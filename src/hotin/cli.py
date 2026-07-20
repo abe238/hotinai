@@ -16,7 +16,7 @@ from .canonical import canonicalize
 from .coerce import finite_float
 from .config import config_dir, env_path, load_config
 from .render import color, hyperlink, sanitize
-from .sources import github, hfmodels, hfpapers, hn, npm, trends, reddit, youtube
+from .sources import github, hfmodels, hfpapers, hn, npm, trends, reddit, smolai, youtube
 
 
 COMMANDS = {
@@ -30,6 +30,7 @@ COMMANDS = {
     "youtube": "show YouTube signals",
     "models": "show trending AI models (HuggingFace)",
     "papers": "show trending AI papers (HuggingFace)",
+    "news": "show recent AI news headlines (smol.ai / AINews)",
     "search": "search cached tools",
     "show": "show one tool",
     "setup": "check local configuration",
@@ -46,7 +47,7 @@ _BADGE_COLORS = {"fresh": "32", "rising": "38;5;208", "viral": "38;5;198",
 _ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
 # --limit only makes sense for commands that produce a ranked/list result.
 # update (refresh + health), setup, about, and show (one repo) don't take one.
-_LIST_COMMANDS = {"hot", "repos", "hn", "npm", "stars", "trending", "reddit", "youtube", "models", "papers", "search"}
+_LIST_COMMANDS = {"hot", "repos", "hn", "npm", "stars", "trending", "reddit", "youtube", "models", "papers", "news", "search"}
 # Entity commands: (adapter, entity_type, metric weights for scoring, primary metric label).
 _ENTITY_COMMANDS = {
     "models": (hfmodels, "model", {"model_downloads": 1.0, "model_likes": 0.5}),
@@ -417,6 +418,42 @@ def _show_repo(repo: dict, arguments: argparse.Namespace) -> None:
                 print("    {}: {}".format(color(_safe(key), "2", enabled), rendered))
 
 
+def _news(arguments: argparse.Namespace) -> int:
+    """Recent AI news headlines from smol.ai/AINews, most recent first.
+
+    Surfaces titles + links (attribution to AINews / Latent Space); it never
+    re-serves their editorial prose.
+    """
+    limit = _normal_limit(arguments)
+    if limit is None:
+        return 2
+    try:
+        text = smolai._request()
+    except Exception:
+        text = None
+    items = smolai.parse_news(text)[:limit] if text is not None else []
+    if arguments.json:
+        _dump_json({"news": [{"title": item["name"], "url": item["url"], "date": item["meta"].get("date")} for item in items],
+                    "status": "ok" if text is not None else "error"})
+        _attribution(arguments)
+        return 0 if text is not None else 1
+    if text is None:
+        print("news source (smol.ai) unavailable", file=sys.stderr)
+        _attribution(arguments)
+        return 1
+    enabled = _color_enabled(arguments)
+    if not items:
+        print("No AI news headlines right now.")
+    else:
+        for item in items:
+            date = _safe(item["meta"].get("date", ""))[:16]
+            title = hyperlink(color(_safe(item["name"]), "1", enabled), item["url"] if isinstance(item.get("url"), str) else "", enabled)
+            print("{}  {}".format(color(date, "2", enabled), title))
+        print(color("via AINews (smol.ai / Latent Space) — news.smol.ai", "2", enabled))
+    _attribution(arguments)
+    return 0
+
+
 def _brief(arguments: argparse.Namespace) -> int:
     """A short, deterministic 'what's happening in AI' digest from the local store.
 
@@ -568,6 +605,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         return _ingest(arguments)
     if command == "brief":
         return _brief(arguments)
+    if command == "news":
+        return _news(arguments)
     if command in ("hot", "repos"):
         limit = _normal_limit(arguments)
         if limit is None:

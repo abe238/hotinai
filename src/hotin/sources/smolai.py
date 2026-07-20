@@ -12,6 +12,7 @@ malformed-XML bug (a broken tag cannot drop the whole feed). Never raises.
 from __future__ import annotations
 
 import gzip
+import html
 import re
 import urllib.request
 from typing import Any, Dict, List, Optional
@@ -56,6 +57,54 @@ def parse_repos(feed_text: Any) -> List[Dict[str, Any]]:
     except (AttributeError, TypeError, ValueError, OverflowError, re.error):
         return []
     return list(seen.values())
+
+
+_ITEM_RE = re.compile(r"<item\b[^>]*>(.*?)</item>", re.DOTALL | re.IGNORECASE)
+_TITLE_RE = re.compile(r"<title\b[^>]*>(.*?)</title>", re.DOTALL | re.IGNORECASE)
+_LINK_RE = re.compile(r"<link\b[^>]*>(.*?)</link>", re.DOTALL | re.IGNORECASE)
+_DATE_RE = re.compile(r"<pubDate\b[^>]*>(.*?)</pubDate>", re.DOTALL | re.IGNORECASE)
+
+
+def _clean(text: str) -> str:
+    inner = re.sub(r"<!\[CDATA\[(.*?)\]\]>", r"\1", text, flags=re.DOTALL)
+    return html.unescape(re.sub(r"<[^>]+>", "", inner)).strip()
+
+
+def parse_news(feed_text: Any) -> List[Dict[str, Any]]:
+    """Extract recent AINews items (title, link, date) as news records.
+
+    Tolerant of malformed XML: it walks <item> blocks with regex and skips any
+    item missing a title or link, so one broken entry never drops the feed. This
+    surfaces headlines + links (attribution to AINews/Latent Space); it does not
+    re-serve their prose.
+    """
+    if not isinstance(feed_text, str):
+        return []
+    news: List[Dict[str, Any]] = []
+    try:
+        for block in _ITEM_RE.findall(feed_text):
+            title_match = _TITLE_RE.search(block)
+            link_match = _LINK_RE.search(block)
+            if not title_match or not link_match:
+                continue
+            title = _clean(title_match.group(1))
+            link = _clean(link_match.group(1))
+            if not title or not link.startswith("http"):
+                continue
+            date_match = _DATE_RE.search(block)
+            news.append({
+                "entity_type": "news",
+                "entity_id": link,
+                "url": link,
+                "name": title,
+                "source": SOURCE,
+                "signal": {},
+                "meta": {"date": _clean(date_match.group(1)) if date_match else "",
+                         "publisher": "AINews (smol.ai / Latent Space)"},
+            })
+    except (AttributeError, TypeError, ValueError, re.error):
+        return []
+    return news
 
 
 def _request() -> Optional[str]:
@@ -108,6 +157,20 @@ def selftest() -> None:
     # reserved / non-repo paths are rejected by canonicalize
     assert parse_repos("https://github.com/blog/post https://github.com/features") == []
     assert parse_repos("no links here") == []
+
+    # news headlines: title + link per item, tolerant of a broken item and CDATA
+    feed = (
+        '<rss><channel>'
+        '<item><title>Kimi K3 release</title><link>https://news.smol.ai/issues/1</link>'
+        '<pubDate>Fri, 17 Jul 2026 00:00:00 GMT</pubDate></item>'
+        '<item><title>no link here</title></item>'
+        '<item><title><![CDATA[GLM-5.2 drops]]></title><link>https://news.smol.ai/issues/2</link></item>'
+        '</channel></rss>'
+    )
+    news = parse_news(feed)
+    assert [n["name"] for n in news] == ["Kimi K3 release", "GLM-5.2 drops"]
+    assert news[0]["entity_type"] == "news" and news[0]["url"] == "https://news.smol.ai/issues/1"
+    assert parse_news("garbage") == []
     print("smolai selftest: ok")
 
 

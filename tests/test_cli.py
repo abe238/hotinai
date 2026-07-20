@@ -388,3 +388,18 @@ def test_brief_empty_store_is_friendly(monkeypatch, capsys):
     monkeypatch.setattr(cli, "open_cache", MemoryCache)
     assert main(["brief"]) == 0
     assert "Run `hotin ingest`" in capsys.readouterr().out
+
+
+def test_news_command_shows_smol_headlines(monkeypatch, capsys):
+    feed = ('<rss><channel><item><title>Kimi K3 release</title>'
+            '<link>https://news.smol.ai/issues/1</link>'
+            '<pubDate>Fri, 17 Jul 2026 00:00:00 GMT</pubDate></item></channel></rss>')
+    monkeypatch.setattr(cli.smolai, "_request", lambda: feed)
+    assert main(["news", "--json", "--limit", "5"]) == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["news"][0]["title"] == "Kimi K3 release"
+    assert out["news"][0]["url"] == "https://news.smol.ai/issues/1"
+
+    monkeypatch.setattr(cli.smolai, "_request", lambda: None)
+    assert main(["news"]) == 1  # source unavailable
+    assert "unavailable" in capsys.readouterr().err
