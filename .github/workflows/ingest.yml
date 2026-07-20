@@ -1,0 +1,36 @@
+# Scheduled ingest: a server (not a human) keeps hotin's observation store fresh,
+# turning the snapshot into a continuous time series that velocity is computed from.
+# The store persists across runs via actions/cache (no binary committed to git).
+# NON-BLOCKING: this never gates a PR; it is a background data pipeline.
+name: Ingest
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"   # every 6 hours
+  workflow_dispatch:
+
+concurrency:
+  group: hotin-ingest        # single writer; never run two ingests at once
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e .
+      - name: Restore observation store
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/hotin
+          key: hotin-store-${{ github.run_id }}
+          restore-keys: |
+            hotin-store-
+      - name: Ingest (records the time series; keyless sources work without secrets)
+        env:
+          SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: hotin ingest

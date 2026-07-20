@@ -6,11 +6,12 @@ import json
 import math
 import os
 import sys
+import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
 from . import __version__, engine, health
-from .cache import open_cache
+from .cache import MemoryCache, open_cache
 from .canonical import canonicalize
 from .coerce import finite_float
 from .config import config_dir, env_path, load_config
@@ -32,8 +33,11 @@ COMMANDS = {
     "show": "show one tool",
     "setup": "check local configuration",
     "update": "update hotin",
+    "ingest": "refresh all sources and record the time series (for a scheduler)",
     "about": "show project information",
 }
+_RETENTION_DAYS = 30.0
+_INGEST_DEPTH = 100
 
 _BADGE_COLORS = {"fresh": "32", "smart-money": "38;5;220", "new": "34", "corroborated": "35",
                  "paper-backed": "38;5;45", "rising": "38;5;208", "viral": "38;5;198"}
@@ -411,6 +415,58 @@ def _show_repo(repo: dict, arguments: argparse.Namespace) -> None:
                 print("    {}: {}".format(color(_safe(key), "2", enabled), rendered))
 
 
+def _ingest(arguments: argparse.Namespace) -> int:
+    """Refresh every source (repos + papers + models), append the time series, prune.
+
+    Designed to be run on a schedule. It is the writer that turns hotin's snapshot
+    into a continuous picture. A run that could not PERSIST (SQLite fell to the
+    in-memory cache) exits non-zero, since an in-memory store won't survive to the
+    next scheduled run.
+    """
+    run_id = "run-{}".format(int(time.time()))
+    now = time.time()
+    config = load_config()
+    cache = open_cache()
+    statuses: List[health.SourceStatus] = []
+    persisted = False
+    try:
+        statuses = list(engine.fetch_all(config, limit=_INGEST_DEPTH, cache=cache, ttl=0))
+        for adapter, _entity_type, _weights in _ENTITY_COMMANDS.values():
+            try:
+                result = adapter.fetch(limit=_INGEST_DEPTH, config=config)
+            except Exception as exc:  # adapters shouldn't raise; ingest never crashes
+                result = {"records": [], "status": "error", "detail": str(exc) or "fetch failed"}
+            if isinstance(result, dict):
+                statuses.append(health.SourceStatus(
+                    getattr(adapter, "SOURCE", "?"),
+                    result.get("status") if result.get("status") in ("ok", "empty", "error") else "error",
+                    result.get("detail") if isinstance(result.get("detail"), str) else None,
+                ))
+                for record in result.get("records") if isinstance(result.get("records"), list) else []:
+                    if isinstance(record, dict):
+                        cache.upsert(engine._cache_record(record))
+        cache.record_observations(engine.observations_from_cache(cache.get_all(), run_id, now))
+        cache.prune_observations(now - _RETENTION_DAYS * 86400.0)
+        persisted = not isinstance(cache, MemoryCache) and getattr(cache, "_fallback", None) is None
+        if arguments.json:
+            _dump_json({"run_id": run_id, "persisted": persisted,
+                        "sources": [{"source": s.source, "status": s.status, "detail": s.detail} for s in statuses]})
+        else:
+            for status in statuses:
+                detail = " — {}".format(_safe(status.detail)) if status.detail else ""
+                print("{}  {}{}".format(_safe(status.source), _safe(status.status), detail))
+            print("run {} recorded — cache {}".format(run_id, "persisted" if persisted else "NOT persisted (in-memory)"))
+        if not persisted:
+            print("ingest did not persist (SQLite unavailable); a scheduled run needs a durable store", file=sys.stderr)
+    finally:
+        cache.close()
+    exit_code = 0 if persisted else 1
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os._exit(exit_code)
+    return exit_code  # allows unit tests to substitute os._exit()
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     parser = build_parser()
     arguments = parser.parse_args(argv)
@@ -435,6 +491,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         return _single_source(command, arguments)
     if command in _ENTITY_COMMANDS:
         return _entity_command(command, arguments)
+    if command == "ingest":
+        return _ingest(arguments)
     if command == "hot":
         limit = _normal_limit(arguments)
         if limit is None:

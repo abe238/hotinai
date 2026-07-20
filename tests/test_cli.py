@@ -335,3 +335,30 @@ def test_models_command_renders_entities_json(monkeypatch, capsys):
     assert out["entities"][0]["entity_id"] == "org/m"
     assert out["entities"][0]["entity_type"] == "model"
     assert out["entities"][0]["score"] > 0
+
+
+def test_ingest_records_observations_and_is_strict_about_persistence(monkeypatch, capsys):
+    cache = MemoryCache()
+    monkeypatch.setattr(cli, "open_cache", lambda: cache)
+
+    def fetch_all(config, **kwargs):
+        kwargs["cache"].upsert({
+            "entity_type": "repo", "entity_id": "a/b", "canonical_repo": "a/b",
+            "url": "https://github.com/a/b", "name": "a/b", "source": "github",
+            "signal_json": {"signal": {"stars": 100}, "meta": {}}})
+        return [SourceStatus("github", "ok")]
+
+    monkeypatch.setattr(cli.engine, "fetch_all", fetch_all)
+    monkeypatch.setattr(cli.hfmodels, "fetch", lambda **kwargs: {"records": [
+        {"entity_type": "model", "entity_id": "o/m", "url": "u", "name": "o/m", "source": "hfmodels",
+         "signal": {"model_downloads": 5, "model_likes": 2}, "meta": {}}], "status": "ok", "detail": None})
+    monkeypatch.setattr(cli.hfpapers, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
+
+    # MemoryCache cannot persist a scheduled run -> exit 1 (strict).
+    assert main(["ingest", "--json"]) == 1
+    out = json.loads(capsys.readouterr().out)
+    assert out["persisted"] is False
+    assert out["run_id"].startswith("run-")
+    # observations were still recorded for the velocity metrics
+    assert cache.observations_for("repo", "a/b", "stars")[0][0] == 100.0
+    assert cache.observations_for("model", "o/m", "model_downloads")[0][0] == 5.0

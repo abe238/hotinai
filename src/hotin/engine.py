@@ -7,7 +7,7 @@ import json
 import math
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from . import categories
 from .cache import open_cache
@@ -254,6 +254,36 @@ def cross_entity_repo_links(records: List[dict], *, max_age_days: Optional[float
 # Cumulative-counter metrics that are safe to difference for velocity. Gauges,
 # windowed counts, already-rates, and subject-changing metrics are NOT here.
 _VELOCITY_METRICS = {"stars": "repo", "model_downloads": "model", "model_likes": "model", "paper_upvotes": "paper"}
+
+
+def observations_from_cache(records: List[dict], run_id: str, observed_at: float) -> List[dict]:
+    """Turn the current cache rows into observation samples for the velocity metrics.
+
+    One sample per (entity, source, metric) for this ingest run. Only the
+    cumulative-counter metrics in _VELOCITY_METRICS are recorded, and only on the
+    entity type they belong to (stars on repos, downloads/likes on models, etc.).
+    """
+    observations: List[dict] = []
+    for raw_record in records:
+        record = _decoded_record(raw_record)
+        if record is None:
+            continue
+        entity_type = record.get("entity_type") or "repo"
+        entity_id = record.get("entity_id") or record.get("canonical_repo")
+        source = record.get("source") or ""
+        if not isinstance(entity_id, str) or not entity_id:
+            continue
+        signal = record.get("signal") if isinstance(record.get("signal"), dict) else {}
+        for metric, metric_entity_type in _VELOCITY_METRICS.items():
+            if entity_type != metric_entity_type or metric not in signal:
+                continue
+            value = finite_float(signal.get(metric))
+            if value is not None:
+                observations.append({
+                    "run_id": run_id, "entity_type": entity_type, "entity_id": entity_id,
+                    "source": source, "metric": metric, "value": value, "observed_at": observed_at,
+                })
+    return observations
 
 
 def series_velocity(samples: List[Tuple[float, float]]) -> Tuple[float, Optional[float], str]:
