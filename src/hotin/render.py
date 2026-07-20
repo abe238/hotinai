@@ -33,3 +33,16 @@ def color(text: str, code: str, enabled: bool = True) -> str:
     if not _COLOR_CODE.fullmatch(sgr):
         raise ValueError("color code must be an SGR numeric code")
     return "\x1b[{}m{}\x1b[0m".format(sgr, text)
+
+
+def hyperlink(text: str, url: str, enabled: bool = True) -> str:
+    """Wrap ``text`` in an OSC 8 terminal hyperlink when enabled, else return it plain.
+
+    The URL is caller-trusted (built from an already-validated canonical repo), but
+    control bytes are stripped defensively so hotin can never emit an escape it did
+    not intend. Terminals without OSC 8 support simply show ``text``.
+    """
+    if not enabled:
+        return text
+    safe_url = _CONTROL.sub("", url)
+    return "\x1b]8;;{}\x1b\\{}\x1b]8;;\x1b\\".format(safe_url, text)

@@ -14,7 +14,7 @@ from .cache import open_cache
 from .canonical import canonicalize
 from .coerce import finite_float
 from .config import config_dir, env_path, load_config
-from .render import color, sanitize
+from .render import color, hyperlink, sanitize
 from .sources import github, hn, npm, trends, reddit, youtube
 
 
@@ -35,15 +35,21 @@ COMMANDS = {
 
 _BADGE_COLORS = {"fresh": "32", "smart-money": "38;5;220", "new": "34", "corroborated": "35"}
 _ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
+# --limit only makes sense for commands that produce a ranked/list result.
+# update (refresh + health), setup, about, and show (one repo) don't take one.
+_LIST_COMMANDS = {"hot", "hn", "npm", "stars", "trending", "reddit", "youtube", "search"}
 
 
-def _add_global_flags(parser: argparse.ArgumentParser, suppress_defaults: bool = False) -> None:
+def _add_global_flags(
+    parser: argparse.ArgumentParser, suppress_defaults: bool = False, include_limit: bool = True
+) -> None:
     default = argparse.SUPPRESS if suppress_defaults else False
     parser.add_argument("--json", action="store_true", default=default, help="emit JSON output")
     parser.add_argument("--no-color", action="store_true", default=default, help="disable ANSI color")
     parser.add_argument("--quiet", action="store_true", default=default, help="reduce output")
     parser.add_argument("--verbose", action="store_true", default=default, help="increase output")
-    parser.add_argument("--limit", type=int, default=argparse.SUPPRESS if suppress_defaults else None, metavar="N", help="limit results")
+    if include_limit:
+        parser.add_argument("--limit", type=int, default=argparse.SUPPRESS if suppress_defaults else None, metavar="N", help="limit results")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -52,7 +58,7 @@ def build_parser() -> argparse.ArgumentParser:
     subcommands = parser.add_subparsers(dest="command", title="subcommands")
     for command, description in COMMANDS.items():
         subparser = subcommands.add_parser(command, help=description, description=description)
-        _add_global_flags(subparser, suppress_defaults=True)
+        _add_global_flags(subparser, suppress_defaults=True, include_limit=(command in _LIST_COMMANDS))
         if command == "setup":
             subparser.add_argument("--check", action="store_true", help="check local configuration")
         elif command == "search":
@@ -128,17 +134,46 @@ def _render_badges(badges: object, enabled: bool) -> str:
     rendered = []
     for badge in badges:
         text = _safe(badge)
-        rendered.append(color(text, _BADGE_COLORS.get(text, "36"), enabled))
-    return ",".join(rendered)
+        rendered.append(color(text, "1;" + _BADGE_COLORS.get(text, "36"), enabled))
+    return " ".join(rendered)
+
+
+def _score_color(score: float, top: float) -> str:
+    """Bold SGR code heat-mapped by a score's share of the list's top score."""
+    ratio = (score / top) if top > 0 else 0.0
+    if ratio >= 0.66:
+        return "1;38;5;42"   # bold green: hottest
+    if ratio >= 0.33:
+        return "1;38;5;214"  # bold amber: warm
+    return "1;38;5;250"      # bold light: cooler
+
+
+def _repo_link(repo: dict, enabled: bool) -> str:
+    """Bold, hyperlinked ``owner/repo`` (falls back to the display name)."""
+    slug = _safe(repo.get("canonical_repo") or "")
+    if slug:
+        return hyperlink(color(slug, "1", enabled), "https://github.com/{}".format(slug), enabled)
+    return color(_safe(repo.get("name", "")), "1", enabled)
 
 
 def _render_ranked(repos: List[dict], arguments: argparse.Namespace) -> None:
     enabled = _color_enabled(arguments)
+    top = max((_finite(repo.get("score")) for repo in repos), default=0.0)
     for repo in repos:
-        print("{:.2f}  {}  {}  {}".format(
-            _finite(repo.get("score")), _safe(repo.get("name", "")),
-            _safe(repo.get("category", "uncategorized")), _render_badges(repo.get("badges"), enabled),
-        ).rstrip())
+        score = _finite(repo.get("score"))
+        row = "  ".join(part for part in (
+            color("{:>6.2f}".format(score), _score_color(score, top), enabled),
+            _repo_link(repo, enabled),
+            color(_safe(repo.get("category", "uncategorized")), "2", enabled),
+            _render_badges(repo.get("badges"), enabled),
+        ) if part).rstrip()
+        print(row)
+        # Secondary dim line: the human title/context, when it adds something the
+        # repo slug doesn't already say (HN/Reddit/YouTube titles, not repo names).
+        name = _safe(repo.get("name", ""))
+        slug = _safe(repo.get("canonical_repo") or "")
+        if name and name.casefold() != slug.casefold():
+            print("        " + color(name[:78], "2", enabled))
 
 
 def _short_excerpt(record: dict) -> str:
@@ -173,12 +208,21 @@ def _trend_metric(record: dict) -> Tuple[str, float]:
     return max(candidates, key=lambda item: item[1]) if candidates else ("trend_score", float("-inf"))
 
 
-def _render_single_source(records: List[dict], metric: Callable[[dict], Tuple[str, float]]) -> None:
+def _render_single_source(
+    records: List[dict], metric: Callable[[dict], Tuple[str, float]], arguments: argparse.Namespace
+) -> None:
+    enabled = _color_enabled(arguments)
     for record in records:
         label, value = metric(record)
-        line = "{} {}  {}".format(_safe(label), _format_number(value), _safe(record.get("name", "")))
+        line = "{} {}  {}".format(
+            color(_safe(label), "2", enabled),
+            color(_format_number(value), "1", enabled),
+            _repo_link(record, enabled),
+        )
         excerpt = _short_excerpt(record)
-        print("{}  — {}".format(line, excerpt) if excerpt else line)
+        if excerpt:
+            line += "  " + color("— " + excerpt, "2", enabled)
+        print(line)
 
 
 def _attribution(arguments: argparse.Namespace, *, force: bool = False) -> None:
@@ -245,7 +289,7 @@ def _single_source(command: str, arguments: argparse.Namespace) -> int:
         usable = [record for record in records if isinstance(record, dict)]
         usable.sort(key=lambda record: metric(record)[1], reverse=True)
         if usable:
-            _render_single_source(usable[:limit], metric)
+            _render_single_source(usable[:limit], metric, arguments)
         else:
             print("No {} results right now.".format(command))
     else:
@@ -258,30 +302,40 @@ def _single_source(command: str, arguments: argparse.Namespace) -> int:
     return exit_code
 
 
+def _label(name: str, value: str, enabled: bool, value_code: Optional[str] = "1") -> str:
+    """A dim label with a (by default bold) value; value_code=None leaves value as-is."""
+    shown = color(value, value_code, enabled) if value_code else value
+    return "{}: {}".format(color(name, "2", enabled), shown)
+
+
 def _show_repo(repo: dict, arguments: argparse.Namespace) -> None:
     enabled = _color_enabled(arguments)
-    print(_safe(repo.get("name", "")))
-    print("repository: {}".format(_safe(repo.get("canonical_repo", ""))))
-    print("category: {}".format(_safe(repo.get("category", "uncategorized"))))
-    print("score: {:.2f}".format(_finite(repo.get("score"))))
-    print("momentum: {:.2f}".format(_finite(repo.get("momentum"))))
-    print("credibility: {:.2f}".format(_finite(repo.get("credibility"))))
-    print("signal_score: {:.2f}".format(_finite(repo.get("signal_score"))))
-    print("corroboration: {:.2f}".format(_finite(repo.get("corroboration"))))
-    print("freshness_factor: {:.2f}".format(_finite(repo.get("freshness_factor"))))
+    slug = _safe(repo.get("canonical_repo", ""))
+    print(color(_safe(repo.get("name", "")), "1", enabled))
+    if slug:
+        url = "https://github.com/{}".format(slug)
+        print(_label("repository", hyperlink(color(slug, "1", enabled), url, enabled), enabled, value_code=None))
+        print(_label("url", url, enabled, value_code="2"))
+    print(_label("category", _safe(repo.get("category", "uncategorized")), enabled))
+    print(_label("score", "{:.2f}".format(_finite(repo.get("score"))), enabled, value_code="1;38;5;42"))
+    print(_label("momentum", "{:.2f}".format(_finite(repo.get("momentum"))), enabled))
+    print(_label("credibility", "{:.2f}".format(_finite(repo.get("credibility"))), enabled))
+    print(_label("signal_score", "{:.2f}".format(_finite(repo.get("signal_score"))), enabled))
+    print(_label("corroboration", "{:.2f}".format(_finite(repo.get("corroboration"))), enabled))
+    print(_label("freshness_factor", "{:.2f}".format(_finite(repo.get("freshness_factor"))), enabled))
     freshness_days = repo.get("freshness_days")
-    print("freshness_days: {}".format("unknown" if freshness_days is None else "{:.2f}".format(_finite(freshness_days))))
-    print("badges: {}".format(_render_badges(repo.get("badges"), enabled) or "none"))
-    print("signals:")
+    print(_label("freshness_days", "unknown" if freshness_days is None else "{:.2f}".format(_finite(freshness_days)), enabled))
+    print("{}: {}".format(color("badges", "2", enabled), _render_badges(repo.get("badges"), enabled) or "none"))
+    print(color("signals:", "2", enabled))
     by_source = repo.get("signal_by_source") if isinstance(repo.get("signal_by_source"), dict) else {}
     for source in sorted(by_source, key=str):
-        print("  {}:".format(_safe(source)))
+        print("  {}:".format(color(_safe(source), "1", enabled)))
         signal = by_source[source]
         if isinstance(signal, dict):
             for key in sorted(signal, key=str):
                 value = signal[key]
                 rendered = _safe(value) if isinstance(value, str) else _format_number(value)
-                print("    {}: {}".format(_safe(key), rendered))
+                print("    {}: {}".format(color(_safe(key), "2", enabled), rendered))
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -363,11 +417,10 @@ def main(argv: Optional[List[str]] = None) -> int:
             _attribution(arguments)
             return 0
     if command == "update":
-        limit = _normal_limit(arguments)
-        if limit is None:
-            return 2
+        # update just refreshes every source and reports health; it isn't a ranked
+        # list, so it takes no --limit. Refresh to a sensible fixed depth.
         with _cache_session() as cache:
-            statuses = engine.fetch_all(load_config(), limit=limit, cache=cache, ttl=0)
+            statuses = engine.fetch_all(load_config(), limit=50, cache=cache, ttl=0)
             exit_code, message = health.summarize(statuses, cache_has_data=bool(cache.get_all()))
             if arguments.json:
                 _dump_json({"sources": [{"source": status.source, "status": status.status, "detail": status.detail} for status in statuses]})
