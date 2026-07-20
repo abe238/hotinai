@@ -1,4 +1,9 @@
-"""A best-effort local SQLite cache; cache failures must never stop hotin."""
+"""A best-effort local SQLite cache; cache failures must never stop hotin.
+
+Records are keyed by ``(entity_type, entity_id, source)``. For repos,
+``entity_id == canonical_repo``; other entity types (paper, model) supply their
+own id. URL is provenance, never identity.
+"""
 
 import json
 import logging
@@ -10,6 +15,22 @@ from typing import Any, Dict, List, Optional, Tuple
 
 
 LOGGER = logging.getLogger(__name__)
+
+# Bump when the physical schema changes; _migrate() upgrades older databases.
+SCHEMA_VERSION = 1
+
+_TABLE_COLUMNS = """
+                id INTEGER PRIMARY KEY,
+                entity_type TEXT NOT NULL DEFAULT 'repo',
+                entity_id TEXT NOT NULL,
+                url TEXT NOT NULL,
+                canonical_repo TEXT,
+                name TEXT NOT NULL,
+                source TEXT NOT NULL,
+                signal_json TEXT NOT NULL,
+                fetched_at REAL NOT NULL,
+                UNIQUE(entity_type, entity_id, source)
+"""
 
 
 def cache_path() -> Path:
@@ -23,9 +44,16 @@ def _normalise_record(record: Dict[str, Any]) -> Dict[str, Any]:
     signal = record.get("signal_json", {})
     if not isinstance(signal, str):
         signal = json.dumps(signal, sort_keys=True)
+    entity_type = record.get("entity_type") or "repo"
+    canonical = record.get("canonical_repo")
+    # entity_id: repos use the canonical repo; other entity types supply one.
+    # Fall back to canonical_repo, then url, so a row is never keyless.
+    entity_id = record.get("entity_id") or canonical or record.get("url") or ""
     return {
+        "entity_type": str(entity_type),
+        "entity_id": str(entity_id),
         "url": str(record.get("url", "")),
-        "canonical_repo": record.get("canonical_repo"),
+        "canonical_repo": canonical,
         "name": str(record.get("name", "")),
         "source": str(record.get("source", "")),
         "signal_json": signal,
@@ -37,18 +65,18 @@ class MemoryCache:
     """Interface-compatible cache used if SQLite cannot be used at all."""
 
     def __init__(self) -> None:
-        self._records: Dict[Tuple[str, str], Dict[str, Any]] = {}
+        self._records: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
 
     def upsert(self, record: Dict[str, Any]) -> None:
         normalized = _normalise_record(record)
-        key = (normalized["url"], normalized["source"])
+        key = (normalized["entity_type"], normalized["entity_id"], normalized["source"])
         self._records[key] = normalized
 
     def search(self, query: str) -> List[Dict[str, Any]]:
-        """Return observations per ``(url, source)``, not repository-deduplicated.
+        """Return observations per ``(entity_type, entity_id, source)``.
 
-        Callers displaying tools must first route records through
-        ``engine.merge_by_repo()``.
+        Callers displaying tools must first route records through the engine's
+        merge/filter (e.g. ``engine.merge_by_repo``).
         """
         if not query.strip():
             return []
@@ -60,11 +88,7 @@ class MemoryCache:
         ]
 
     def get_all(self) -> List[Dict[str, Any]]:
-        """Return observations per ``(url, source)``, not repository-deduplicated.
-
-        Callers displaying tools must first route records through
-        ``engine.merge_by_repo()``.
-        """
+        """Return every observation; callers filter/merge in the engine."""
         return [dict(record) for record in self._records.values()]
 
     def close(self) -> None:
@@ -83,21 +107,13 @@ class Cache:
     def _initialize(self) -> None:
         self._connection.execute("PRAGMA journal_mode=WAL")
         self._connection.execute("PRAGMA busy_timeout=5000")
-        self._connection.execute(
-            """CREATE TABLE IF NOT EXISTS tools (
-                id INTEGER PRIMARY KEY,
-                url TEXT NOT NULL,
-                canonical_repo TEXT,
-                name TEXT NOT NULL,
-                source TEXT NOT NULL,
-                signal_json TEXT NOT NULL,
-                fetched_at REAL NOT NULL,
-                UNIQUE(url, source)
-            )"""
-        )
-        self._connection.execute(
-            "CREATE INDEX IF NOT EXISTS idx_tools_fetched_at ON tools(fetched_at DESC)"
-        )
+        try:
+            self._migrate()
+        except sqlite3.Error as exc:
+            # A migration we cannot complete is not worth crashing over; degrade
+            # to the in-memory cache for this run rather than lose the command.
+            self._activate_fallback(exc)
+            return
         fts_existed = self._connection.execute(
             "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'tools_fts'"
         ).fetchone() is not None
@@ -113,6 +129,43 @@ class Cache:
             LOGGER.warning("SQLite FTS5 unavailable; cache search will use LIKE")
             self._fts_available = False
         self._connection.commit()
+
+    def _migrate(self) -> None:
+        """Bring the physical schema up to SCHEMA_VERSION, preserving data.
+
+        Handles: fresh DB, the legacy pre-release ``UNIQUE(url)`` schema, and the
+        shipped ``UNIQUE(url, source)`` schema (both at user_version 0). Rebuilds
+        ``tools`` when the entity columns are absent, deterministically keeping
+        the newest row per new key, then forces an FTS backfill.
+        """
+        conn = self._connection
+        version = conn.execute("PRAGMA user_version").fetchone()[0]
+        if version > SCHEMA_VERSION:
+            raise sqlite3.Error("cache is newer (v{}) than this hotin (v{})".format(version, SCHEMA_VERSION))
+        exists = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='tools'"
+        ).fetchone() is not None
+        if not exists:
+            conn.execute("CREATE TABLE tools ({})".format(_TABLE_COLUMNS))
+        else:
+            columns = {row[1] for row in conn.execute("PRAGMA table_info(tools)")}
+            if "entity_type" not in columns or "entity_id" not in columns:
+                conn.execute("DROP TABLE IF EXISTS tools_new")
+                conn.execute("CREATE TABLE tools_new ({})".format(_TABLE_COLUMNS))
+                # Copy oldest-first so the newest row wins each (entity_id, source).
+                conn.execute(
+                    """INSERT OR REPLACE INTO tools_new
+                         (entity_type, entity_id, url, canonical_repo, name, source, signal_json, fetched_at)
+                       SELECT 'repo', COALESCE(NULLIF(canonical_repo, ''), url), url,
+                              canonical_repo, name, source, signal_json, fetched_at
+                       FROM tools ORDER BY fetched_at ASC"""
+                )
+                conn.execute("DROP TABLE tools")
+                conn.execute("ALTER TABLE tools_new RENAME TO tools")
+                conn.execute("DROP TABLE IF EXISTS tools_fts")  # force FTS rebuild
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_tools_fetched_at ON tools(fetched_at DESC)")
+        conn.execute("PRAGMA user_version = {}".format(SCHEMA_VERSION))
+        conn.commit()
 
     def _create_fts(self) -> None:
         self._connection.execute(
@@ -138,20 +191,20 @@ class Cache:
             return
         try:
             self._connection.execute(
-                """INSERT INTO tools (url, canonical_repo, name, source, signal_json, fetched_at)
-                   VALUES (:url, :canonical_repo, :name, :source, :signal_json, :fetched_at)
-                   ON CONFLICT(url, source) DO UPDATE SET
+                """INSERT INTO tools (entity_type, entity_id, url, canonical_repo, name, source, signal_json, fetched_at)
+                   VALUES (:entity_type, :entity_id, :url, :canonical_repo, :name, :source, :signal_json, :fetched_at)
+                   ON CONFLICT(entity_type, entity_id, source) DO UPDATE SET
+                     url=excluded.url,
                      canonical_repo=excluded.canonical_repo,
                      name=excluded.name,
-                     source=excluded.source,
                      signal_json=excluded.signal_json,
                      fetched_at=excluded.fetched_at""",
                 normalized,
             )
             if self._fts_available:
                 row = self._connection.execute(
-                    "SELECT id FROM tools WHERE url = ? AND source = ?",
-                    (normalized["url"], normalized["source"]),
+                    "SELECT id FROM tools WHERE entity_type = ? AND entity_id = ? AND source = ?",
+                    (normalized["entity_type"], normalized["entity_id"], normalized["source"]),
                 ).fetchone()
                 rowid = row[0]
                 self._connection.execute("DELETE FROM tools_fts WHERE rowid = ?", (rowid,))
@@ -164,11 +217,7 @@ class Cache:
             self._activate_fallback(exc).upsert(normalized)
 
     def search(self, query: str) -> List[Dict[str, Any]]:
-        """Return observations per ``(url, source)``, not repository-deduplicated.
-
-        Callers displaying tools must first route records through
-        ``engine.merge_by_repo()``.
-        """
+        """Return matching observations; callers filter/merge in the engine."""
         if not query.strip():
             return []
         if self._fallback is not None:
@@ -207,11 +256,7 @@ class Cache:
         return " ".join('"{}"*'.format(token.replace('"', '""')) for token in query.split())
 
     def get_all(self) -> List[Dict[str, Any]]:
-        """Return observations per ``(url, source)``, not repository-deduplicated.
-
-        Callers displaying tools must first route records through
-        ``engine.merge_by_repo()``.
-        """
+        """Return every observation; callers filter/merge in the engine."""
         if self._fallback is not None:
             return self._fallback.get_all()
         try:

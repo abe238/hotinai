@@ -118,3 +118,94 @@ def test_open_error_degrades_to_memory_cache(monkeypatch):
     assert isinstance(opened, cache.MemoryCache)
     opened.upsert(record("Memory Tool"))
     assert [item["name"] for item in opened.search("Memory")] == ["Memory Tool"]
+
+
+def _legacy_db(path, unique_sql, rows):
+    """Create a pre-entity-model DB at `path` with the given UNIQUE clause."""
+    conn = sqlite3.connect(str(path))
+    conn.execute(
+        "CREATE TABLE tools (id INTEGER PRIMARY KEY, url TEXT NOT NULL, "
+        "canonical_repo TEXT, name TEXT NOT NULL, source TEXT NOT NULL, "
+        "signal_json TEXT NOT NULL, fetched_at REAL NOT NULL{u})".format(u=unique_sql)
+    )
+    conn.executemany(
+        "INSERT INTO tools (url, canonical_repo, name, source, signal_json, fetched_at) "
+        "VALUES (?, ?, ?, ?, ?, ?)", rows,
+    )
+    conn.execute("PRAGMA user_version = 0")
+    conn.commit()
+    conn.close()
+
+
+def _open(path):
+    conn = sqlite3.connect(str(path))
+    conn.row_factory = sqlite3.Row
+    return cache.Cache(conn)
+
+
+def test_migrates_legacy_url_unique_schema_preserving_rows(tmp_path):
+    path = tmp_path / "legacy.db"
+    _legacy_db(path, ", UNIQUE(url)", [
+        ("https://github.com/a/b", "a/b", "AB", "github", '{"stars": 1}', 100.0),
+        ("https://github.com/c/d", "c/d", "CD", "hn", '{"hn_points": 9}', 200.0),
+    ])
+    c = _open(path)
+    rows = c.get_all()
+    assert {r["entity_type"] for r in rows} == {"repo"}
+    assert {r["entity_id"] for r in rows} == {"a/b", "c/d"}
+    assert c._connection.execute("PRAGMA user_version").fetchone()[0] == cache.SCHEMA_VERSION
+    # upsert (which uses ON CONFLICT(entity_type, entity_id, source)) works now.
+    c.upsert(record("New One"))
+    assert any(r["name"] == "New One" for r in c.get_all())
+    c.close()
+
+
+def test_migrates_shipped_url_source_unique_schema(tmp_path):
+    path = tmp_path / "shipped.db"
+    _legacy_db(path, ", UNIQUE(url, source)", [
+        ("https://github.com/a/b", "a/b", "AB", "github", '{"stars": 1}', 100.0),
+    ])
+    c = _open(path)
+    rows = c.get_all()
+    assert len(rows) == 1 and rows[0]["entity_type"] == "repo" and rows[0]["entity_id"] == "a/b"
+    c.close()
+
+
+def test_fresh_db_gets_entity_schema(tmp_path):
+    c = _open(tmp_path / "fresh.db")
+    cols = {r[1] for r in c._connection.execute("PRAGMA table_info(tools)")}
+    assert "entity_type" in cols and "entity_id" in cols
+    assert c._connection.execute("PRAGMA user_version").fetchone()[0] == cache.SCHEMA_VERSION
+    c.close()
+
+
+def test_newer_db_degrades_to_memory_rather_than_corrupt(tmp_path):
+    path = tmp_path / "future.db"
+    conn = sqlite3.connect(str(path))
+    conn.execute("CREATE TABLE tools ({})".format(cache._TABLE_COLUMNS))
+    conn.execute("PRAGMA user_version = 999")
+    conn.commit()
+    conn.close()
+    c = _open(path)
+    # Refused the migration and fell back to memory (no crash); still usable.
+    assert c._fallback is not None
+    c.upsert(record("Safe"))
+    assert any(r["name"] == "Safe" for r in c.get_all())
+    c.close()
+
+
+def test_paper_and_model_rows_do_not_leak_into_repo_merge(tmp_path):
+    from hotin import engine
+    c = _open(tmp_path / "mixed.db")
+    c.upsert({"entity_type": "repo", "entity_id": "acme/tool", "canonical_repo": "acme/tool",
+              "url": "https://github.com/acme/tool", "name": "Acme", "source": "github",
+              "signal_json": {"stars": 10}, "fetched_at": 1000.0})
+    c.upsert({"entity_type": "paper", "entity_id": "2601.12345", "canonical_repo": None,
+              "url": "https://arxiv.org/abs/2601.12345", "name": "A Paper", "source": "hfpapers",
+              "signal_json": {"upvotes": 99}, "fetched_at": 1000.0})
+    c.upsert({"entity_type": "model", "entity_id": "org/model", "canonical_repo": None,
+              "url": "https://huggingface.co/org/model", "name": "org/model", "source": "hfmodels",
+              "signal_json": {"downloads": 5}, "fetched_at": 1000.0})
+    merged = engine.merge_by_repo(c.get_all())
+    assert set(merged) == {"acme/tool"}  # only the repo; paper/model excluded
+    c.close()

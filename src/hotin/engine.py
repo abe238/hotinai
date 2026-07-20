@@ -187,6 +187,11 @@ def merge_by_repo(
         record = _decoded_record(raw_record)
         if record is None:
             continue
+        # Repo views are repo-only: papers/models live in the same cache but are
+        # ranked separately and must never leak into hot/search/show. (Rows with
+        # no entity_type predate the entity model and are repos.)
+        if record.get("entity_type", "repo") != "repo":
+            continue
         canonical = canonicalize(record.get("canonical_repo") or record.get("url") or "")
         if canonical is None:
             continue

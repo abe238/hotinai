@@ -369,7 +369,9 @@ def main(argv: Optional[List[str]] = None) -> int:
             statuses = engine.fetch_all(config, limit=limit, cache=cache)
             cached = cache.get_all()
             ranked = engine.rank(engine.merge_by_repo(cached, max_age_days=engine.EVIDENCE_WINDOW_DAYS), limit=limit)
-            exit_code, message = health.summarize(statuses, cache_has_data=bool(cached))
+            # Health reflects the repo view specifically: a cache holding only
+            # papers/models must not report "sources completed" for `hot`.
+            exit_code, message = health.summarize(statuses, cache_has_data=bool(ranked))
             if arguments.json:
                 _dump_json({"tools": ranked, "sources": [{"source": status.source, "status": status.status, "detail": status.detail} for status in statuses]})
             else:
