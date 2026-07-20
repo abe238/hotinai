@@ -293,3 +293,25 @@ def test_badge_colors_respect_no_color_and_non_tty(monkeypatch, tmp_path, capsys
     monkeypatch.setattr(cli.sys.stdout, "isatty", lambda: False)
     assert main(["hot", "--quiet"]) == 0
     assert "\x1b[" not in capsys.readouterr().out
+
+
+def test_show_json_for_missing_repo_emits_valid_json_not_a_sentence(monkeypatch, capsys):
+    cache = MemoryCache()
+    monkeypatch.setattr(cli, "open_cache", lambda: cache)
+
+    assert main(["show", "typo/nonexistent", "--json"]) == 0
+    out = capsys.readouterr().out
+    payload = json.loads(out)  # must parse as JSON, not a human sentence
+    assert payload["error"] == "not_cached"
+    assert payload["repo"] == "typo/nonexistent"
+
+
+def test_dump_json_coerces_non_string_dict_keys_instead_of_crashing():
+    import io
+    from contextlib import redirect_stdout
+
+    buf = io.StringIO()
+    with redirect_stdout(buf):
+        cli._dump_json({("bad",): "x"})  # a malformed adapter shape must not crash JSON output
+    payload = json.loads(buf.getvalue())  # must be valid JSON, not raise
+    assert payload == {"('bad',)": "x"}

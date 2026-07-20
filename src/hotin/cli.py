@@ -72,12 +72,18 @@ def _json_default(value: object) -> object:
     return sorted(value) if isinstance(value, set) else str(value)
 
 
+def _json_safe_key(key: object) -> Any:
+    # json.dumps only accepts str/int/float/bool/None dict keys; anything else (a malformed
+    # adapter could hand back a tuple, for instance) must be coerced, not just passed through.
+    return key if isinstance(key, (str, int, float, bool)) or key is None else str(key)
+
+
 def _sanitize_json(value: object) -> object:
-    """Replace non-finite values while retaining the full machine-readable result."""
+    """Replace non-finite values and non-JSON-safe dict keys, retaining a machine-readable result."""
     if isinstance(value, float):
         return value if math.isfinite(value) else None
     if isinstance(value, dict):
-        return {key: _sanitize_json(item) for key, item in value.items()}
+        return {_json_safe_key(key): _sanitize_json(item) for key, item in value.items()}
     if isinstance(value, (list, tuple)):
         return [_sanitize_json(item) for item in value]
     if isinstance(value, set):
@@ -88,7 +94,11 @@ def _sanitize_json(value: object) -> object:
 def _dump_json(payload: object) -> None:
     try:
         rendered = json.dumps(payload, default=_json_default, allow_nan=False)
-    except ValueError:
+    except (ValueError, TypeError):
+        # ValueError: a non-finite float slipped past _sanitize_json's normal pass (defense in
+        # depth). TypeError: a genuinely unserializable Python shape from a malformed adapter
+        # (e.g. a tuple used as a dict key) — this project never crashes on hostile/malformed
+        # data, JSON output is no exception.
         rendered = json.dumps(_sanitize_json(payload), default=_json_default, allow_nan=False)
     print(rendered)
 
@@ -332,7 +342,10 @@ def main(argv: Optional[List[str]] = None) -> int:
             canonical = canonicalize(arguments.repo)
             repo = engine.merge_by_repo(cache.get_all()).get(canonical) if canonical else None
             if repo is None:
-                print("{} is not in the local cache yet — run `hotin hot` first to populate it.".format(_safe(arguments.repo)))
+                if arguments.json:
+                    _dump_json({"error": "not_cached", "repo": arguments.repo, "canonical_repo": canonical})
+                else:
+                    print("{} is not in the local cache yet — run `hotin hot` first to populate it.".format(_safe(arguments.repo)))
             else:
                 scored = engine.score_repo(repo)
                 if arguments.json:
