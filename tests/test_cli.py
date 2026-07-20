@@ -11,7 +11,7 @@ from hotin.cli import COMMANDS, main
 
 @pytest.fixture(autouse=True)
 def prevent_hot_process_exit(monkeypatch):
-    """Keep main() testable while production hot commands exit immediately."""
+    """Keep main() testable while production hot/update commands exit immediately."""
     monkeypatch.setattr(cli.os, "_exit", lambda exit_code: None)
 
 
@@ -280,7 +280,9 @@ def test_hostile_adapter_text_is_never_rendered_as_terminal_control(monkeypatch,
 
 def test_badge_colors_respect_no_color_and_non_tty(monkeypatch, tmp_path, capsys):
     cache = MemoryCache()
-    cache.upsert(_cache_record("Fresh Agent", "github", {"stars": 5}))
+    # pushed_at=now earns the (activity-based) "fresh" badge so there is a
+    # colored badge to assert on; this test is about color on/off, not freshness.
+    cache.upsert(_cache_record("Fresh Agent", "github", {"stars": 5, "pushed_at": time.time()}))
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
     monkeypatch.setattr(cli, "open_cache", lambda: cache)
     monkeypatch.setattr(cli.engine, "fetch_all", lambda *args, **kwargs: [SourceStatus("github", "ok")])

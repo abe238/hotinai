@@ -63,7 +63,7 @@ def _find_rows(obj: Any) -> Optional[List[Any]]:
                 found = _find_rows(value)
                 if found is not None:
                     return found
-    except (AttributeError, TypeError, ValueError, OverflowError):
+    except (AttributeError, TypeError, ValueError, OverflowError, RecursionError):
         return None
     return None
 
@@ -92,7 +92,7 @@ def extract_rows_from_html(html: Any) -> Optional[List[Any]]:
                 rows = _find_rows(parsed)
                 if rows is not None:
                     return rows
-    except (AttributeError, TypeError, ValueError, OverflowError, re.error):
+    except (AttributeError, TypeError, ValueError, OverflowError, RecursionError, re.error):
         return None
     return None
 

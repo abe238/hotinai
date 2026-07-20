@@ -135,6 +135,8 @@ def dedupe_records(records: Iterable[Dict[str, Any]], limit: int) -> List[Dict[s
         seen: Set[str] = set()
         result: List[Dict[str, Any]] = []
         for record in records:
+            if len(result) >= limit:
+                break
             if not isinstance(record, dict):
                 continue
             canonical = record.get("canonical_repo")
@@ -142,8 +144,6 @@ def dedupe_records(records: Iterable[Dict[str, Any]], limit: int) -> List[Dict[s
                 continue
             seen.add(canonical)
             result.append(record)
-            if len(result) >= limit:
-                break
         return result
     except (TypeError, ValueError, OverflowError, AttributeError):
         return []
@@ -157,7 +157,7 @@ def _request_search(query: str, api_key: str) -> Optional[Dict[str, Any]]:
         )
         request = urllib.request.Request(
             request_url,
-            headers={"x-api-key": api_key, "User-Agent": "hotin/0.0.1"},
+            headers={"x-api-key": api_key, "User-Agent": "hotin/0.1.0"},
         )
         THROTTLE.wait()
         with urllib.request.urlopen(request, timeout=30) as response:

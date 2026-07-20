@@ -18,7 +18,7 @@ SEARCH_ENDPOINT = "https://registry.npmjs.org/-/v1/search"
 DOWNLOADS_ENDPOINT = "https://api.npmjs.org/downloads/range/last-month/"
 DEFAULT_QUERIES = ("llm", "ai agent", "rag", "mcp server", "vector database")
 THROTTLE = Throttle(min_interval=1.5, jitter=0.5)
-USER_AGENT = "hotin/0.0.1"
+USER_AGENT = "hotin/0.1.0"
 # npm's registry accepts a comma-separated batch of package names on this endpoint
 # (documented cap: 128 per request), turning what used to be one throttled request
 # per candidate into a small, fixed number of requests regardless of candidate count.
@@ -26,9 +26,10 @@ DOWNLOADS_BATCH_SIZE = 128
 # ...except the batch endpoint explicitly rejects scoped packages ("scoped packages
 # are not currently supported in bulk lookups"), and AI/agent npm packages skew
 # heavily scoped (@modelcontextprotocol/..., @langchain/...). Scoped candidates
-# still need one throttled request each, so cap how many run per fetch to stay
-# inside fetch_all's shared timeout alongside the search requests and the batch.
-MAX_SCOPED_DOWNLOAD_LOOKUPS = 6
+# still need one throttled request each (~2s each), so cap how many run per fetch.
+# Kept low so the worst case (5 searches + 1 batch + this many scoped, each ~2s of
+# throttle sleep) stays comfortably inside fetch_all's 25s shared deadline.
+MAX_SCOPED_DOWNLOAD_LOOKUPS = 4
 
 
 def _empty(detail: str) -> Dict[str, Any]:

@@ -233,11 +233,19 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     signal_score += math.log1p(max(0.0, finite_float(signal.get("youtube_views"), 0.0))) * 0.3
     corroboration = 1.0 + 0.25 * max(0, source_count - 1)
 
-    timestamps = [_timestamp(merged.get("fetched_at")), _timestamp(signal.get("pushed_at")),
-                  _timestamp(signal.get("smartmoney_most_recent_star_at"))]
-    known = [timestamp for timestamp in timestamps if timestamp is not None]
-    freshness_days = max(0.0, (reference - max(known)) / 86400.0) if known else 9999.0
-    freshness_factor = 1.0 if freshness_days <= 30 else max(0.2, 1.0 - (freshness_days - 30) / 120.0)
+    # Freshness reflects real repository activity (last push, last smart-money
+    # star) — NOT when we happened to fetch it. Using fetch time made every
+    # currently-surfaced repo look fresh and left the decay branch dead. When no
+    # activity timestamp is available we neither penalize the repo nor claim a
+    # freshness we cannot verify: neutral factor, no "fresh" badge.
+    activity = [_timestamp(signal.get("pushed_at")),
+                _timestamp(signal.get("smartmoney_most_recent_star_at"))]
+    known = [timestamp for timestamp in activity if timestamp is not None]
+    freshness_days = max(0.0, (reference - max(known)) / 86400.0) if known else None
+    freshness_factor = (
+        1.0 if freshness_days is None or freshness_days <= 30
+        else max(0.2, 1.0 - (freshness_days - 30) / 120.0)
+    )
     category = categories.classify(result.get("name", ""), meta.get("description"), meta.get("topics"))
     score = (momentum + credibility + signal_score) * corroboration * freshness_factor
     score = score if math.isfinite(score) else 0.0
@@ -245,7 +253,7 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     badges: List[str] = []
     if young:
         badges.append("new")
-    if freshness_days <= 30:
+    if freshness_days is not None and freshness_days <= 30:
         badges.append("fresh")
     if finite_float(signal.get("smartmoney_starrers"), 0.0) >= 2:
         badges.append("smart-money")

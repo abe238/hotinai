@@ -134,7 +134,7 @@ def _request_subreddit(subreddit: str, api_key: str) -> Optional[Dict[str, Any]]
         )
         request = urllib.request.Request(
             "{}?{}".format(ENDPOINT, query),
-            headers={"x-api-key": api_key, "User-Agent": "hotin/0.0.1"},
+            headers={"x-api-key": api_key, "User-Agent": "hotin/0.1.0"},
         )
         THROTTLE.wait()
         with urllib.request.urlopen(request, timeout=30) as response:
@@ -157,7 +157,7 @@ def _request_search(query: str, api_key: str) -> Optional[Dict[str, Any]]:
         params = urllib.parse.urlencode({"query": query, "sort": "top", "timeframe": "week"})
         request = urllib.request.Request(
             "{}?{}".format(SEARCH_ENDPOINT, params),
-            headers={"x-api-key": api_key, "User-Agent": "hotin/0.0.1"},
+            headers={"x-api-key": api_key, "User-Agent": "hotin/0.1.0"},
         )
         THROTTLE.wait()
         with urllib.request.urlopen(request, timeout=30) as response:

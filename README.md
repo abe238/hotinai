@@ -59,7 +59,21 @@ Available commands:
 
 Each result presents a score, repository name, category, and applicable badges such as `fresh`, `smart-money`, and `corroborated`.
 
-<!-- TODO: insert real captured `hotin hot` output here once L3 lands -->
+Example (real output, top of a live run):
+
+```text
+$ hotin hot --limit 8
+30.55  Grok Build is open source                          agents         new,fresh,hn
+22.89  Show HN: Getting GLM 5.2 running on my slow computer  uncategorized  hn
+17.05  DietrichGebert/ponytail                             app-building   new,fresh
+17.00  odysseus-dev/odysseus                               uncategorized  new,fresh
+16.93  nexu-io/open-design                                 agents         new,fresh
+15.46  Yuan1z0825/nature-skills                            uncategorized  new,fresh
+15.24  BigPizzaV3/CodexPlusPlus                            uncategorized  new,fresh
+14.77  antirez/ds4                                         inference      new,fresh
+```
+
+The columns are score, name, category, and badges. `hn` here means the item was corroborated by a Hacker News signal; `new`/`fresh` reflect recent creation and recent repository activity. Your output will differ — it reflects what is actually hot when you run it.
 
 ## Data Sources & Terms
 

@@ -269,7 +269,8 @@ def _show_repo(repo: dict, arguments: argparse.Namespace) -> None:
     print("signal_score: {:.2f}".format(_finite(repo.get("signal_score"))))
     print("corroboration: {:.2f}".format(_finite(repo.get("corroboration"))))
     print("freshness_factor: {:.2f}".format(_finite(repo.get("freshness_factor"))))
-    print("freshness_days: {:.2f}".format(_finite(repo.get("freshness_days"))))
+    freshness_days = repo.get("freshness_days")
+    print("freshness_days: {}".format("unknown" if freshness_days is None else "{:.2f}".format(_finite(freshness_days))))
     print("badges: {}".format(_render_badges(repo.get("badges"), enabled) or "none"))
     print("signals:")
     by_source = repo.get("signal_by_source") if isinstance(repo.get("signal_by_source"), dict) else {}
@@ -377,7 +378,14 @@ def main(argv: Optional[List[str]] = None) -> int:
             if exit_code:
                 print(_safe(message), file=sys.stderr)
             _attribution(arguments)
-            return exit_code
+        # Like `hot`: adapters can leave non-daemon network workers behind after
+        # the fetch deadline (e.g. a source still inside urlopen, or a throttle
+        # honoring a long server retry delay), which would otherwise block a
+        # normal interpreter exit for seconds to minutes. os._exit skips that join.
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os._exit(exit_code)
+        return exit_code  # Allows unit tests to substitute os._exit().
     print("{}: not yet implemented".format(command))
     return 0
 

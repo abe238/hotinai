@@ -129,7 +129,7 @@ def _request_payload(period: str) -> Optional[Dict[str, Any]]:
     """Fetch and decode one response, returning None for every request failure."""
     try:
         url = "{}?{}".format(ENDPOINT, urllib.parse.urlencode({"period": period}))
-        request = urllib.request.Request(url, headers={"User-Agent": "hotin/0.0.1"})
+        request = urllib.request.Request(url, headers={"User-Agent": "hotin/0.1.0"})
         THROTTLE.wait()
         with urllib.request.urlopen(request, timeout=30) as response:
             body = response.read()

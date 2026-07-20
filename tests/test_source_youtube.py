@@ -170,3 +170,17 @@ def test_fetch_returns_empty_when_successful_videos_have_no_github_links(monkeyp
         "status": "empty",
         "detail": "no GitHub repositories found",
     }
+
+
+def test_dedupe_records_respects_zero_and_positive_limits():
+    records = [
+        {"canonical_repo": "owner/one"},
+        {"canonical_repo": "owner/two"},
+        {"canonical_repo": "owner/one"},  # duplicate, dropped
+        {"canonical_repo": "owner/three"},
+    ]
+    # limit 0 yields nothing (matches dedupe.dedupe_by_metric used by hn/reddit).
+    assert youtube.dedupe_records(records, 0) == []
+    # positive limit keeps first-seen unique repos up to the cap.
+    kept = youtube.dedupe_records(records, 2)
+    assert [r["canonical_repo"] for r in kept] == ["owner/one", "owner/two"]

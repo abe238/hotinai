@@ -65,7 +65,10 @@ def write_config(values: Mapping[str, str]) -> None:
     fd, temporary_name = tempfile.mkstemp(prefix=".env.", dir=str(path.parent))
     temporary = Path(temporary_name)
     try:
-        os.fchmod(fd, 0o600)
+        # os.fchmod is Unix-only; on Windows file privacy comes from the
+        # user-profile ACLs the config dir already inherits, not POSIX modes.
+        if hasattr(os, "fchmod"):
+            os.fchmod(fd, 0o600)
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
             for key, value in values.items():
                 if "\n" in key or "\r" in key or "=" in key or "\n" in value or "\r" in value:

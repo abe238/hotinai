@@ -97,6 +97,33 @@ def test_fresh_repository_outranks_otherwise_identical_stale_one():
     assert engine.score_repo(fresh, now=now)["score"] > engine.score_repo(stale, now=now)["score"]
 
 
+def test_freshness_tracks_activity_not_fetch_time():
+    now = time.time()
+    # A repo trending on HN right now (fetched_at = now) but last pushed 3 years
+    # ago must NOT be tagged fresh, and its decay factor must actually bite —
+    # freshness is measured from pushed_at, not the cache-write time.
+    dormant = engine.merge_by_repo([
+        record("hn", signal={"hn_points": 500, "pushed_at": now - 3 * 365 * 86400}, fetched_at=now)
+    ])["acme/tool"]
+    scored = engine.score_repo(dormant, now=now)
+    assert "fresh" not in scored["badges"]
+    assert scored["freshness_factor"] == 0.2  # fully decayed at 3 years
+    assert scored["freshness_days"] > 1000
+
+
+def test_missing_activity_data_is_neutral_not_penalized():
+    now = time.time()
+    # Surfaced only via a source with no activity timestamp (e.g. HN with no
+    # pushed_at): don't penalize data we don't have, and don't claim freshness.
+    unknown = engine.merge_by_repo([
+        record("hn", signal={"hn_points": 500}, fetched_at=now)
+    ])["acme/tool"]
+    scored = engine.score_repo(unknown, now=now)
+    assert scored["freshness_factor"] == 1.0
+    assert scored["freshness_days"] is None
+    assert "fresh" not in scored["badges"]
+
+
 def test_hostile_numeric_signal_cannot_make_score_nonfinite():
     repo = engine.merge_by_repo([record(signal={"stars": float("inf"), "hn_points": float("inf"), "youtube_views": float("inf")})])["acme/tool"]
     scored = engine.score_repo(repo)

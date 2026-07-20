@@ -139,7 +139,7 @@ def _request(min_points: int, days: int) -> Optional[Dict[str, Any]]:
             }
         )
         request = urllib.request.Request(
-            "{}?{}".format(ENDPOINT, params), headers={"User-Agent": "hotin/0.0.1"}
+            "{}?{}".format(ENDPOINT, params), headers={"User-Agent": "hotin/0.1.0"}
         )
         THROTTLE.wait()
         with urllib.request.urlopen(request, timeout=30) as response:
