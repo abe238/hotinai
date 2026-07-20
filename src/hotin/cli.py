@@ -1,9 +1,14 @@
 """The intentionally small L0 command dispatcher."""
 
 import argparse
+import json
+import math
+import os
 import sys
 from typing import List, Optional
 
+from . import engine, health
+from .cache import open_cache
 from .config import env_path, load_config
 from .render import sanitize
 
@@ -53,12 +58,67 @@ def _setup_check() -> int:
     return 0
 
 
+def _json_default(value: object) -> object:
+    return sorted(value) if isinstance(value, set) else str(value)
+
+
+def _sanitize_json(value: object) -> object:
+    """Replace non-finite values while retaining the full machine-readable result."""
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    if isinstance(value, dict):
+        return {key: _sanitize_json(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_sanitize_json(item) for item in value]
+    if isinstance(value, set):
+        return sorted(_sanitize_json(item) for item in value)
+    return value
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     parser = build_parser()
     arguments = parser.parse_args(argv)
     command = arguments.command or "hot"
     if command == "setup" and arguments.check:
         return _setup_check()
+    if command == "hot":
+        limit = arguments.limit if arguments.limit is not None else 50
+        if limit < 0:
+            print("limit must be zero or greater", file=sys.stderr)
+            return 2
+        config = load_config()
+        cache = open_cache()
+        try:
+            statuses = engine.fetch_all(config, limit=limit, cache=cache)
+            ranked = engine.rank(engine.merge_by_repo(cache.get_all()), limit=limit)
+            exit_code, message = health.summarize(statuses, cache_has_data=bool(cache.get_all()))
+            if arguments.json:
+                payload = {
+                    "tools": ranked,
+                    "sources": [
+                        {"source": status.source, "status": status.status, "detail": status.detail}
+                        for status in statuses
+                    ],
+                }
+                try:
+                    rendered = json.dumps(payload, default=_json_default, allow_nan=False)
+                except ValueError:
+                    rendered = json.dumps(_sanitize_json(payload), default=_json_default, allow_nan=False)
+                print(rendered)
+            else:
+                for repo in ranked:
+                    print("{:.2f}  {}  {}  {}".format(repo["score"], repo["name"], repo["category"], ",".join(repo["badges"])))
+            if exit_code:
+                print(message, file=sys.stderr)
+        finally:
+            cache.close()
+        # The adapters run in non-daemon executor threads.  They may still be
+        # blocked in a network call after fetch_all() has reached its deadline;
+        # do not let CPython wait for those abandoned workers at process exit.
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os._exit(exit_code)
+        return exit_code  # Allows unit tests to substitute os._exit().
     print("{}: not yet implemented".format(command))
     return 0
 

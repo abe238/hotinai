@@ -24,6 +24,20 @@ def test_insert_and_search(tmp_path, monkeypatch):
     opened.close()
 
 
+def test_cache_keeps_one_observation_per_url_and_source_without_fts_cross_product():
+    connection = sqlite3.connect(":memory:")
+    connection.row_factory = sqlite3.Row
+    opened = cache.Cache(connection)
+    shared = record("Shared Tool")
+    other_source = dict(shared, source="other")
+    opened.upsert(shared)
+    opened.upsert(other_source)
+
+    assert len(opened.get_all()) == 2
+    assert len(opened.search("Shared")) == 2
+    opened.close()
+
+
 def test_fts_unavailable_uses_like_search(monkeypatch):
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row

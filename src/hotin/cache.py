@@ -6,7 +6,7 @@ import os
 import sqlite3
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 
 LOGGER = logging.getLogger(__name__)
@@ -37,14 +37,19 @@ class MemoryCache:
     """Interface-compatible cache used if SQLite cannot be used at all."""
 
     def __init__(self) -> None:
-        self._records: Dict[str, Dict[str, Any]] = {}
+        self._records: Dict[Tuple[str, str], Dict[str, Any]] = {}
 
     def upsert(self, record: Dict[str, Any]) -> None:
         normalized = _normalise_record(record)
-        key = normalized["url"] or "{}:{}".format(normalized["source"], normalized["name"])
+        key = (normalized["url"], normalized["source"])
         self._records[key] = normalized
 
     def search(self, query: str) -> List[Dict[str, Any]]:
+        """Return observations per ``(url, source)``, not repository-deduplicated.
+
+        Callers displaying tools must first route records through
+        ``engine.merge_by_repo()``.
+        """
         if not query.strip():
             return []
         needle = query.lower()
@@ -55,6 +60,11 @@ class MemoryCache:
         ]
 
     def get_all(self) -> List[Dict[str, Any]]:
+        """Return observations per ``(url, source)``, not repository-deduplicated.
+
+        Callers displaying tools must first route records through
+        ``engine.merge_by_repo()``.
+        """
         return [dict(record) for record in self._records.values()]
 
     def close(self) -> None:
@@ -76,12 +86,13 @@ class Cache:
         self._connection.execute(
             """CREATE TABLE IF NOT EXISTS tools (
                 id INTEGER PRIMARY KEY,
-                url TEXT NOT NULL UNIQUE,
+                url TEXT NOT NULL,
                 canonical_repo TEXT,
                 name TEXT NOT NULL,
                 source TEXT NOT NULL,
                 signal_json TEXT NOT NULL,
-                fetched_at REAL NOT NULL
+                fetched_at REAL NOT NULL,
+                UNIQUE(url, source)
             )"""
         )
         fts_existed = self._connection.execute(
@@ -126,7 +137,7 @@ class Cache:
             self._connection.execute(
                 """INSERT INTO tools (url, canonical_repo, name, source, signal_json, fetched_at)
                    VALUES (:url, :canonical_repo, :name, :source, :signal_json, :fetched_at)
-                   ON CONFLICT(url) DO UPDATE SET
+                   ON CONFLICT(url, source) DO UPDATE SET
                      canonical_repo=excluded.canonical_repo,
                      name=excluded.name,
                      source=excluded.source,
@@ -135,16 +146,26 @@ class Cache:
                 normalized,
             )
             if self._fts_available:
-                self._connection.execute("DELETE FROM tools_fts WHERE url = ?", (normalized["url"],))
+                row = self._connection.execute(
+                    "SELECT id FROM tools WHERE url = ? AND source = ?",
+                    (normalized["url"], normalized["source"]),
+                ).fetchone()
+                rowid = row[0]
+                self._connection.execute("DELETE FROM tools_fts WHERE rowid = ?", (rowid,))
                 self._connection.execute(
-                    "INSERT INTO tools_fts (url, canonical_repo, name, source) VALUES (?, ?, ?, ?)",
-                    (normalized["url"], normalized["canonical_repo"], normalized["name"], normalized["source"]),
+                    "INSERT INTO tools_fts (rowid, url, canonical_repo, name, source) VALUES (?, ?, ?, ?, ?)",
+                    (rowid, normalized["url"], normalized["canonical_repo"], normalized["name"], normalized["source"]),
                 )
             self._connection.commit()
         except sqlite3.Error as exc:
             self._activate_fallback(exc).upsert(normalized)
 
     def search(self, query: str) -> List[Dict[str, Any]]:
+        """Return observations per ``(url, source)``, not repository-deduplicated.
+
+        Callers displaying tools must first route records through
+        ``engine.merge_by_repo()``.
+        """
         if not query.strip():
             return []
         if self._fallback is not None:
@@ -153,7 +174,7 @@ class Cache:
             if self._fts_available:
                 try:
                     rows = self._connection.execute(
-                        """SELECT t.* FROM tools t JOIN tools_fts f ON t.url = f.url
+                        """SELECT t.* FROM tools t JOIN tools_fts f ON t.id = f.rowid
                            WHERE tools_fts MATCH ? ORDER BY t.fetched_at DESC""",
                         (self._fts_query(query),),
                     ).fetchall()
@@ -183,6 +204,11 @@ class Cache:
         return " ".join('"{}"*'.format(token.replace('"', '""')) for token in query.split())
 
     def get_all(self) -> List[Dict[str, Any]]:
+        """Return observations per ``(url, source)``, not repository-deduplicated.
+
+        Callers displaying tools must first route records through
+        ``engine.merge_by_repo()``.
+        """
         if self._fallback is not None:
             return self._fallback.get_all()
         try:
