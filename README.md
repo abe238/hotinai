@@ -47,6 +47,8 @@ Available commands:
 | Command | Description |
 | --- | --- |
 | `hotin hot` | show the hottest AI tools |
+| `hotin repos` | the hottest repos (same ranking as `hot`) |
+| `hotin news` | recent AI news headlines (smol.ai / AINews) |
 | `hotin hn` | show Hacker News signals |
 | `hotin npm` | show npm signals |
 | `hotin stars` | show GitHub star growth |
@@ -63,23 +65,25 @@ Available commands:
 | `hotin ingest` | refresh + record the time series (for a scheduler) |
 | `hotin about` | show project information |
 
-Each repo result presents a score, the owner/repo (clickable), category, and applicable badges such as `fresh`, `smart-money`, `corroborated`, `paper-backed`, `rising`, and `viral`.
+Each repo result presents a score, the owner/repo (clickable), category, and applicable badges: `fresh` (recently created or active), `rising` / `viral` (climbing fast on the recorded time series, `viral` being the rare accelerating-and-corroborated extreme), `smart-money` (credible AI accounts on it across several sources), and `paper-backed` (linked from a trending paper). Corroboration across sources is folded into the score itself, not shown as a badge.
 
 Example (real output, top of a live run):
 
 ```text
 $ hotin hot --limit 8
-30.55  Grok Build is open source                          agents         new,fresh,hn
-22.89  Show HN: Getting GLM 5.2 running on my slow computer  uncategorized  hn
-17.05  DietrichGebert/ponytail                             app-building   new,fresh
-17.00  odysseus-dev/odysseus                               uncategorized  new,fresh
-16.93  nexu-io/open-design                                 agents         new,fresh
-15.46  Yuan1z0825/nature-skills                            uncategorized  new,fresh
-15.24  BigPizzaV3/CodexPlusPlus                            uncategorized  new,fresh
-14.77  antirez/ds4                                         inference      new,fresh
+ 30.59  xai-org/grok-build  agents  fresh
+        Grok Build is open source
+ 22.17  justvugg/colibri  uncategorized
+        Show HN: Getting GLM 5.2 running on my slow computer
+ 17.05  dietrichgebert/ponytail  app-building  fresh
+ 17.00  odysseus-dev/odysseus  uncategorized  fresh
+ 16.93  nexu-io/open-design  agents  fresh
+ 15.46  yuan1z0825/nature-skills  uncategorized  fresh
+ 15.24  bigpizzav3/codexplusplus  uncategorized  fresh
+ 14.77  antirez/ds4  inference  fresh
 ```
 
-The columns are score, name, category, and badges. `hn` here means the item was corroborated by a Hacker News signal; `new`/`fresh` reflect recent creation and recent repository activity. Your output will differ — it reflects what is actually hot when you run it.
+The first line of each result is score, owner/repo (clickable in a real terminal), category, and badges; a dimmed second line shows the human title when it adds context the slug doesn't. `fresh` reflects recent repository activity. In a live terminal the score and badges are colored. Your output will differ — it reflects what is actually hot when you run it.
 
 ## Data Sources & Terms
 
