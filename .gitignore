@@ -40,3 +40,6 @@ node_modules/
 *.swp
 .vscode/
 .idea/
+
+# parable executor run logs (internal tooling, not part of the product)
+.parable/
