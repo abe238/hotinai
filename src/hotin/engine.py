@@ -14,10 +14,14 @@ from .cache import open_cache
 from .canonical import canonicalize
 from .coerce import finite_float
 from .health import SourceStatus
-from .sources import github, hn, npm, trends, reddit, smartmoney, x, youtube
+from .sources import github, hn, npm, trends, reddit, smartmoney, smolai, x, youtube
 
 
-SOURCES = (github, trends, hn, npm, reddit, youtube, smartmoney, x)
+SOURCES = (github, trends, hn, npm, reddit, youtube, smartmoney, smolai, x)
+# Sources whose repo mentions are a credibility FLAG, not independent
+# corroboration: they never count toward source_count / the corroboration
+# multiplier (they'd otherwise inflate the score by 1.25x for free).
+_FLAG_SOURCES = frozenset({"smolai"})
 # At 12, smart-money alone remains influential but cannot exceed modest
 # corroborated OSS momentum from three independent sources.
 CREDIBILITY_CAP = 12.0
@@ -228,8 +232,9 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     result = dict(merged)
     signal = merged.get("signal") if isinstance(merged.get("signal"), dict) else {}
     meta = merged.get("meta") if isinstance(merged.get("meta"), dict) else {}
-    sources = merged.get("sources")
-    source_count = len(sources) if isinstance(sources, (set, list, tuple)) else 0
+    sources = merged.get("sources") if isinstance(merged.get("sources"), (set, list, tuple)) else ()
+    # Flag sources (smolai) don't count as independent corroboration.
+    source_count = len([source for source in sources if source not in _FLAG_SOURCES])
     reference = finite_float(now, time.time()) if now is not None else time.time()
     young = _is_young(signal.get("created_at"), reference)
     oss_score = (finite_float(signal.get("trend_stars"), 0.0) or
@@ -274,8 +279,11 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     # nudge. It is a flag, NOT a source: capped tiny (min 5% of the base, 1.0
     # absolute) so it stays well below the 25% independent-source increment.
     base = momentum + credibility + signal_score
-    curated_bonus = min(1.0, 0.05 * base) if meta.get("youtube_curated") else 0.0
-    score = (base + curated_bonus) * corroboration * freshness_factor
+    # Credibility flags (curated YouTube channel, smol.ai editorial mention) each
+    # add a bounded nudge, well below the 25% independent-source increment.
+    has_flag = bool(meta.get("youtube_curated") or meta.get("smol_mention"))
+    flag_bonus = min(1.0, 0.05 * base) if has_flag else 0.0
+    score = (base + flag_bonus) * corroboration * freshness_factor
     score = score if math.isfinite(score) else 0.0
 
     badges: List[str] = []

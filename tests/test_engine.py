@@ -187,7 +187,7 @@ def test_fetch_all_starts_every_adapter_and_catches_errors(monkeypatch):
     github_status = next(status for status in statuses if status.source == "github")
     assert github_status.status == "error"
     assert "boom" in (github_status.detail or "")
-    assert len(cache.get_all()) == 7
+    assert len(cache.get_all()) == 8
 
 
 def test_fetch_all_timeout_does_not_wait_for_slow_adapter(monkeypatch):
@@ -206,7 +206,7 @@ def test_fetch_all_timeout_does_not_wait_for_slow_adapter(monkeypatch):
     elapsed = time.monotonic() - started
     assert elapsed < 0.15
     assert next(status for status in statuses if status.source == "github").detail == "timed out"
-    assert sum(status.status == "empty" for status in statuses) == 7
+    assert sum(status.status == "empty" for status in statuses) == 8
 
 
 def test_fetch_all_has_one_timeout_budget_for_the_entire_batch(monkeypatch):
@@ -296,3 +296,23 @@ def test_merge_by_entity_is_type_scoped_and_ranks_by_metric():
     assert [e["entity_id"] for e in ranked] == ["org/big", "org/small"]  # more downloads ranks first
     assert ranked[0]["score"] > 0
     assert engine.merge_by_entity(rows, "paper").keys() == {"2601.1"}
+
+
+def test_smol_mention_is_a_flag_not_a_corroboration_source():
+    now = time.time()
+    # github + smolai on the same repo: smolai must NOT count as a 2nd source.
+    merged = engine.merge_by_repo([
+        record("github", signal={"stars": 100, "pushed_at": now}),
+        record("smolai", signal={}, meta={"smol_mention": True}),
+    ], now=now)["acme/tool"]
+    scored = engine.score_repo(merged, now=now)
+    assert "smolai" in merged["sources"]        # recorded as provenance
+    assert scored["corroboration"] == 1.0       # but excluded from corroboration
+    # a real 2nd source (hn) WOULD raise corroboration to 1.25
+    two_real = engine.merge_by_repo([
+        record("github", signal={"stars": 100, "pushed_at": now}), record("hn", signal={}),
+    ], now=now)["acme/tool"]
+    assert engine.score_repo(two_real, now=now)["corroboration"] == 1.25
+    assert scored["score"] > engine.score_repo(
+        engine.merge_by_repo([record("github", signal={"stars": 100, "pushed_at": now})], now=now)["acme/tool"], now=now
+    )["score"]  # the flag still gives a small nudge
