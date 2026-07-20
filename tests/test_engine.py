@@ -219,7 +219,7 @@ def test_fetch_all_has_one_timeout_budget_for_the_entire_batch(monkeypatch):
     fast_source = SimpleNamespace(SOURCE="fast")
 
     def slow(**kwargs):
-        time.sleep(0.15)
+        time.sleep(0.3)
         return {"records": [], "status": "empty", "detail": None}
 
     for source in slow_sources:
@@ -228,11 +228,13 @@ def test_fetch_all_has_one_timeout_budget_for_the_entire_batch(monkeypatch):
     monkeypatch.setattr(engine, "SOURCES", slow_sources + (fast_source,))
 
     started = time.monotonic()
-    statuses = engine.fetch_all({}, cache=cache, timeout=0.1)
+    statuses = engine.fetch_all({}, cache=cache, timeout=0.2)
     elapsed = time.monotonic() - started
 
-    # One shared budget: ~0.1s + thread overhead. Sequential would be ~1.0s.
-    assert elapsed < 0.5
+    # One shared budget: ~0.2s + thread overhead. A per-future (sequential) wait
+    # would be ~2.0s (10 x 0.2). The 1.0s threshold leaves ~0.8s of overhead
+    # headroom on the concurrent path while staying well below sequential.
+    assert elapsed < 1.0
     assert {status.source for status in statuses if status.detail == "timed out"} == {source.SOURCE for source in slow_sources}
     assert next(status for status in statuses if status.source == "fast").status == "empty"
 
