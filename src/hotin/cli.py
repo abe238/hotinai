@@ -35,7 +35,7 @@ COMMANDS = {
     "about": "show project information",
 }
 
-_BADGE_COLORS = {"fresh": "32", "smart-money": "38;5;220", "new": "34", "corroborated": "35"}
+_BADGE_COLORS = {"fresh": "32", "smart-money": "38;5;220", "new": "34", "corroborated": "35", "paper-backed": "38;5;45"}
 _ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
 # --limit only makes sense for commands that produce a ranked/list result.
 # update (refresh + health), setup, about, and show (one repo) don't take one.
@@ -442,7 +442,14 @@ def main(argv: Optional[List[str]] = None) -> int:
         with _cache_session() as cache:
             statuses = engine.fetch_all(config, limit=limit, cache=cache)
             cached = cache.get_all()
-            ranked = engine.rank(engine.merge_by_repo(cached, max_age_days=engine.EVIDENCE_WINDOW_DAYS), limit=limit)
+            # Cross-entity bridge: repos implementing a currently-cached trending
+            # paper/model get a bounded boost + a paper-backed badge.
+            links = engine.cross_entity_repo_links(cached, max_age_days=engine.EVIDENCE_WINDOW_DAYS)
+            merged = engine.merge_by_repo(cached, max_age_days=engine.EVIDENCE_WINDOW_DAYS)
+            for repo_id, repo in merged.items():
+                if repo_id in links:
+                    repo.setdefault("meta", {})["paper_backed"] = True
+            ranked = engine.rank(merged, limit=limit)
             # Health reflects the repo view specifically: a cache holding only
             # papers/models must not report "sources completed" for `hot`.
             exit_code, message = health.summarize(statuses, cache_has_data=bool(ranked))

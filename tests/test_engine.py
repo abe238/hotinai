@@ -316,3 +316,27 @@ def test_smol_mention_is_a_flag_not_a_corroboration_source():
     assert scored["score"] > engine.score_repo(
         engine.merge_by_repo([record("github", signal={"stars": 100, "pushed_at": now})], now=now)["acme/tool"], now=now
     )["score"]  # the flag still gives a small nudge
+
+
+def test_cross_entity_bridge_boosts_paper_backed_repo():
+    now = time.time()
+    rows = [
+        record("github", signal={"stars": 100, "pushed_at": now}),
+        {"entity_type": "paper", "entity_id": "2601.1", "url": "u", "name": "A Paper",
+         "source": "hfpapers", "signal": {"paper_upvotes": 50},
+         "meta": {"linked_repo": "acme/tool"}, "fetched_at": now},
+    ]
+    links = engine.cross_entity_repo_links(rows, now=now)
+    assert "acme/tool" in links
+    merged = engine.merge_by_repo(rows, now=now)      # the paper is NOT a repo row
+    assert set(merged) == {"acme/tool"}
+    repo = merged["acme/tool"]
+    repo["meta"]["paper_backed"] = True
+    scored = engine.score_repo(repo, now=now)
+    assert "paper-backed" in scored["badges"]
+    plain = engine.score_repo(
+        engine.merge_by_repo([record("github", signal={"stars": 100, "pushed_at": now})], now=now)["acme/tool"], now=now)
+    assert scored["score"] > plain["score"]          # bounded boost, but real
+    # a stale paper link stops counting
+    stale_rows = [rows[0], dict(rows[1], fetched_at=now - 60 * 86400)]
+    assert engine.cross_entity_repo_links(stale_rows, max_age_days=21.0, now=now) == set()

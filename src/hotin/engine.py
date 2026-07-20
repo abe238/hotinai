@@ -227,6 +227,30 @@ def merge_by_repo(
     return merged
 
 
+def cross_entity_repo_links(records: List[dict], *, max_age_days: Optional[float] = None, now: Optional[float] = None) -> set:
+    """Canonical repo ids linked from cached paper/model entities (the bridge).
+
+    A repo that is the implementation of a currently-trending paper or model is
+    stronger signal; this returns the repos to boost. Evidence-windowed like the
+    rest, so a stale paper's link stops counting.
+    """
+    reference = time.time() if now is None else now
+    cutoff = reference - max_age_days * 86400.0 if max_age_days else None
+    linked: set = set()
+    for raw_record in records:
+        record = _decoded_record(raw_record)
+        if record is None or record.get("entity_type") not in ("paper", "model"):
+            continue
+        fetched_at = _timestamp(record.get("fetched_at"))
+        if cutoff is not None and fetched_at is not None and fetched_at < cutoff:
+            continue
+        meta = record.get("meta") if isinstance(record.get("meta"), dict) else {}
+        repo = meta.get("linked_repo")
+        if isinstance(repo, str) and repo:
+            linked.add(canonicalize(repo) or repo)
+    return linked
+
+
 def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     """Apply the documented momentum, credibility, corroboration and freshness formula."""
     result = dict(merged)
@@ -283,7 +307,11 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     # add a bounded nudge, well below the 25% independent-source increment.
     has_flag = bool(meta.get("youtube_curated") or meta.get("smol_mention"))
     flag_bonus = min(1.0, 0.05 * base) if has_flag else 0.0
-    score = (base + flag_bonus) * corroboration * freshness_factor
+    # Cross-entity bridge: implementing a trending paper/model is a stronger (but
+    # still bounded) signal than a plain flag.
+    paper_backed = bool(meta.get("paper_backed"))
+    bridge_bonus = min(2.0, 0.1 * base) if paper_backed else 0.0
+    score = (base + flag_bonus + bridge_bonus) * corroboration * freshness_factor
     score = score if math.isfinite(score) else 0.0
 
     badges: List[str] = []
@@ -295,6 +323,8 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
         badges.append("smart-money")
     if source_count >= 3:
         badges.append("corroborated")
+    if paper_backed:
+        badges.append("paper-backed")
     for source in ("hn", "reddit", "npm"):
         if isinstance(sources, (set, list, tuple)) and source in sources:
             badges.append(source)
