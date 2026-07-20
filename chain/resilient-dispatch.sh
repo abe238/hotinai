@@ -11,7 +11,7 @@ set -uo pipefail
 EXECUTOR="${1:?executor required}"
 PLAN="${2:?plan.md required}"
 WORKDIR="${3:?workdir required}"
-SLUG="${4:?slug required — always pass one explicitly, never rely on the plan's parent dir}"
+SLUG="${4:?slug required — always pass one explicitly, never rely on the plan file parent directory}"
 MAX_ATTEMPTS="${5:-3}"
 PR="$HOME/.claude/plugins/cache/unc-skills/parable/0.1.7/skills/parable/scripts/parable-run.sh"
 
