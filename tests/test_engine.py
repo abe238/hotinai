@@ -340,3 +340,40 @@ def test_cross_entity_bridge_boosts_paper_backed_repo():
     # a stale paper link stops counting
     stale_rows = [rows[0], dict(rows[1], fetched_at=now - 60 * 86400)]
     assert engine.cross_entity_repo_links(stale_rows, max_age_days=21.0, now=now) == set()
+
+
+def test_series_velocity_states_and_reset_handling():
+    now = time.time()
+    day = 86400.0
+    assert engine.series_velocity([(100, now)])[2] == "unknown"          # one sample
+    assert engine.series_velocity([(100, now), (100, now)])[2] == "unknown"  # zero span
+    v, accel, state = engine.series_velocity([(100, now - 2 * day), (300, now)])
+    assert state == "rising" and v == 100.0                              # +200 over 2 days
+    # a counter that decreases (reset) floors velocity at 0, not negative
+    v2, _, state2 = engine.series_velocity([(500, now - day), (100, now)])
+    assert v2 == 0.0 and state2 == "flat"
+
+
+def test_rising_velocity_boosts_and_badges_only_with_history():
+    now = time.time()
+    day = 86400.0
+
+    class Store:
+        def __init__(self, samples):
+            self._samples = samples
+        def observations_for(self, entity_type, entity_id, metric):
+            return self._samples
+
+    base_repo = engine.merge_by_repo([record("github", signal={"stars": 300, "pushed_at": now})], now=now)
+    cold = engine.score_repo(base_repo["acme/tool"], now=now)  # no annotation -> neutral
+    assert "rising" not in cold["badges"] and "viral" not in cold["badges"]
+
+    rising = engine.merge_by_repo([record("github", signal={"stars": 300, "pushed_at": now})], now=now)
+    engine.annotate_velocity(rising, Store([(100, now - 2 * day), (300, now)]))
+    scored = engine.score_repo(rising["acme/tool"], now=now)
+    assert "rising" in scored["badges"]
+    assert scored["score"] > cold["score"]                     # rising history helps, bounded
+
+    unknown = engine.merge_by_repo([record("github", signal={"stars": 300, "pushed_at": now})], now=now)
+    engine.annotate_velocity(unknown, Store([]))               # empty store -> unknown -> neutral
+    assert engine.score_repo(unknown["acme/tool"], now=now)["score"] == cold["score"]

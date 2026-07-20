@@ -251,6 +251,61 @@ def cross_entity_repo_links(records: List[dict], *, max_age_days: Optional[float
     return linked
 
 
+# Cumulative-counter metrics that are safe to difference for velocity. Gauges,
+# windowed counts, already-rates, and subject-changing metrics are NOT here.
+_VELOCITY_METRICS = {"stars": "repo", "model_downloads": "model", "model_likes": "model", "paper_upvotes": "paper"}
+
+
+def series_velocity(samples: List[Tuple[float, float]]) -> Tuple[float, Optional[float], str]:
+    """From ``(value, observed_at)`` samples, return (per-day velocity, accel, state).
+
+    state is 'unknown' (<2 valid samples or zero span), 'flat', or 'rising'. A
+    counter that decreases between samples is a reset/correction, so velocity is
+    floored at 0. Acceleration needs >=3 samples.
+    """
+    points = sorted(
+        (observed_at, value) for value, observed_at in samples
+        if isinstance(observed_at, (int, float)) and isinstance(value, (int, float))
+        and math.isfinite(observed_at) and math.isfinite(value)
+    )
+    if len(points) < 2:
+        return (0.0, None, "unknown")
+    (t0, v0), (t1, v1) = points[0], points[-1]
+    span = (t1 - t0) / 86400.0
+    if span <= 0:
+        return (0.0, None, "unknown")
+    velocity = max(0.0, (v1 - v0) / span)
+    accel: Optional[float] = None
+    if len(points) >= 3:
+        tm, vm = points[len(points) // 2]
+        span_early = (tm - t0) / 86400.0
+        span_late = (t1 - tm) / 86400.0
+        if span_early > 0 and span_late > 0:
+            accel = max(0.0, (v1 - vm) / span_late) - max(0.0, (vm - v0) / span_early)
+    return (velocity, accel, "rising" if velocity > 0 else "flat")
+
+
+def annotate_velocity(merged: Dict[str, dict], cache: Any, *, entity_type: str = "repo", metric: str = "stars", now: Optional[float] = None) -> None:
+    """Annotate merged entities in place with velocity from the observation store.
+
+    No/insufficient history leaves velocity_state='unknown' and adds nothing, so
+    a cold-start (or a store with no history yet) ranks exactly by the snapshot.
+    """
+    for entity_id, entity in merged.items():
+        try:
+            samples = cache.observations_for(entity_type, entity_id, metric)
+        except Exception:  # a cache without the observations API must not crash ranking
+            samples = []
+        velocity, accel, state = series_velocity(samples)
+        meta = entity.setdefault("meta", {})
+        meta["velocity_state"] = state
+        if state == "rising":
+            meta["velocity_per_day"] = velocity
+            meta["rising"] = True
+            if accel is not None and accel > 0:
+                meta["accelerating"] = True
+
+
 def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     """Apply the documented momentum, credibility, corroboration and freshness formula."""
     result = dict(merged)
@@ -311,7 +366,12 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     # still bounded) signal than a plain flag.
     paper_backed = bool(meta.get("paper_backed"))
     bridge_bonus = min(2.0, 0.1 * base) if paper_backed else 0.0
-    score = (base + flag_bonus + bridge_bonus) * corroboration * freshness_factor
+    # Velocity (Cascade 3): a repo whose stars are actually rising over time gets
+    # a bounded bonus. Unknown/flat history contributes nothing (cold-start ==
+    # snapshot exactly). Composed here, but computed outside score_repo.
+    rising = bool(meta.get("rising"))
+    rising_bonus = min(2.0, 0.1 * base) if rising else 0.0
+    score = (base + flag_bonus + bridge_bonus + rising_bonus) * corroboration * freshness_factor
     score = score if math.isfinite(score) else 0.0
 
     badges: List[str] = []
@@ -325,6 +385,9 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
         badges.append("corroborated")
     if paper_backed:
         badges.append("paper-backed")
+    if rising:
+        # viral = rising AND accelerating AND independently corroborated.
+        badges.append("viral" if (meta.get("accelerating") and source_count >= 2) else "rising")
     for source in ("hn", "reddit", "npm"):
         if isinstance(sources, (set, list, tuple)) and source in sources:
             badges.append(source)

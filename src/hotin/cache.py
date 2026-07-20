@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple
 LOGGER = logging.getLogger(__name__)
 
 # Bump when the physical schema changes; _migrate() upgrades older databases.
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 _TABLE_COLUMNS = """
                 id INTEGER PRIMARY KEY,
@@ -30,6 +30,21 @@ _TABLE_COLUMNS = """
                 signal_json TEXT NOT NULL,
                 fetched_at REAL NOT NULL,
                 UNIQUE(entity_type, entity_id, source)
+"""
+
+# Append-only time series. run_id groups one ingest; the uniqueness key makes a
+# retried run idempotent (same value, no dup) while a genuine later run appends a
+# fresh sample. This is what velocity/acceleration are computed from.
+_OBSERVATIONS_COLUMNS = """
+                id INTEGER PRIMARY KEY,
+                run_id TEXT NOT NULL,
+                entity_type TEXT NOT NULL,
+                entity_id TEXT NOT NULL,
+                source TEXT NOT NULL,
+                metric TEXT NOT NULL,
+                value REAL NOT NULL,
+                observed_at REAL NOT NULL,
+                UNIQUE(run_id, entity_type, entity_id, source, metric)
 """
 
 
@@ -66,11 +81,31 @@ class MemoryCache:
 
     def __init__(self) -> None:
         self._records: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+        self._observations: List[Dict[str, Any]] = []
 
     def upsert(self, record: Dict[str, Any]) -> None:
         normalized = _normalise_record(record)
         key = (normalized["entity_type"], normalized["entity_id"], normalized["source"])
         self._records[key] = normalized
+
+    def record_observations(self, observations: List[Dict[str, Any]]) -> None:
+        seen = {(o["run_id"], o["entity_type"], o["entity_id"], o["source"], o["metric"]) for o in self._observations}
+        for obs in observations:
+            key = (obs["run_id"], obs["entity_type"], obs["entity_id"], obs["source"], obs["metric"])
+            if key not in seen:
+                seen.add(key)
+                self._observations.append(dict(obs))
+
+    def observations_for(self, entity_type: str, entity_id: str, metric: str) -> List[Tuple[float, float]]:
+        rows = [(o["value"], o["observed_at"]) for o in self._observations
+                if o["entity_type"] == entity_type and o["entity_id"] == entity_id and o["metric"] == metric]
+        return sorted(rows, key=lambda item: item[1])
+
+    def recent_observations(self, since: float) -> List[Dict[str, Any]]:
+        return [dict(o) for o in self._observations if o["observed_at"] >= since]
+
+    def prune_observations(self, cutoff: float) -> None:
+        self._observations = [o for o in self._observations if o["observed_at"] >= cutoff]
 
     def search(self, query: str) -> List[Dict[str, Any]]:
         """Return observations per ``(entity_type, entity_id, source)``.
@@ -164,6 +199,11 @@ class Cache:
                 conn.execute("ALTER TABLE tools_new RENAME TO tools")
                 conn.execute("DROP TABLE IF EXISTS tools_fts")  # force FTS rebuild
         conn.execute("CREATE INDEX IF NOT EXISTS idx_tools_fetched_at ON tools(fetched_at DESC)")
+        # v2: the append-only observation time series (additive, safe on any prior version).
+        conn.execute("CREATE TABLE IF NOT EXISTS observations ({})".format(_OBSERVATIONS_COLUMNS))
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_obs_entity ON observations(entity_type, entity_id, metric, observed_at)"
+        )
         conn.execute("PRAGMA user_version = {}".format(SCHEMA_VERSION))
         conn.commit()
 
@@ -264,6 +304,61 @@ class Cache:
             return [self._row(row) for row in rows]
         except sqlite3.Error as exc:
             return self._activate_fallback(exc).get_all()
+
+    def record_observations(self, observations: List[Dict[str, Any]]) -> None:
+        """Append time-series samples idempotently (INSERT OR IGNORE on the key)."""
+        rows = list(observations)
+        if not rows:
+            return
+        if self._fallback is not None:
+            self._fallback.record_observations(rows)
+            return
+        try:
+            self._connection.executemany(
+                """INSERT OR IGNORE INTO observations
+                     (run_id, entity_type, entity_id, source, metric, value, observed_at)
+                   VALUES (:run_id, :entity_type, :entity_id, :source, :metric, :value, :observed_at)""",
+                rows,
+            )
+            self._connection.commit()
+        except sqlite3.Error as exc:
+            self._activate_fallback(exc).record_observations(rows)
+
+    def observations_for(self, entity_type: str, entity_id: str, metric: str) -> List[Tuple[float, float]]:
+        """Return ``(value, observed_at)`` samples for one metric, oldest first."""
+        if self._fallback is not None:
+            return self._fallback.observations_for(entity_type, entity_id, metric)
+        try:
+            rows = self._connection.execute(
+                "SELECT value, observed_at FROM observations WHERE entity_type=? AND entity_id=? AND metric=? ORDER BY observed_at ASC",
+                (entity_type, entity_id, metric),
+            ).fetchall()
+            return [(row[0], row[1]) for row in rows]
+        except sqlite3.Error as exc:
+            return self._activate_fallback(exc).observations_for(entity_type, entity_id, metric)
+
+    def recent_observations(self, since: float) -> List[Dict[str, Any]]:
+        """Every observation at/after ``since`` (for the brief's deltas)."""
+        if self._fallback is not None:
+            return self._fallback.recent_observations(since)
+        try:
+            rows = self._connection.execute(
+                "SELECT entity_type, entity_id, source, metric, value, observed_at FROM observations WHERE observed_at >= ? ORDER BY observed_at ASC",
+                (since,),
+            ).fetchall()
+            return [dict(row) for row in rows]
+        except sqlite3.Error as exc:
+            return self._activate_fallback(exc).recent_observations(since)
+
+    def prune_observations(self, cutoff: float) -> None:
+        if self._fallback is not None:
+            self._fallback.prune_observations(cutoff)
+            return
+        try:
+            self._connection.execute("DELETE FROM observations WHERE observed_at < ?", (cutoff,))
+            self._connection.commit()
+        except sqlite3.Error:
+            pass
 
     def close(self) -> None:
         try:

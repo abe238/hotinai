@@ -209,3 +209,19 @@ def test_paper_and_model_rows_do_not_leak_into_repo_merge(tmp_path):
     merged = engine.merge_by_repo(c.get_all())
     assert set(merged) == {"acme/tool"}  # only the repo; paper/model excluded
     c.close()
+
+
+def test_observation_store_records_reads_and_is_idempotent(tmp_path):
+    c = _open(tmp_path / "obs.db")
+    obs = [
+        {"run_id": "r1", "entity_type": "repo", "entity_id": "a/b", "source": "github", "metric": "stars", "value": 100.0, "observed_at": 1000.0},
+        {"run_id": "r2", "entity_type": "repo", "entity_id": "a/b", "source": "github", "metric": "stars", "value": 150.0, "observed_at": 2000.0},
+    ]
+    c.record_observations(obs)
+    c.record_observations(obs)  # same run_ids -> idempotent, no duplicates
+    series = c.observations_for("repo", "a/b", "stars")
+    assert series == [(100.0, 1000.0), (150.0, 2000.0)]
+    assert len(c.recent_observations(1500.0)) == 1
+    c.prune_observations(1500.0)
+    assert c.observations_for("repo", "a/b", "stars") == [(150.0, 2000.0)]
+    c.close()

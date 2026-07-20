@@ -35,7 +35,8 @@ COMMANDS = {
     "about": "show project information",
 }
 
-_BADGE_COLORS = {"fresh": "32", "smart-money": "38;5;220", "new": "34", "corroborated": "35", "paper-backed": "38;5;45"}
+_BADGE_COLORS = {"fresh": "32", "smart-money": "38;5;220", "new": "34", "corroborated": "35",
+                 "paper-backed": "38;5;45", "rising": "38;5;208", "viral": "38;5;198"}
 _ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
 # --limit only makes sense for commands that produce a ranked/list result.
 # update (refresh + health), setup, about, and show (one repo) don't take one.
@@ -449,6 +450,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             for repo_id, repo in merged.items():
                 if repo_id in links:
                     repo.setdefault("meta", {})["paper_backed"] = True
+            engine.annotate_velocity(merged, cache)  # rising/viral from the observation store
             ranked = engine.rank(merged, limit=limit)
             # Health reflects the repo view specifically: a cache holding only
             # papers/models must not report "sources completed" for `hot`.
