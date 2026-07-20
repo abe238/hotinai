@@ -8,8 +8,60 @@ def test_no_key_is_the_normal_optional_state():
     assert youtube.fetch(config={}) == {
         "records": [],
         "status": "empty",
-        "detail": "no SCRAPECREATORS_API_KEY configured",
+        "detail": "no YOUTUBE_API_KEY or SCRAPECREATORS_API_KEY configured",
     }
+
+
+def test_v3_is_preferred_when_youtube_api_key_is_set(monkeypatch):
+    calls = []
+
+    class Response:
+        def __init__(self, payload):
+            self.payload = payload
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *unused):
+            return False
+
+        def read(self):
+            return json.dumps(self.payload).encode("utf-8")
+
+    def fake_urlopen(request, timeout):
+        url = request.full_url
+        calls.append(url)
+        if "/youtube/v3/search" in url:
+            return Response({"items": [{"id": {"videoId": "vid-1"}}]})
+        if "/youtube/v3/videos" in url:
+            return Response({"items": [{
+                "id": "vid-1",
+                "snippet": {"title": "Great repo", "description": "see https://github.com/example/pkg",
+                            "channelTitle": "Chan", "publishedAt": "2026-07-10T00:00:00Z"},
+                "statistics": {"viewCount": "4242"},
+            }]})
+        raise AssertionError("v3 path must not hit ScrapeCreators: " + url)
+
+    monkeypatch.setattr(youtube.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(youtube, "V3_THROTTLE", type("T", (), {"wait": lambda self: None})())
+
+    result = youtube.fetch(query="fixture", limit=5, config={"YOUTUBE_API_KEY": "yt-key"})
+    assert result["status"] == "ok"
+    assert result["records"][0]["canonical_repo"] == "example/pkg"
+    assert result["records"][0]["signal"]["youtube_views"] == 4242
+    # v3 search + videos were both hit; the key rode the query string (Google's design).
+    assert any("/youtube/v3/search" in c and "key=yt-key" in c for c in calls)
+    assert any("/youtube/v3/videos" in c for c in calls)
+
+
+def test_v3_all_requests_failing_is_an_error(monkeypatch):
+    def fail(*unused, **unused_kwargs):
+        raise URLError("fixture failure")
+
+    monkeypatch.setattr(youtube.urllib.request, "urlopen", fail)
+    monkeypatch.setattr(youtube, "V3_THROTTLE", type("T", (), {"wait": lambda self: None})())
+    result = youtube.fetch(query="fixture", config={"YOUTUBE_API_KEY": "yt-key"})
+    assert result == {"records": [], "status": "error", "detail": "all YouTube API requests failed"}
 
 
 def test_parser_extracts_description_link_and_skips_videos_without_one():
