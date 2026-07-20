@@ -68,13 +68,12 @@ def write_config(values: Mapping[str, str]) -> None:
         os.fchmod(fd, 0o600)
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
             for key, value in values.items():
-                if "\n" in key or "=" in key or "\n" in value:
+                if "\n" in key or "\r" in key or "=" in key or "\n" in value or "\r" in value:
                     raise ValueError("configuration keys and values must be single-line literals")
                 handle.write("{}={}\n".format(key, value))
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(str(temporary), str(path))
-        os.chmod(path, 0o600)
     except BaseException:
         try:
             temporary.unlink()

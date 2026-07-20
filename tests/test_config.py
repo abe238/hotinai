@@ -32,6 +32,7 @@ def test_write_is_atomic_and_uses_replace(tmp_path, monkeypatch):
 
     assert replaced
     assert config.env_path().read_text() == "A=one\n"
+    assert config.env_path().stat().st_mode & 0o777 == 0o600
     assert not list(config.env_path().parent.glob(".env.*"))
 
 
@@ -45,3 +46,10 @@ def test_refuses_to_write_through_symlink(tmp_path, monkeypatch):
     with pytest.raises(RuntimeError, match="symlink"):
         config.write_config({"A": "one"})
     assert target.read_text() == "keep"
+
+
+def test_write_rejects_carriage_return_in_value(tmp_path, monkeypatch):
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+
+    with pytest.raises(ValueError, match="single-line"):
+        config.write_config({"TOKEN": "good\rINJECTED=yes"})

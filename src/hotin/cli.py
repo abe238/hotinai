@@ -5,6 +5,7 @@ import sys
 from typing import List, Optional
 
 from .config import env_path, load_config
+from .render import sanitize
 
 
 COMMANDS = {
@@ -46,7 +47,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _setup_check() -> int:
     config = load_config()
-    print("config: {}".format(env_path()))
+    print("config: {}".format(sanitize(str(env_path()))))
     print("configured entries: {}".format(len(config)))
     print("setup check passed")
     return 0

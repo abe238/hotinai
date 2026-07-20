@@ -20,3 +20,10 @@ def test_setup_check_succeeds_without_config(tmp_path, monkeypatch, capsys):
     output = capsys.readouterr().out
     assert "configured entries: 0" in output
     assert "setup check passed" in output
+
+
+def test_setup_check_sanitizes_config_path(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "\x1b[31mHACKED\x1b[0m" / "xdgconfig"))
+
+    assert main(["setup", "--check"]) == 0
+    assert "\x1b" not in capsys.readouterr().out

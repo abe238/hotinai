@@ -45,6 +45,8 @@ class MemoryCache:
         self._records[key] = normalized
 
     def search(self, query: str) -> List[Dict[str, Any]]:
+        if not query.strip():
+            return []
         needle = query.lower()
         return [
             dict(record)
@@ -82,8 +84,16 @@ class Cache:
                 fetched_at REAL NOT NULL
             )"""
         )
+        fts_existed = self._connection.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'tools_fts'"
+        ).fetchone() is not None
         try:
             self._create_fts()
+            if not fts_existed:
+                self._connection.execute(
+                    """INSERT INTO tools_fts (rowid, url, canonical_repo, name, source)
+                       SELECT id, url, canonical_repo, name, source FROM tools"""
+                )
             self._fts_available = True
         except sqlite3.OperationalError:
             LOGGER.warning("SQLite FTS5 unavailable; cache search will use LIKE")
@@ -135,6 +145,8 @@ class Cache:
             self._activate_fallback(exc).upsert(normalized)
 
     def search(self, query: str) -> List[Dict[str, Any]]:
+        if not query.strip():
+            return []
         if self._fallback is not None:
             return self._fallback.search(query)
         try:
@@ -143,7 +155,7 @@ class Cache:
                     rows = self._connection.execute(
                         """SELECT t.* FROM tools t JOIN tools_fts f ON t.url = f.url
                            WHERE tools_fts MATCH ? ORDER BY t.fetched_at DESC""",
-                        (query,),
+                        (self._fts_query(query),),
                     ).fetchall()
                 except sqlite3.OperationalError:
                     # A user query can be invalid FTS syntax; retain the same
@@ -156,13 +168,19 @@ class Cache:
             return self._activate_fallback(exc).search(query)
 
     def _like_search(self, query: str) -> List[sqlite3.Row]:
-        pattern = "%{}%".format(query)
+        escaped = query.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        pattern = "%{}%".format(escaped)
         return self._connection.execute(
             """SELECT * FROM tools
-               WHERE url LIKE ? OR canonical_repo LIKE ? OR name LIKE ? OR source LIKE ?
+               WHERE url LIKE ? ESCAPE '\\' OR canonical_repo LIKE ? ESCAPE '\\'
+                  OR name LIKE ? ESCAPE '\\' OR source LIKE ? ESCAPE '\\'
                ORDER BY fetched_at DESC""",
             (pattern, pattern, pattern, pattern),
         ).fetchall()
+
+    @staticmethod
+    def _fts_query(query: str) -> str:
+        return " ".join('"{}"*'.format(token.replace('"', '""')) for token in query.split())
 
     def get_all(self) -> List[Dict[str, Any]]:
         if self._fallback is not None:

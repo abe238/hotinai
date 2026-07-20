@@ -40,6 +40,60 @@ def test_fts_unavailable_uses_like_search(monkeypatch):
     opened.close()
 
 
+def test_fts_and_like_search_have_matching_prefix_and_literal_wildcard_behavior(monkeypatch):
+    fts_connection = sqlite3.connect(":memory:")
+    fts_connection.row_factory = sqlite3.Row
+    fts_cache = cache.Cache(fts_connection)
+    fts_cache.upsert(record("Useful Tool"))
+    fts_cache.upsert(record("Another Tool"))
+
+    assert fts_cache._fts_available is True
+    assert [item["name"] for item in fts_cache.search("Use")] == ["Useful Tool"]
+    assert fts_cache.search("%") == []
+    assert fts_cache.search("   ") == []
+    fts_cache.close()
+
+    def no_fts(self):
+        raise sqlite3.OperationalError("no such module: fts5")
+
+    monkeypatch.setattr(cache.Cache, "_create_fts", no_fts)
+    like_connection = sqlite3.connect(":memory:")
+    like_connection.row_factory = sqlite3.Row
+    like_cache = cache.Cache(like_connection)
+    like_cache.upsert(record("Useful Tool"))
+    like_cache.upsert(record("Another Tool"))
+
+    assert like_cache._fts_available is False
+    assert [item["name"] for item in like_cache.search("Use")] == ["Useful Tool"]
+    assert like_cache.search("%") == []
+    assert like_cache.search("   ") == []
+    like_cache.close()
+
+
+def test_fts_creation_backfills_existing_like_only_cache(tmp_path, monkeypatch):
+    database = tmp_path / "cache.db"
+    connection = sqlite3.connect(str(database))
+    connection.row_factory = sqlite3.Row
+    original_create_fts = cache.Cache._create_fts
+
+    def no_fts(self):
+        raise sqlite3.OperationalError("no such module: fts5")
+
+    monkeypatch.setattr(cache.Cache, "_create_fts", no_fts)
+    like_cache = cache.Cache(connection)
+    like_cache.upsert(record("Backfilled Tool"))
+    like_cache.close()
+
+    monkeypatch.setattr(cache.Cache, "_create_fts", original_create_fts)
+    connection = sqlite3.connect(str(database))
+    connection.row_factory = sqlite3.Row
+    fts_cache = cache.Cache(connection)
+
+    assert fts_cache._fts_available is True
+    assert [item["name"] for item in fts_cache.search("Backfilled")] == ["Backfilled Tool"]
+    fts_cache.close()
+
+
 def test_open_error_degrades_to_memory_cache(monkeypatch):
     def unavailable(*args, **kwargs):
         raise sqlite3.OperationalError("database is locked")
