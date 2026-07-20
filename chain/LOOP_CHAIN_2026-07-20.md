@@ -37,15 +37,27 @@ Zero setup for the core, works on any fresh machine, gets sharper the more you u
     observations should fade, matching the engine's general freshness treatment), explicit source
     provenance + timestamp stored per observation, and **`unknown` outside the observed window
     rather than implying "confirmed zero smart-money interest."**
-  - **REJECTED as the core mechanism (kept only as an experimental, feature-flagged, OFF-by-default
-    fallback — never L1's dependency):** bulk-crawling each of the ~1,000 cached AI-1000 usernames'
-    *entire lifetime* starred-repo history via GraphQL (`user(login:).starredRepositories`,
-    confirmed technically live/cheap in points). Sol's second review killed this as the primary
-    path: harvesting 1,000 people's full star history on a recurring cron is disproportionate to
-    "did a credible person notice this recently," and shares the same abuse-pattern shape GitHub
-    just restricted (mass collection of star relationship data), just inverted — a real risk of
-    being closed next, and arguably not something to build the product's core on even if it stays
-    open. If ever enabled, it needs an explicit opt-out mechanism for tracked people.
+  - **REJECTED as the core mechanism, kept as the DISASTER-RECOVERY fallback (revised 2026-07-20
+    per Abe: the influencer-stars source itself could also lose access, same as GitHub's stargazers endpoint did — treat
+    that as a real, not hypothetical, failure mode; this fallback exists so smart-money doesn't
+    go completely dark if the influencer-stars source's feed is ever cut off, not as a routine alternate path):**
+    bulk-crawling each of the ~1,000 cached AI-1000 usernames' starred-repo history via GraphQL
+    (`user(login:).starredRepositories`, confirmed technically live/cheap in raw API points).
+    Sol's second review killed it as the PRIMARY path: harvesting people's full star history on a
+    recurring cron is disproportionate to "did a credible person notice this recently," and
+    shares the same abuse-pattern shape GitHub just restricted (mass collection of star
+    relationship data), just inverted — a real risk of being closed next, and arguably not
+    something to build the product's core on even if it stays open.
+    **If ever activated (the influencer-stars source feed confirmed dead, not just one bad fetch), it MUST run as a slow
+    trickle, never a burst — the whole point is to never be the reason another source locks down**:
+    spread the full ~1,000-account refresh across **at least 24 hours**, a low fixed rate (e.g. a
+    few accounts per minute with real jittered sleep between each, not "as fast as the point
+    budget allows"), sequential per account (never parallelize this specific job), paginate only
+    as many pages of a very prolific user's history as needed and stop early once reasonably
+    covered rather than exhausting it, and cache+reuse partial progress across restarts so a
+    trickle resumes where it left off instead of restarting the clock. This is explicitly the
+    "be kind to servers" principle applied at its highest-risk point. Needs an explicit opt-out
+    mechanism for tracked people if ever enabled.
   - **Cap smart-money's contribution relative to corroboration** — it's a heavily-weighted primary
     term, but corroboration (independent-source agreement) stays the strongest multiplier; smart-
     money alone should not be able to single-handedly outrank a repo with zero independent
@@ -55,6 +67,18 @@ Zero setup for the core, works on any fresh machine, gets sharper the more you u
   (ScrapeCreators) and are documented as such, never blurred into "zero setup covers everything."
 - **No telemetry, ever** — not even anonymous/opt-in. (Standing decision, not up for silent
   reversal later.)
+- **Be kind to servers — standing engineering principle, applies to every adapter (added
+  2026-07-20 per Abe: the influencer-stars source itself could get rate-limited or cut off, same as GitHub's stargazers
+  endpoint was; assume every unofficial or informally-generous source can tighten at any time,
+  and never be the reason it does).** Every adapter uses the shared `throttle.py` primitive built
+  in L0: a minimum interval between requests to the same host (with jitter, never a tight loop),
+  real respect for `Retry-After`/`X-RateLimit-*` response headers (back off further than asked
+  when in doubt, never race a limit), and conditional requests (ETag/If-None-Match) where a
+  source supports them. Concurrency across DIFFERENT sources is fine (L2's concurrent fetch), but
+  a single source is never hammered just because its documented limit technically allows it —
+  technically-allowed and considerate are not the same bar. Any bulk/many-request job (e.g. the
+  smartmoney-deep fallback below) runs as a **slow trickle spread over hours, not a burst** —
+  see that section for the concrete cadence.
 - **Per-source failure isolation, not "never crashes" (Sol fix #9):** a source failing emits `[]`
   and a structured status, never raises. But if EVERY source fails AND no local cache exists,
   the CLI exits **nonzero** with a concise health summary — it does not print an empty, cheerful
