@@ -1,4 +1,5 @@
 import json
+import os
 import time
 
 import pytest
@@ -34,6 +35,7 @@ def test_setup_check_succeeds_without_config(tmp_path, monkeypatch, capsys):
     assert "setup check passed" in output
 
 
+@pytest.mark.skipif(os.name == "nt", reason="ANSI/control bytes are illegal in Windows path names")
 def test_setup_check_sanitizes_config_path(tmp_path, monkeypatch, capsys):
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "\x1b[31mHACKED\x1b[0m" / "xdgconfig"))
 

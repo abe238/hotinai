@@ -192,11 +192,15 @@ def test_fetch_all_timeout_does_not_wait_for_slow_adapter(monkeypatch):
 
 def test_fetch_all_has_one_timeout_budget_for_the_entire_batch(monkeypatch):
     cache = MemoryCache()
-    slow_sources = tuple(SimpleNamespace(SOURCE="slow{}".format(index)) for index in range(4))
+    # 10 slow sources make the concurrent-vs-sequential gap wide: one shared
+    # timeout budget finishes in ~timeout, while a per-future (sequential) wait
+    # would take ~10x that. A generous absolute threshold between the two keeps
+    # the assertion meaningful without flaking on a loaded CI runner.
+    slow_sources = tuple(SimpleNamespace(SOURCE="slow{}".format(index)) for index in range(10))
     fast_source = SimpleNamespace(SOURCE="fast")
 
     def slow(**kwargs):
-        time.sleep(0.2)
+        time.sleep(0.15)
         return {"records": [], "status": "empty", "detail": None}
 
     for source in slow_sources:
@@ -205,10 +209,11 @@ def test_fetch_all_has_one_timeout_budget_for_the_entire_batch(monkeypatch):
     monkeypatch.setattr(engine, "SOURCES", slow_sources + (fast_source,))
 
     started = time.monotonic()
-    statuses = engine.fetch_all({}, cache=cache, timeout=0.03)
+    statuses = engine.fetch_all({}, cache=cache, timeout=0.1)
     elapsed = time.monotonic() - started
 
-    assert elapsed < 0.08
+    # One shared budget: ~0.1s + thread overhead. Sequential would be ~1.0s.
+    assert elapsed < 0.5
     assert {status.source for status in statuses if status.detail == "timed out"} == {source.SOURCE for source in slow_sources}
     assert next(status for status in statuses if status.source == "fast").status == "empty"
 

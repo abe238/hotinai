@@ -32,7 +32,10 @@ def test_write_is_atomic_and_uses_replace(tmp_path, monkeypatch):
 
     assert replaced
     assert config.env_path().read_text() == "A=one\n"
-    assert config.env_path().stat().st_mode & 0o777 == 0o600
+    if os.name != "nt":
+        # POSIX modes don't apply on Windows (file privacy comes from profile
+        # ACLs); config.write_config already guards the Unix-only os.fchmod.
+        assert config.env_path().stat().st_mode & 0o777 == 0o600
     assert not list(config.env_path().parent.glob(".env.*"))
 
 
