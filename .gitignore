@@ -1,0 +1,42 @@
+# Secrets & credentials — never commit these
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pat
+**/secrets/**
+**/contacts.toml
+config.toml
+*credentials*
+*_token*
+*.token
+
+# Local cache / DB (the whole point is zero-setup, so runtime state stays local)
+*.db
+*.db-wal
+*.db-shm
+.cache/
+.hotin/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node (site tooling, if any)
+node_modules/
+
+# OS/editor noise
+.DS_Store
+*.swp
+.vscode/
+.idea/

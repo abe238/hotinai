@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hotin — what's hot in AI, from your terminal</title>
+<meta name="description" content="hotin is an open-source CLI that surfaces what's hot, fresh, and viral in AI right now — GitHub, Hacker News, npm, Reddit, YouTube, and smart-money signals, ranked by corroboration and freshness.">
+<style>
+  :root{
+    --bg:#0a0e14; --panel:#111722; --line:#1e2733;
+    --ink:#e6edf3; --dim:#8b98a9; --faint:#5a6675;
+    --signal:#3fdd8a; --amber:#f2b45c; --violet:#a98bf5;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:32px;text-align:center;line-height:1.6;
+    background-image:radial-gradient(900px 500px at 80% -10%,rgba(63,221,138,.08),transparent),
+      radial-gradient(700px 400px at -10% 30%,rgba(169,139,245,.05),transparent);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:640px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--signal);margin-bottom:22px}
+  h1{font-family:var(--serif);font-size:clamp(38px,8vw,64px);font-weight:600;letter-spacing:-.02em;line-height:1.05}
+  h1 .hot{color:var(--signal)}
+  .sub{color:var(--dim);font-size:17px;max-width:520px;margin:22px auto 0}
+  .prompt{
+    font-family:var(--mono);font-size:15px;color:var(--amber);
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:14px 20px;margin:36px auto 0;display:inline-block;
+  }
+  .prompt .dollar{color:var(--faint);margin-right:8px}
+  .status{
+    margin-top:40px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--violet);border:1px solid rgba(169,139,245,.35);background:rgba(169,139,245,.07);
+    border-radius:20px;padding:6px 16px;display:inline-block;
+  }
+  .cta{margin-top:44px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{
+    font-family:var(--mono);font-size:14px;color:var(--ink);text-decoration:none;
+    border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:11px 20px;
+    transition:border-color .15s;
+  }
+  .btn:hover{border-color:var(--signal)}
+  .btn.primary{border-color:var(--signal);color:var(--signal)}
+  footer{margin-top:70px;font-family:var(--mono);font-size:11.5px;color:var(--faint)}
+  footer a{color:var(--faint)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Open Source · Terminal-native</div>
+    <h1>What's <span class="hot">hot in AI</span>,<br>from your terminal.</h1>
+    <p class="sub">A CLI that fuses GitHub trending, Hacker News, npm adoption, Reddit, and credible-account signal into one ranked board — by cross-source agreement, not noise.</p>
+    <div class="prompt"><span class="dollar">$</span>hotin</div>
+    <div><span class="status">🚧 Under construction</span></div>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/abe238/hotinai">View on GitHub →</a>
+    </div>
+  </div>
+  <footer>hotin.ai · made by <a href="https://github.com/abe238">@abe238</a> · MIT licensed</footer>
+</body>
+</html>
