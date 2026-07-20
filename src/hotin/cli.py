@@ -34,6 +34,7 @@ COMMANDS = {
     "setup": "check local configuration",
     "update": "update hotin",
     "ingest": "refresh all sources and record the time series (for a scheduler)",
+    "brief": "a short daily digest of what's happening in AI",
     "about": "show project information",
 }
 _RETENTION_DAYS = 30.0
@@ -415,6 +416,77 @@ def _show_repo(repo: dict, arguments: argparse.Namespace) -> None:
                 print("    {}: {}".format(color(_safe(key), "2", enabled), rendered))
 
 
+def _brief(arguments: argparse.Namespace) -> int:
+    """A short, deterministic 'what's happening in AI' digest from the local store.
+
+    Every line traces to real data (a velocity delta, a rank, an upvote count) —
+    nothing is fabricated. LLM prose enrichment over these immutable facts is a
+    documented future opt-in; the deterministic digest is the product.
+    """
+    with _cache_session() as cache:
+        rows = cache.get_all()
+        window = engine.EVIDENCE_WINDOW_DAYS
+        merged = engine.merge_by_repo(rows, max_age_days=window)
+        links = engine.cross_entity_repo_links(rows, max_age_days=window)
+        for repo_id, repo in merged.items():
+            if repo_id in links:
+                repo.setdefault("meta", {})["paper_backed"] = True
+        engine.annotate_velocity(merged, cache)
+        repos = engine.rank(merged, limit=50)
+        models = engine.rank_entities(engine.merge_by_entity(rows, "model", max_age_days=window), {"model_downloads": 1.0, "model_likes": 0.5}, limit=5)
+        papers = engine.rank_entities(engine.merge_by_entity(rows, "paper", max_age_days=window), {"paper_upvotes": 1.0}, limit=5)
+        rising = sorted(
+            (repo for repo in repos if repo.get("meta", {}).get("rising")),
+            key=lambda repo: -_finite(repo.get("meta", {}).get("velocity_per_day")),
+        )[:5]
+
+        if arguments.json:
+            _dump_json({
+                "rising": [{"repo": r.get("canonical_repo"), "stars_per_day": _finite(r.get("meta", {}).get("velocity_per_day"))} for r in rising],
+                "top_repos": [{"repo": r.get("canonical_repo"), "score": _finite(r.get("score")), "badges": r.get("badges")} for r in repos[:5]],
+                "top_models": [{"model": m.get("entity_id"), "downloads": _finite(_record_signal(m).get("model_downloads"))} for m in models],
+                "top_papers": [{"paper": p.get("entity_id"), "title": p.get("name"), "upvotes": _finite(_record_signal(p).get("paper_upvotes"))} for p in papers],
+            })
+            _attribution(arguments)
+            return 0
+
+        enabled = _color_enabled(arguments)
+        if not (repos or models or papers):
+            print("Nothing in the store yet. Run `hotin ingest` (or `hotin hot`) first to populate it.")
+            _attribution(arguments)
+            return 0
+
+        def header(text):
+            print("\n" + color(text, "1", enabled))
+
+        print(color("hotin brief — what's happening in AI", "1;38;5;42", enabled))
+        if rising:
+            header("Rising (stars/day)")
+            for repo in rising:
+                per_day = _finite(repo.get("meta", {}).get("velocity_per_day"))
+                print("  {}  {}".format(_repo_link(repo, enabled), color("+{}/day".format(_format_number(per_day)), "38;5;208", enabled)))
+        if repos:
+            header("Hottest repos")
+            for repo in repos[:5]:
+                print("  {}  {}  {}".format(
+                    color("{:>6.2f}".format(_finite(repo.get("score"))), "1;38;5;42", enabled),
+                    _repo_link(repo, enabled), _render_badges(repo.get("badges"), enabled)))
+        if models:
+            header("Trending models")
+            for model in models:
+                signal = _record_signal(model)
+                print("  {}  {}".format(color(_safe(model.get("entity_id", "")), "1", enabled),
+                                        color("{} downloads".format(_format_number(signal.get("model_downloads"))), "2", enabled)))
+        if papers:
+            header("Trending papers")
+            for paper in papers:
+                signal = _record_signal(paper)
+                print("  {}  {}".format(color("{} upvotes".format(_format_number(signal.get("paper_upvotes"))), "2", enabled),
+                                        _safe(paper.get("name", ""))[:70]))
+        _attribution(arguments)
+        return 0
+
+
 def _ingest(arguments: argparse.Namespace) -> int:
     """Refresh every source (repos + papers + models), append the time series, prune.
 
@@ -493,6 +565,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         return _entity_command(command, arguments)
     if command == "ingest":
         return _ingest(arguments)
+    if command == "brief":
+        return _brief(arguments)
     if command == "hot":
         limit = _normal_limit(arguments)
         if limit is None:

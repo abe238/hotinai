@@ -362,3 +362,29 @@ def test_ingest_records_observations_and_is_strict_about_persistence(monkeypatch
     # observations were still recorded for the velocity metrics
     assert cache.observations_for("repo", "a/b", "stars")[0][0] == 100.0
     assert cache.observations_for("model", "o/m", "model_downloads")[0][0] == 5.0
+
+
+def test_brief_json_summarizes_repos_models_papers(monkeypatch, capsys):
+    cache = MemoryCache()
+    now = time.time()
+    cache.upsert({"entity_type": "repo", "entity_id": "a/b", "canonical_repo": "a/b",
+                  "url": "https://github.com/a/b", "name": "a/b", "source": "github",
+                  "signal_json": {"signal": {"stars": 100, "pushed_at": now}, "meta": {}}, "fetched_at": now})
+    cache.upsert({"entity_type": "model", "entity_id": "o/m", "url": "u", "name": "o/m", "source": "hfmodels",
+                  "signal_json": {"signal": {"model_downloads": 500, "model_likes": 10}, "meta": {}}, "fetched_at": now})
+    cache.upsert({"entity_type": "paper", "entity_id": "2601.1", "url": "u", "name": "A Paper", "source": "hfpapers",
+                  "signal_json": {"signal": {"paper_upvotes": 42}, "meta": {}}, "fetched_at": now})
+    monkeypatch.setattr(cli, "open_cache", lambda: cache)
+
+    assert main(["brief", "--json"]) == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["top_repos"][0]["repo"] == "a/b"
+    assert out["top_models"][0]["model"] == "o/m"
+    assert out["top_papers"][0]["paper"] == "2601.1"
+    assert out["top_papers"][0]["upvotes"] == 42
+
+
+def test_brief_empty_store_is_friendly(monkeypatch, capsys):
+    monkeypatch.setattr(cli, "open_cache", MemoryCache)
+    assert main(["brief"]) == 0
+    assert "Run `hotin ingest`" in capsys.readouterr().out
