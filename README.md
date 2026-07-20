@@ -23,7 +23,13 @@ $ hotin
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+
+You're free to use, fork, and build commercial products on top of hotin. The Apache
+license requires any redistributed copy or derivative to retain the attribution notice
+in [NOTICE](NOTICE) — if hotin (the code, the ranking approach, or the idea) inspired
+your project, please keep that credit and a link back to
+[github.com/abe238/hotinai](https://github.com/abe238/hotinai).
 
 ---
 
