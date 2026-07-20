@@ -265,7 +265,12 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
         else max(0.2, 1.0 - (freshness_days - 30) / 120.0)
     )
     category = categories.classify(result.get("name", ""), meta.get("description"), meta.get("topics"))
-    score = (momentum + credibility + signal_score) * corroboration * freshness_factor
+    # A repo surfaced by a curated YouTube channel earns a bounded credibility
+    # nudge. It is a flag, NOT a source: capped tiny (min 5% of the base, 1.0
+    # absolute) so it stays well below the 25% independent-source increment.
+    base = momentum + credibility + signal_score
+    curated_bonus = min(1.0, 0.05 * base) if meta.get("youtube_curated") else 0.0
+    score = (base + curated_bonus) * corroboration * freshness_factor
     score = score if math.isfinite(score) else 0.0
 
     badges: List[str] = []

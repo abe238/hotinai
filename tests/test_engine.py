@@ -264,3 +264,15 @@ def test_cache_payload_round_trips_signal_and_meta_through_engine_fetch(monkeypa
     merged = engine.merge_by_repo(cache.get_all())["acme/tool"]
     assert merged["signal"] == {"stars": 4}
     assert merged["meta"] == {"topics": ["agent"]}
+
+
+def test_curated_youtube_flag_is_a_bounded_nudge_not_a_source():
+    now = time.time()
+    plain = engine.merge_by_repo([record("youtube", signal={"youtube_views": 1000})])["acme/tool"]
+    curated = engine.merge_by_repo([record("youtube", signal={"youtube_views": 1000}, meta={"youtube_curated": True})])["acme/tool"]
+    plain_score = engine.score_repo(plain, now=now)["score"]
+    curated_score = engine.score_repo(curated, now=now)["score"]
+    assert curated_score > plain_score          # curated helps
+    assert curated_score - plain_score <= 1.0   # but is bounded, not a 1.25x source multiplier
+    # it did not add a phantom source
+    assert engine.score_repo(curated, now=now)["corroboration"] == 1.0

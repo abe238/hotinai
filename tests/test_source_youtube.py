@@ -236,3 +236,43 @@ def test_dedupe_records_respects_zero_and_positive_limits():
     # positive limit keeps first-seen unique repos up to the cap.
     kept = youtube.dedupe_records(records, 2)
     assert [r["canonical_repo"] for r in kept] == ["owner/one", "owner/two"]
+
+
+def test_curated_channels_flag_their_repos(monkeypatch):
+    class Response:
+        def __init__(self, payload):
+            self.payload = payload
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *unused):
+            return False
+
+        def read(self):
+            return json.dumps(self.payload).encode("utf-8")
+
+    def fake_urlopen(request, timeout):
+        url = request.full_url
+        if "/youtube/v3/search" in url:
+            return Response({"items": []})  # no keyword results, isolate curated
+        if "/youtube/v3/channels" in url:
+            return Response({"items": [{"contentDetails": {"relatedPlaylists": {"uploads": "UU_test"}}}]})
+        if "/youtube/v3/playlistItems" in url:
+            return Response({"items": [{"contentDetails": {"videoId": "vc-1"}}]})
+        if "/youtube/v3/videos" in url:
+            return Response({"items": [{
+                "id": "vc-1",
+                "snippet": {"title": "Weekly roundup", "description": "repo: https://github.com/example/curated",
+                            "channelTitle": "TestChan"},
+                "statistics": {"viewCount": "500"},
+            }]})
+        raise AssertionError("unexpected url: " + url)
+
+    monkeypatch.setattr(youtube.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(youtube, "V3_THROTTLE", type("T", (), {"wait": lambda self: None})())
+
+    result = youtube.fetch(query="q", limit=5, config={"YOUTUBE_API_KEY": "k", "HOTIN_YT_CHANNELS": "@TestChan"})
+    assert result["status"] == "ok"
+    assert result["records"][0]["canonical_repo"] == "example/curated"
+    assert result["records"][0]["meta"]["youtube_curated"] is True

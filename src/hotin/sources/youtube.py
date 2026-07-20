@@ -23,12 +23,20 @@ SOURCE = "youtube"
 ENDPOINT = "https://api.scrapecreators.com/v1/youtube/search"
 V3_SEARCH_ENDPOINT = "https://www.googleapis.com/youtube/v3/search"
 V3_VIDEOS_ENDPOINT = "https://www.googleapis.com/youtube/v3/videos"
+V3_CHANNELS_ENDPOINT = "https://www.googleapis.com/youtube/v3/channels"
+V3_PLAYLIST_ITEMS_ENDPOINT = "https://www.googleapis.com/youtube/v3/playlistItems"
 DEFAULT_QUERIES = ("new AI tool", "AI agent github", "open source AI")
+# Curator channels publish a full repo index (20-35 repos) in each video
+# description. A starting set of verified handles; overridable via
+# HOTIN_YT_CHANNELS (comma-separated handles or channel IDs). Expand empirically.
+DEFAULT_CHANNELS = ("@ManuAGI", "@GithubAwesome")
 THROTTLE = Throttle(min_interval=2.0, jitter=1.0)
 # The official API is quota- not rate-limited (10k units/day; search.list costs
 # 100 units, videos.list 1), so it can be paced lighter than the scrape backend.
 V3_THROTTLE = Throttle(min_interval=0.4, jitter=0.3)
 _V3_MAX_RESULTS = 15  # per search query; keeps search.list quota spend modest
+_CURATED_MAX_CHANNELS = 6
+_CURATED_VIDEOS_PER_CHANNEL = 4
 
 
 def _empty(detail: str) -> Dict[str, Any]:
@@ -259,6 +267,70 @@ def _request_v3_videos(video_ids: List[str], api_key: str) -> Optional[Dict[str,
     return payload
 
 
+def _channel_config(config: Dict[str, Any]) -> Tuple[str, ...]:
+    raw = config.get("HOTIN_YT_CHANNELS")
+    if isinstance(raw, str) and raw.strip():
+        return tuple(part.strip() for part in raw.split(",") if part.strip())[:_CURATED_MAX_CHANNELS]
+    return DEFAULT_CHANNELS
+
+
+def _resolve_uploads_playlist(channel: str, api_key: str) -> Optional[str]:
+    """Resolve a channel handle/ID to its uploads-playlist ID, or None."""
+    param = "forHandle" if channel.startswith("@") else "id"
+    params = urllib.parse.urlencode({"part": "contentDetails", param: channel, "key": api_key})
+    payload = _request_v3("{}?{}".format(V3_CHANNELS_ENDPOINT, params))
+    if payload is None:
+        return None
+    items = payload.get("items")
+    if not isinstance(items, list) or not items or not isinstance(items[0], dict):
+        return None
+    details = items[0].get("contentDetails")
+    playlists = details.get("relatedPlaylists") if isinstance(details, dict) else None
+    uploads = playlists.get("uploads") if isinstance(playlists, dict) else None
+    return uploads if isinstance(uploads, str) and uploads.strip() else None
+
+
+def _request_v3_playlist_items(playlist_id: str, api_key: str) -> List[str]:
+    """Recent video IDs from a channel's uploads playlist (bounded)."""
+    params = urllib.parse.urlencode({
+        "part": "contentDetails", "playlistId": playlist_id,
+        "maxResults": str(_CURATED_VIDEOS_PER_CHANNEL), "key": api_key,
+    })
+    payload = _request_v3("{}?{}".format(V3_PLAYLIST_ITEMS_ENDPOINT, params))
+    if payload is None or not isinstance(payload.get("items"), list):
+        return []
+    ids: List[str] = []
+    for item in payload["items"]:
+        details = item.get("contentDetails") if isinstance(item, dict) else None
+        video_id = details.get("videoId") if isinstance(details, dict) else None
+        if isinstance(video_id, str) and video_id.strip():
+            ids.append(video_id.strip())
+    return ids
+
+
+def _fetch_curated(channels: Tuple[str, ...], api_key: str) -> List[Dict[str, Any]]:
+    """Harvest repos from curator channels' recent uploads, flagged curated.
+
+    Curated repos are a bounded credibility signal, NOT a separate source: they
+    still carry source="youtube" and only add a `youtube_curated` meta flag.
+    """
+    records: List[Dict[str, Any]] = []
+    for channel in channels[:_CURATED_MAX_CHANNELS]:
+        uploads = _resolve_uploads_playlist(channel, api_key)
+        if not uploads:
+            continue
+        video_ids = _request_v3_playlist_items(uploads, api_key)
+        if not video_ids:
+            continue
+        payload = _request_v3_videos(video_ids, api_key)
+        if payload is None:
+            continue
+        for record in parse_v3_videos(payload):
+            record["meta"]["youtube_curated"] = True
+            records.append(record)
+    return records
+
+
 # ---- shared -----------------------------------------------------------------
 
 def dedupe_records(records: Iterable[Dict[str, Any]], limit: int) -> List[Dict[str, Any]]:
@@ -307,7 +379,7 @@ def _normalise_limit(limit: Any) -> int:
     return 50 if value is None else max(0, value)
 
 
-def _fetch_v3(queries: Tuple[str, ...], limit: int, api_key: str) -> Dict[str, Any]:
+def _fetch_v3(queries: Tuple[str, ...], limit: int, api_key: str, channels: Tuple[str, ...] = ()) -> Dict[str, Any]:
     parsed: List[Dict[str, Any]] = []
     successful = 0
     for query in queries:
@@ -321,6 +393,12 @@ def _fetch_v3(queries: Tuple[str, ...], limit: int, api_key: str) -> Dict[str, A
         if payload is None:
             continue
         parsed.extend(parse_v3_videos(payload))
+    # Curated channels first, so dedupe keeps the curated-flagged record when a
+    # repo also appears in keyword search.
+    curated = _fetch_curated(channels, api_key) if channels else []
+    if curated:
+        successful += 1
+        parsed = curated + parsed
     if successful == 0:
         return {"records": [], "status": "error", "detail": "all YouTube API requests failed"}
     records = dedupe_records(parsed, limit)
@@ -363,7 +441,7 @@ def fetch(
 
         yt_key = cfg.get("YOUTUBE_API_KEY")
         if isinstance(yt_key, str) and yt_key.strip():
-            return _fetch_v3(queries, requested_limit, yt_key.strip())
+            return _fetch_v3(queries, requested_limit, yt_key.strip(), _channel_config(cfg))
         sc_key = cfg.get("SCRAPECREATORS_API_KEY")
         if isinstance(sc_key, str) and sc_key.strip():
             return _fetch_scrapecreators(queries, requested_limit, sc_key.strip())
