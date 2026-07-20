@@ -404,23 +404,23 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     score = (base + flag_bonus + bridge_bonus + rising_bonus) * corroboration * freshness_factor
     score = score if math.isfinite(score) else 0.0
 
+    # Word-of-mouth vocabulary: a tight, sayable set. "Hot" is the score itself;
+    # the badges are the few reasons that stick. Corroboration ("in many places")
+    # is folded into the score, not badged; source tags are provenance shown in
+    # `show`, not headline badges.
     badges: List[str] = []
-    if young:
-        badges.append("new")
-    if freshness_days is not None and freshness_days <= 30:
+    # Fresh = brand new OR recently active (absorbs the old "new").
+    if young or (freshness_days is not None and freshness_days <= 30):
         badges.append("fresh")
-    if finite_float(signal.get("smartmoney_starrers"), 0.0) >= 2:
+    # Rising = climbing fast; Viral is the rare extreme (accelerating + corroborated).
+    if rising:
+        badges.append("viral" if (meta.get("accelerating") and source_count >= 2) else "rising")
+    # Smart Money = the premium credibility rubric: the AI1000 crowd is on it AND
+    # it is showing up across several independent sources.
+    if finite_float(signal.get("smartmoney_starrers"), 0.0) >= 2 and source_count >= 2:
         badges.append("smart-money")
-    if source_count >= 3:
-        badges.append("corroborated")
     if paper_backed:
         badges.append("paper-backed")
-    if rising:
-        # viral = rising AND accelerating AND independently corroborated.
-        badges.append("viral" if (meta.get("accelerating") and source_count >= 2) else "rising")
-    for source in ("hn", "reddit", "npm"):
-        if isinstance(sources, (set, list, tuple)) and source in sources:
-            badges.append(source)
     result.update({"momentum": momentum, "credibility": credibility, "signal_score": signal_score,
                    "corroboration": corroboration, "freshness_days": freshness_days,
                    "freshness_factor": freshness_factor, "category": category, "score": score,

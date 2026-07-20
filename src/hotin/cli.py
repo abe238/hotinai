@@ -20,7 +20,8 @@ from .sources import github, hfmodels, hfpapers, hn, npm, trends, reddit, youtub
 
 
 COMMANDS = {
-    "hot": "show the hottest AI tools",
+    "hot": "show the hottest AI tools (the flagship board)",
+    "repos": "show trending AI repos (same as hot)",
     "hn": "show Hacker News signals",
     "npm": "show npm signals",
     "stars": "show GitHub star growth",
@@ -40,12 +41,12 @@ COMMANDS = {
 _RETENTION_DAYS = 30.0
 _INGEST_DEPTH = 100
 
-_BADGE_COLORS = {"fresh": "32", "smart-money": "38;5;220", "new": "34", "corroborated": "35",
-                 "paper-backed": "38;5;45", "rising": "38;5;208", "viral": "38;5;198"}
+_BADGE_COLORS = {"fresh": "32", "rising": "38;5;208", "viral": "38;5;198",
+                 "smart-money": "38;5;220", "paper-backed": "38;5;45"}
 _ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
 # --limit only makes sense for commands that produce a ranked/list result.
 # update (refresh + health), setup, about, and show (one repo) don't take one.
-_LIST_COMMANDS = {"hot", "hn", "npm", "stars", "trending", "reddit", "youtube", "models", "papers", "search"}
+_LIST_COMMANDS = {"hot", "repos", "hn", "npm", "stars", "trending", "reddit", "youtube", "models", "papers", "search"}
 # Entity commands: (adapter, entity_type, metric weights for scoring, primary metric label).
 _ENTITY_COMMANDS = {
     "models": (hfmodels, "model", {"model_downloads": 1.0, "model_likes": 0.5}),
@@ -567,7 +568,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         return _ingest(arguments)
     if command == "brief":
         return _brief(arguments)
-    if command == "hot":
+    if command in ("hot", "repos"):
         limit = _normal_limit(arguments)
         if limit is None:
             return 2

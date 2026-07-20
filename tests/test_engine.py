@@ -379,3 +379,26 @@ def test_rising_velocity_boosts_and_badges_only_with_history():
     unknown = engine.merge_by_repo([record("github", signal={"stars": 300, "pushed_at": now})], now=now)
     engine.annotate_velocity(unknown, Store([]))               # empty store -> unknown -> neutral
     assert engine.score_repo(unknown["acme/tool"], now=now)["score"] == cold["score"]
+
+
+def test_badge_vocabulary_is_tight_and_word_of_mouth():
+    now = time.time()
+    created = datetime.fromtimestamp(now, timezone.utc).isoformat()
+    # young + recently active -> a single "fresh" (old "new" merged in)
+    fresh = engine.merge_by_repo([record("github", signal={"stars": 100, "created_at": created, "pushed_at": now})], now=now)["acme/tool"]
+    fb = engine.score_repo(fresh, now=now)["badges"]
+    assert "fresh" in fb and "new" not in fb
+    # corroboration folded into the score, not badged; source tags demoted
+    three = engine.merge_by_repo([
+        record("github", signal={"stars": 100, "pushed_at": now}), record("hn", signal={}), record("reddit", signal={}),
+    ], now=now)["acme/tool"]
+    tb = engine.score_repo(three, now=now)["badges"]
+    assert "corroborated" not in tb and "hn" not in tb and "reddit" not in tb
+    # Smart Money = AI1000 stars AND corroboration (>=2 sources); alone is not enough
+    sm_alone = engine.merge_by_repo([record("smartmoney", signal={"smartmoney_starrers": 50, "pushed_at": now})], now=now)["acme/tool"]
+    assert "smart-money" not in engine.score_repo(sm_alone, now=now)["badges"]
+    sm_backed = engine.merge_by_repo([
+        record("smartmoney", signal={"smartmoney_starrers": 50, "pushed_at": now}),
+        record("github", signal={"stars": 10, "pushed_at": now}),
+    ], now=now)["acme/tool"]
+    assert "smart-money" in engine.score_repo(sm_backed, now=now)["badges"]
