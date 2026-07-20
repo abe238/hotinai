@@ -10,23 +10,24 @@ def dedupe_by_metric(
     limit: int,
     metric_key: str,
     coerce: Callable[[Any], Optional[int]],
+    key: str = "canonical_repo",
 ) -> List[Dict[str, Any]]:
-    """Keep the highest-``metric_key`` record for each canonical repository."""
+    """Keep the highest-``metric_key`` record for each distinct ``key`` value."""
     winners: Dict[str, Tuple[int, int, Dict[str, Any]]] = {}
     try:
         for position, record in enumerate(records):
             if not isinstance(record, dict):
                 continue
-            canonical_repo = record.get("canonical_repo")
+            identity = record.get(key)
             signal = record.get("signal")
-            if not isinstance(canonical_repo, str) or not isinstance(signal, dict):
+            if not isinstance(identity, str) or not isinstance(signal, dict):
                 continue
             metric = coerce(signal.get(metric_key))
             if metric is None:
                 continue
-            current = winners.get(canonical_repo)
+            current = winners.get(identity)
             if current is None or metric > current[0]:
-                winners[canonical_repo] = (metric, position, record)
+                winners[identity] = (metric, position, record)
         ordered = sorted(winners.values(), key=lambda item: (-item[0], item[1]))
         return [item[2] for item in ordered[:max(0, limit)]]
     except (AttributeError, TypeError, ValueError, OverflowError):

@@ -53,6 +53,45 @@ def test_parser_extracts_url_and_story_text_dedupes_and_skips_reserved_owner():
     assert records[0]["meta"] == {"hn_id": "three", "hn_title": "Higher duplicate"}
 
 
+def test_parser_classifies_arxiv_as_paper_and_huggingface_as_model():
+    payload = {
+        "hits": [
+            {
+                "url": "https://arxiv.org/abs/2506.12345",
+                "points": 200,
+                "num_comments": 30,
+                "objectID": "paper",
+                "title": "A paper on HN",
+            },
+            {
+                "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4",
+                "points": 175,
+                "num_comments": 25,
+                "objectID": "model",
+                "title": "A model on HN",
+            },
+            {
+                # HF reserved first path segment is a page, not a model
+                "url": "https://huggingface.co/papers/2506.99999",
+                "points": 300,
+                "num_comments": 40,
+                "objectID": "hfpage",
+                "title": "HF papers page",
+            },
+        ]
+    }
+
+    records = hn.dedupe_records(hn.parse_response(payload), 50)
+    identity = {(r["entity_type"], r["entity_id"]) for r in records}
+
+    assert ("paper", "2506.12345") in identity
+    assert ("model", "deepseek-ai/DeepSeek-V4") in identity
+    assert not any(r["entity_type"] == "model" and r["entity_id"].startswith("papers/") for r in records)
+    paper = next(r for r in records if r["entity_type"] == "paper")
+    assert paper["url"] == "https://arxiv.org/abs/2506.12345"
+    assert "canonical_repo" not in paper
+
+
 def test_parser_hostile_shapes_overflow_and_missing_object_id_degrade_to_no_records():
     assert hn.parse_response({}) == []
     assert hn.parse_response({"hits": "not a list"}) == []

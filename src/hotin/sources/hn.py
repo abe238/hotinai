@@ -26,6 +26,33 @@ DEFAULT_DAYS = 30
 _GITHUB_REPO_RE = re.compile(
     r"(?:https?://)?(?:www\.)?github\.com/([\w.-]+/[\w.-]+)", re.IGNORECASE
 )
+_ARXIV_RE = re.compile(r"arxiv\.org/(?:abs|pdf)/(\d{4}\.\d{4,5})", re.IGNORECASE)
+_HF_MODEL_RE = re.compile(r"huggingface\.co/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)", re.IGNORECASE)
+_HF_RESERVED = {"papers", "datasets", "models", "spaces", "blog", "docs", "collections"}
+
+
+def _classify(hit: Dict[str, Any]) -> Optional[Tuple[str, str, str]]:
+    """Classify an HN story by its link into (entity_type, entity_id, url).
+
+    A GitHub link -> repo, an arXiv link -> paper, a HuggingFace model link ->
+    model. Returns None for a story that is none of these (kept out of hotin's
+    entity views rather than mis-filed as a repo).
+    """
+    reference = _github_reference(hit)
+    if reference is not None:
+        return ("repo", reference[1], reference[0])
+    blob = " ".join(
+        hit.get(field, "") for field in ("url", "story_text") if isinstance(hit.get(field), str)
+    )
+    arxiv = _ARXIV_RE.search(blob)
+    if arxiv is not None:
+        return ("paper", arxiv.group(1), "https://arxiv.org/abs/{}".format(arxiv.group(1)))
+    model = _HF_MODEL_RE.search(blob)
+    if model is not None:
+        slug = model.group(1)
+        if slug.split("/", 1)[0].lower() not in _HF_RESERVED:
+            return ("model", slug, "https://huggingface.co/{}".format(slug))
+    return None
 
 
 def _github_reference(hit: Dict[str, Any]) -> Optional[Tuple[str, str]]:
@@ -87,28 +114,30 @@ def parse_response(payload: Any) -> List[Dict[str, Any]]:
                 or not title.strip()
             ):
                 continue
-            reference = _github_reference(hit)
-            if reference is None:
+            classified = _classify(hit)
+            if classified is None:
                 continue
-            url, canonical_repo = reference
-            records.append(
-                {
-                    "url": url,
-                    "canonical_repo": canonical_repo,
-                    "name": title.strip(),
-                    "source": SOURCE,
-                    "signal": {"hn_points": points, "hn_comments": comments},
-                    "meta": {"hn_id": hn_id, "hn_title": title.strip()},
-                }
-            )
+            entity_type, entity_id, url = classified
+            record: Dict[str, Any] = {
+                "entity_type": entity_type,
+                "entity_id": entity_id,
+                "url": url,
+                "name": title.strip(),
+                "source": SOURCE,
+                "signal": {"hn_points": points, "hn_comments": comments},
+                "meta": {"hn_id": hn_id, "hn_title": title.strip()},
+            }
+            if entity_type == "repo":
+                record["canonical_repo"] = entity_id
+            records.append(record)
     except (AttributeError, TypeError, ValueError, OverflowError):
         return []
     return records
 
 
 def dedupe_records(records: Iterable[Dict[str, Any]], limit: int) -> List[Dict[str, Any]]:
-    """Keep the highest-points HN submission for each canonical repository."""
-    return dedupe_by_metric(records, limit, "hn_points", finite_int)
+    """Keep the highest-points HN submission per entity (repo, paper, or model)."""
+    return dedupe_by_metric(records, limit, "hn_points", finite_int, key="entity_id")
 
 
 def _normalise_limit(limit: Any) -> int:
@@ -208,17 +237,47 @@ def selftest() -> None:
                 "title": "Not a repository",
             },
             {
+                "url": "https://arxiv.org/abs/2506.12345",
+                "points": 200,
+                "num_comments": 30,
+                "objectID": "five",
+                "title": "A new paper",
+            },
+            {
+                "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4",
+                "points": 175,
+                "num_comments": 25,
+                "objectID": "six",
+                "title": "New model drop",
+            },
+            {
+                "url": "https://huggingface.co/papers/2506.99999",
+                "points": 300,
+                "num_comments": 40,
+                "objectID": "seven",
+                "title": "HF papers page, not a model",
+            },
+            {
                 "url": "https://example.com/nope",
                 "points": 500,
                 "num_comments": 50,
-                "objectID": "five",
-                "title": "Not GitHub",
+                "objectID": "eight",
+                "title": "Not classifiable",
             },
         ]
     }
     records = dedupe_records(parse_response(payload), 50)
-    assert [record["canonical_repo"] for record in records] == ["example/useful", "example/body-link"]
-    assert records[0]["signal"]["hn_points"] == 150
+    by_type = {(r["entity_type"], r["entity_id"]) for r in records}
+    assert ("repo", "example/useful") in by_type
+    assert ("repo", "example/body-link") in by_type
+    assert ("paper", "2506.12345") in by_type
+    assert ("model", "deepseek-ai/DeepSeek-V4") in by_type
+    # reserved HF first-segment (papers/) is not a model; unclassifiable is dropped
+    assert not any(r["entity_id"].startswith("papers/") for r in records)
+    assert all(r["url"] != "https://example.com/nope" for r in records)
+    # highest-points duplicate of a repo wins
+    repo = next(r for r in records if r["entity_id"] == "example/useful")
+    assert repo["signal"]["hn_points"] == 150
     assert parse_response(
         {"hits": [{"url": "https://github.com/example/repo", "points": 1e309}]}
     ) == []

@@ -164,11 +164,13 @@ def _score_color(score: float, top: float) -> str:
 
 
 def _repo_link(repo: dict, enabled: bool) -> str:
-    """Bold, hyperlinked ``owner/repo`` (falls back to the display name)."""
+    """Bold, hyperlinked ``owner/repo`` (falls back to the display name + its own url)."""
     slug = _safe(repo.get("canonical_repo") or "")
     if slug:
         return hyperlink(color(slug, "1", enabled), "https://github.com/{}".format(slug), enabled)
-    return color(_safe(repo.get("name", "")), "1", enabled)
+    name = color(_safe(repo.get("name", "")), "1", enabled)
+    url = repo.get("url")
+    return hyperlink(name, url, enabled) if isinstance(url, str) and url else name
 
 
 def _render_ranked(repos: List[dict], arguments: argparse.Namespace) -> None:
