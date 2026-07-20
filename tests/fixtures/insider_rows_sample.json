@@ -1,0 +1,34 @@
+[
+  {
+    "repo": {
+      "full_name": "testowner/test-repo",
+      "ai1000_stars": 1,
+      "distinct_starrers": 1,
+      "most_recent_star_at": "2026-07-20T00:09:26+00:00",
+      "description": "A test repository for hotin parser fixtures.",
+      "language": "TypeScript",
+      "starrers": [
+        {
+          "username": "testuser1",
+          "rank": 100
+        }
+      ]
+    }
+  },
+  {
+    "repo": {
+      "full_name": "testowner2/test-repo-two",
+      "ai1000_stars": 1,
+      "distinct_starrers": 1,
+      "most_recent_star_at": "2026-07-19T23:41:12+00:00",
+      "description": "Another test repository for hotin parser fixtures.",
+      "language": "TypeScript",
+      "starrers": [
+        {
+          "username": "testuser2",
+          "rank": 200
+        }
+      ]
+    }
+  }
+]
