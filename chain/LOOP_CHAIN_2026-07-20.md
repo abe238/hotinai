@@ -14,9 +14,42 @@ Zero setup for the core, works on any fresh machine, gets sharper the more you u
   Python/SQLite builds — code MUST detect this and fall back to a `LIKE`-based search path**,
   never crash or require a rebuild (Sol P2 fix #2).
 - **SQLite-only. Zero database server. No Postgres, no pgvector — ever, as a requirement.**
-- **No required external binaries.** the influencer-stars source smart-money is Python-only (no Go binary), and is
-  **optional enrichment, never load-bearing for corroboration** (Sol fix #1 — it's a fragile
-  RSC scrape; the core ranking must work identically with it absent).
+- **No required external binaries.** the influencer-stars source smart-money is Python-only (no Go binary; the existing
+  `insider-pp-cli` scrape pattern is reimplemented, not shelled out to).
+- **Smart-money stays PRIMARY and heavily weighted (revised 2026-07-20 — do not re-demote this).**
+  Sol's original "demote" language conflated two different things: RESILIENCE (the `hot` command
+  must not depend on the influencer-stars source's uptime to run at all) and SIGNAL WEIGHT (how much a working smart-money
+  read moves the score). Only the first is required. When the adapter succeeds, its contribution
+  is NOT capped low — it's a primary term, same tier as momentum. When it fails, the engine
+  degrades gracefully (score computes without it), it just never blocks the core `hot` command.
+  **Architecture (superseded twice — read this, not the earlier "cache-usernames-then-check-via-
+  GitHub-stargazers-API" idea, which is DEAD; GitHub restricted `/repos/{o}/{r}/stargazers` to
+  admins/collaborators June 30 2026, confirmed live 404 on real repos):**
+  - **Primary: the influencer-stars source's own repo-centric recent-activity feed** (`/ai/github/stars`, what
+    `insider-pp-cli` already hits) — it already returns `most_recent_star_at` with real, hours-fresh
+    timestamps (verified live: `2026-07-19T23:41:12Z` on a same-day check). This is repo-centric,
+    naturally fresh, and the influencer-stars source has already done the account-tracking/identity-joining work — no
+    reason to rebuild that ourselves.
+  - **Harden it, don't replace it (per Sol's second review):** schema-drift detection (the parser
+    must detect an unexpected shape and degrade to `[]` + a warning, never crash — this is the
+    original P1 pattern already fixed once in the yt-tool-extraction sibling project, reuse that
+    discipline), a freshness gate + 30-day retention with recency decay (old smart-money
+    observations should fade, matching the engine's general freshness treatment), explicit source
+    provenance + timestamp stored per observation, and **`unknown` outside the observed window
+    rather than implying "confirmed zero smart-money interest."**
+  - **REJECTED as the core mechanism (kept only as an experimental, feature-flagged, OFF-by-default
+    fallback — never L1's dependency):** bulk-crawling each of the ~1,000 cached AI-1000 usernames'
+    *entire lifetime* starred-repo history via GraphQL (`user(login:).starredRepositories`,
+    confirmed technically live/cheap in points). Sol's second review killed this as the primary
+    path: harvesting 1,000 people's full star history on a recurring cron is disproportionate to
+    "did a credible person notice this recently," and shares the same abuse-pattern shape GitHub
+    just restricted (mass collection of star relationship data), just inverted — a real risk of
+    being closed next, and arguably not something to build the product's core on even if it stays
+    open. If ever enabled, it needs an explicit opt-out mechanism for tracked people.
+  - **Cap smart-money's contribution relative to corroboration** — it's a heavily-weighted primary
+    term, but corroboration (independent-source agreement) stays the strongest multiplier; smart-
+    money alone should not be able to single-handedly outrank a repo with zero independent
+    corroboration, per Sol's balance note.
 - **Honest zero-key claim (Sol fix #2):** the **zero-key core** is GitHub + the public repo-trends API + HN + npm
   — this must be excellent with NO configuration. Reddit + YouTube are **key-unlocked social**
   (ScrapeCreators) and are documented as such, never blurred into "zero setup covers everything."
@@ -80,10 +113,19 @@ Each adapter: stdlib-first, a `--selftest` with hostile-input fixtures, never ra
 5. **reddit** — ScrapeCreators `/v1/reddit/subreddit` + `/search`. No key → `[]`, never fatal.
 6. **youtube** — ScrapeCreators `/v1/youtube/search`. No key → `[]`.
 
-**Optional enrichment (never load-bearing):**
-7. **smartmoney** — the influencer-stars source AI-1000 starrers, pure-Python scrape. Best-effort by design; the engine
-   must rank correctly with this adapter entirely absent/broken.
-8. **x** — stub only; SC doesn't cover X. Documented as bring-your-own-creds, not v1-core.
+**Primary credibility signal (resilience-optional, weight-primary — see the full spec above):**
+7. **smartmoney** — the influencer-stars source's repo-centric recent-GitHub-stars feed (`/ai/github/stars`), pure-Python
+   scrape (reimplements the `insider-pp-cli` pattern, no external binary). Best-effort TRANSPORT
+   (engine ranks correctly if this adapter is entirely absent/broken this run) but a PRIMARY,
+   heavily-weighted signal when it succeeds — not demoted in importance. Includes schema-drift
+   detection, a freshness gate + 30-day retention with decay, and `unknown`-outside-window
+   semantics (never implies zero interest just because it's outside the observed range).
+
+**Experimental, feature-flagged, OFF by default (not L1's dependency):**
+8. **smartmoney-deep** — the GraphQL starred-repos-history inversion. Rejected as core (see spec
+   above); implement only behind an explicit opt-in flag if built at all, never wired into the
+   default `hot` ranking path.
+9. **x** — stub only; ScrapeCreators doesn't cover X. Documented as bring-your-own-creds, not v1-core.
 
 ## The engine (query-time, no-history-required)
 - **canonicalization** — first pass, before anything else touches a record (Sol fix #7).
