@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from hotin.canonical import canonicalize
+from hotin.coerce import finite_int
 from hotin.throttle import Throttle
 
 
@@ -31,16 +32,6 @@ _RSC_CHUNK_RE = re.compile(
 )
 _RSC_SEGMENT_RE = re.compile(r"^[0-9a-f]+:(.*)")
 LOGGER = logging.getLogger(__name__)
-
-
-def _as_int(value: Any, default: int = 0) -> int:
-    """Return an integer while treating malformed and infinite values as default."""
-    if isinstance(value, bool) or value is None:
-        return default
-    try:
-        return int(value)
-    except (TypeError, ValueError, OverflowError):
-        return default
 
 
 def _decode_rsc_chunk(chunk: Any) -> Optional[str]:
@@ -152,7 +143,7 @@ def parse_rows(rows: Any, now: Optional[datetime] = None) -> List[Dict[str, Any]
                     if not isinstance(username, str) or not username.strip():
                         continue
                     top_starrers.append(
-                        {"username": username, "rank": _as_int(starrer.get("rank"), -1)}
+                        {"username": username, "rank": finite_int(starrer.get("rank"), -1)}
                     )
                     if len(top_starrers) == 5:
                         break
@@ -166,8 +157,8 @@ def parse_rows(rows: Any, now: Optional[datetime] = None) -> List[Dict[str, Any]
                     "name": canonical_repo,
                     "source": SOURCE,
                     "signal": {
-                        "smartmoney_starrers": _as_int(repo.get("distinct_starrers")),
-                        "smartmoney_ai1000": _as_int(repo.get("ai1000_stars")),
+                        "smartmoney_starrers": finite_int(repo.get("distinct_starrers"), 0),
+                        "smartmoney_ai1000": finite_int(repo.get("ai1000_stars"), 0),
                         "smartmoney_freshness": _freshness(raw_timestamp, now),
                         "smartmoney_most_recent_star_at": raw_timestamp,
                     },
@@ -184,7 +175,7 @@ def parse_rows(rows: Any, now: Optional[datetime] = None) -> List[Dict[str, Any]
 
 
 def _normalise_limit(limit: Any) -> int:
-    return max(0, _as_int(limit, 50))
+    return max(0, finite_int(limit, 50))
 
 
 def _request_html() -> Optional[str]:

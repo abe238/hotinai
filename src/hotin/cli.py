@@ -1,16 +1,18 @@
 """The command dispatcher and safe terminal renderers for hotin."""
 
 import argparse
+import contextlib
 import json
 import math
 import os
 import sys
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
 from . import __version__, engine, health
 from .cache import open_cache
 from .canonical import canonicalize
+from .coerce import finite_float
 from .config import config_dir, env_path, load_config
 from .render import color, sanitize
 from .sources import github, hn, npm, trends, reddit, youtube
@@ -112,13 +114,7 @@ def _safe(value: object) -> str:
 
 
 def _finite(value: object, default: float = 0.0) -> float:
-    if isinstance(value, bool) or value is None:
-        return default
-    try:
-        number = float(value)
-    except (TypeError, ValueError, OverflowError):
-        return default
-    return number if math.isfinite(number) else default
+    return finite_float(value, default)
 
 
 def _format_number(value: object) -> str:
@@ -159,6 +155,15 @@ def _record_signal(record: dict) -> dict:
     return signal if isinstance(signal, dict) else {}
 
 
+def _signal_metric(field: str, fallback_field: Optional[str] = None) -> Callable[[dict], Tuple[str, float]]:
+    """Build a metric reading one signal field, with an optional fallback field."""
+    def metric(record: dict) -> Tuple[str, float]:
+        signal = _record_signal(record)
+        value = signal.get(field, signal.get(fallback_field) if fallback_field else None)
+        return field, _finite(value, float("-inf"))
+    return metric
+
+
 def _trend_metric(record: dict) -> Tuple[str, float]:
     signal = _record_signal(record)
     for key in ("trend_stars", "trend_total_score", "trend_collection_score"):
@@ -191,6 +196,15 @@ def _attribution(arguments: argparse.Namespace, *, force: bool = False) -> None:
         return
 
 
+@contextlib.contextmanager
+def _cache_session() -> Iterator[Any]:
+    cache = open_cache()
+    try:
+        yield cache
+    finally:
+        cache.close()
+
+
 def _normal_limit(arguments: argparse.Namespace) -> Optional[int]:
     limit = arguments.limit if arguments.limit is not None else 50
     if limit < 0:
@@ -201,12 +215,12 @@ def _normal_limit(arguments: argparse.Namespace) -> Optional[int]:
 
 def _single_source(command: str, arguments: argparse.Namespace) -> int:
     sources: Dict[str, Tuple[Any, Callable[[dict], Tuple[str, float]]]] = {
-        "hn": (hn, lambda record: ("hn_points", _finite(_record_signal(record).get("hn_points"), float("-inf")))),
-        "npm": (npm, lambda record: ("npm_growth", _finite(_record_signal(record).get("npm_growth", _record_signal(record).get("npm_downloads_week")), float("-inf")))),
-        "stars": (github, lambda record: ("stars", _finite(_record_signal(record).get("stars"), float("-inf")))),
+        "hn": (hn, _signal_metric("hn_points")),
+        "npm": (npm, _signal_metric("npm_growth", "npm_downloads_week")),
+        "stars": (github, _signal_metric("stars")),
         "trending": (trends, _trend_metric),
-        "reddit": (reddit, lambda record: ("reddit_score", _finite(_record_signal(record).get("reddit_score"), float("-inf")))),
-        "youtube": (youtube, lambda record: ("youtube_views", _finite(_record_signal(record).get("youtube_views"), float("-inf")))),
+        "reddit": (reddit, _signal_metric("reddit_score")),
+        "youtube": (youtube, _signal_metric("youtube_views")),
     }
     limit = _normal_limit(arguments)
     if limit is None:
@@ -296,8 +310,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         if limit is None:
             return 2
         config = load_config()
-        cache = open_cache()
-        try:
+        with _cache_session() as cache:
             statuses = engine.fetch_all(config, limit=limit, cache=cache)
             cached = cache.get_all()
             ranked = engine.rank(engine.merge_by_repo(cached), limit=limit)
@@ -309,8 +322,6 @@ def main(argv: Optional[List[str]] = None) -> int:
             if exit_code:
                 print(_safe(message), file=sys.stderr)
             _attribution(arguments)
-        finally:
-            cache.close()
         # Adapters can leave network workers behind after the fetch deadline.
         sys.stdout.flush()
         sys.stderr.flush()
@@ -322,8 +333,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         limit = _normal_limit(arguments)
         if limit is None:
             return 2
-        cache = open_cache()
-        try:
+        with _cache_session() as cache:
             ranked = engine.rank(engine.merge_by_repo(cache.search(arguments.query)), limit=limit)
             if arguments.json:
                 _dump_json({"tools": ranked, "query": arguments.query})
@@ -334,11 +344,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                     print("No cached tools match {}.".format(_safe(arguments.query)))
             _attribution(arguments)
             return 0
-        finally:
-            cache.close()
     if command == "show":
-        cache = open_cache()
-        try:
+        with _cache_session() as cache:
             canonical = canonicalize(arguments.repo)
             repo = engine.merge_by_repo(cache.get_all()).get(canonical) if canonical else None
             if repo is None:
@@ -354,14 +361,11 @@ def main(argv: Optional[List[str]] = None) -> int:
                     _show_repo(scored, arguments)
             _attribution(arguments)
             return 0
-        finally:
-            cache.close()
     if command == "update":
         limit = _normal_limit(arguments)
         if limit is None:
             return 2
-        cache = open_cache()
-        try:
+        with _cache_session() as cache:
             statuses = engine.fetch_all(load_config(), limit=limit, cache=cache, ttl=0)
             exit_code, message = health.summarize(statuses, cache_has_data=bool(cache.get_all()))
             if arguments.json:
@@ -374,8 +378,6 @@ def main(argv: Optional[List[str]] = None) -> int:
                 print(_safe(message), file=sys.stderr)
             _attribution(arguments)
             return exit_code
-        finally:
-            cache.close()
     print("{}: not yet implemented".format(command))
     return 0
 

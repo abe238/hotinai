@@ -9,7 +9,9 @@ import urllib.parse
 import urllib.request
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-from hotin.canonical import RESERVED_TOP_LEVEL, canonicalize
+from hotin.canonical import canonicalize, trim_glued_repo_name
+from hotin.coerce import finite_int
+from hotin.dedupe import dedupe_by_metric
 from hotin.throttle import Throttle
 
 
@@ -26,16 +28,6 @@ _GITHUB_REPO_RE = re.compile(
 )
 
 
-def _as_int(value: Any, default: Optional[int] = None) -> Optional[int]:
-    """Safely coerce JSON numeric fields, including infinite floats."""
-    if isinstance(value, bool) or value is None:
-        return default
-    try:
-        return int(value)
-    except (TypeError, ValueError, OverflowError):
-        return default
-
-
 def _github_reference(hit: Dict[str, Any]) -> Optional[Tuple[str, str]]:
     """Find the first usable repository URL in an HN story's URL or body."""
     try:
@@ -47,10 +39,7 @@ def _github_reference(hit: Dict[str, Any]) -> Optional[Tuple[str, str]]:
         for candidate in candidates:
             for match in _GITHUB_REPO_RE.finditer(candidate):
                 slug = match.group(1)
-                owner = slug.split("/", 1)[0].lower()
-                # Avoid false matches such as github.com/blog/announcement.
-                if owner in RESERVED_TOP_LEVEL:
-                    continue
+                # canonicalize() rejects reserved paths such as github.com/blog.
                 canonical_repo = canonicalize("https://github.com/{}".format(slug))
                 if canonical_repo:
                     return "https://github.com/{}".format(canonical_repo), canonical_repo
@@ -59,12 +48,7 @@ def _github_reference(hit: Dict[str, Any]) -> Optional[Tuple[str, str]]:
         if isinstance(story_text, str):
             for match in _GITHUB_REPO_RE.finditer(story_text):
                 owner, repo = match.group(1).rsplit("/", 1)
-                # Free text can glue its next sentence onto a URL.  This may
-                # trim a genuine ``myProject`` repo, an accepted trade-off.
-                repo = re.split(r"(?<=[a-z0-9])(?=[A-Z])", repo, maxsplit=1)[0]
-                owner = owner.lower()
-                if owner in RESERVED_TOP_LEVEL:
-                    continue
+                repo = trim_glued_repo_name(repo)
                 canonical_repo = canonicalize("https://github.com/{}/{}".format(owner, repo))
                 if canonical_repo:
                     return "https://github.com/{}".format(canonical_repo), canonical_repo
@@ -90,8 +74,8 @@ def parse_response(payload: Any) -> List[Dict[str, Any]]:
         for hit in hits:
             if not isinstance(hit, dict):
                 continue
-            points = _as_int(hit.get("points"))
-            comments = _as_int(hit.get("num_comments"))
+            points = finite_int(hit.get("points"))
+            comments = finite_int(hit.get("num_comments"))
             hn_id = hit.get("objectID")
             title = hit.get("title")
             if (
@@ -124,29 +108,11 @@ def parse_response(payload: Any) -> List[Dict[str, Any]]:
 
 def dedupe_records(records: Iterable[Dict[str, Any]], limit: int) -> List[Dict[str, Any]]:
     """Keep the highest-points HN submission for each canonical repository."""
-    winners: Dict[str, Tuple[int, int, Dict[str, Any]]] = {}
-    try:
-        for position, record in enumerate(records):
-            if not isinstance(record, dict):
-                continue
-            canonical_repo = record.get("canonical_repo")
-            signal = record.get("signal")
-            if not isinstance(canonical_repo, str) or not isinstance(signal, dict):
-                continue
-            points = _as_int(signal.get("hn_points"))
-            if points is None:
-                continue
-            current = winners.get(canonical_repo)
-            if current is None or points > current[0]:
-                winners[canonical_repo] = (points, position, record)
-        ordered = sorted(winners.values(), key=lambda item: (-item[0], item[1]))
-        return [item[2] for item in ordered[:max(0, limit)]]
-    except (AttributeError, TypeError, ValueError, OverflowError):
-        return []
+    return dedupe_by_metric(records, limit, "hn_points", finite_int)
 
 
 def _normalise_limit(limit: Any) -> int:
-    value = _as_int(limit, 50)
+    value = finite_int(limit, 50)
     return max(0, value if value is not None else 50)
 
 
@@ -154,8 +120,8 @@ def _settings(config: Optional[dict]) -> Tuple[int, int]:
     """Read optional non-secret tuning values while retaining safe defaults."""
     if not isinstance(config, dict):
         return DEFAULT_MIN_POINTS, DEFAULT_DAYS
-    min_points = _as_int(config.get("HN_MIN_POINTS"), DEFAULT_MIN_POINTS)
-    days = _as_int(config.get("HN_DAYS"), DEFAULT_DAYS)
+    min_points = finite_int(config.get("HN_MIN_POINTS"), DEFAULT_MIN_POINTS)
+    days = finite_int(config.get("HN_DAYS"), DEFAULT_DAYS)
     return max(0, min_points if min_points is not None else DEFAULT_MIN_POINTS), max(
         1, days if days is not None else DEFAULT_DAYS
     )

@@ -9,6 +9,7 @@ import urllib.request
 from typing import Any, Dict, List, Optional, Tuple
 
 from hotin.canonical import canonicalize
+from hotin.coerce import finite_float, finite_int
 from hotin.throttle import Throttle
 
 
@@ -25,12 +26,7 @@ def _empty(detail: str) -> Dict[str, Any]:
 
 
 def _normalise_limit(limit: Any) -> int:
-    if isinstance(limit, bool) or limit is None:
-        return 50
-    try:
-        return max(0, int(limit))
-    except (TypeError, ValueError, OverflowError):
-        return 50
+    return max(0, finite_int(limit, 50))
 
 
 def _github_repo(package: Dict[str, Any]) -> Optional[str]:
@@ -79,14 +75,14 @@ def parse_search_response(payload: Any) -> List[Dict[str, str]]:
 
 
 def _finite_download(value: Any) -> Optional[float]:
-    """Accept only finite numeric download counts from an individual day."""
+    """Accept only already-numeric download counts, never numeric strings.
+
+    Downloads come from a trusted registry API where a string here means a
+    malformed response, not a value worth coercing.
+    """
     if not isinstance(value, (int, float)):
         return None
-    try:
-        numeric = float(value)
-    except (TypeError, ValueError, OverflowError):
-        return None
-    return numeric if math.isfinite(numeric) else None
+    return finite_float(value)
 
 
 def parse_downloads_response(payload: Any) -> Optional[Tuple[float, float]]:

@@ -12,6 +12,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 from hotin.canonical import canonicalize
+from hotin.coerce import finite_int
 from hotin.config import get as config_get
 from hotin.throttle import Throttle
 
@@ -22,23 +23,13 @@ THROTTLE = Throttle(min_interval=1.0, jitter=0.5)
 USER_AGENT = "hotin/0.0.1"
 
 
-def _as_int(value: Any, default: int = 0) -> int:
-    """Coerce GitHub number fields without accepting hostile infinities."""
-    if isinstance(value, bool) or value is None:
-        return default
-    try:
-        return int(value)
-    except (TypeError, ValueError, OverflowError):
-        return default
-
-
 def _normalise_limit(limit: Any) -> int:
-    return max(0, min(_as_int(limit, 50), 100))
+    return max(0, min(finite_int(limit, 50), 100))
 
 
 def _cutoff_date(days: Any) -> str:
     """Return a safe UTC date ``days`` before today, defaulting to 90 days."""
-    normalised_days = _as_int(days, 90)
+    normalised_days = finite_int(days, 90)
     if normalised_days < 0:
         normalised_days = 90
     try:
@@ -106,12 +97,12 @@ def parse_response(payload: Any) -> List[Dict[str, Any]]:
                     "name": name,
                     "source": SOURCE,
                     "signal": {
-                        "stars": _as_int(item.get("stargazers_count")),
+                        "stars": finite_int(item.get("stargazers_count"), 0),
                         "created_at": _string_or_none(item.get("created_at")),
                         "pushed_at": _string_or_none(item.get("pushed_at")),
                         "language": _string_or_none(item.get("language")),
-                        "forks": _as_int(item.get("forks_count")),
-                        "open_issues": _as_int(item.get("open_issues_count")),
+                        "forks": finite_int(item.get("forks_count"), 0),
+                        "open_issues": finite_int(item.get("open_issues_count"), 0),
                     },
                     "meta": {
                         "description": _string_or_none(item.get("description")),

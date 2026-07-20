@@ -12,31 +12,20 @@ from typing import Any, Dict, Iterable, List, Optional
 from . import categories
 from .cache import open_cache
 from .canonical import canonicalize
+from .coerce import finite_float
 from .health import SourceStatus
 from .sources import github, hn, npm, trends, reddit, smartmoney, x, youtube
 
 
 SOURCES = (github, trends, hn, npm, reddit, youtube, smartmoney, x)
-_CACHE_SIGNAL_KEY = "__hotin_signal"
-_CACHE_META_KEY = "__hotin_meta"
 # At 12, smart-money alone remains influential but cannot exceed modest
 # corroborated OSS momentum from three independent sources.
 CREDIBILITY_CAP = 12.0
 
 
-def _finite_number(value: Any, default: float = 0.0) -> float:
-    if isinstance(value, bool) or value is None:
-        return default
-    try:
-        number = float(value)
-    except (TypeError, ValueError, OverflowError):
-        return default
-    return number if math.isfinite(number) else default
-
-
 def _timestamp(value: Any) -> Optional[float]:
     """Parse an ISO timestamp or a finite Unix timestamp, returning UTC seconds."""
-    number = _finite_number(value, float("nan"))
+    number = finite_float(value, float("nan"))
     if math.isfinite(number):
         return number
     if not isinstance(value, str) or not value.strip():
@@ -63,8 +52,8 @@ def _cache_record(record: Dict[str, Any]) -> Dict[str, Any]:
     """Preserve adapter signal and meta in L0's single JSON cache payload."""
     stored = dict(record)
     stored["signal_json"] = {
-        _CACHE_SIGNAL_KEY: record.get("signal") if isinstance(record.get("signal"), dict) else {},
-        _CACHE_META_KEY: record.get("meta") if isinstance(record.get("meta"), dict) else {},
+        "signal": record.get("signal") if isinstance(record.get("signal"), dict) else {},
+        "meta": record.get("meta") if isinstance(record.get("meta"), dict) else {},
     }
     return stored
 
@@ -77,14 +66,19 @@ def _source_name(source: Any) -> str:
     return module_name.rsplit(".", 1)[-1]
 
 
-def _source_is_fresh(records: Iterable[Any], source_name: str, cutoff: float) -> bool:
+def _latest_fetch_by_source(records: Iterable[Any]) -> Dict[str, float]:
+    """One pass over the cache, not one pass per source."""
+    latest: Dict[str, float] = {}
     for record in records:
-        if not isinstance(record, dict) or record.get("source") != source_name:
+        if not isinstance(record, dict):
             continue
+        source_name = record.get("source")
         fetched_at = _timestamp(record.get("fetched_at"))
-        if fetched_at is not None and fetched_at >= cutoff:
-            return True
-    return False
+        if not isinstance(source_name, str) or fetched_at is None:
+            continue
+        if fetched_at > latest.get(source_name, float("-inf")):
+            latest[source_name] = fetched_at
+    return latest
 
 
 def fetch_all(
@@ -93,16 +87,17 @@ def fetch_all(
     """Run every adapter concurrently and store any returned records in ``cache``."""
     owned_cache = cache is None
     cache = open_cache() if owned_cache else cache
-    cutoff = time.time() - max(0.0, _finite_number(ttl))
+    cutoff = time.time() - max(0.0, finite_float(ttl, 0.0))
     try:
         cached_records = cache.get_all()
     except Exception:
         cached_records = []
+    latest_fetch = _latest_fetch_by_source(cached_records)
     statuses_by_source: Dict[str, SourceStatus] = {}
     pending = []
     for source in SOURCES:
         source_name = _source_name(source)
-        if _source_is_fresh(cached_records, source_name, cutoff):
+        if latest_fetch.get(source_name, float("-inf")) >= cutoff:
             statuses_by_source[source_name] = SourceStatus(source_name, "ok", "served from cache")
         else:
             pending.append(source)
@@ -160,14 +155,10 @@ def _decoded_record(record: Any) -> Optional[Dict[str, Any]]:
         except (TypeError, ValueError):
             payload = {}
     if not isinstance(signal, dict):
-        if isinstance(payload, dict) and isinstance(payload.get(_CACHE_SIGNAL_KEY), dict):
-            signal = payload[_CACHE_SIGNAL_KEY]
-        elif isinstance(payload, dict):  # compatibility with pre-engine cache entries
-            signal = payload
-        else:
-            signal = {}
+        signal = payload.get("signal", {}) if isinstance(payload, dict) else {}
+        signal = signal if isinstance(signal, dict) else {}
     if not isinstance(meta, dict):
-        meta = payload.get(_CACHE_META_KEY, {}) if isinstance(payload, dict) else {}
+        meta = payload.get("meta", {}) if isinstance(payload, dict) else {}
     result["signal"] = signal
     result["meta"] = meta if isinstance(meta, dict) else {}
     return result
@@ -216,30 +207,30 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     meta = merged.get("meta") if isinstance(merged.get("meta"), dict) else {}
     sources = merged.get("sources")
     source_count = len(sources) if isinstance(sources, (set, list, tuple)) else 0
-    reference = _finite_number(now, time.time()) if now is not None else time.time()
+    reference = finite_float(now, time.time()) if now is not None else time.time()
     young = _is_young(signal.get("created_at"), reference)
-    oss_score = (_finite_number(signal.get("trend_stars")) or
-                 _finite_number(signal.get("trend_total_score")) or
-                 _finite_number(signal.get("trend_collection_score")))
+    oss_score = (finite_float(signal.get("trend_stars"), 0.0) or
+                 finite_float(signal.get("trend_total_score"), 0.0) or
+                 finite_float(signal.get("trend_collection_score"), 0.0))
     momentum = math.log1p(max(0.0, oss_score)) * 2.0
-    momentum += math.log1p(max(0.0, _finite_number(signal.get("npm_growth")))) * 1.0
-    momentum += math.log1p(max(0.0, _finite_number(signal.get("stars")))) * (1.5 if young else 0.3)
+    momentum += math.log1p(max(0.0, finite_float(signal.get("npm_growth"), 0.0))) * 1.0
+    momentum += math.log1p(max(0.0, finite_float(signal.get("stars"), 0.0))) * (1.5 if young else 0.3)
 
     rank_bonus = 0.0
     starrers = meta.get("top_starrers")
     if isinstance(starrers, list):
         for starrer in starrers:
             if isinstance(starrer, dict):
-                rank = _finite_number(starrer.get("rank"), 1000.0)
+                rank = finite_float(starrer.get("rank"), 1000.0)
                 rank_bonus += max(0.0, (1000.0 - rank) / 1000.0) * 0.5
-    credibility = math.log1p(max(0.0, _finite_number(signal.get("smartmoney_starrers")))) * 3.0
-    credibility += max(0.0, _finite_number(signal.get("smartmoney_ai1000"))) * 1.2 + rank_bonus
+    credibility = math.log1p(max(0.0, finite_float(signal.get("smartmoney_starrers"), 0.0))) * 3.0
+    credibility += max(0.0, finite_float(signal.get("smartmoney_ai1000"), 0.0)) * 1.2 + rank_bonus
     # A single smart-money source must not eclipse independently corroborated momentum.
     credibility = min(credibility, CREDIBILITY_CAP)
 
-    signal_score = math.log1p(max(0.0, _finite_number(signal.get("hn_points")))) * 1.5
-    signal_score += math.log1p(max(0.0, _finite_number(signal.get("reddit_score")))) * 1.2
-    signal_score += math.log1p(max(0.0, _finite_number(signal.get("youtube_views")))) * 0.3
+    signal_score = math.log1p(max(0.0, finite_float(signal.get("hn_points"), 0.0))) * 1.5
+    signal_score += math.log1p(max(0.0, finite_float(signal.get("reddit_score"), 0.0))) * 1.2
+    signal_score += math.log1p(max(0.0, finite_float(signal.get("youtube_views"), 0.0))) * 0.3
     corroboration = 1.0 + 0.25 * max(0, source_count - 1)
 
     timestamps = [_timestamp(merged.get("fetched_at")), _timestamp(signal.get("pushed_at")),
@@ -256,7 +247,7 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
         badges.append("new")
     if freshness_days <= 30:
         badges.append("fresh")
-    if _finite_number(signal.get("smartmoney_starrers")) >= 2:
+    if finite_float(signal.get("smartmoney_starrers"), 0.0) >= 2:
         badges.append("smart-money")
     if source_count >= 3:
         badges.append("corroborated")

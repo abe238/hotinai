@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import json
-import re
 import urllib.parse
 import urllib.request
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
-from hotin.canonical import canonicalize
+from hotin.canonical import GITHUB_URL_IN_TEXT_RE, canonicalize, trim_glued_repo_name
+from hotin.coerce import finite_int
 from hotin.throttle import Throttle
 
 
@@ -17,37 +17,18 @@ ENDPOINT = "https://api.scrapecreators.com/v1/youtube/search"
 DEFAULT_QUERIES = ("new AI tool", "AI agent github", "open source AI")
 THROTTLE = Throttle(min_interval=2.0, jitter=1.0)
 
-# Match repository-shaped links only; canonicalize() rejects GitHub's reserved
-# top-level paths and supplies the common owner/repository representation.
-_GITHUB_URL_RE = re.compile(
-    r"https?://(?:www\.)?github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+)",
-    re.IGNORECASE,
-)
-
 
 def _empty(detail: str) -> Dict[str, Any]:
     return {"records": [], "status": "empty", "detail": detail}
-
-
-def _coerce_int(value: Any) -> Optional[int]:
-    """Safely coerce API numeric values, including hostile infinities."""
-    if isinstance(value, bool) or value is None:
-        return None
-    try:
-        return int(value)
-    except (TypeError, ValueError, OverflowError):
-        return None
 
 
 def _github_reference(text: Any) -> Optional[Tuple[str, str]]:
     """Return the first canonical repository link in a video text field."""
     if not isinstance(text, str):
         return None
-    for match in _GITHUB_URL_RE.finditer(text):
+    for match in GITHUB_URL_IN_TEXT_RE.finditer(text):
         owner, repo = match.groups()
-        # Free text can glue prose onto a URL; prefer truncation over a false
-        # repository attribution, even though this can trim ``myProject``.
-        repo = re.split(r"(?<=[a-z0-9])(?=[A-Z])", repo, maxsplit=1)[0]
+        repo = trim_glued_repo_name(repo)
         canonical = canonicalize("{}/{}".format(owner, repo))
         if canonical:
             return "https://github.com/{}".format(canonical), canonical
@@ -67,7 +48,7 @@ def _view_count(video: Dict[str, Any]) -> Optional[int]:
     """Read documented and compatibility view-count fields without guessing text."""
     for key in ("viewCountInt", "viewCount", "view_count"):
         if key in video:
-            value = _coerce_int(video.get(key))
+            value = finite_int(video.get(key))
             if value is not None:
                 return value
     return None
@@ -190,7 +171,7 @@ def _request_search(query: str, api_key: str) -> Optional[Dict[str, Any]]:
 
 
 def _normalise_limit(limit: Any) -> int:
-    value = _coerce_int(limit)
+    value = finite_int(limit)
     return 50 if value is None else max(0, value)
 
 

@@ -48,7 +48,7 @@ def test_hot_prints_ranked_json_from_seeded_cache(monkeypatch, capsys):
         kwargs["cache"].upsert({
             "url": "https://github.com/acme/tool", "canonical_repo": "acme/tool",
             "name": "Acme Agent", "source": "github",
-            "signal_json": {"__hotin_signal": {"stars": 20}, "__hotin_meta": {"topics": ["agent"]}},
+            "signal_json": {"signal": {"stars": 20}, "meta": {"topics": ["agent"]}},
         })
         return [SourceStatus("github", "ok")]
 
@@ -84,7 +84,7 @@ def test_hot_json_sanitizes_nonfinite_raw_signal(monkeypatch, capsys):
         kwargs["cache"].upsert({
             "url": "https://github.com/acme/tool", "canonical_repo": "acme/tool",
             "name": "Acme Agent", "source": "github",
-            "signal_json": {"__hotin_signal": {"stars": float("inf")}, "__hotin_meta": {}},
+            "signal_json": {"signal": {"stars": float("inf")}, "meta": {}},
         })
         return [SourceStatus("github", "ok")]
 
@@ -168,7 +168,7 @@ def _cache_record(name, source, signal, *, canonical="acme/agent", meta=None):
         "canonical_repo": canonical,
         "name": name,
         "source": source,
-        "signal_json": {"__hotin_signal": signal, "__hotin_meta": meta or {}},
+        "signal_json": {"signal": signal, "meta": meta or {}},
         "fetched_at": time.time(),
     }
 

@@ -95,6 +95,9 @@ class Cache:
                 UNIQUE(url, source)
             )"""
         )
+        self._connection.execute(
+            "CREATE INDEX IF NOT EXISTS idx_tools_fetched_at ON tools(fetched_at DESC)"
+        )
         fts_existed = self._connection.execute(
             "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'tools_fts'"
         ).fetchone() is not None

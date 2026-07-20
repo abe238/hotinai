@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import json
-import math
 import urllib.parse
 import urllib.request
 from typing import Any, Dict, List, Optional
 
 from hotin.canonical import canonicalize
+from hotin.coerce import finite_float, finite_int
 from hotin.throttle import Throttle
 
 
@@ -16,28 +16,6 @@ SOURCE = "trends"
 ENDPOINT = "https://api.ossinsight.io/v1/trends/repos/"
 THROTTLE = Throttle(min_interval=2.0, jitter=1.0)
 _PERIODS = {"past_week", "past_month"}
-
-
-def _as_int(value: Any) -> Optional[int]:
-    """Safely convert a whole-number metric, including hostile infinity values."""
-    if isinstance(value, bool) or value is None:
-        return None
-    try:
-        converted = int(value)
-        return converted
-    except (TypeError, ValueError, OverflowError):
-        return None
-
-
-def _as_float(value: Any) -> Optional[float]:
-    """Safely convert a score without allowing NaN or infinity into Records."""
-    if isinstance(value, bool) or value is None:
-        return None
-    try:
-        converted = float(value)
-        return converted if math.isfinite(converted) else None
-    except (TypeError, ValueError, OverflowError):
-        return None
 
 
 def _column_names(columns: Any) -> Optional[List[str]]:
@@ -103,14 +81,14 @@ def parse_response(payload: Any) -> List[Dict[str, Any]]:
 
             signal: Dict[str, Any] = {}
             for column in ("stars", "pull_requests", "pushes"):
-                metric = _as_int(values.get(column))
+                metric = finite_int(values.get(column))
                 if metric is not None:
                     signal["trend_{}".format(column)] = metric
 
             # The current live endpoint exposes total_score.  Older variants
             # have used collection_score, so retain support for that schema.
             for score_column in ("total_score", "collection_score"):
-                score = _as_float(values.get(score_column))
+                score = finite_float(values.get(score_column))
                 if score is not None:
                     signal["trend_{}".format(score_column)] = score
                     break
@@ -139,7 +117,7 @@ def parse_response(payload: Any) -> List[Dict[str, Any]]:
 
 
 def _normalise_limit(limit: Any) -> int:
-    value = _as_int(limit)
+    value = finite_int(limit)
     return 50 if value is None else max(0, value)
 
 

@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import json
-import re
 import urllib.parse
 import urllib.request
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-from hotin.canonical import canonicalize
+from hotin.canonical import GITHUB_URL_IN_TEXT_RE, canonicalize, trim_glued_repo_name
+from hotin.coerce import finite_int
+from hotin.dedupe import dedupe_by_metric
 from hotin.throttle import Throttle
 
 
@@ -25,26 +26,9 @@ ENDPOINT = "https://api.scrapecreators.com/v1/reddit/subreddit"
 SEARCH_ENDPOINT = "https://api.scrapecreators.com/v1/reddit/search"
 THROTTLE = Throttle(min_interval=2.0, jitter=1.0)
 
-# This deliberately finds only GitHub repository-shaped URLs.  The canonicalizer
-# performs the authoritative owner/repository validation afterwards.
-_GITHUB_URL_RE = re.compile(
-    r"https?://(?:www\.)?github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+)",
-    re.IGNORECASE,
-)
-
 
 def _empty(detail: str) -> Dict[str, Any]:
     return {"records": [], "status": "empty", "detail": detail}
-
-
-def _coerce_int(value: Any) -> Optional[int]:
-    """Coerce API numeric fields without allowing hostile numbers to escape."""
-    if isinstance(value, bool) or value is None:
-        return None
-    try:
-        return int(value)
-    except (TypeError, ValueError, OverflowError):
-        return None
 
 
 def _github_reference(post: Dict[str, Any]) -> Optional[Tuple[str, str]]:
@@ -63,9 +47,9 @@ def _github_reference(post: Dict[str, Any]) -> Optional[Tuple[str, str]]:
     for key in ("selftext", "body"):
         value = post.get(key)
         if isinstance(value, str):
-            for match in _GITHUB_URL_RE.finditer(value):
+            for match in GITHUB_URL_IN_TEXT_RE.finditer(value):
                 owner, repo = match.groups()
-                repo = re.split(r"(?<=[a-z0-9])(?=[A-Z])", repo, maxsplit=1)[0]
+                repo = trim_glued_repo_name(repo)
                 canonical = canonicalize("{}/{}".format(owner, repo))
                 if canonical:
                     return "https://github.com/{}".format(canonical), canonical
@@ -99,7 +83,7 @@ def parse_response(payload: Any, subreddit: str) -> List[Dict[str, Any]]:
         for post in posts:
             if not isinstance(post, dict):
                 continue
-            score = _coerce_int(post.get("score"))
+            score = finite_int(post.get("score"))
             if score is None:
                 continue
             reference = _github_reference(post)
@@ -111,7 +95,7 @@ def parse_response(payload: Any, subreddit: str) -> List[Dict[str, Any]]:
             name = title.strip() if isinstance(title, str) and title.strip() else canonical_repo
             signal: Dict[str, Any] = {"reddit_score": score}
             if "num_comments" in post:
-                comments = _coerce_int(post.get("num_comments"))
+                comments = finite_int(post.get("num_comments"))
                 if comments is not None:
                     signal["reddit_comments"] = comments
 
@@ -139,25 +123,7 @@ def parse_response(payload: Any, subreddit: str) -> List[Dict[str, Any]]:
 
 def dedupe_records(records: Iterable[Dict[str, Any]], limit: int) -> List[Dict[str, Any]]:
     """Keep the highest-scored Reddit post for each canonical repository."""
-    winners: Dict[str, Tuple[int, int, Dict[str, Any]]] = {}
-    try:
-        for position, record in enumerate(records):
-            if not isinstance(record, dict):
-                continue
-            canonical = record.get("canonical_repo")
-            signal = record.get("signal")
-            if not isinstance(canonical, str) or not isinstance(signal, dict):
-                continue
-            score = _coerce_int(signal.get("reddit_score"))
-            if score is None:
-                continue
-            current = winners.get(canonical)
-            if current is None or score > current[0]:
-                winners[canonical] = (score, position, record)
-        ordered = sorted(winners.values(), key=lambda item: (-item[0], item[1]))
-        return [item[2] for item in ordered[:max(0, limit)]]
-    except (TypeError, ValueError, OverflowError, AttributeError):
-        return []
+    return dedupe_by_metric(records, limit, "reddit_score", finite_int)
 
 
 def _request_subreddit(subreddit: str, api_key: str) -> Optional[Dict[str, Any]]:
@@ -205,7 +171,7 @@ def _request_search(query: str, api_key: str) -> Optional[Dict[str, Any]]:
 
 
 def _normalise_limit(limit: Any) -> int:
-    value = _coerce_int(limit)
+    value = finite_int(limit)
     return 50 if value is None else max(0, value)
 
 
