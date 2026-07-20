@@ -5,12 +5,27 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "hotin"
 version = "0.0.1"
-description = "What's hot in AI, from your terminal."
+description = "An open-source CLI surfacing what's hot, fresh, and credible in AI from GitHub, Hacker News, npm, Reddit, and a the influencer-stars source-based credibility signal, ranked by cross-source corroboration and freshness."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "Apache-2.0" }
-authors = [{ name = "hotin contributors" }]
+authors = [{ name = "Abe Diaz" }]
 dependencies = []
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Internet",
+]
+keywords = ["ai", "cli", "github", "trending", "discovery", "terminal"]
+
+[project.urls]
+Homepage = "https://hotin.ai"
+Repository = "https://github.com/abe238/hotinai"
+Issues = "https://github.com/abe238/hotinai/issues"
 
 [project.scripts]
 hotin = "hotin.cli:main"

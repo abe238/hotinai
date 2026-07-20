@@ -1,16 +1,19 @@
-"""The intentionally small L0 command dispatcher."""
+"""The command dispatcher and safe terminal renderers for hotin."""
 
 import argparse
 import json
 import math
 import os
 import sys
-from typing import List, Optional
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from . import engine, health
+from . import __version__, engine, health
 from .cache import open_cache
-from .config import env_path, load_config
-from .render import sanitize
+from .canonical import canonicalize
+from .config import config_dir, env_path, load_config
+from .render import color, sanitize
+from .sources import github, hn, npm, trends, reddit, youtube
 
 
 COMMANDS = {
@@ -27,6 +30,9 @@ COMMANDS = {
     "update": "update hotin",
     "about": "show project information",
 }
+
+_BADGE_COLORS = {"fresh": "32", "smart-money": "38;5;220", "new": "34", "corroborated": "35"}
+_ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
 
 
 def _add_global_flags(parser: argparse.ArgumentParser, suppress_defaults: bool = False) -> None:
@@ -47,6 +53,10 @@ def build_parser() -> argparse.ArgumentParser:
         _add_global_flags(subparser, suppress_defaults=True)
         if command == "setup":
             subparser.add_argument("--check", action="store_true", help="check local configuration")
+        elif command == "search":
+            subparser.add_argument("query", nargs="?", default=None, help="text to search for")
+        elif command == "show":
+            subparser.add_argument("repo", help="GitHub owner/repository")
     return parser
 
 
@@ -75,50 +85,284 @@ def _sanitize_json(value: object) -> object:
     return value
 
 
+def _dump_json(payload: object) -> None:
+    try:
+        rendered = json.dumps(payload, default=_json_default, allow_nan=False)
+    except ValueError:
+        rendered = json.dumps(_sanitize_json(payload), default=_json_default, allow_nan=False)
+    print(rendered)
+
+
+def _color_enabled(arguments: argparse.Namespace) -> bool:
+    return sys.stdout.isatty() and not getattr(arguments, "no_color", False)
+
+
+def _safe(value: object) -> str:
+    return sanitize(value if isinstance(value, str) else str(value))
+
+
+def _finite(value: object, default: float = 0.0) -> float:
+    if isinstance(value, bool) or value is None:
+        return default
+    try:
+        number = float(value)
+    except (TypeError, ValueError, OverflowError):
+        return default
+    return number if math.isfinite(number) else default
+
+
+def _format_number(value: object) -> str:
+    number = _finite(value)
+    return "{:.2f}".format(number) if not number.is_integer() else str(int(number))
+
+
+def _render_badges(badges: object, enabled: bool) -> str:
+    if not isinstance(badges, (list, tuple, set)):
+        return ""
+    rendered = []
+    for badge in badges:
+        text = _safe(badge)
+        rendered.append(color(text, _BADGE_COLORS.get(text, "36"), enabled))
+    return ",".join(rendered)
+
+
+def _render_ranked(repos: List[dict], arguments: argparse.Namespace) -> None:
+    enabled = _color_enabled(arguments)
+    for repo in repos:
+        print("{:.2f}  {}  {}  {}".format(
+            _finite(repo.get("score")), _safe(repo.get("name", "")),
+            _safe(repo.get("category", "uncategorized")), _render_badges(repo.get("badges"), enabled),
+        ).rstrip())
+
+
+def _short_excerpt(record: dict) -> str:
+    meta = record.get("meta") if isinstance(record.get("meta"), dict) else {}
+    for field in ("description", "hn_title", "reddit_title", "youtube_title", "youtube_channel", "subreddit", "npm_package"):
+        value = meta.get(field)
+        if isinstance(value, str) and value.strip() and value != record.get("name"):
+            return _safe(value)[:120]
+    return ""
+
+
+def _record_signal(record: dict) -> dict:
+    signal = record.get("signal")
+    return signal if isinstance(signal, dict) else {}
+
+
+def _trend_metric(record: dict) -> Tuple[str, float]:
+    signal = _record_signal(record)
+    for key in ("trend_stars", "trend_total_score", "trend_collection_score"):
+        if key in signal:
+            return key, _finite(signal.get(key), float("-inf"))
+    candidates = [(key, _finite(value, float("-inf"))) for key, value in signal.items() if str(key).startswith("trend_")]
+    return max(candidates, key=lambda item: item[1]) if candidates else ("trend_score", float("-inf"))
+
+
+def _render_single_source(records: List[dict], metric: Callable[[dict], Tuple[str, float]]) -> None:
+    for record in records:
+        label, value = metric(record)
+        line = "{} {}  {}".format(_safe(label), _format_number(value), _safe(record.get("name", "")))
+        excerpt = _short_excerpt(record)
+        print("{}  — {}".format(line, excerpt) if excerpt else line)
+
+
+def _attribution(arguments: argparse.Namespace, *, force: bool = False) -> None:
+    """Show the one-time terminal footer; errors here must never affect a command."""
+    if not force and (getattr(arguments, "quiet", False) or getattr(arguments, "json", False) or not sys.stdout.isatty()):
+        return
+    try:
+        marker = Path(config_dir()) / ".attribution-shown"
+        if not force and marker.exists():
+            return
+        print(color(_ATTRIBUTION, "2;37", _color_enabled(arguments)))
+        if not force:
+            marker.touch(exist_ok=True)
+    except OSError:
+        return
+
+
+def _normal_limit(arguments: argparse.Namespace) -> Optional[int]:
+    limit = arguments.limit if arguments.limit is not None else 50
+    if limit < 0:
+        print("limit must be zero or greater", file=sys.stderr)
+        return None
+    return limit
+
+
+def _single_source(command: str, arguments: argparse.Namespace) -> int:
+    sources: Dict[str, Tuple[Any, Callable[[dict], Tuple[str, float]]]] = {
+        "hn": (hn, lambda record: ("hn_points", _finite(_record_signal(record).get("hn_points"), float("-inf")))),
+        "npm": (npm, lambda record: ("npm_growth", _finite(_record_signal(record).get("npm_growth", _record_signal(record).get("npm_downloads_week")), float("-inf")))),
+        "stars": (github, lambda record: ("stars", _finite(_record_signal(record).get("stars"), float("-inf")))),
+        "trending": (trends, _trend_metric),
+        "reddit": (reddit, lambda record: ("reddit_score", _finite(_record_signal(record).get("reddit_score"), float("-inf")))),
+        "youtube": (youtube, lambda record: ("youtube_views", _finite(_record_signal(record).get("youtube_views"), float("-inf")))),
+    }
+    limit = _normal_limit(arguments)
+    if limit is None:
+        return 2
+    adapter, metric = sources[command]
+    try:
+        result = adapter.fetch(limit=limit, config=load_config())
+    except Exception as exc:
+        result = {"records": [], "status": "error", "detail": str(exc) or "fetch failed"}
+    if not isinstance(result, dict):
+        result = {"records": [], "status": "error", "detail": "invalid adapter result"}
+    status = result.get("status")
+    detail = result.get("detail") if isinstance(result.get("detail"), str) else None
+    records = result.get("records") if isinstance(result.get("records"), list) else []
+    if arguments.json:
+        _dump_json({"records": records, "status": status, "detail": detail})
+    elif status == "error":
+        print(_safe(detail or "source fetch failed"), file=sys.stderr)
+    elif status == "empty":
+        print("No {} results right now{}.".format(command, ": " + _safe(detail) if detail else ""))
+    elif status == "ok":
+        usable = [record for record in records if isinstance(record, dict)]
+        usable.sort(key=lambda record: metric(record)[1], reverse=True)
+        if usable:
+            _render_single_source(usable[:limit], metric)
+        else:
+            print("No {} results right now.".format(command))
+    else:
+        if not arguments.json:
+            print("invalid adapter status", file=sys.stderr)
+        status = "error"
+        detail = "invalid adapter status"
+    exit_code = 1 if status == "error" else 0
+    _attribution(arguments)
+    return exit_code
+
+
+def _show_repo(repo: dict, arguments: argparse.Namespace) -> None:
+    enabled = _color_enabled(arguments)
+    print(_safe(repo.get("name", "")))
+    print("repository: {}".format(_safe(repo.get("canonical_repo", ""))))
+    print("category: {}".format(_safe(repo.get("category", "uncategorized"))))
+    print("score: {:.2f}".format(_finite(repo.get("score"))))
+    print("momentum: {:.2f}".format(_finite(repo.get("momentum"))))
+    print("credibility: {:.2f}".format(_finite(repo.get("credibility"))))
+    print("signal_score: {:.2f}".format(_finite(repo.get("signal_score"))))
+    print("corroboration: {:.2f}".format(_finite(repo.get("corroboration"))))
+    print("freshness_factor: {:.2f}".format(_finite(repo.get("freshness_factor"))))
+    print("freshness_days: {:.2f}".format(_finite(repo.get("freshness_days"))))
+    print("badges: {}".format(_render_badges(repo.get("badges"), enabled) or "none"))
+    print("signals:")
+    by_source = repo.get("signal_by_source") if isinstance(repo.get("signal_by_source"), dict) else {}
+    for source in sorted(by_source, key=str):
+        print("  {}:".format(_safe(source)))
+        signal = by_source[source]
+        if isinstance(signal, dict):
+            for key in sorted(signal, key=str):
+                value = signal[key]
+                rendered = _safe(value) if isinstance(value, str) else _format_number(value)
+                print("    {}: {}".format(_safe(key), rendered))
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     parser = build_parser()
     arguments = parser.parse_args(argv)
     command = arguments.command or "hot"
     if command == "setup" and arguments.check:
-        return _setup_check()
+        code = _setup_check()
+        _attribution(arguments)
+        return code
+    if command == "about":
+        if arguments.json:
+            _dump_json({"name": "hotin", "version": __version__, "description": "What's hot in AI, from your terminal.", "attribution": _ATTRIBUTION})
+        else:
+            print(" _           _   _")
+            print("| |__   ___ | |_(_)_ __")
+            print("| '_ \\ / _ \\| __| | '_ \\")
+            print("| | | | (_) | |_| | | | |")
+            print("|_| |_|\\___/ \\__|_|_| |_|")
+            print("hotin {} — What's hot in AI, from your terminal.".format(__version__))
+            _attribution(arguments, force=True)
+        return 0
+    if command in {"hn", "npm", "stars", "trending", "reddit", "youtube"}:
+        return _single_source(command, arguments)
     if command == "hot":
-        limit = arguments.limit if arguments.limit is not None else 50
-        if limit < 0:
-            print("limit must be zero or greater", file=sys.stderr)
+        limit = _normal_limit(arguments)
+        if limit is None:
             return 2
         config = load_config()
         cache = open_cache()
         try:
             statuses = engine.fetch_all(config, limit=limit, cache=cache)
-            ranked = engine.rank(engine.merge_by_repo(cache.get_all()), limit=limit)
-            exit_code, message = health.summarize(statuses, cache_has_data=bool(cache.get_all()))
+            cached = cache.get_all()
+            ranked = engine.rank(engine.merge_by_repo(cached), limit=limit)
+            exit_code, message = health.summarize(statuses, cache_has_data=bool(cached))
             if arguments.json:
-                payload = {
-                    "tools": ranked,
-                    "sources": [
-                        {"source": status.source, "status": status.status, "detail": status.detail}
-                        for status in statuses
-                    ],
-                }
-                try:
-                    rendered = json.dumps(payload, default=_json_default, allow_nan=False)
-                except ValueError:
-                    rendered = json.dumps(_sanitize_json(payload), default=_json_default, allow_nan=False)
-                print(rendered)
+                _dump_json({"tools": ranked, "sources": [{"source": status.source, "status": status.status, "detail": status.detail} for status in statuses]})
             else:
-                for repo in ranked:
-                    print("{:.2f}  {}  {}  {}".format(repo["score"], repo["name"], repo["category"], ",".join(repo["badges"])))
+                _render_ranked(ranked, arguments)
             if exit_code:
-                print(message, file=sys.stderr)
+                print(_safe(message), file=sys.stderr)
+            _attribution(arguments)
         finally:
             cache.close()
-        # The adapters run in non-daemon executor threads.  They may still be
-        # blocked in a network call after fetch_all() has reached its deadline;
-        # do not let CPython wait for those abandoned workers at process exit.
+        # Adapters can leave network workers behind after the fetch deadline.
         sys.stdout.flush()
         sys.stderr.flush()
         os._exit(exit_code)
         return exit_code  # Allows unit tests to substitute os._exit().
+    if command == "search":
+        if not arguments.query:
+            parser.error("search requires a query")
+        limit = _normal_limit(arguments)
+        if limit is None:
+            return 2
+        cache = open_cache()
+        try:
+            ranked = engine.rank(engine.merge_by_repo(cache.search(arguments.query)), limit=limit)
+            if arguments.json:
+                _dump_json({"tools": ranked, "query": arguments.query})
+            else:
+                if ranked:
+                    _render_ranked(ranked, arguments)
+                else:
+                    print("No cached tools match {}.".format(_safe(arguments.query)))
+            _attribution(arguments)
+            return 0
+        finally:
+            cache.close()
+    if command == "show":
+        cache = open_cache()
+        try:
+            canonical = canonicalize(arguments.repo)
+            repo = engine.merge_by_repo(cache.get_all()).get(canonical) if canonical else None
+            if repo is None:
+                print("{} is not in the local cache yet — run `hotin hot` first to populate it.".format(_safe(arguments.repo)))
+            else:
+                scored = engine.score_repo(repo)
+                if arguments.json:
+                    _dump_json(scored)
+                else:
+                    _show_repo(scored, arguments)
+            _attribution(arguments)
+            return 0
+        finally:
+            cache.close()
+    if command == "update":
+        limit = _normal_limit(arguments)
+        if limit is None:
+            return 2
+        cache = open_cache()
+        try:
+            statuses = engine.fetch_all(load_config(), limit=limit, cache=cache, ttl=0)
+            exit_code, message = health.summarize(statuses, cache_has_data=bool(cache.get_all()))
+            if arguments.json:
+                _dump_json({"sources": [{"source": status.source, "status": status.status, "detail": status.detail} for status in statuses]})
+            else:
+                for status in statuses:
+                    detail = " — {}".format(_safe(status.detail)) if status.detail else ""
+                    print("{}  {}{}".format(_safe(status.source), _safe(status.status), detail))
+            if exit_code:
+                print(_safe(message), file=sys.stderr)
+            _attribution(arguments)
+            return exit_code
+        finally:
+            cache.close()
     print("{}: not yet implemented".format(command))
     return 0
 

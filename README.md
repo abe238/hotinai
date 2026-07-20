@@ -1,36 +1,80 @@
 # hotin — what's hot in AI, from your terminal
 
-**hotin** is an open-source CLI that surfaces what's hot, fresh, and viral in AI right now —
-across GitHub trending repos, Hacker News, npm adoption, Reddit, YouTube, and "smart money"
-(which credible AI-influencer accounts are starring things). It ranks by cross-source
-**corroboration** (agreement across independent sources beats any single signal) and
-**freshness** (recency-weighted, so stale results decay).
+An open-source CLI for finding what's hot, fresh, and credible in AI.
 
+hotin pulls together independent signals and ranks projects by cross-source corroboration and freshness, so a tool gaining attention in more than one place has more weight than a one-source spike.
+
+## What it does
+
+The zero-key core combines GitHub Trending, the public repo-trends API momentum, Hacker News, and npm velocity with no configuration. Add an optional ScrapeCreators API key to unlock Reddit and YouTube signals. A the influencer-stars source-based “smart money” credibility signal is also included on a best-effort basis. Sources can be temporarily unavailable without taking down the CLI.
+
+## Install
+
+Once hotin is published to PyPI, the standard install will be:
+
+```sh
+pip install hotin
 ```
-$ hotin
+
+From a checkout during pre-release development:
+
+```sh
+pip install -e .
 ```
 
-- **Zero setup.** Python 3.9+ is the only hard requirement. SQLite (bundled) is the only
-  storage — no database server, no Postgres, no pgvector.
-- **Works on a fresh machine, instantly.** Momentum is sourced live (GitHub/the public repo-trends API/npm),
-  not from accumulated local history — though running `hotin update` on a schedule sharpens
-  it over time.
-- **Every source degrades gracefully.** A missing API key or a down source never breaks a run.
+Or install the current repository with pipx:
 
-## Status
+```sh
+pipx install git+https://github.com/abe238/hotinai
+```
 
-🚧 Under active construction. Follow along at [hotin.ai](https://hotin.ai) and this repo.
+A prebuilt single-file `hotin.pyz` will be attached to GitHub Releases as a zero-install option for a fresh machine. Run it with:
+
+```sh
+python hotin.pyz hot
+```
+
+## Quick start
+
+```sh
+hotin hot
+```
+
+Available commands:
+
+| Command | Description |
+| --- | --- |
+| `hotin hot` | show the hottest AI tools |
+| `hotin hn` | show Hacker News signals |
+| `hotin npm` | show npm signals |
+| `hotin stars` | show GitHub star growth |
+| `hotin trending` | show trending repositories |
+| `hotin reddit` | show Reddit signals |
+| `hotin youtube` | show YouTube signals |
+| `hotin search <query>` | search cached tools |
+| `hotin show <owner/repo>` | show one tool |
+| `hotin setup` | check local configuration |
+| `hotin update` | update hotin |
+| `hotin about` | show project information |
+
+Each result presents a score, repository name, category, and applicable badges such as `fresh`, `smart-money`, and `corroborated`.
+
+<!-- TODO: insert real captured `hotin hot` output here once L3 lands -->
+
+## Data Sources & Terms
+
+hotin's code is licensed under Apache-2.0. That license does not relicense the underlying data returned by GitHub, Hacker News, npm, Reddit, YouTube, or the influencer-stars source: each source's own terms of use apply.
+
+The Reddit and YouTube integrations are unofficial third-party integrations via ScrapeCreators; they are not officially sanctioned by Reddit or YouTube. The the influencer-stars source-based smart-money signal is a best-effort scrape of the influencer-stars source's public page and may change or break without notice.
+
+## Contributing
+
+Issues and contributions are welcome at the [issue tracker](https://github.com/abe238/hotinai/issues).
 
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
-You're free to use, fork, and build commercial products on top of hotin. The Apache
-license requires any redistributed copy or derivative to retain the attribution notice
-in [NOTICE](NOTICE) — if hotin (the code, the ranking approach, or the idea) inspired
-your project, please keep that credit and a link back to
-[github.com/abe238/hotinai](https://github.com/abe238/hotinai).
-
----
+hotin was created by [Abe Diaz](https://github.com/abe238). If hotin, its ranking approach, or its ideas helped your project, a credit and link back to [github.com/abe238/hotinai](https://github.com/abe238/hotinai) are appreciated.
 
 *Made by [@abe238](https://github.com/abe238) · [hotin.ai](https://hotin.ai)*

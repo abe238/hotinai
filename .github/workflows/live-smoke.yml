@@ -1,0 +1,59 @@
+# Fixture tests gate PRs in ci.yml; these live API checks are scheduled and intentionally never fail the workflow.
+name: Live source smoke check
+
+on:
+  schedule:
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+jobs:
+  live-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - run: python -m pip install -e .
+      - name: Fetch each live source (report-only)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}
+        run: |
+          python - <<'PY'
+          import os
+          from hotin.sources import github, hn, npm, trends, reddit, smartmoney, x, youtube
+
+          sources = {
+              "github": github,
+              "hn": hn,
+              "npm": npm,
+              "trends": trends,
+              "reddit": reddit,
+              "youtube": youtube,
+              "insider smart-money": smartmoney,
+              "x (not implemented)": x,
+          }
+          config = {
+              key: value
+              for key, value in {
+                  "GITHUB_TOKEN": os.environ.get("GITHUB_TOKEN"),
+                  "SCRAPECREATORS_API_KEY": os.environ.get("SCRAPECREATORS_API_KEY"),
+              }.items()
+              if value
+          }
+          for name, adapter in sources.items():
+              try:
+                  result = adapter.fetch(limit=5, config=config)
+                  status = result.get("status", "invalid") if isinstance(result, dict) else "invalid"
+                  detail = result.get("detail") if isinstance(result, dict) else "non-dict result"
+                  count = len(result.get("records", [])) if isinstance(result, dict) else 0
+                  outcome = "healthy" if status in {"ok", "empty"} else "error"
+                  if status == "empty" and detail and "no SCRAPECREATORS_API_KEY" in detail:
+                      outcome = "skipped"
+                  print("{}: {} [{}] ({} records{})".format(
+                      name, outcome, status, count, "; " + detail if detail else ""
+                  ))
+              except Exception as exc:
+                  print("{}: error [exception] ({})".format(name, exc))
+          PY
