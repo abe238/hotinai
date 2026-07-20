@@ -1,4 +1,5 @@
 import json
+import urllib.parse
 from urllib.error import URLError
 
 from hotin.sources import npm
@@ -90,6 +91,71 @@ def test_fetch_uses_both_endpoints_and_throttles_every_request(monkeypatch):
     assert throttle.calls == 2
     assert len(calls) == 2
     assert "%40scope%2Fpkg" in calls[1][0]
+
+
+def test_split_batch_downloads_handles_wrapped_and_flat_shapes():
+    wrapped = {"pkg-a": {"downloads": [{"day": "2026-07-01", "downloads": 5}]}, "pkg-b": None}
+    assert npm._split_batch_downloads(wrapped, ["pkg-a", "pkg-b"]) == {
+        "pkg-a": {"downloads": [{"day": "2026-07-01", "downloads": 5}]},
+        "pkg-b": None,
+    }
+    flat = {"downloads": [{"day": "2026-07-01", "downloads": 5}], "package": "pkg-a"}
+    assert npm._split_batch_downloads(flat, ["pkg-a"]) == {"pkg-a": flat}
+    assert npm._split_batch_downloads("not a dict", ["pkg-a"]) == {}
+
+
+def test_fetch_batches_unscoped_and_caps_scoped_download_lookups(monkeypatch):
+    # 3 unscoped candidates (should collapse into ONE batched downloads request)
+    # and more scoped candidates than MAX_SCOPED_DOWNLOAD_LOOKUPS allows (each
+    # scoped candidate costs its own throttled request, so only the cap's worth
+    # should ever be requested).
+    scoped_count = npm.MAX_SCOPED_DOWNLOAD_LOOKUPS + 2
+    objects = [
+        {"package": {"name": "unscoped-{}".format(i), "links": {"repository": "https://github.com/example/unscoped-{}".format(i)}}}
+        for i in range(3)
+    ] + [
+        {"package": {"name": "@scope/pkg-{}".format(i), "links": {"repository": "https://github.com/example/scoped-{}".format(i)}}}
+        for i in range(scoped_count)
+    ]
+    search_payload = {"objects": objects}
+    days = [{"day": "2026-07-{:02d}".format(day), "downloads": 5} for day in range(1, 15)]
+
+    class Response:
+        def __init__(self, payload):
+            self.payload = payload
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *unused):
+            return False
+
+        def read(self):
+            return json.dumps(self.payload).encode("utf-8")
+
+    download_requests = []
+
+    def fake_urlopen(request, timeout):
+        url = request.full_url
+        if "registry.npmjs.org" in url:
+            return Response(search_payload)
+        download_requests.append(url)
+        if "," in url.split("/downloads/range/last-month/", 1)[1]:
+            names = url.split("/downloads/range/last-month/", 1)[1].split(",")
+            return Response({urllib.parse.unquote(name): {"downloads": days} for name in names})
+        return Response({"downloads": days})
+
+    monkeypatch.setattr(npm.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(npm, "THROTTLE", type("T", (), {"wait": lambda self: None})())
+
+    result = npm.fetch(query="fixture", limit=50)
+
+    assert result["status"] == "ok"
+    # 1 unscoped batch request + exactly MAX_SCOPED_DOWNLOAD_LOOKUPS scoped requests.
+    assert len(download_requests) == 1 + npm.MAX_SCOPED_DOWNLOAD_LOOKUPS
+    package_names = {record["meta"]["npm_package"] for record in result["records"]}
+    assert {"unscoped-0", "unscoped-1", "unscoped-2"} <= package_names
+    assert sum(1 for name in package_names if name.startswith("@scope/")) == npm.MAX_SCOPED_DOWNLOAD_LOOKUPS
 
 
 def test_fetch_returns_error_when_all_search_requests_fail(monkeypatch):

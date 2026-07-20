@@ -19,6 +19,16 @@ DOWNLOADS_ENDPOINT = "https://api.npmjs.org/downloads/range/last-month/"
 DEFAULT_QUERIES = ("llm", "ai agent", "rag", "mcp server", "vector database")
 THROTTLE = Throttle(min_interval=1.5, jitter=0.5)
 USER_AGENT = "hotin/0.0.1"
+# npm's registry accepts a comma-separated batch of package names on this endpoint
+# (documented cap: 128 per request), turning what used to be one throttled request
+# per candidate into a small, fixed number of requests regardless of candidate count.
+DOWNLOADS_BATCH_SIZE = 128
+# ...except the batch endpoint explicitly rejects scoped packages ("scoped packages
+# are not currently supported in bulk lookups"), and AI/agent npm packages skew
+# heavily scoped (@modelcontextprotocol/..., @langchain/...). Scoped candidates
+# still need one throttled request each, so cap how many run per fetch to stay
+# inside fetch_all's shared timeout alongside the search requests and the batch.
+MAX_SCOPED_DOWNLOAD_LOOKUPS = 6
 
 
 def _empty(detail: str) -> Dict[str, Any]:
@@ -173,8 +183,23 @@ def _search_url(query: str) -> str:
     )
 
 
-def _downloads_url(package_name: str) -> str:
-    return "{}{}".format(DOWNLOADS_ENDPOINT, urllib.parse.quote(package_name, safe=""))
+def _downloads_url(package_names: List[str]) -> str:
+    joined = ",".join(urllib.parse.quote(name, safe="") for name in package_names)
+    return "{}{}".format(DOWNLOADS_ENDPOINT, joined)
+
+
+def _split_batch_downloads(payload: Any, package_names: List[str]) -> Dict[str, Any]:
+    """Normalize one batch downloads response back into per-package payloads.
+
+    npm wraps each package under its own key when a batch names 2+ packages,
+    but returns the flat single-package shape directly when a batch (e.g. the
+    final partial chunk) happens to contain exactly one name.
+    """
+    if not isinstance(payload, dict):
+        return {}
+    if len(package_names) == 1 and "downloads" in payload:
+        return {package_names[0]: payload}
+    return {name: payload.get(name) for name in package_names}
 
 
 def fetch(
@@ -206,11 +231,27 @@ def fetch(
         if not candidates:
             return _empty("no GitHub-linked npm packages found")
 
+        scoped_candidates = [c for c in candidates if c["npm_package"].startswith("@")][:MAX_SCOPED_DOWNLOAD_LOOKUPS]
+        batch_candidates = [c for c in candidates if not c["npm_package"].startswith("@")]
+
         records: List[Dict[str, Any]] = []
         successful_downloads = 0
-        for candidate in candidates:
-            payload = _request_json(_downloads_url(candidate["npm_package"]))
-            if payload is None or not isinstance(payload, dict) or not isinstance(payload.get("downloads"), list):
+        for start in range(0, len(batch_candidates), DOWNLOADS_BATCH_SIZE):
+            batch = batch_candidates[start:start + DOWNLOADS_BATCH_SIZE]
+            names = [candidate["npm_package"] for candidate in batch]
+            payload = _request_json(_downloads_url(names))
+            if payload is None or not isinstance(payload, dict):
+                continue
+            successful_downloads += 1
+            per_package = _split_batch_downloads(payload, names)
+            for candidate in batch:
+                record = build_record(candidate, per_package.get(candidate["npm_package"]))
+                if record is not None:
+                    records.append(record)
+
+        for candidate in scoped_candidates:
+            payload = _request_json(_downloads_url([candidate["npm_package"]]))
+            if payload is None or not isinstance(payload, dict):
                 continue
             successful_downloads += 1
             record = build_record(candidate, payload)
