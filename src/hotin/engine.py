@@ -21,6 +21,11 @@ SOURCES = (github, trends, hn, npm, reddit, youtube, smartmoney, x)
 # At 12, smart-money alone remains influential but cannot exceed modest
 # corroborated OSS momentum from three independent sources.
 CREDIBILITY_CAP = 12.0
+# Corroboration should mean "hot across sources recently", not "ever mentioned".
+# A source observation older than this (i.e. the source stopped re-surfacing the
+# repo) no longer counts toward the ranked view. The CLI passes this to
+# merge_by_repo; direct callers/tests default to no window.
+EVIDENCE_WINDOW_DAYS = 21.0
 
 
 def _timestamp(value: Any) -> Optional[float]:
@@ -164,8 +169,19 @@ def _decoded_record(record: Any) -> Optional[Dict[str, Any]]:
     return result
 
 
-def merge_by_repo(records: List[dict]) -> Dict[str, dict]:
-    """Merge source records by their canonical GitHub owner/repository name."""
+def merge_by_repo(
+    records: List[dict], *, max_age_days: Optional[float] = None, now: Optional[float] = None
+) -> Dict[str, dict]:
+    """Merge source records by their canonical GitHub owner/repository name.
+
+    When ``max_age_days`` is given, observations a source has not re-seen within
+    that window are dropped before merging, so corroboration means "hot across
+    sources recently" rather than "co-mentioned at any time in cache history".
+    (``fetched_at`` is refreshed each time a source re-feeds a repo, so a source
+    that stopped surfacing a repo leaves a stale row that this filter excludes.)
+    """
+    reference = time.time() if now is None else now
+    cutoff = reference - max_age_days * 86400.0 if max_age_days else None
     merged: Dict[str, dict] = {}
     for raw_record in records:
         record = _decoded_record(raw_record)
@@ -174,11 +190,13 @@ def merge_by_repo(records: List[dict]) -> Dict[str, dict]:
         canonical = canonicalize(record.get("canonical_repo") or record.get("url") or "")
         if canonical is None:
             continue
+        fetched_at = _timestamp(record.get("fetched_at"))
+        if cutoff is not None and fetched_at is not None and fetched_at < cutoff:
+            continue  # stale evidence: not re-seen by this source within the window
         current = merged.get(canonical)
         name = record.get("name") if isinstance(record.get("name"), str) else canonical
         url = record.get("url") if isinstance(record.get("url"), str) else ""
         source = record.get("source") if isinstance(record.get("source"), str) else ""
-        fetched_at = _timestamp(record.get("fetched_at"))
         if current is None:
             current = {
                 "canonical_repo": canonical, "url": url, "name": name, "sources": set(),

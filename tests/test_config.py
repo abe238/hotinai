@@ -7,10 +7,26 @@ from hotin import config
 
 def test_loader_merges_file_and_environment_with_environment_winning(tmp_path, monkeypatch):
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+    # Clear the known overlay keys so the environment (e.g. CI's GITHUB_TOKEN)
+    # can't leak into this exact-equality assertion.
+    for key in config._ENV_OVERLAY_KEYS:
+        monkeypatch.delenv(key, raising=False)
     config.write_config({"HOTIN_TOKEN": "from-file", "OTHER": "kept"})
     monkeypatch.setenv("HOTIN_TOKEN", "from-environment")
 
     assert config.load_config() == {"HOTIN_TOKEN": "from-environment", "OTHER": "kept"}
+
+
+def test_known_key_is_read_from_environment_even_when_file_omits_it(tmp_path, monkeypatch):
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+    # No .env file at all; a known hotin key set purely in the environment must
+    # still be picked up (the shipped v0.1.0 bug: env-only keys were ignored).
+    monkeypatch.setenv("YOUTUBE_API_KEY", "env-only-key")
+    cfg = config.load_config()
+    assert cfg.get("YOUTUBE_API_KEY") == "env-only-key"
+    # An unrelated process variable is NOT pulled in.
+    monkeypatch.setenv("SOME_UNRELATED_VAR", "nope")
+    assert "SOME_UNRELATED_VAR" not in config.load_config()
 
 
 def test_missing_file_returns_empty_dict(tmp_path, monkeypatch):

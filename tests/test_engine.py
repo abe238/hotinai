@@ -124,6 +124,25 @@ def test_missing_activity_data_is_neutral_not_penalized():
     assert "fresh" not in scored["badges"]
 
 
+def test_evidence_window_drops_stale_source_from_corroboration():
+    now = time.time()
+    fresh_run = now
+    stale_run = now - 60 * 86400  # this source stopped re-surfacing the repo 60d ago
+    records = [
+        record("github", signal={"stars": 100, "pushed_at": now}, fetched_at=fresh_run),
+        record("hn", signal={"hn_points": 500}, fetched_at=stale_run),
+    ]
+    # No window: both sources count -> corroboration multiplier applies.
+    both = engine.merge_by_repo(records, now=now)["acme/tool"]
+    assert both["sources"] == {"github", "hn"}
+    # With a 21-day window: the stale hn evidence is dropped, so corroboration
+    # reflects only what is currently hot.
+    windowed = engine.merge_by_repo(records, max_age_days=21.0, now=now)["acme/tool"]
+    assert windowed["sources"] == {"github"}
+    assert engine.score_repo(windowed, now=now)["corroboration"] == 1.0
+    assert engine.score_repo(both, now=now)["corroboration"] == 1.25
+
+
 def test_hostile_numeric_signal_cannot_make_score_nonfinite():
     repo = engine.merge_by_repo([record(signal={"stars": float("inf"), "hn_points": float("inf"), "youtube_views": float("inf")})])["acme/tool"]
     scored = engine.score_repo(repo)

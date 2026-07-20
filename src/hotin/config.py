@@ -26,6 +26,16 @@ def env_path() -> Path:
     return config_dir() / ".env"
 
 
+# Keys hotin's own adapters read. These are overlaid from the process
+# environment even when the .env file omits them, so a user can configure hotin
+# purely via the environment. We keep an explicit allow-list (rather than
+# returning every process variable) so load_config stays a scoped config loader.
+_ENV_OVERLAY_KEYS = (
+    "SCRAPECREATORS_API_KEY", "GITHUB_TOKEN", "YOUTUBE_API_KEY",
+    "HOTIN_YT_CHANNELS", "HN_MIN_POINTS", "HN_DAYS",
+)
+
+
 def load_config() -> Dict[str, str]:
     """Load literal KEY=value entries, with process environment taking priority."""
     values: Dict[str, str] = {}
@@ -43,9 +53,11 @@ def load_config() -> Dict[str, str]:
     except FileNotFoundError:
         pass
 
-    # Only overlay keys the file declared.  This keeps load_config() a generic
-    # config loader rather than returning every variable in the process.
-    for key in list(values):
+    # Overlay the process environment: every key the file declared (env wins),
+    # plus hotin's own known keys even when the file omitted them, so env-only
+    # configuration works. Unrelated process variables are never pulled in.
+    overlay = list(values) + [key for key in _ENV_OVERLAY_KEYS if key not in values]
+    for key in overlay:
         if key in os.environ:
             values[key] = os.environ[key]
     return values

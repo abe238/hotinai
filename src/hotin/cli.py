@@ -368,7 +368,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         with _cache_session() as cache:
             statuses = engine.fetch_all(config, limit=limit, cache=cache)
             cached = cache.get_all()
-            ranked = engine.rank(engine.merge_by_repo(cached), limit=limit)
+            ranked = engine.rank(engine.merge_by_repo(cached, max_age_days=engine.EVIDENCE_WINDOW_DAYS), limit=limit)
             exit_code, message = health.summarize(statuses, cache_has_data=bool(cached))
             if arguments.json:
                 _dump_json({"tools": ranked, "sources": [{"source": status.source, "status": status.status, "detail": status.detail} for status in statuses]})
@@ -389,7 +389,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         if limit is None:
             return 2
         with _cache_session() as cache:
-            ranked = engine.rank(engine.merge_by_repo(cache.search(arguments.query)), limit=limit)
+            ranked = engine.rank(engine.merge_by_repo(cache.search(arguments.query), max_age_days=engine.EVIDENCE_WINDOW_DAYS), limit=limit)
             if arguments.json:
                 _dump_json({"tools": ranked, "query": arguments.query})
             else:
