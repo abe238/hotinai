@@ -302,3 +302,73 @@ def rank(merged_repos: Dict[str, dict], *, limit: int = 50) -> List[dict]:
     scored = [score_repo(repo) for repo in merged_repos.values() if isinstance(repo, dict)]
     scored.sort(key=lambda repo: (-repo["score"], -repo["momentum"], str(repo.get("name", "")).casefold()))
     return scored[:max(0, int(limit))]
+
+
+def merge_by_entity(
+    records: List[dict], entity_type: str, *, max_age_days: Optional[float] = None, now: Optional[float] = None
+) -> Dict[str, dict]:
+    """Merge non-repo entity records (paper, model) by their ``entity_id``.
+
+    Type-scoped: only records of ``entity_type`` are considered, so repos and
+    other entity types in the same cache never bleed in. The evidence window
+    applies identically to repos (see merge_by_repo).
+    """
+    reference = time.time() if now is None else now
+    cutoff = reference - max_age_days * 86400.0 if max_age_days else None
+    merged: Dict[str, dict] = {}
+    for raw_record in records:
+        record = _decoded_record(raw_record)
+        if record is None or record.get("entity_type") != entity_type:
+            continue
+        entity_id = record.get("entity_id")
+        if not isinstance(entity_id, str) or not entity_id:
+            continue
+        fetched_at = _timestamp(record.get("fetched_at"))
+        if cutoff is not None and fetched_at is not None and fetched_at < cutoff:
+            continue
+        current = merged.get(entity_id)
+        name = record.get("name") if isinstance(record.get("name"), str) else entity_id
+        url = record.get("url") if isinstance(record.get("url"), str) else ""
+        source = record.get("source") if isinstance(record.get("source"), str) else ""
+        if current is None:
+            current = {
+                "entity_type": entity_type, "entity_id": entity_id, "url": url, "name": name,
+                "sources": set(), "signal": {}, "signal_by_source": {}, "meta": {}, "fetched_at": fetched_at,
+            }
+            merged[entity_id] = current
+        if len(name) > len(current["name"]):
+            current["name"] = name
+        if not current["url"] and url:
+            current["url"] = url
+        if source:
+            current["sources"].add(source)
+        current["signal"].update(record["signal"])
+        if source:
+            current["signal_by_source"][source] = dict(record["signal"])
+        current["meta"].update(record["meta"])
+        if fetched_at is not None and (current["fetched_at"] is None or fetched_at > current["fetched_at"]):
+            current["fetched_at"] = fetched_at
+    return merged
+
+
+def score_entity(merged: dict, metric_weights: Dict[str, float]) -> dict:
+    """Score a paper/model: sum of log-scaled metric fields x corroboration."""
+    result = dict(merged)
+    signal = merged.get("signal") if isinstance(merged.get("signal"), dict) else {}
+    sources = merged.get("sources")
+    source_count = len(sources) if isinstance(sources, (set, list, tuple)) else 0
+    base = 0.0
+    for key, weight in metric_weights.items():
+        base += math.log1p(max(0.0, finite_float(signal.get(key), 0.0))) * weight
+    corroboration = 1.0 + 0.25 * max(0, source_count - 1)
+    score = base * corroboration
+    result["score"] = score if math.isfinite(score) else 0.0
+    result["corroboration"] = corroboration
+    return result
+
+
+def rank_entities(merged_entities: Dict[str, dict], metric_weights: Dict[str, float], *, limit: int = 50) -> List[dict]:
+    """Score and stably rank merged paper/model entities."""
+    scored = [score_entity(entity, metric_weights) for entity in merged_entities.values() if isinstance(entity, dict)]
+    scored.sort(key=lambda entity: (-entity["score"], str(entity.get("name", "")).casefold()))
+    return scored[:max(0, int(limit))]

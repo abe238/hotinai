@@ -15,7 +15,7 @@ from .canonical import canonicalize
 from .coerce import finite_float
 from .config import config_dir, env_path, load_config
 from .render import color, hyperlink, sanitize
-from .sources import github, hn, npm, trends, reddit, youtube
+from .sources import github, hfmodels, hfpapers, hn, npm, trends, reddit, youtube
 
 
 COMMANDS = {
@@ -26,6 +26,8 @@ COMMANDS = {
     "trending": "show trending repositories",
     "reddit": "show Reddit signals",
     "youtube": "show YouTube signals",
+    "models": "show trending AI models (HuggingFace)",
+    "papers": "show trending AI papers (HuggingFace)",
     "search": "search cached tools",
     "show": "show one tool",
     "setup": "check local configuration",
@@ -37,7 +39,12 @@ _BADGE_COLORS = {"fresh": "32", "smart-money": "38;5;220", "new": "34", "corrobo
 _ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
 # --limit only makes sense for commands that produce a ranked/list result.
 # update (refresh + health), setup, about, and show (one repo) don't take one.
-_LIST_COMMANDS = {"hot", "hn", "npm", "stars", "trending", "reddit", "youtube", "search"}
+_LIST_COMMANDS = {"hot", "hn", "npm", "stars", "trending", "reddit", "youtube", "models", "papers", "search"}
+# Entity commands: (adapter, entity_type, metric weights for scoring, primary metric label).
+_ENTITY_COMMANDS = {
+    "models": (hfmodels, "model", {"model_downloads": 1.0, "model_likes": 0.5}),
+    "papers": (hfpapers, "paper", {"paper_upvotes": 1.0}),
+}
 
 
 def _add_global_flags(
@@ -308,6 +315,71 @@ def _label(name: str, value: str, enabled: bool, value_code: Optional[str] = "1"
     return "{}: {}".format(color(name, "2", enabled), shown)
 
 
+def _entity_metric_line(entity: dict, entity_type: str) -> Tuple[str, str]:
+    """Return (metric summary, dim context) for a paper/model row."""
+    signal = entity.get("signal") if isinstance(entity.get("signal"), dict) else {}
+    meta = entity.get("meta") if isinstance(entity.get("meta"), dict) else {}
+    if entity_type == "model":
+        metric = "{} downloads · {} likes".format(
+            _format_number(signal.get("model_downloads")), _format_number(signal.get("model_likes")))
+        context = _safe(meta.get("model_task")) if isinstance(meta.get("model_task"), str) else ""
+    else:  # paper
+        metric = "{} upvotes".format(_format_number(signal.get("paper_upvotes")))
+        title = _safe(entity.get("name", ""))
+        context = title if title != _safe(entity.get("entity_id", "")) else ""
+    return metric, context
+
+
+def _render_entities(entities: List[dict], arguments: argparse.Namespace, entity_type: str) -> None:
+    enabled = _color_enabled(arguments)
+    top = max((_finite(entity.get("score")) for entity in entities), default=0.0)
+    for entity in entities:
+        score = _finite(entity.get("score"))
+        entity_id = _safe(entity.get("entity_id", ""))
+        url = entity.get("url") if isinstance(entity.get("url"), str) else ""
+        id_disp = hyperlink(color(entity_id, "1", enabled), url, enabled) if url else color(entity_id, "1", enabled)
+        metric, context = _entity_metric_line(entity, entity_type)
+        row = "  ".join(part for part in (
+            color("{:>6.2f}".format(score), _score_color(score, top), enabled),
+            id_disp,
+            color(metric, "2", enabled),
+        ) if part).rstrip()
+        print(row)
+        if context:
+            print("        " + color(context[:78], "2", enabled))
+
+
+def _entity_command(command: str, arguments: argparse.Namespace) -> int:
+    limit = _normal_limit(arguments)
+    if limit is None:
+        return 2
+    adapter, entity_type, metric_weights = _ENTITY_COMMANDS[command]
+    with _cache_session() as cache:
+        try:
+            result = adapter.fetch(limit=limit, config=load_config())
+        except Exception as exc:  # defensive: adapters shouldn't raise, but never crash the CLI
+            result = {"records": [], "status": "error", "detail": str(exc) or "fetch failed"}
+        if not isinstance(result, dict):
+            result = {"records": [], "status": "error", "detail": "invalid adapter result"}
+        status = result.get("status")
+        detail = result.get("detail") if isinstance(result.get("detail"), str) else None
+        for record in result.get("records") if isinstance(result.get("records"), list) else []:
+            if isinstance(record, dict):
+                cache.upsert(engine._cache_record(record))
+        merged = engine.merge_by_entity(cache.get_all(), entity_type, max_age_days=engine.EVIDENCE_WINDOW_DAYS)
+        ranked = engine.rank_entities(merged, metric_weights, limit=limit)
+        if arguments.json:
+            _dump_json({"entities": ranked, "status": status, "detail": detail})
+        elif status == "error" and not ranked:
+            print(_safe(detail or "source fetch failed"), file=sys.stderr)
+        elif not ranked:
+            print("No {} results right now{}.".format(command, ": " + _safe(detail) if detail else ""))
+        else:
+            _render_entities(ranked, arguments, entity_type)
+        _attribution(arguments)
+        return 1 if (status == "error" and not ranked) else 0
+
+
 def _show_repo(repo: dict, arguments: argparse.Namespace) -> None:
     enabled = _color_enabled(arguments)
     slug = _safe(repo.get("canonical_repo", ""))
@@ -360,6 +432,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
     if command in {"hn", "npm", "stars", "trending", "reddit", "youtube"}:
         return _single_source(command, arguments)
+    if command in _ENTITY_COMMANDS:
+        return _entity_command(command, arguments)
     if command == "hot":
         limit = _normal_limit(arguments)
         if limit is None:

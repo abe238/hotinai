@@ -319,3 +319,19 @@ def test_dump_json_coerces_non_string_dict_keys_instead_of_crashing():
         cli._dump_json({("bad",): "x"})  # a malformed adapter shape must not crash JSON output
     payload = json.loads(buf.getvalue())  # must be valid JSON, not raise
     assert payload == {"('bad',)": "x"}
+
+
+def test_models_command_renders_entities_json(monkeypatch, capsys):
+    cache = MemoryCache()
+    monkeypatch.setattr(cli, "open_cache", lambda: cache)
+    monkeypatch.setattr(cli.hfmodels, "fetch", lambda **kwargs: {"records": [
+        {"entity_type": "model", "entity_id": "org/m", "url": "https://huggingface.co/org/m",
+         "name": "org/m", "source": "hfmodels", "signal": {"model_downloads": 1000, "model_likes": 50},
+         "meta": {"model_task": "text-generation"}},
+    ], "status": "ok", "detail": None})
+
+    assert main(["models", "--json", "--limit", "5"]) == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["entities"][0]["entity_id"] == "org/m"
+    assert out["entities"][0]["entity_type"] == "model"
+    assert out["entities"][0]["score"] > 0

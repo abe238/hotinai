@@ -276,3 +276,23 @@ def test_curated_youtube_flag_is_a_bounded_nudge_not_a_source():
     assert curated_score - plain_score <= 1.0   # but is bounded, not a 1.25x source multiplier
     # it did not add a phantom source
     assert engine.score_repo(curated, now=now)["corroboration"] == 1.0
+
+
+def test_merge_by_entity_is_type_scoped_and_ranks_by_metric():
+    now = time.time()
+    rows = [
+        {"entity_type": "model", "entity_id": "org/big", "url": "https://huggingface.co/org/big",
+         "name": "org/big", "source": "hfmodels", "signal": {"model_downloads": 100000, "model_likes": 10}, "meta": {}, "fetched_at": now},
+        {"entity_type": "model", "entity_id": "org/small", "url": "https://huggingface.co/org/small",
+         "name": "org/small", "source": "hfmodels", "signal": {"model_downloads": 5, "model_likes": 1}, "meta": {}, "fetched_at": now},
+        {"entity_type": "paper", "entity_id": "2601.1", "url": "u", "name": "P",
+         "source": "hfpapers", "signal": {"paper_upvotes": 9}, "meta": {}, "fetched_at": now},
+        {"entity_type": "repo", "entity_id": "a/b", "canonical_repo": "a/b", "url": "https://github.com/a/b",
+         "name": "a/b", "source": "github", "signal": {"stars": 5}, "meta": {}, "fetched_at": now},
+    ]
+    models = engine.merge_by_entity(rows, "model")
+    assert set(models) == {"org/big", "org/small"}          # type-scoped: no paper/repo
+    ranked = engine.rank_entities(models, {"model_downloads": 1.0, "model_likes": 0.5})
+    assert [e["entity_id"] for e in ranked] == ["org/big", "org/small"]  # more downloads ranks first
+    assert ranked[0]["score"] > 0
+    assert engine.merge_by_entity(rows, "paper").keys() == {"2601.1"}
