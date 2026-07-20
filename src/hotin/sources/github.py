@@ -20,7 +20,7 @@ from hotin.throttle import Throttle
 SOURCE = "github"
 ENDPOINT = "https://api.github.com/search/repositories"
 THROTTLE = Throttle(min_interval=1.0, jitter=0.5)
-USER_AGENT = "hotin/0.1.0"
+USER_AGENT = "hotin/0.2.0"
 
 
 def _normalise_limit(limit: Any) -> int:

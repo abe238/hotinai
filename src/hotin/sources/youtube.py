@@ -232,7 +232,7 @@ def _request_v3(url: str) -> Optional[Dict[str, Any]]:
     so this URL must never be logged.
     """
     try:
-        request = urllib.request.Request(url, headers={"User-Agent": "hotin/0.1.0"})
+        request = urllib.request.Request(url, headers={"User-Agent": "hotin/0.2.0"})
         V3_THROTTLE.wait()
         with urllib.request.urlopen(request, timeout=30) as response:
             body = response.read()
@@ -361,7 +361,7 @@ def _request_search(query: str, api_key: str) -> Optional[Dict[str, Any]]:
         )
         request = urllib.request.Request(
             request_url,
-            headers={"x-api-key": api_key, "User-Agent": "hotin/0.1.0"},
+            headers={"x-api-key": api_key, "User-Agent": "hotin/0.2.0"},
         )
         THROTTLE.wait()
         with urllib.request.urlopen(request, timeout=30) as response:

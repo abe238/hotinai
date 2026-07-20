@@ -18,7 +18,7 @@ SEARCH_ENDPOINT = "https://registry.npmjs.org/-/v1/search"
 DOWNLOADS_ENDPOINT = "https://api.npmjs.org/downloads/range/last-month/"
 DEFAULT_QUERIES = ("llm", "ai agent", "rag", "mcp server", "vector database")
 THROTTLE = Throttle(min_interval=1.5, jitter=0.5)
-USER_AGENT = "hotin/0.1.0"
+USER_AGENT = "hotin/0.2.0"
 # npm's registry accepts a comma-separated batch of package names on this endpoint
 # (documented cap: 128 per request), turning what used to be one throttled request
 # per candidate into a small, fixed number of requests regardless of candidate count.

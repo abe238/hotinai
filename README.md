@@ -6,7 +6,9 @@ hotin pulls together independent signals and ranks projects by cross-source corr
 
 ## What it does
 
-The zero-key core combines GitHub Trending, the public repo-trends API momentum, Hacker News, and npm velocity with no configuration. Add an optional ScrapeCreators API key to unlock Reddit and YouTube signals. A the influencer-stars source-based “smart money” credibility signal is also included on a best-effort basis. Sources can be temporarily unavailable without taking down the CLI.
+The zero-key core combines GitHub Trending, the public repo-trends API momentum, Hacker News, and npm velocity with no configuration. Add an optional key to unlock Reddit and YouTube (ScrapeCreators, or the official YouTube Data API v3), including curated repo-roundup channels. A the influencer-stars source-based “smart money” credibility signal is included on a best-effort basis, and smol.ai/AINews adds an editorial corroboration flag. Sources can be temporarily unavailable without taking down the CLI.
+
+Beyond repos, hotin surfaces trending **AI models** (`hotin models`) and **papers** (`hotin papers`) as their own views, and a short daily **`hotin brief`** of what's happening across all of them. Run `hotin ingest` on a schedule (a GitHub Actions cron is included) and hotin records a time series, so `hotin hot` can flag what's genuinely **rising** and **viral** (velocity, not just a snapshot) — not just what's big right now.
 
 ## Install
 
@@ -51,13 +53,17 @@ Available commands:
 | `hotin trending` | show trending repositories |
 | `hotin reddit` | show Reddit signals |
 | `hotin youtube` | show YouTube signals |
+| `hotin models` | show trending AI models (HuggingFace) |
+| `hotin papers` | show trending AI papers (HuggingFace) |
+| `hotin brief` | a short daily digest of what's happening in AI |
 | `hotin search <query>` | search cached tools |
 | `hotin show <owner/repo>` | show one tool |
 | `hotin setup` | check local configuration |
-| `hotin update` | update hotin |
+| `hotin update` | refresh all sources |
+| `hotin ingest` | refresh + record the time series (for a scheduler) |
 | `hotin about` | show project information |
 
-Each result presents a score, repository name, category, and applicable badges such as `fresh`, `smart-money`, and `corroborated`.
+Each repo result presents a score, the owner/repo (clickable), category, and applicable badges such as `fresh`, `smart-money`, `corroborated`, `paper-backed`, `rising`, and `viral`.
 
 Example (real output, top of a live run):
 

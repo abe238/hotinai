@@ -24,7 +24,7 @@ from hotin.throttle import Throttle
 SOURCE = "smolai"
 ENDPOINT = "https://news.smol.ai/rss.xml"
 THROTTLE = Throttle(min_interval=2.0, jitter=1.0)
-USER_AGENT = "hotin/0.1.0"
+USER_AGENT = "hotin/0.2.0"
 
 
 def _normalise_limit(limit: Any) -> int:
