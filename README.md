@@ -55,7 +55,8 @@ Available commands:
 | `hotin trending` | show trending repositories |
 | `hotin reddit` | show Reddit signals |
 | `hotin youtube` | show YouTube signals |
-| `hotin models` | show trending AI models (HuggingFace) |
+| `hotin models` | AI models — official lab releases first, then HuggingFace trending |
+| `hotin releases` | official releases from frontier AI lab blogs |
 | `hotin papers` | show trending AI papers (HuggingFace) |
 | `hotin brief` | a short daily digest of what's happening in AI |
 | `hotin search <query>` | search cached tools |
