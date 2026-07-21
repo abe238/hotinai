@@ -3068,23 +3068,6 @@
       },
       {
         "rank": 40,
-        "name": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
-        "url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
-        "meta": "text-generation",
-        "receipts": [
-          {
-            "label": "197k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "851 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 41,
         "name": "Soofi-Project/Soofi-S-Base",
         "url": "https://huggingface.co/Soofi-Project/Soofi-S-Base",
         "meta": "text-generation",
@@ -3095,6 +3078,23 @@
           },
           {
             "label": "69 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 41,
+        "name": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
+        "url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "197k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "851 likes",
             "kind": "stars"
           }
         ],
@@ -3302,6 +3302,23 @@
       },
       {
         "rank": 54,
+        "name": "unsloth/Ornith-1.0-35B-GGUF",
+        "url": "https://huggingface.co/unsloth/Ornith-1.0-35B-GGUF",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "23.4k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "51 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 55,
         "name": "MuScriptor/muscriptor-large",
         "url": "https://huggingface.co/MuScriptor/muscriptor-large",
         "meta": null,
@@ -3312,23 +3329,6 @@
           },
           {
             "label": "86 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 55,
-        "name": "unsloth/Ornith-1.0-35B-GGUF",
-        "url": "https://huggingface.co/unsloth/Ornith-1.0-35B-GGUF",
-        "meta": "text-generation",
-        "receipts": [
-          {
-            "label": "23.4k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "50 likes",
             "kind": "stars"
           }
         ],
@@ -3491,7 +3491,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "52 upvotes",
+            "label": "53 upvotes",
             "kind": "paper"
           }
         ],
@@ -3685,6 +3685,37 @@
       },
       {
         "rank": 18,
+        "name": "GigaAM Multilingual: Foundation Model for Underrepresented Languages",
+        "url": "https://huggingface.co/papers/2607.10371",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "5 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "name": "GigaChat Audio: Time-aware Large Audio Language Model",
+        "url": "https://huggingface.co/papers/2607.10387",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "5 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 20,
         "name": "Distilled Reinforcement Learning for LLM Post-training",
         "url": "https://huggingface.co/papers/2607.17247",
         "meta": null,
@@ -3702,7 +3733,7 @@
         ]
       },
       {
-        "rank": 19,
+        "rank": 21,
         "name": "JoyNexus: Service-Oriented Multi-Tenant Post-Training for VLA Models",
         "url": "https://huggingface.co/papers/2607.16074",
         "meta": null,
@@ -3715,20 +3746,7 @@
         "badges": []
       },
       {
-        "rank": 20,
-        "name": "GigaChat Audio: Time-aware Large Audio Language Model",
-        "url": "https://huggingface.co/papers/2607.10387",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "2 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 21,
+        "rank": 22,
         "name": "OpenLongTail: Generative Scaling of Long-Tail Driving Data",
         "url": "https://huggingface.co/papers/2607.09655",
         "meta": null,
@@ -3746,7 +3764,7 @@
         ]
       },
       {
-        "rank": 22,
+        "rank": 23,
         "name": "Self-State Attacks on Self-Hosted AI Agents: How Far Can OS Defenses Go?",
         "url": "https://huggingface.co/papers/2607.17986",
         "meta": null,
@@ -3759,7 +3777,7 @@
         "badges": []
       },
       {
-        "rank": 23,
+        "rank": 24,
         "name": "DiFA: Inference-Time Forward-Process Alignment for Diffusion Models",
         "url": "https://huggingface.co/papers/2607.17972",
         "meta": null,
@@ -3772,7 +3790,7 @@
         "badges": []
       },
       {
-        "rank": 24,
+        "rank": 25,
         "name": "FlashRT: Agent Harness for Guiding Agents to Deploy Real-Time Multimodal Applications",
         "url": "https://huggingface.co/papers/2607.18171",
         "meta": null,
@@ -3783,24 +3801,6 @@
           }
         ],
         "badges": []
-      },
-      {
-        "rank": 25,
-        "name": "GigaAM Multilingual: Foundation Model for Underrepresented Languages",
-        "url": "https://huggingface.co/papers/2607.10371",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "1 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
       },
       {
         "rank": 26,
