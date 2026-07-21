@@ -2,13 +2,13 @@
 
 An open-source CLI for finding what's hot, fresh, and credible in AI.
 
-hotin pulls together independent signals and ranks projects by cross-source corroboration and freshness, so a tool gaining attention in more than one place has more weight than a one-source spike.
+hotin pulls together independent signals and ranks projects by cross-source consensus and freshness, so a tool gaining attention in more than one place has more weight than a one-source spike.
 
 ## What it does
 
-The zero-key core combines GitHub Trending, the public repo-trends API momentum, Hacker News, and npm velocity with no configuration. Add an optional key to unlock Reddit and YouTube (ScrapeCreators, or the official YouTube Data API v3), including curated repo-roundup channels. A the influencer-stars source-based “smart money” credibility signal is included on a best-effort basis, and smol.ai/AINews adds an editorial corroboration flag. Sources can be temporarily unavailable without taking down the CLI.
+The zero-key core combines GitHub Trending, curated growth momentum, Hacker News, and npm velocity with no configuration. Add an optional key to unlock Reddit and YouTube (ScrapeCreators, or the official YouTube Data API v3), including curated repo-roundup channels. A “smart money” signal (repos the AI Insiders are backing) is included on a best-effort basis, and an AI-newsletter feed adds an editorial signal. Sources can be temporarily unavailable without taking down the CLI.
 
-Beyond repos, hotin surfaces trending **AI models** (`hotin models`) and **papers** (`hotin papers`) as their own views, and a short daily **`hotin brief`** of what's happening across all of them. Run `hotin ingest` on a schedule (a GitHub Actions cron is included) and hotin records a time series, so `hotin hot` can flag what's genuinely **rising** and **viral** (velocity, not just a snapshot) — not just what's big right now.
+Beyond repos, hotin surfaces trending **AI models** (`hotin models`) and **papers** (`hotin papers`) as their own views, and a short daily **`hotin brief`** of what's happening across all of them. Run `hotin refresh` on a schedule and hotin records a time series, so the board can flag what's genuinely **rising** and **viral** (velocity, not just a snapshot) — not just what's big right now.
 
 ## Install
 
@@ -33,46 +33,41 @@ pipx install git+https://github.com/abe238/hotinai
 A prebuilt single-file `hotin.pyz` will be attached to GitHub Releases as a zero-install option for a fresh machine. Run it with:
 
 ```sh
-python hotin.pyz hot
+python hotin.pyz
 ```
 
 ## Quick start
 
 ```sh
-hotin hot
+hotin
 ```
 
 Available commands:
 
 | Command | Description |
 | --- | --- |
-| `hotin hot` | show the hottest AI tools |
-| `hotin repos` | the hottest repos (same ranking as `hot`) |
-| `hotin news` | recent AI news headlines (smol.ai / AINews) |
-| `hotin hn` | show Hacker News signals |
-| `hotin npm` | show npm signals |
-| `hotin stars` | show GitHub star growth |
-| `hotin trending` | show trending repositories |
-| `hotin reddit` | show Reddit signals |
-| `hotin youtube` | show YouTube signals |
-| `hotin models` | AI models — frontier-lab press releases first, then HuggingFace trending |
-| `hotin releases` | press releases / blog posts from frontier AI lab blogs |
-| `hotin papers` | show trending AI papers (HuggingFace) |
-| `hotin people` | the the influencer-stars source AI 1000 — ranked accounts shaping AI |
-| `hotin brief` | a short daily digest of what's happening in AI |
-| `hotin search <query>` | search cached tools |
-| `hotin show <owner/repo>` | show one tool |
+| `hotin` | the flagship board (defaults to `repos`) |
+| `hotin repos` | trending AI repos, fused across sources |
+| `hotin insiders` | repos the AI Insiders are backing (the smart-money signal) |
+| `hotin models` | AI models — lab press releases + trending weights |
+| `hotin papers` | trending AI papers |
+| `hotin news` | recent AI news headlines |
+| `hotin brief` | a one-shot digest across every entity |
+| `hotin refresh` | refresh all sources + record a snapshot (`--quiet` = headless) |
+| `hotin export` | write the board to `docs/index.html` + `latest.json` |
 | `hotin setup` | check config, or schedule automatic refreshes |
-| `hotin update` | refresh all sources |
-| `hotin ingest` | refresh + record the time series (for a scheduler) |
+| `hotin search <query>` | search cached repos |
+| `hotin show <owner/repo>` | show one repo |
 | `hotin about` | show project information |
 
-Each repo result presents a score, the owner/repo (clickable), category, and applicable badges: `fresh` (recently created or active), `rising` / `viral` (climbing fast on the recorded time series, `viral` being the rare accelerating-and-corroborated extreme), `smart-money` (credible AI accounts on it across several sources), and `paper-backed` (linked from a trending paper). Corroboration across sources is folded into the score itself, not shown as a badge.
+**Flags:** `--format text\|json\|md\|html` · `--limit N` (default 20) · `--source <name>` (repos: one upstream feed instead of the fused board) · `--since 30d` / `--min-stars N` (repos filters) · `--verbose`.
+
+Each repo result presents a score, the owner/repo (clickable), category, and applicable badges: `fresh` (recently created or active), `rising` / `viral` (climbing fast on the recorded time series, `viral` being the rare accelerating-and-consensus extreme), `smart-money` (the AI Insiders are backing it), and `paper-backed` (linked from a trending paper). Consensus across sources is folded into the score itself, not shown as a badge.
 
 Example (real output, top of a live run):
 
 ```text
-$ hotin hot --limit 8
+$ hotin --limit 8
  30.59  xai-org/grok-build  agents  fresh
         Grok Build is open source
  22.17  justvugg/colibri  uncategorized
@@ -89,7 +84,7 @@ The first line of each result is score, owner/repo (clickable in a real terminal
 
 ## Keeping it fresh
 
-hotin's `rising` / `viral` badges and the `hotin brief` come from a recorded time series, so they get better the more often `hotin ingest` runs. `hotin setup` can install a scheduled job for you:
+hotin's `rising` / `viral` badges and the `hotin brief` come from a recorded time series, so they get better the more often `hotin refresh` runs. `hotin setup` can install a scheduled job for you:
 
 ```sh
 hotin setup                     # interactive: once a day (8am) or twice (8am & 8pm)
@@ -98,13 +93,13 @@ hotin setup --schedule daily    # 8am only
 hotin setup --schedule off      # remove it
 ```
 
-On macOS/Linux this manages a marked block in your `crontab`; on Windows it creates `hotin-ingest` scheduled tasks. Either way it runs `python -m hotin ingest`, leaving the rest of your schedule untouched.
+On macOS/Linux this manages a marked block in your `crontab`; on Windows it creates `hotin-refresh` scheduled tasks. Either way it runs `python -m hotin refresh --quiet`, leaving the rest of your schedule untouched.
 
 ## Data Sources & Terms
 
-hotin's code is licensed under Apache-2.0. That license does not relicense the underlying data returned by GitHub, Hacker News, npm, Reddit, YouTube, or the influencer-stars source: each source's own terms of use apply.
+hotin's code is licensed under Apache-2.0. That license does not relicense the underlying data returned by GitHub, Hacker News, npm, Reddit, or YouTube: each source's own terms of use apply.
 
-The Reddit and YouTube integrations are unofficial third-party integrations via ScrapeCreators; they are not officially sanctioned by Reddit or YouTube. The the influencer-stars source-based smart-money signal is a best-effort scrape of the influencer-stars source's public page and may change or break without notice.
+The Reddit and YouTube integrations are unofficial third-party integrations via ScrapeCreators; they are not officially sanctioned by Reddit or YouTube. The smart-money signal is a best-effort read of a public AI-influencer graph and may change or break without notice.
 
 ## Contributing
 

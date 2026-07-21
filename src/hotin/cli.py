@@ -11,14 +11,14 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
-from . import __version__, engine, health, schedule
+from . import __version__, board, engine, health, render_board, schedule
 from .cache import MemoryCache, open_cache
 from .canonical import canonicalize
 from .coerce import finite_float
 from .config import config_dir, env_path, load_config
 from .render import color, hyperlink, sanitize
-from .sources import (insider_people, frontier, github, hfmodels, hfpapers, hn,
-                      npm, trends, collections_ai, reddit, smolai, youtube)
+from .sources import (frontier, github, hfmodels, hfpapers, hn,
+                      insiders, npm, trends, collections, reddit, smolai, youtube)
 
 
 # Entities (the nouns, each self-ranked) + MANAGE verbs. The raw single-source
@@ -26,12 +26,13 @@ from .sources import (insider_people, frontier, github, hfmodels, hfpapers, hn,
 # `repos --source <name>` values. `refresh` replaces the old ingest+update.
 COMMANDS = {
     "repos": "trending AI repos — the flagship board (default)",
-    "people": "the the influencer-stars source AI 1000 — ranked accounts shaping AI",
-    "models": "AI models — frontier-lab press releases + HuggingFace trending",
-    "papers": "trending AI papers (HuggingFace)",
-    "news": "recent AI news headlines (smol.ai / AINews)",
+    "insiders": "repos the AI Insiders are backing (the smart-money signal)",
+    "models": "AI models — frontier-lab press releases + trending model weights",
+    "papers": "trending AI papers",
+    "news": "recent AI news headlines",
     "brief": "a one-shot digest across every entity",
     "refresh": "refresh all sources, record a snapshot, report health (--quiet = headless)",
+    "export": "write the board to docs/index.html + latest.json (the daily snapshot)",
     "setup": "check config, or schedule automatic refreshes (--schedule)",
     "search": "search cached tools",
     "show": "show one repo (owner/repo)",
@@ -45,13 +46,13 @@ _BADGE_COLORS = {"fresh": "32", "rising": "38;5;208", "viral": "38;5;198",
 _ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
 # `repos --source X` shows a single upstream feed instead of the fused board.
 _REPO_SOURCE_ADAPTERS = {
-    "stars": github, "trending": trends, "trends-ai": collections_ai,
+    "stars": github, "trending": trends, "collections": collections,
     "hn": hn, "npm": npm, "reddit": reddit, "youtube": youtube,
 }
 _SOURCE_CHOICES = tuple(_REPO_SOURCE_ADAPTERS)
 _FORMATS = ("text", "json", "md", "html")
 # Commands that produce a ranked/list result and take --limit.
-_LIST_COMMANDS = {"repos", "models", "papers", "news", "people", "search"}
+_LIST_COMMANDS = {"repos", "insiders", "models", "papers", "news", "search", "export"}
 # Entity commands: (adapter, entity_type, metric weights for scoring, primary metric label).
 # Models rank by HuggingFace's trendingScore (heat right now), NOT lifetime
 # downloads — otherwise a hugely-adopted but old model (Kokoro-82M, ~10M
@@ -376,7 +377,7 @@ def _repo_source(command: str, arguments: argparse.Namespace) -> int:
         "npm": (npm, _signal_metric("npm_growth", "npm_downloads_week")),
         "stars": (github, _signal_metric("stars")),
         "trending": (trends, _trend_metric),
-        "trends-ai": (collections_ai, _signal_metric("stars_growth")),
+        "collections": (collections, _signal_metric("stars_growth")),
         "reddit": (reddit, _signal_metric("reddit_score")),
         "youtube": (youtube, _signal_metric("youtube_views")),
     }
@@ -500,45 +501,99 @@ def _releases(arguments: argparse.Namespace) -> int:
     return 0
 
 
-def _people(arguments: argparse.Namespace) -> int:
-    """The the influencer-stars source AI 1000 — ranked accounts shaping AI, most influential first."""
+def _render_rows(rows: List[dict], arguments: argparse.Namespace) -> None:
+    """Render Row view-models to the active --format (text/md/html)."""
+    fmt = getattr(arguments, "format", "text")
+    if fmt == "md":
+        print(render_board.render_md(rows))
+    elif fmt == "html":
+        print(render_board.render_html(rows))
+    else:
+        print(render_board.render_text(rows, color_on=_color_enabled(arguments)))
+
+
+def _insiders(arguments: argparse.Namespace) -> int:
+    """Repos the AI Insiders are backing — the raw smart-money signal, names first."""
     limit = _normal_limit(arguments)
     if limit is None:
         return 2
     try:
-        result = insider_people.fetch(limit=limit, config=load_config())
-    except Exception as exc:  # defensive: adapters shouldn't raise
+        result = insiders.fetch(limit=limit, config=load_config())
+    except Exception as exc:  # adapters shouldn't raise
         result = {"records": [], "status": "error", "detail": str(exc) or "fetch failed"}
     if not isinstance(result, dict):
         result = {"records": [], "status": "error", "detail": "invalid adapter result"}
-    people = [p for p in (result.get("records") or []) if isinstance(p, dict)]
+    records = [r for r in (result.get("records") or []) if isinstance(r, dict)]
     detail = result.get("detail") if isinstance(result.get("detail"), str) else None
     if arguments.json:
-        _dump_json({"people": [{"rank": p.get("rank"), "handle": p.get("handle"), "name": p.get("name"),
-                                "category": p.get("category"), "github": p.get("github"),
-                                "ai1000_followers": _record_signal(p).get("ai1000_followers"),
-                                "rank_change": _record_signal(p).get("rank_change")} for p in people],
-                    "status": result.get("status"), "detail": detail})
+        _dump_json({"insiders": [{"rank": i + 1, "repo": r.get("canonical_repo"),
+                                  "insider_stars": _record_signal(r).get("insider_stars"),
+                                  "who": (r.get("meta") or {}).get("insiders"),
+                                  "top_insider": (r.get("meta") or {}).get("top_insider")}
+                                 for i, r in enumerate(records)], "status": result.get("status"), "detail": detail})
         _attribution(arguments)
-        return 0 if people else 1
-    if not people:
-        print("No AI 1000 rankings right now{}.".format(": " + _safe(detail) if detail else ""), file=sys.stderr)
+        return 0 if records else 1
+    if not records:
+        print("No AI Insider signal right now{}.".format(": " + _safe(detail) if detail else ""), file=sys.stderr)
         _attribution(arguments)
         return 1
-    enabled = _color_enabled(arguments)
-    for p in people:
-        change = _finite(_record_signal(p).get("rank_change"))
-        arrow = (color(" ↑{}".format(int(change)), "32", enabled) if change > 0
-                 else color(" ↓{}".format(int(-change)), "31", enabled) if change < 0 else "")
-        handle = _safe(p.get("handle", ""))
-        name = hyperlink(color(handle, "1", enabled), p.get("url") if isinstance(p.get("url"), str) else "", enabled)
-        print("{}  {}{}  {}  {}".format(
-            color("#{:<4}".format(int(_finite(p.get("rank")))), _score_color(1000 - _finite(p.get("rank")), 1000), enabled),
-            name, arrow,
-            color(_safe(p.get("name", "")), "2", enabled),
-            color(_safe(p.get("category", "")), "2", enabled)))
-    print(color("via the influencer-stars source AI 1000 — digg.com/tech/x/rankings", "2", enabled))
+    _render_rows(board.insider_rows(records), arguments)
     _attribution(arguments)
+    return 0
+
+
+def _export(arguments: argparse.Namespace) -> int:
+    """Bake the 5-tab board into docs/index.html + write docs/data/latest.json.
+
+    The daily snapshot the live site self-updates from: no backend, just a static
+    page + JSON regenerated on a schedule and committed. Every entity is rendered
+    to HTML rows and injected between its <!-- BOARD:<id> --> markers.
+    """
+    import datetime
+    repo_root = Path(__file__).resolve().parents[2]
+    docs = repo_root / "docs"
+    index = docs / "index.html"
+    limit = _normal_limit(arguments) or 60
+    config = load_config()
+    with _cache_session() as cache:
+        engine.fetch_all(config, limit=max(limit, 100), cache=cache)
+        cached = cache.get_all()
+        window = engine.EVIDENCE_WINDOW_DAYS
+        links = engine.cross_entity_repo_links(cached, max_age_days=window)
+        merged = engine.merge_by_repo(cached, max_age_days=window)
+        for rid, repo in merged.items():
+            if rid in links:
+                repo.setdefault("meta", {})["paper_backed"] = True
+        engine.annotate_velocity(merged, cache)
+        repos = engine.rank(merged, limit=limit)
+        models = engine.rank_entities(engine.merge_by_entity(cached, "model", max_age_days=window),
+                                      _ENTITY_COMMANDS["models"][2], limit=limit)
+        papers = engine.rank_entities(engine.merge_by_entity(cached, "paper", max_age_days=window),
+                                      _ENTITY_COMMANDS["papers"][2], limit=limit)
+    ins_res = insiders.fetch(limit=limit, config=config)
+    ins = [r for r in (ins_res.get("records") or []) if isinstance(r, dict)] if isinstance(ins_res, dict) else []
+    news_text = smolai._request()
+    news = smolai.parse_news(news_text)[:limit] if news_text else []
+    rows = {
+        "repos": board.repo_rows(repos), "insiders": board.insider_rows(ins),
+        "models": board.model_rows(models), "papers": board.paper_rows(papers),
+        "news": board.news_rows(news),
+    }
+    stamp = datetime.date.today().isoformat()
+    if index.exists():
+        html = index.read_text()
+        for eid, entity_rows in rows.items():
+            rendered = "\n" + (render_board.render_html(entity_rows) or "") + "\n"
+            html = re.sub(
+                r"(<!-- BOARD:{0} -->).*?(<!-- /BOARD:{0} -->)".format(re.escape(eid)),
+                lambda m, r=rendered: m.group(1) + r + m.group(2), html, flags=re.DOTALL)
+        html = re.sub(r"(hotin · updated )\d{4}-\d{2}-\d{2}", r"\g<1>" + stamp, html)
+        index.write_text(html)
+    (docs / "data").mkdir(parents=True, exist_ok=True)
+    (docs / "data" / "latest.json").write_text(json.dumps(
+        {"generated": stamp, "entities": rows}, indent=2, allow_nan=False))
+    counts = ", ".join("{} {}".format(len(v), k) for k, v in rows.items())
+    print("exported {} · baked {} + docs/data/latest.json".format(counts, index.name))
     return 0
 
 
@@ -624,7 +679,7 @@ def _show_repo(repo: dict, arguments: argparse.Namespace) -> None:
     print(_label("momentum", "{:.2f}".format(_finite(repo.get("momentum"))), enabled))
     print(_label("credibility", "{:.2f}".format(_finite(repo.get("credibility"))), enabled))
     print(_label("signal_score", "{:.2f}".format(_finite(repo.get("signal_score"))), enabled))
-    print(_label("corroboration", "{:.2f}".format(_finite(repo.get("corroboration"))), enabled))
+    print(_label("consensus", "{:.2f}".format(_finite(repo.get("corroboration"))), enabled))
     print(_label("freshness_factor", "{:.2f}".format(_finite(repo.get("freshness_factor"))), enabled))
     freshness_days = repo.get("freshness_days")
     print(_label("freshness_days", "unknown" if freshness_days is None else "{:.2f}".format(_finite(freshness_days)), enabled))
@@ -877,8 +932,10 @@ def main(argv: Optional[List[str]] = None) -> int:
         return _brief(arguments)
     if command == "news":
         return _news(arguments)
-    if command == "people":
-        return _people(arguments)
+    if command == "insiders":
+        return _insiders(arguments)
+    if command == "export":
+        return _export(arguments)
     if command == "repos":
         if getattr(arguments, "source", None):
             return _repo_source(arguments.source, arguments)
@@ -904,6 +961,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             exit_code, message = health.summarize(statuses, cache_has_data=bool(ranked))
             if arguments.json:
                 _dump_json({"tools": ranked, "sources": [{"source": status.source, "status": status.status, "detail": status.detail} for status in statuses]})
+            elif getattr(arguments, "format", "text") in ("md", "html"):
+                _render_rows(board.repo_rows(ranked), arguments)
             else:
                 _render_ranked(ranked, arguments)
             if exit_code:

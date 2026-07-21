@@ -1,6 +1,6 @@
-"""the public repo-trends API AI collection rankings (repository entity).
+"""AI-topic growth AI collection rankings (repository entity).
 
-the public repo-trends API publishes public repository collections, including several AI-focused
+AI-topic growth publishes public repository collections, including several AI-focused
 ones used by its AI trending page.  This adapter discovers those collections and
 combines their star rankings without an API key or any runtime dependency beyond
 the standard library.  It is deliberately best-effort: bad API rows are skipped
@@ -19,7 +19,7 @@ from hotin.coerce import finite_int
 from hotin.throttle import Throttle
 
 
-SOURCE = "collections_ai"
+SOURCE = "collections"
 ENDPOINT = "https://api.ossinsight.io/v1/collections/"
 THROTTLE = Throttle(min_interval=1.5, jitter=0.5)
 USER_AGENT = "hotin/0.2.0"
@@ -28,7 +28,7 @@ _AI_TERMS = ("ai", "llm", "artificial", "agent", "rag", "inference", "machine le
 
 
 def _request(url: str) -> Optional[Any]:
-    """Fetch and decode an the public repo-trends API JSON response, or return None on failure."""
+    """Fetch and decode an AI-topic growth JSON response, or return None on failure."""
     try:
         request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
         THROTTLE.wait()
@@ -110,9 +110,9 @@ def parse_ranking(payload: Any, collection_name: Any) -> List[Dict[str, Any]]:
                     "signal": {
                         "stars": finite_int(row.get("total"), 0),
                         "stars_growth": finite_int(row.get("current_period_growth"), 0),
-                        "collections_ai_rank": finite_int(row.get("current_period_rank")),
+                        "collections_rank": finite_int(row.get("current_period_rank")),
                     },
-                    "meta": {"trend_collection": collection_name, "on_trending_list": True},
+                    "meta": {"collection": collection_name, "on_trending_list": True},
                 }
             )
     except (AttributeError, TypeError, ValueError, OverflowError):
@@ -160,7 +160,7 @@ def fetch(
 
         collection_payload = _request(ENDPOINT)
         if collection_payload is None:
-            return {"records": [], "status": "error", "detail": "trends collections request failed"}
+            return {"records": [], "status": "error", "detail": "AI-topic collections request failed"}
         collections = parse_collections(collection_payload)
         if not collections:
             return {"records": [], "status": "empty", "detail": "no AI collections parsed"}
@@ -174,14 +174,14 @@ def fetch(
             reached += 1
             records.extend(parse_ranking(payload, name))
         if reached == 0:
-            return {"records": [], "status": "error", "detail": "trends AI rankings request failed"}
+            return {"records": [], "status": "error", "detail": "AI-topic rankings request failed"}
 
         records = dedupe_records(records)
         if not records:
             return {"records": [], "status": "empty", "detail": "no AI repositories parsed"}
         return {"records": records[:requested_limit], "status": "ok", "detail": None}
     except Exception:
-        return {"records": [], "status": "error", "detail": "collections_ai fetch failed"}
+        return {"records": [], "status": "error", "detail": "collections fetch failed"}
 
 
 def selftest() -> None:
@@ -197,7 +197,7 @@ def selftest() -> None:
         {"rows": [{"repo_name": "example/project", "current_period_growth": 9}]}, "LLMs"
     ))[0]["signal"]["stars_growth"] == 9
     assert parse_ranking(None, "AI") == [] and parse_collections("bad") == []
-    print("collections_ai selftest: ok")
+    print("collections selftest: ok")
 
 
 if __name__ == "__main__":
