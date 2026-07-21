@@ -542,6 +542,25 @@ def _insiders(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def _pacific_stamp() -> str:
+    """Human 'last updated' stamp in Pacific time, to the minute.
+
+    Cross-platform (no %-/%# strftime tricks). Falls back to naive local time
+    labeled PT if the tz database is unavailable.
+    """
+    import datetime
+    now = datetime.datetime.now()
+    try:
+        from zoneinfo import ZoneInfo
+        now = datetime.datetime.now(ZoneInfo("America/Los_Angeles"))
+    except Exception:
+        pass
+    hour12 = now.hour % 12 or 12
+    ampm = "AM" if now.hour < 12 else "PM"
+    return "{} {}, {} · {}:{:02d} {} PT".format(
+        now.strftime("%b"), now.day, now.year, hour12, now.minute, ampm)
+
+
 def _export(arguments: argparse.Namespace) -> int:
     """Bake the 5-tab board into docs/index.html + write docs/data/latest.json.
 
@@ -580,6 +599,7 @@ def _export(arguments: argparse.Namespace) -> int:
         "news": board.news_rows(news),
     }
     stamp = datetime.date.today().isoformat()
+    stamp_pt = _pacific_stamp()
     if index.exists():
         html = index.read_text()
         for eid, entity_rows in rows.items():
@@ -588,10 +608,14 @@ def _export(arguments: argparse.Namespace) -> int:
                 r"(<!-- BOARD:{0} -->).*?(<!-- /BOARD:{0} -->)".format(re.escape(eid)),
                 lambda m, r=rendered: m.group(1) + r + m.group(2), html, flags=re.DOTALL)
         html = re.sub(r"(hotin · updated )\d{4}-\d{2}-\d{2}", r"\g<1>" + stamp, html)
+        html = re.sub(r"<!-- STAMP -->.*?<!-- /STAMP -->",
+                      lambda m: "<!-- STAMP -->last updated " + stamp_pt + " <!-- /STAMP -->",
+                      html, flags=re.DOTALL)
         index.write_text(html)
     (docs / "data").mkdir(parents=True, exist_ok=True)
     (docs / "data" / "latest.json").write_text(json.dumps(
-        {"generated": stamp, "entities": rows}, indent=2, allow_nan=False))
+        {"generated": stamp, "generated_pt": stamp_pt, "entities": rows},
+        indent=2, allow_nan=False))
     counts = ", ".join("{} {}".format(len(v), k) for k, v in rows.items())
     print("exported {} · baked {} + docs/data/latest.json".format(counts, index.name))
     return 0
