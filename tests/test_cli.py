@@ -389,6 +389,39 @@ def test_brief_json_summarizes_repos_models_papers(monkeypatch, capsys):
     assert out["news"][0]["title"] == "Kimi K3 release"
 
 
+def test_setup_schedule_flag_installs_via_scheduler(monkeypatch, capsys):
+    calls = {}
+
+    def fake_install(freq):
+        calls["install"] = freq
+        return "scheduled ok"
+
+    monkeypatch.setattr(cli.schedule, "install", fake_install)
+    assert main(["setup", "--schedule", "twice"]) == 0
+    assert calls["install"] == "twice"
+    assert "scheduled ok" in capsys.readouterr().out
+
+
+def test_setup_schedule_off_removes(monkeypatch, capsys):
+    calls = {}
+
+    def fake_remove():
+        calls["remove"] = True
+        return "removed"
+
+    monkeypatch.setattr(cli.schedule, "remove", fake_remove)
+    assert main(["setup", "--schedule", "off"]) == 0
+    assert calls["remove"] is True
+
+
+def test_setup_schedule_failure_is_reported_not_raised(monkeypatch, capsys):
+    def boom(freq):
+        raise OSError("crontab not found")
+    monkeypatch.setattr(cli.schedule, "install", boom)
+    assert main(["setup", "--schedule", "daily"]) == 1
+    assert "could not update schedule" in capsys.readouterr().err
+
+
 def test_brief_empty_store_is_friendly(monkeypatch, capsys):
     monkeypatch.setattr(cli, "open_cache", MemoryCache)
     monkeypatch.setattr(cli.smolai, "_request", lambda: None)  # offline: no news section

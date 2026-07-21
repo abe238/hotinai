@@ -10,7 +10,7 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
-from . import __version__, engine, health
+from . import __version__, engine, health, schedule
 from .cache import MemoryCache, open_cache
 from .canonical import canonicalize
 from .coerce import finite_float
@@ -76,6 +76,8 @@ def build_parser() -> argparse.ArgumentParser:
         _add_global_flags(subparser, suppress_defaults=True, include_limit=(command in _LIST_COMMANDS))
         if command == "setup":
             subparser.add_argument("--check", action="store_true", help="check local configuration")
+            subparser.add_argument("--schedule", choices=("daily", "twice", "off"), default=None,
+                                   help="install/remove a scheduled `hotin ingest` (daily=8am, twice=8am+8pm)")
         elif command == "search":
             subparser.add_argument("query", nargs="?", default=None, help="text to search for")
         elif command == "show":
@@ -89,6 +91,45 @@ def _setup_check() -> int:
     print("configured entries: {}".format(len(config)))
     print("setup check passed")
     return 0
+
+
+def _apply_schedule(choice: str) -> int:
+    """Install (daily/twice) or remove (off) the scheduled ingest; report the result."""
+    try:
+        message = schedule.remove() if choice == "off" else schedule.install(choice)
+    except Exception as exc:  # cron/schtasks missing or refused — report, don't crash
+        print("could not update schedule: {}".format(_safe(str(exc) or "unknown error")), file=sys.stderr)
+        return 1
+    print(message)
+    return 0
+
+
+def _prompt_schedule() -> Optional[str]:
+    """Ask whether to schedule ingest. Returns 'daily'/'twice'/'off', or None if declined."""
+    print("\nKeep hotin fresh by running `hotin ingest` on a schedule?")
+    print("  1) once a day   (8am)")
+    print("  2) twice a day  (8am & 8pm)")
+    print("  n) no thanks")
+    try:
+        answer = input("choice [1/2/n]: ").strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        print()
+        return None
+    return {"1": "daily", "2": "twice", "n": None, "": None}.get(answer, None)
+
+
+def _setup(arguments: argparse.Namespace) -> int:
+    """Config check, plus an optional scheduler install (flag or interactive prompt)."""
+    if arguments.schedule is not None:
+        return _apply_schedule(arguments.schedule)
+    code = _setup_check()
+    if sys.stdin.isatty() and sys.stdout.isatty():
+        choice = _prompt_schedule()
+        if choice is not None:
+            code = _apply_schedule(choice) or code
+    else:
+        print("(run `hotin setup --schedule daily|twice` to keep the store fresh automatically)")
+    return code
 
 
 def _json_default(value: object) -> object:
@@ -491,8 +532,12 @@ def _brief(arguments: argparse.Namespace) -> int:
             _dump_json({
                 "rising": [{"repo": r.get("canonical_repo"), "stars_per_day": _finite(r.get("meta", {}).get("velocity_per_day"))} for r in rising],
                 "top_repos": [{"repo": r.get("canonical_repo"), "score": _finite(r.get("score")), "badges": r.get("badges")} for r in repos[:5]],
-                "top_models": [{"model": m.get("entity_id"), "downloads": _finite(_record_signal(m).get("model_downloads"))} for m in models],
-                "top_papers": [{"paper": p.get("entity_id"), "title": p.get("name"), "upvotes": _finite(_record_signal(p).get("paper_upvotes"))} for p in papers],
+                "top_papers": [{"paper": p.get("entity_id"), "title": p.get("name"), "url": p.get("url"),
+                                "upvotes": _finite(_record_signal(p).get("paper_upvotes")),
+                                "repo": p.get("meta", {}).get("linked_repo")} for p in papers],
+                "top_models": [{"model": m.get("entity_id"), "url": m.get("url"),
+                                "downloads": _finite(_record_signal(m).get("model_downloads")),
+                                "likes": _finite(_record_signal(m).get("model_likes"))} for m in models],
                 "news": [{"title": n["name"], "url": n["url"], "date": n["meta"].get("date")} for n in news],
             })
             _attribution(arguments)
@@ -519,18 +564,28 @@ def _brief(arguments: argparse.Namespace) -> int:
                 print("  {}  {}  {}".format(
                     color("{:>6.2f}".format(_finite(repo.get("score"))), "1;38;5;42", enabled),
                     _repo_link(repo, enabled), _render_badges(repo.get("badges"), enabled)))
+        def entity_link(entity, text):
+            url = entity.get("url")
+            return hyperlink(color(text, "1", enabled), url, enabled) if isinstance(url, str) and url else color(text, "1", enabled)
+
         if models:
             header("Trending models")
             for model in models:
                 signal = _record_signal(model)
-                print("  {}  {}".format(color(_safe(model.get("entity_id", "")), "1", enabled),
-                                        color("{} downloads".format(_format_number(signal.get("model_downloads"))), "2", enabled)))
+                metric = "{} downloads · {} likes".format(
+                    _format_number(signal.get("model_downloads")), _format_number(signal.get("model_likes")))
+                print("  {}  {}".format(entity_link(model, _safe(model.get("entity_id", ""))),
+                                        color(metric, "2", enabled)))
         if papers:
             header("Trending papers")
             for paper in papers:
                 signal = _record_signal(paper)
-                print("  {}  {}".format(color("{} upvotes".format(_format_number(signal.get("paper_upvotes"))), "2", enabled),
-                                        _safe(paper.get("name", ""))[:70]))
+                print("  {}  {}".format(
+                    color("{:>4} upvotes".format(_format_number(signal.get("paper_upvotes"))), "2", enabled),
+                    entity_link(paper, _safe(paper.get("name", ""))[:66])))
+                repo = paper.get("meta", {}).get("linked_repo")
+                if isinstance(repo, str) and repo:
+                    print("        {}".format(hyperlink(color(repo, "2", enabled), "https://github.com/{}".format(repo), enabled)))
         if news:
             header("AI news (smol.ai / AINews)")
             for item in news:
@@ -598,8 +653,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser = build_parser()
     arguments = parser.parse_args(argv)
     command = arguments.command or "hot"
-    if command == "setup" and arguments.check:
-        code = _setup_check()
+    if command == "setup":
+        code = _setup_check() if arguments.check else _setup(arguments)
         _attribution(arguments)
         return code
     if command == "about":
