@@ -4,46 +4,12 @@
     "repos": [
       {
         "rank": 1,
-        "name": "xai-org/grok-build",
-        "url": "https://github.com/xai-org/grok-build",
-        "meta": "Grok Build is open source",
-        "receipts": [
-          {
-            "label": "\u2605 deepfates +4 insiders",
-            "kind": "insiders"
-          },
-          {
-            "label": "20.9k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "588 pts",
-            "kind": "hn"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": true
-          },
-          {
-            "label": "smart-money",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 2,
         "name": "justvugg/colibri",
         "url": "https://github.com/justvugg/colibri",
         "meta": "Show HN: Getting GLM 5.2 running on my slow computer",
         "receipts": [
           {
-            "label": "17k stars",
+            "label": "17.2k stars",
             "kind": "stars"
           },
           {
@@ -58,7 +24,41 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "name": "xai-org/grok-build",
+        "url": "https://github.com/xai-org/grok-build",
+        "meta": "Grok Build is open source",
+        "receipts": [
+          {
+            "label": "\u2605 deepfates +4 insiders",
+            "kind": "insiders"
+          },
+          {
+            "label": "21.1k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "589 pts",
+            "kind": "hn"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          },
+          {
+            "label": "smart-money",
+            "hot": false
           }
         ]
       },
@@ -99,7 +99,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "11.1k stars",
+            "label": "11.4k stars",
             "kind": "stars"
           }
         ],
@@ -143,7 +143,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "30.1k stars",
+            "label": "30.2k stars",
             "kind": "stars"
           }
         ],
@@ -187,7 +187,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "9.4k stars",
+            "label": "9.5k stars",
             "kind": "stars"
           }
         ],
@@ -204,12 +204,12 @@
       },
       {
         "rank": 9,
-        "name": "darrylmorley/whatcable",
-        "url": "https://github.com/darrylmorley/whatcable",
+        "name": "oso95/scroll-world",
+        "url": "https://github.com/oso95/scroll-world",
         "meta": null,
         "receipts": [
           {
-            "label": "7.7k stars",
+            "label": "4.5k stars",
             "kind": "stars"
           }
         ],
@@ -226,12 +226,12 @@
       },
       {
         "rank": 10,
-        "name": "oso95/scroll-world",
-        "url": "https://github.com/oso95/scroll-world",
+        "name": "darrylmorley/whatcable",
+        "url": "https://github.com/darrylmorley/whatcable",
         "meta": null,
         "receipts": [
           {
-            "label": "4.4k stars",
+            "label": "7.7k stars",
             "kind": "stars"
           }
         ],
@@ -264,22 +264,18 @@
           },
           {
             "label": "trending",
-            "hot": false
+            "hot": true
           }
         ]
       },
       {
         "rank": 12,
-        "name": "microsoft/skillopt",
-        "url": "https://github.com/microsoft/skillopt",
+        "name": "cobusgreyling/loop-engineering",
+        "url": "https://github.com/cobusgreyling/loop-engineering",
         "meta": null,
         "receipts": [
           {
-            "label": "\u2605 deepfates \u00b7 insider",
-            "kind": "insiders"
-          },
-          {
-            "label": "13.5k stars",
+            "label": "8.9k stars",
             "kind": "stars"
           }
         ],
@@ -296,28 +292,6 @@
       },
       {
         "rank": 13,
-        "name": "cobusgreyling/loop-engineering",
-        "url": "https://github.com/cobusgreyling/loop-engineering",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "8.8k stars",
-            "kind": "stars"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": true
-          }
-        ]
-      },
-      {
-        "rank": 14,
         "name": "xxhuberrr/mineradio",
         "url": "https://github.com/xxhuberrr/mineradio",
         "meta": null,
@@ -339,13 +313,13 @@
         ]
       },
       {
-        "rank": 15,
+        "rank": 14,
         "name": "laoma2053/awesome-zhuiju-free",
         "url": "https://github.com/laoma2053/awesome-zhuiju-free",
         "meta": null,
         "receipts": [
           {
-            "label": "4k stars",
+            "label": "4.1k stars",
             "kind": "stars"
           }
         ],
@@ -361,7 +335,7 @@
         ]
       },
       {
-        "rank": 16,
+        "rank": 15,
         "name": "yu9191/wloc",
         "url": "https://github.com/yu9191/wloc",
         "meta": null,
@@ -383,7 +357,7 @@
         ]
       },
       {
-        "rank": 17,
+        "rank": 16,
         "name": "dnshe/dnshe-freedomains",
         "url": "https://github.com/dnshe/dnshe-freedomains",
         "meta": null,
@@ -400,22 +374,40 @@
           },
           {
             "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "name": "moonshotai/kimi-code",
+        "url": "https://github.com/moonshotai/kimi-code",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "4.3k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
             "hot": true
           }
         ]
       },
       {
         "rank": 18,
-        "name": "ayghri/i-have-adhd",
-        "url": "https://github.com/ayghri/i-have-adhd",
+        "name": "baidu/unlimited-ocr",
+        "url": "https://github.com/baidu/unlimited-ocr",
         "meta": null,
         "receipts": [
           {
-            "label": "\u2605 quasimondo \u00b7 insider",
-            "kind": "insiders"
-          },
-          {
-            "label": "5.4k stars",
+            "label": "15.8k stars",
             "kind": "stars"
           }
         ],
@@ -432,12 +424,16 @@
       },
       {
         "rank": 19,
-        "name": "moonshotai/kimi-code",
-        "url": "https://github.com/moonshotai/kimi-code",
+        "name": "microsoft/skillopt",
+        "url": "https://github.com/microsoft/skillopt",
         "meta": null,
         "receipts": [
           {
-            "label": "4.2k stars",
+            "label": "\u2605 deepfates \u00b7 insider",
+            "kind": "insiders"
+          },
+          {
+            "label": "13.6k stars",
             "kind": "stars"
           }
         ],
@@ -448,12 +444,51 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
       {
         "rank": 20,
+        "name": "ayghri/i-have-adhd",
+        "url": "https://github.com/ayghri/i-have-adhd",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 quasimondo \u00b7 insider",
+            "kind": "insiders"
+          },
+          {
+            "label": "5.8k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "name": "iofficeai/officecli",
+        "url": "https://github.com/iofficeai/officecli",
+        "meta": "OfficeCLI: Office suite for AI agents to read and edit Microsoft Office files",
+        "receipts": [
+          {
+            "label": "215 pts",
+            "kind": "hn"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 22,
         "name": "withmarbleapp/os-taxonomy",
         "url": "https://github.com/withmarbleapp/os-taxonomy",
         "meta": null,
@@ -474,12 +509,25 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
       {
-        "rank": 21,
+        "rank": 23,
+        "name": "malisper/pgrust",
+        "url": "https://github.com/malisper/pgrust",
+        "meta": "Postgres rewritten in Rust, now passing 100% of the Postgres regression tests",
+        "receipts": [
+          {
+            "label": "831 pts",
+            "kind": "hn"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 24,
         "name": "DietrichGebert/ponytail",
         "url": "https://github.com/DietrichGebert/ponytail",
         "meta": null,
@@ -501,7 +549,7 @@
         ]
       },
       {
-        "rank": 22,
+        "rank": 25,
         "name": "odysseus-dev/odysseus",
         "url": "https://github.com/odysseus-dev/odysseus",
         "meta": null,
@@ -523,7 +571,7 @@
         ]
       },
       {
-        "rank": 23,
+        "rank": 26,
         "name": "nexu-io/open-design",
         "url": "https://github.com/nexu-io/open-design",
         "meta": null,
@@ -545,84 +593,27 @@
         ]
       },
       {
-        "rank": 24,
-        "name": "iofficeai/officecli",
-        "url": "https://github.com/iofficeai/officecli",
-        "meta": "OfficeCLI: Office suite for AI agents to read and edit Microsoft Office files",
-        "receipts": [
-          {
-            "label": "215 pts",
-            "kind": "hn"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 25,
-        "name": "malisper/pgrust",
-        "url": "https://github.com/malisper/pgrust",
-        "meta": "Postgres rewritten in Rust, now passing 100% of the Postgres regression tests",
-        "receipts": [
-          {
-            "label": "831 pts",
-            "kind": "hn"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 26,
-        "name": "antirez/ds4",
-        "url": "https://github.com/antirez/ds4",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "18.9k stars",
-            "kind": "stars"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
         "rank": 27,
-        "name": "baidu/Unlimited-OCR",
-        "url": "https://github.com/baidu/Unlimited-OCR",
-        "meta": null,
+        "name": "stupside/castor",
+        "url": "https://github.com/stupside/castor",
+        "meta": "Better and Cheaper Than IPTV",
         "receipts": [
           {
-            "label": "15.5k stars",
-            "kind": "stars"
+            "label": "346 pts",
+            "kind": "hn"
           }
         ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
+        "badges": []
       },
       {
         "rank": 28,
-        "name": "Nutlope/hallmark",
-        "url": "https://github.com/Nutlope/hallmark",
+        "name": "handy-computer/transcribe.cpp",
+        "url": "https://github.com/handy-computer/transcribe.cpp",
         "meta": null,
         "receipts": [
           {
-            "label": "14.3k stars",
-            "kind": "stars"
+            "label": "\u2605 kepano +3 insiders",
+            "kind": "insiders"
           }
         ],
         "badges": [
@@ -631,13 +622,57 @@
             "hot": false
           },
           {
-            "label": "trending",
+            "label": "smart-money",
             "hot": false
           }
         ]
       },
       {
         "rank": 29,
+        "name": "antirez/ds4",
+        "url": "https://github.com/antirez/ds4",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "19k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 30,
+        "name": "Nutlope/hallmark",
+        "url": "https://github.com/Nutlope/hallmark",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "14.6k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 31,
         "name": "XiaomiMiMo/MiMo-Code",
         "url": "https://github.com/XiaomiMiMo/MiMo-Code",
         "meta": null,
@@ -659,20 +694,7 @@
         ]
       },
       {
-        "rank": 30,
-        "name": "stupside/castor",
-        "url": "https://github.com/stupside/castor",
-        "meta": "Better and Cheaper Than IPTV",
-        "receipts": [
-          {
-            "label": "345 pts",
-            "kind": "hn"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 31,
+        "rank": 32,
         "name": "alibaba/open-code-review",
         "url": "https://github.com/alibaba/open-code-review",
         "meta": null,
@@ -694,35 +716,13 @@
         ]
       },
       {
-        "rank": 32,
+        "rank": 33,
         "name": "t8y2/dbx",
         "url": "https://github.com/t8y2/dbx",
         "meta": null,
         "receipts": [
           {
-            "label": "10.6k stars",
-            "kind": "stars"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 33,
-        "name": "virgiliojr94/book-to-skill",
-        "url": "https://github.com/virgiliojr94/book-to-skill",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "9k stars",
+            "label": "10.7k stars",
             "kind": "stars"
           }
         ],
@@ -739,12 +739,12 @@
       },
       {
         "rank": 34,
-        "name": "zhaoxuya520/reverse-skill",
-        "url": "https://github.com/zhaoxuya520/reverse-skill",
+        "name": "virgiliojr94/book-to-skill",
+        "url": "https://github.com/virgiliojr94/book-to-skill",
         "meta": null,
         "receipts": [
           {
-            "label": "8.5k stars",
+            "label": "9.1k stars",
             "kind": "stars"
           }
         ],
@@ -761,12 +761,12 @@
       },
       {
         "rank": 35,
-        "name": "freestylefly/awesome-gpt-image-2",
-        "url": "https://github.com/freestylefly/awesome-gpt-image-2",
+        "name": "zhaoxuya520/reverse-skill",
+        "url": "https://github.com/zhaoxuya520/reverse-skill",
         "meta": null,
         "receipts": [
           {
-            "label": "8.5k stars",
+            "label": "8.6k stars",
             "kind": "stars"
           }
         ],
@@ -783,6 +783,28 @@
       },
       {
         "rank": 36,
+        "name": "freestylefly/awesome-gpt-image-2",
+        "url": "https://github.com/freestylefly/awesome-gpt-image-2",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "8.6k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 37,
         "name": "EpicGames/lore",
         "url": "https://github.com/EpicGames/lore",
         "meta": null,
@@ -804,7 +826,51 @@
         ]
       },
       {
-        "rank": 37,
+        "rank": 38,
+        "name": "nexu-io/html-anything",
+        "url": "https://github.com/nexu-io/html-anything",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "7.9k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 39,
+        "name": "omnigent-ai/omnigent",
+        "url": "https://github.com/omnigent-ai/omnigent",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "7.6k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 40,
         "name": "simonlin1212/a-stock-data",
         "url": "https://github.com/simonlin1212/a-stock-data",
         "meta": null,
@@ -826,7 +892,7 @@
         ]
       },
       {
-        "rank": 38,
+        "rank": 41,
         "name": "GoogleCloudPlatform/knowledge-catalog",
         "url": "https://github.com/GoogleCloudPlatform/knowledge-catalog",
         "meta": null,
@@ -848,7 +914,29 @@
         ]
       },
       {
-        "rank": 39,
+        "rank": 42,
+        "name": "FULU-Foundation/OrcaSlicer-bambulab",
+        "url": "https://github.com/FULU-Foundation/OrcaSlicer-bambulab",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "7.1k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 43,
         "name": "AprilNEA/OpenLogi",
         "url": "https://github.com/AprilNEA/OpenLogi",
         "meta": null,
@@ -870,13 +958,365 @@
         ]
       },
       {
-        "rank": 40,
+        "rank": 44,
         "name": "StarTrail-org/PixelRAG",
         "url": "https://github.com/StarTrail-org/PixelRAG",
         "meta": null,
         "receipts": [
           {
             "label": "7k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 45,
+        "name": "open-gsd/gsd-core",
+        "url": "https://github.com/open-gsd/gsd-core",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.9k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 46,
+        "name": "simplifaisoul/osiris",
+        "url": "https://github.com/simplifaisoul/osiris",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.9k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 47,
+        "name": "vercel-labs/native",
+        "url": "https://github.com/vercel-labs/native",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.8k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 48,
+        "name": "Imbad0202/academic-research-skills-codex",
+        "url": "https://github.com/Imbad0202/academic-research-skills-codex",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.7k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 49,
+        "name": "deepseek-ai/DeepSpec",
+        "url": "https://github.com/deepseek-ai/DeepSpec",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.7k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 50,
+        "name": "anthropics/defending-code-reference-harness",
+        "url": "https://github.com/anthropics/defending-code-reference-harness",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.6k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 51,
+        "name": "teamchong/pxpipe",
+        "url": "https://github.com/teamchong/pxpipe",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.6k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 52,
+        "name": "opensquilla/opensquilla",
+        "url": "https://github.com/opensquilla/opensquilla",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.2k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 53,
+        "name": "zgwl/chinese-buy-us-stock-guide",
+        "url": "https://github.com/zgwl/chinese-buy-us-stock-guide",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.1k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 54,
+        "name": "1weiho/open-slide",
+        "url": "https://github.com/1weiho/open-slide",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "5.9k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 55,
+        "name": "XBuilderLAB/cheat-on-content",
+        "url": "https://github.com/XBuilderLAB/cheat-on-content",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "5.8k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 56,
+        "name": "datawhalechina/Agent-Learning-Hub",
+        "url": "https://github.com/datawhalechina/Agent-Learning-Hub",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "5.6k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 57,
+        "name": "erincatto/box3d",
+        "url": "https://github.com/erincatto/box3d",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "5.4k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 58,
+        "name": "shadcn/improve",
+        "url": "https://github.com/shadcn/improve",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "8.5k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 59,
+        "name": "alxndrtl/little-book-rl",
+        "url": "https://github.com/alxndrtl/little-book-rl",
+        "meta": "The Little Book of Reinforcement Learning",
+        "receipts": [
+          {
+            "label": "\u2605 skirano \u00b7 insider",
+            "kind": "insiders"
+          },
+          {
+            "label": "211 pts",
+            "kind": "hn"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 60,
+        "name": "op7418/guizang-social-card-skill",
+        "url": "https://github.com/op7418/guizang-social-card-skill",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "5.3k stars",
             "kind": "stars"
           }
         ],
@@ -1612,6 +2052,366 @@
             "hot": false
           }
         ]
+      },
+      {
+        "rank": 41,
+        "name": "harbor-framework/terminal-bench-3",
+        "url": "https://github.com/harbor-framework/terminal-bench-3",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 deepfates \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 42,
+        "name": "harveyai/harvey-labs",
+        "url": "https://github.com/harveyai/harvey-labs",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 jerryjliu0 \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 43,
+        "name": "hkuds/deeptutor",
+        "url": "https://github.com/hkuds/deeptutor",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 omarsar0 \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 44,
+        "name": "hugohe3/ppt-master",
+        "url": "https://github.com/hugohe3/ppt-master",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 ZimingLiu11 \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 45,
+        "name": "jamesx0416/chatlink",
+        "url": "https://github.com/jamesx0416/chatlink",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 theo \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 46,
+        "name": "jmtomczak/vibeprompter",
+        "url": "https://github.com/jmtomczak/vibeprompter",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 jmtomczak \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 47,
+        "name": "julian-adv/openmmo",
+        "url": "https://github.com/julian-adv/openmmo",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 mayfer \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 48,
+        "name": "lablup/all-smi",
+        "url": "https://github.com/lablup/all-smi",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 syhw \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 49,
+        "name": "lamalab-org/openclatura",
+        "url": "https://github.com/lamalab-org/openclatura",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 andrewwhite01 \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 50,
+        "name": "lean-dojo/torchlean",
+        "url": "https://github.com/lean-dojo/torchlean",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 leloykun \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 51,
+        "name": "lohhhha/lato.2",
+        "url": "https://github.com/lohhhha/lato.2",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 andrew_n_carr \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 52,
+        "name": "lopopolo/harness-engineering",
+        "url": "https://github.com/lopopolo/harness-engineering",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 deepfates \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 53,
+        "name": "mayfer/soldat-web",
+        "url": "https://github.com/mayfer/soldat-web",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 mayfer \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 54,
+        "name": "michaelliv/pi-dynamic-workflows",
+        "url": "https://github.com/michaelliv/pi-dynamic-workflows",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 deepfates \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 55,
+        "name": "microsoft/deepctt",
+        "url": "https://github.com/microsoft/deepctt",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 LesterMackey \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 56,
+        "name": "microsoft/goodpoints",
+        "url": "https://github.com/microsoft/goodpoints",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 LesterMackey \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 57,
+        "name": "microsoft/khsgd",
+        "url": "https://github.com/microsoft/khsgd",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 LesterMackey \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 58,
+        "name": "microsoft/skillopt",
+        "url": "https://github.com/microsoft/skillopt",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 deepfates \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 59,
+        "name": "midas-hand-org/midas_hand_mujoco",
+        "url": "https://github.com/midas-hand-org/midas_hand_mujoco",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 kevin_zakka \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 60,
+        "name": "mit-han-lab/fouroversix",
+        "url": "https://github.com/mit-han-lab/fouroversix",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 code_star \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
       }
     ],
     "models": [
@@ -1622,7 +2422,7 @@
         "meta": "image-text-to-text",
         "receipts": [
           {
-            "label": "13.5k downloads",
+            "label": "16.4k downloads",
             "kind": "npm"
           },
           {
@@ -1639,11 +2439,11 @@
         "meta": "text-generation",
         "receipts": [
           {
-            "label": "339k downloads",
+            "label": "432k downloads",
             "kind": "npm"
           },
           {
-            "label": "857 likes",
+            "label": "873 likes",
             "kind": "stars"
           }
         ],
@@ -1656,11 +2456,11 @@
         "meta": "text-generation",
         "receipts": [
           {
-            "label": "1.3M downloads",
+            "label": "1.4M downloads",
             "kind": "npm"
           },
           {
-            "label": "543 likes",
+            "label": "554 likes",
             "kind": "stars"
           }
         ],
@@ -1673,7 +2473,7 @@
         "meta": "image-text-to-text",
         "receipts": [
           {
-            "label": "2.1M downloads",
+            "label": "2.2M downloads",
             "kind": "npm"
           },
           {
@@ -1690,7 +2490,7 @@
         "meta": "text-generation",
         "receipts": [
           {
-            "label": "532k downloads",
+            "label": "545k downloads",
             "kind": "npm"
           },
           {
@@ -1724,7 +2524,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "458 likes",
+            "label": "464 likes",
             "kind": "stars"
           }
         ],
@@ -1732,6 +2532,23 @@
       },
       {
         "rank": 8,
+        "name": "DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
+        "url": "https://huggingface.co/DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
+        "meta": "image-text-to-text",
+        "receipts": [
+          {
+            "label": "62.8k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "186 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 9,
         "name": "HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
         "url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
         "meta": "image-text-to-text",
@@ -1748,34 +2565,17 @@
         "badges": []
       },
       {
-        "rank": 9,
+        "rank": 10,
         "name": "ATH-MaaS/OvisOCR2",
         "url": "https://huggingface.co/ATH-MaaS/OvisOCR2",
         "meta": "image-text-to-text",
         "receipts": [
           {
-            "label": "14.6k downloads",
+            "label": "17.2k downloads",
             "kind": "npm"
           },
           {
-            "label": "219 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 10,
-        "name": "bottlecapai/ThinkingCap-Qwen3.6-27B",
-        "url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B",
-        "meta": "image-text-to-text",
-        "receipts": [
-          {
-            "label": "10.6k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "484 likes",
+            "label": "225 likes",
             "kind": "stars"
           }
         ],
@@ -1783,16 +2583,16 @@
       },
       {
         "rank": 11,
-        "name": "DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
-        "url": "https://huggingface.co/DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
+        "name": "bottlecapai/ThinkingCap-Qwen3.6-27B",
+        "url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B",
         "meta": "image-text-to-text",
         "receipts": [
           {
-            "label": "16.7k downloads",
+            "label": "12k downloads",
             "kind": "npm"
           },
           {
-            "label": "160 likes",
+            "label": "486 likes",
             "kind": "stars"
           }
         ],
@@ -1800,16 +2600,16 @@
       },
       {
         "rank": 12,
-        "name": "AngelSlim/Hy3-GGUF",
-        "url": "https://huggingface.co/AngelSlim/Hy3-GGUF",
+        "name": "prism-ml/Bonsai-27B-mlx-1bit",
+        "url": "https://huggingface.co/prism-ml/Bonsai-27B-mlx-1bit",
         "meta": "text-generation",
         "receipts": [
           {
-            "label": "110k downloads",
+            "label": "25.3k downloads",
             "kind": "npm"
           },
           {
-            "label": "149 likes",
+            "label": "157 likes",
             "kind": "stars"
           }
         ],
@@ -1817,16 +2617,16 @@
       },
       {
         "rank": 13,
-        "name": "prism-ml/Bonsai-27B-mlx-1bit",
-        "url": "https://huggingface.co/prism-ml/Bonsai-27B-mlx-1bit",
+        "name": "AngelSlim/Hy3-GGUF",
+        "url": "https://huggingface.co/AngelSlim/Hy3-GGUF",
         "meta": "text-generation",
         "receipts": [
           {
-            "label": "21.7k downloads",
+            "label": "145k downloads",
             "kind": "npm"
           },
           {
-            "label": "155 likes",
+            "label": "151 likes",
             "kind": "stars"
           }
         ],
@@ -1839,7 +2639,7 @@
         "meta": "text-generation",
         "receipts": [
           {
-            "label": "5.5k downloads",
+            "label": "6.2k downloads",
             "kind": "npm"
           },
           {
@@ -1851,16 +2651,16 @@
       },
       {
         "rank": 15,
-        "name": "GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-GGUF",
-        "url": "https://huggingface.co/GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-GGUF",
-        "meta": "text-generation",
+        "name": "openbmb/MiniCPM-RobotManip",
+        "url": "https://huggingface.co/openbmb/MiniCPM-RobotManip",
+        "meta": "robotics",
         "receipts": [
           {
-            "label": "28k downloads",
+            "label": "58 downloads",
             "kind": "npm"
           },
           {
-            "label": "135 likes",
+            "label": "142 likes",
             "kind": "stars"
           }
         ],
@@ -1873,11 +2673,11 @@
         "meta": "audio-text-to-text",
         "receipts": [
           {
-            "label": "87.5k downloads",
+            "label": "92.3k downloads",
             "kind": "npm"
           },
           {
-            "label": "293 likes",
+            "label": "295 likes",
             "kind": "stars"
           }
         ],
@@ -1885,12 +2685,16 @@
       },
       {
         "rank": 17,
-        "name": "openbmb/MiniCPM-RobotManip",
-        "url": "https://huggingface.co/openbmb/MiniCPM-RobotManip",
-        "meta": "robotics",
+        "name": "GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-GGUF",
+        "url": "https://huggingface.co/GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-GGUF",
+        "meta": "text-generation",
         "receipts": [
           {
-            "label": "135 likes",
+            "label": "51.7k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "137 likes",
             "kind": "stars"
           }
         ],
@@ -1903,11 +2707,11 @@
         "meta": "text-generation",
         "receipts": [
           {
-            "label": "17.9k downloads",
+            "label": "20.4k downloads",
             "kind": "npm"
           },
           {
-            "label": "130 likes",
+            "label": "131 likes",
             "kind": "stars"
           }
         ],
@@ -1920,11 +2724,11 @@
         "meta": "image-text-to-text",
         "receipts": [
           {
-            "label": "6.8k downloads",
+            "label": "7.4k downloads",
             "kind": "npm"
           },
           {
-            "label": "111 likes",
+            "label": "114 likes",
             "kind": "stars"
           }
         ],
@@ -1932,16 +2736,16 @@
       },
       {
         "rank": 20,
-        "name": "Wan-AI/Wan-Dancer-14B",
-        "url": "https://huggingface.co/Wan-AI/Wan-Dancer-14B",
-        "meta": "image-to-video",
+        "name": "openbmb/MiniCPM-RobotTrack",
+        "url": "https://huggingface.co/openbmb/MiniCPM-RobotTrack",
+        "meta": "robotics",
         "receipts": [
           {
-            "label": "2.4k downloads",
+            "label": "72 downloads",
             "kind": "npm"
           },
           {
-            "label": "145 likes",
+            "label": "104 likes",
             "kind": "stars"
           }
         ],
@@ -1949,12 +2753,16 @@
       },
       {
         "rank": 21,
-        "name": "openbmb/MiniCPM-RobotTrack",
-        "url": "https://huggingface.co/openbmb/MiniCPM-RobotTrack",
-        "meta": "robotics",
+        "name": "Wan-AI/Wan-Dancer-14B",
+        "url": "https://huggingface.co/Wan-AI/Wan-Dancer-14B",
+        "meta": "image-to-video",
         "receipts": [
           {
-            "label": "100 likes",
+            "label": "2.5k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "149 likes",
             "kind": "stars"
           }
         ],
@@ -1962,12 +2770,29 @@
       },
       {
         "rank": 22,
+        "name": "google/gemma-4-31B-it",
+        "url": "https://huggingface.co/google/gemma-4-31B-it",
+        "meta": "image-text-to-text",
+        "receipts": [
+          {
+            "label": "12.1M downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "3.3k likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 23,
         "name": "OpenMOSS-Team/MOSS-VL-Realtime",
         "url": "https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime",
         "meta": "video-text-to-text",
         "receipts": [
           {
-            "label": "544 downloads",
+            "label": "714 downloads",
             "kind": "npm"
           },
           {
@@ -1978,34 +2803,17 @@
         "badges": []
       },
       {
-        "rank": 23,
-        "name": "empero-ai/Qwythos-9B-v2-GGUF",
-        "url": "https://huggingface.co/empero-ai/Qwythos-9B-v2-GGUF",
-        "meta": "image-text-to-text",
-        "receipts": [
-          {
-            "label": "106k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "197 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 24,
-        "name": "tencent/Hy3",
-        "url": "https://huggingface.co/tencent/Hy3",
-        "meta": "text-generation",
+        "name": "nvidia/Nemotron-3-Embed-1B-BF16",
+        "url": "https://huggingface.co/nvidia/Nemotron-3-Embed-1B-BF16",
+        "meta": "sentence-similarity",
         "receipts": [
           {
-            "label": "13.7k downloads",
+            "label": "93k downloads",
             "kind": "npm"
           },
           {
-            "label": "849 likes",
+            "label": "91 likes",
             "kind": "stars"
           }
         ],
@@ -2018,7 +2826,7 @@
         "meta": "text-to-video",
         "receipts": [
           {
-            "label": "214 likes",
+            "label": "217 likes",
             "kind": "stars"
           }
         ],
@@ -2026,63 +2834,12 @@
       },
       {
         "rank": 26,
-        "name": "google/gemma-4-31B-it",
-        "url": "https://huggingface.co/google/gemma-4-31B-it",
-        "meta": "image-text-to-text",
-        "receipts": [
-          {
-            "label": "12M downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "3.3k likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 27,
-        "name": "nvidia/Nemotron-3-Embed-1B-BF16",
-        "url": "https://huggingface.co/nvidia/Nemotron-3-Embed-1B-BF16",
-        "meta": "sentence-similarity",
-        "receipts": [
-          {
-            "label": "61.7k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "87 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 28,
-        "name": "Cactus-Compute/needle",
-        "url": "https://huggingface.co/Cactus-Compute/needle",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "950 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "292 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 29,
         "name": "moonshotai/Kimi-K2.7-Code",
         "url": "https://huggingface.co/moonshotai/Kimi-K2.7-Code",
         "meta": "image-text-to-text",
         "receipts": [
           {
-            "label": "714k downloads",
+            "label": "722k downloads",
             "kind": "npm"
           },
           {
@@ -2093,17 +2850,68 @@
         "badges": []
       },
       {
-        "rank": 30,
-        "name": "LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
-        "url": "https://huggingface.co/LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
-        "meta": "image-text-to-text",
+        "rank": 27,
+        "name": "tencent/Hy3",
+        "url": "https://huggingface.co/tencent/Hy3",
+        "meta": "text-generation",
         "receipts": [
           {
-            "label": "15.1k downloads",
+            "label": "14.1k downloads",
             "kind": "npm"
           },
           {
-            "label": "85 likes",
+            "label": "851 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 28,
+        "name": "empero-ai/Qwythos-9B-v2-GGUF",
+        "url": "https://huggingface.co/empero-ai/Qwythos-9B-v2-GGUF",
+        "meta": "image-text-to-text",
+        "receipts": [
+          {
+            "label": "126k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "198 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 29,
+        "name": "Cactus-Compute/needle",
+        "url": "https://huggingface.co/Cactus-Compute/needle",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "1.1k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "294 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 30,
+        "name": "Motif-Technologies/Motif-3-Beta",
+        "url": "https://huggingface.co/Motif-Technologies/Motif-3-Beta",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "125 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "79 likes",
             "kind": "stars"
           }
         ],
@@ -2111,16 +2919,16 @@
       },
       {
         "rank": 31,
-        "name": "mgwr/M87",
-        "url": "https://huggingface.co/mgwr/M87",
-        "meta": "text-to-image",
+        "name": "LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
+        "url": "https://huggingface.co/LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
+        "meta": "image-text-to-text",
         "receipts": [
           {
-            "label": "4.7k downloads",
+            "label": "19.1k downloads",
             "kind": "npm"
           },
           {
-            "label": "171 likes",
+            "label": "90 likes",
             "kind": "stars"
           }
         ],
@@ -2133,7 +2941,7 @@
         "meta": "image-text-to-text",
         "receipts": [
           {
-            "label": "66.5k downloads",
+            "label": "76k downloads",
             "kind": "npm"
           },
           {
@@ -2145,6 +2953,40 @@
       },
       {
         "rank": 33,
+        "name": "nvidia/Nemotron-3-Embed-8B-BF16",
+        "url": "https://huggingface.co/nvidia/Nemotron-3-Embed-8B-BF16",
+        "meta": "sentence-similarity",
+        "receipts": [
+          {
+            "label": "15.4k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "70 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 34,
+        "name": "mgwr/M87",
+        "url": "https://huggingface.co/mgwr/M87",
+        "meta": "text-to-image",
+        "receipts": [
+          {
+            "label": "5k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "171 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 35,
         "name": "froggeric/Qwen-Fixed-Chat-Templates",
         "url": "https://huggingface.co/froggeric/Qwen-Fixed-Chat-Templates",
         "meta": null,
@@ -2157,51 +2999,17 @@
         "badges": []
       },
       {
-        "rank": 34,
-        "name": "nvidia/Nemotron-3-Embed-8B-BF16",
-        "url": "https://huggingface.co/nvidia/Nemotron-3-Embed-8B-BF16",
-        "meta": "sentence-similarity",
-        "receipts": [
-          {
-            "label": "14.3k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "66 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 35,
+        "rank": 36,
         "name": "nvidia/nemotron-3.5-asr-streaming-0.6b",
         "url": "https://huggingface.co/nvidia/nemotron-3.5-asr-streaming-0.6b",
         "meta": "automatic-speech-recognition",
         "receipts": [
           {
-            "label": "541k downloads",
+            "label": "590k downloads",
             "kind": "npm"
           },
           {
             "label": "890 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 36,
-        "name": "InternScience/Agents-A1",
-        "url": "https://huggingface.co/InternScience/Agents-A1",
-        "meta": "text-generation",
-        "receipts": [
-          {
-            "label": "35.8k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "590 likes",
             "kind": "stars"
           }
         ],
@@ -2214,7 +3022,7 @@
         "meta": "image-text-to-text",
         "receipts": [
           {
-            "label": "341k downloads",
+            "label": "345k downloads",
             "kind": "npm"
           },
           {
@@ -2226,16 +3034,16 @@
       },
       {
         "rank": 38,
-        "name": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
-        "url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
+        "name": "InternScience/Agents-A1",
+        "url": "https://huggingface.co/InternScience/Agents-A1",
         "meta": "text-generation",
         "receipts": [
           {
-            "label": "196k downloads",
+            "label": "36.6k downloads",
             "kind": "npm"
           },
           {
-            "label": "849 likes",
+            "label": "592 likes",
             "kind": "stars"
           }
         ],
@@ -2243,16 +3051,16 @@
       },
       {
         "rank": 39,
-        "name": "mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
-        "url": "https://huggingface.co/mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
-        "meta": null,
+        "name": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
+        "meta": "text-to-speech",
         "receipts": [
           {
-            "label": "6.8k downloads",
+            "label": "2.4M downloads",
             "kind": "npm"
           },
           {
-            "label": "90 likes",
+            "label": "1.8k likes",
             "kind": "stars"
           }
         ],
@@ -2260,6 +3068,23 @@
       },
       {
         "rank": 40,
+        "name": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
+        "url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "197k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "851 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 41,
         "name": "Soofi-Project/Soofi-S-Base",
         "url": "https://huggingface.co/Soofi-Project/Soofi-S-Base",
         "meta": "text-generation",
@@ -2269,7 +3094,322 @@
             "kind": "npm"
           },
           {
-            "label": "67 likes",
+            "label": "69 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 42,
+        "name": "nvidia/Nemotron-3-Embed-1B-NVFP4",
+        "url": "https://huggingface.co/nvidia/Nemotron-3-Embed-1B-NVFP4",
+        "meta": "sentence-similarity",
+        "receipts": [
+          {
+            "label": "7.4k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "58 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 43,
+        "name": "krea/Krea-2-Turbo",
+        "url": "https://huggingface.co/krea/Krea-2-Turbo",
+        "meta": "text-to-image",
+        "receipts": [
+          {
+            "label": "212k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "670 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 44,
+        "name": "mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
+        "url": "https://huggingface.co/mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "7.6k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "94 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 45,
+        "name": "nvidia/Cosmos3-Edge",
+        "url": "https://huggingface.co/nvidia/Cosmos3-Edge",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.6k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "57 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 46,
+        "name": "OpenMOSS-Team/MOSS-SoundEffect-v2.0",
+        "url": "https://huggingface.co/OpenMOSS-Team/MOSS-SoundEffect-v2.0",
+        "meta": "text-to-audio",
+        "receipts": [
+          {
+            "label": "1k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "109 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 47,
+        "name": "deepreinforce-ai/Ornith-1.0-35B-GGUF",
+        "url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "2M downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "929 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 48,
+        "name": "GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-Thinking-GGUF",
+        "url": "https://huggingface.co/GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-Thinking-GGUF",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "195k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "289 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 49,
+        "name": "internlm/Intern-S2-Preview-397B",
+        "url": "https://huggingface.co/internlm/Intern-S2-Preview-397B",
+        "meta": "image-text-to-text",
+        "receipts": [
+          {
+            "label": "94 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "52 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 50,
+        "name": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
+        "url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "515k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "1.2k likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 51,
+        "name": "ai-sage/GigaAM-Multilingual",
+        "url": "https://huggingface.co/ai-sage/GigaAM-Multilingual",
+        "meta": "automatic-speech-recognition",
+        "receipts": [
+          {
+            "label": "3.1k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "62 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 52,
+        "name": "nineninesix/diamond-1.0",
+        "url": "https://huggingface.co/nineninesix/diamond-1.0",
+        "meta": "audio-to-audio",
+        "receipts": [
+          {
+            "label": "51 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 53,
+        "name": "jlnsrk/GLM-5.2-colibri-int4",
+        "url": "https://huggingface.co/jlnsrk/GLM-5.2-colibri-int4",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "4.5k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "144 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 54,
+        "name": "MuScriptor/muscriptor-large",
+        "url": "https://huggingface.co/MuScriptor/muscriptor-large",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "1.6k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "86 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 55,
+        "name": "unsloth/Ornith-1.0-35B-GGUF",
+        "url": "https://huggingface.co/unsloth/Ornith-1.0-35B-GGUF",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "23.4k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "50 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 56,
+        "name": "unsloth/Qwen3.6-27B-MTP-GGUF",
+        "url": "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF",
+        "meta": "image-text-to-text",
+        "receipts": [
+          {
+            "label": "2.9M downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "1.1k likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 57,
+        "name": "Cseti/LTX2.3-22B_IC-LoRA-CrossView-Prompt",
+        "url": "https://huggingface.co/Cseti/LTX2.3-22B_IC-LoRA-CrossView-Prompt",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "101 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 58,
+        "name": "InternScience/Agents-A1-4B",
+        "url": "https://huggingface.co/InternScience/Agents-A1-4B",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "8.1k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "46 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 59,
+        "name": "openbmb/MiniCPM5-1B",
+        "url": "https://huggingface.co/openbmb/MiniCPM5-1B",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "391k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "982 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 60,
+        "name": "tencent/Hy-Embodied-RxBrain-1.0",
+        "url": "https://huggingface.co/tencent/Hy-Embodied-RxBrain-1.0",
+        "meta": "any-to-any",
+        "receipts": [
+          {
+            "label": "204 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "45 likes",
             "kind": "stars"
           }
         ],
@@ -2315,6 +3455,55 @@
       },
       {
         "rank": 3,
+        "name": "SWE-Pruner Pro: The Coder LLM Already Knows What to Prune",
+        "url": "https://huggingface.co/papers/2607.18213",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "59 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 4,
+        "name": "EvolvingWorld: An Open-Schema Framework for Co-Evolving Role-Play Agents and World Model in Interactive Literary World",
+        "url": "https://huggingface.co/papers/2607.17250",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "55 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "name": "DeepSearch-World: Self-Distillation for Deep Search Agents in a Verifiable Environment",
+        "url": "https://huggingface.co/papers/2607.07820",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "52 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 6,
         "name": "Loop the Loopies!",
         "url": "https://huggingface.co/papers/2607.16051",
         "meta": null,
@@ -2327,9 +3516,177 @@
         "badges": []
       },
       {
-        "rank": 4,
+        "rank": 7,
+        "name": "TimeLens2: Generalist Video Temporal Grounding with Multimodal LLMs",
+        "url": "https://huggingface.co/papers/2607.17423",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "38 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "name": "RynnBrain 1.1: Towards More Capable and Generalizable Embodied Foundation Model",
+        "url": "https://huggingface.co/papers/2607.17977",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "29 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 9,
+        "name": "HOMIE: Human-object Centric Video Personalization via Multimodal Intelligent Enchancement",
+        "url": "https://huggingface.co/papers/2607.18217",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "28 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "name": "Apple-\u03c0: Benchmarking Thinking with Video Towards Law-Grounded Physical Intelligence",
+        "url": "https://huggingface.co/papers/2607.16401",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "26 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "name": "Group Entropy-Controlled Policy Optimization",
+        "url": "https://huggingface.co/papers/2607.16850",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "19 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 12,
+        "name": "ReflectWorld-MM: An Entity-Oriented Multimodal Memory System for Open-Ended Video Streams",
+        "url": "https://huggingface.co/papers/2607.09759",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "19 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "name": "Environment-free Synthetic Data Generation for API-Calling Agents",
+        "url": "https://huggingface.co/papers/2607.16900",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "11 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 14,
         "name": "DiffGI: Differentiable Geometry Images for High-Fidelity Thin-Shell 3D Generation",
         "url": "https://huggingface.co/papers/2607.13365",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "7 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 15,
+        "name": "FlowMimic: Mask-free Visual Editing and Generation with Pixel-pair Warped Flow Field for Online Video Editing Data Generation and Modality Mimicry",
+        "url": "https://huggingface.co/papers/2607.18227",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "7 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 16,
+        "name": "LLM-as-a-Coach: Experiential Learning for Non-Verifiable Tasks",
+        "url": "https://huggingface.co/papers/2607.18110",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "7 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 17,
+        "name": "HarmoHOI: Harmonizing Appearance and 3D Motion for Multi-view Hand-Object Interaction Synthesis",
+        "url": "https://huggingface.co/papers/2607.17097",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "name": "Distilled Reinforcement Learning for LLM Post-training",
+        "url": "https://huggingface.co/papers/2607.17247",
         "meta": null,
         "receipts": [
           {
@@ -2337,12 +3694,17 @@
             "kind": "paper"
           }
         ],
-        "badges": []
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
       },
       {
-        "rank": 5,
-        "name": "LLM-as-a-Coach: Experiential Learning for Non-Verifiable Tasks",
-        "url": "https://huggingface.co/papers/2607.18110",
+        "rank": 19,
+        "name": "JoyNexus: Service-Oriented Multi-Tenant Post-Training for VLA Models",
+        "url": "https://huggingface.co/papers/2607.16074",
         "meta": null,
         "receipts": [
           {
@@ -2353,9 +3715,9 @@
         "badges": []
       },
       {
-        "rank": 6,
-        "name": "Group Entropy-Controlled Policy Optimization",
-        "url": "https://huggingface.co/papers/2607.16850",
+        "rank": 20,
+        "name": "GigaChat Audio: Time-aware Large Audio Language Model",
+        "url": "https://huggingface.co/papers/2607.10387",
         "meta": null,
         "receipts": [
           {
@@ -2366,9 +3728,27 @@
         "badges": []
       },
       {
-        "rank": 7,
-        "name": "JoyNexus: Service-Oriented Multi-Tenant Post-Training for VLA Models",
-        "url": "https://huggingface.co/papers/2607.16074",
+        "rank": 21,
+        "name": "OpenLongTail: Generative Scaling of Long-Tail Driving Data",
+        "url": "https://huggingface.co/papers/2607.09655",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "2 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "name": "Self-State Attacks on Self-Hosted AI Agents: How Far Can OS Defenses Go?",
+        "url": "https://huggingface.co/papers/2607.17986",
         "meta": null,
         "receipts": [
           {
@@ -2379,9 +3759,9 @@
         "badges": []
       },
       {
-        "rank": 8,
-        "name": "Environment-free Synthetic Data Generation for API-Calling Agents",
-        "url": "https://huggingface.co/papers/2607.16900",
+        "rank": 23,
+        "name": "DiFA: Inference-Time Forward-Process Alignment for Diffusion Models",
+        "url": "https://huggingface.co/papers/2607.17972",
         "meta": null,
         "receipts": [
           {
@@ -2392,7 +3772,51 @@
         "badges": []
       },
       {
-        "rank": 9,
+        "rank": 24,
+        "name": "FlashRT: Agent Harness for Guiding Agents to Deploy Real-Time Multimodal Applications",
+        "url": "https://huggingface.co/papers/2607.18171",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "1 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 25,
+        "name": "GigaAM Multilingual: Foundation Model for Underrepresented Languages",
+        "url": "https://huggingface.co/papers/2607.10371",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "1 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 26,
+        "name": "Token-Level Off-Policy Learning for Faithful Generation Under Distribution Shift",
+        "url": "https://huggingface.co/papers/2607.17524",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "1 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 27,
         "name": "A sociotechnical threat model for AI-driven smart home devices",
         "url": "https://arxiv.org/abs/2602.09239",
         "meta": null,
@@ -2400,7 +3824,7 @@
         "badges": []
       },
       {
-        "rank": 10,
+        "rank": 28,
         "name": "A Study of Microsoft's Early 2026 Rollout of Claude Code and GitHub Copilot CLI",
         "url": "https://arxiv.org/abs/2607.01418",
         "meta": null,
@@ -2408,7 +3832,7 @@
         "badges": []
       },
       {
-        "rank": 11,
+        "rank": 29,
         "name": "Automation Without Understanding",
         "url": "https://arxiv.org/abs/2607.06377",
         "meta": null,
@@ -2416,7 +3840,7 @@
         "badges": []
       },
       {
-        "rank": 12,
+        "rank": 30,
         "name": "Billions of Sketches Reveal Hidden Cultural Variation in Human Concepts",
         "url": "https://arxiv.org/abs/2607.07267",
         "meta": null,
@@ -2424,7 +3848,7 @@
         "badges": []
       },
       {
-        "rank": 13,
+        "rank": 31,
         "name": "Can LLMs Perform Deep Technical Comprehension of Computer Architecture Papers",
         "url": "https://arxiv.org/abs/2607.11859",
         "meta": null,
@@ -2432,7 +3856,7 @@
         "badges": []
       },
       {
-        "rank": 14,
+        "rank": 32,
         "name": "Co-evolution of self-replication and function in a digital primordial soup",
         "url": "https://arxiv.org/abs/2607.09211",
         "meta": null,
@@ -2440,7 +3864,7 @@
         "badges": []
       },
       {
-        "rank": 15,
+        "rank": 33,
         "name": "Coding agents think ahead of time",
         "url": "https://arxiv.org/abs/2607.05188",
         "meta": null,
@@ -2448,15 +3872,7 @@
         "badges": []
       },
       {
-        "rank": 16,
-        "name": "DiFA: Inference-Time Forward-Process Alignment for Diffusion Models",
-        "url": "https://huggingface.co/papers/2607.17972",
-        "meta": null,
-        "receipts": [],
-        "badges": []
-      },
-      {
-        "rank": 17,
+        "rank": 34,
         "name": "Does code cleanliness affect coding agents? A controlled minimal-pair study",
         "url": "https://arxiv.org/abs/2605.20049",
         "meta": null,
@@ -2464,7 +3880,7 @@
         "badges": []
       },
       {
-        "rank": 18,
+        "rank": 35,
         "name": "Kani: A Model Checker for Rust",
         "url": "https://arxiv.org/abs/2607.01504",
         "meta": null,
@@ -2472,7 +3888,7 @@
         "badges": []
       },
       {
-        "rank": 19,
+        "rank": 36,
         "name": "Mathematics of Data Science",
         "url": "https://arxiv.org/abs/2607.11938",
         "meta": null,
@@ -2480,7 +3896,7 @@
         "badges": []
       },
       {
-        "rank": 20,
+        "rank": 37,
         "name": "Qubes OS Security in the Public Record",
         "url": "https://arxiv.org/abs/2607.14587",
         "meta": null,
@@ -2488,7 +3904,7 @@
         "badges": []
       },
       {
-        "rank": 21,
+        "rank": 38,
         "name": "Ring-Zero: Scaling Zero RL to a Trillion Parameters for Emergent Reasoning",
         "url": "https://arxiv.org/abs/2607.12395",
         "meta": null,
@@ -2496,12 +3912,25 @@
         "badges": []
       },
       {
-        "rank": 22,
+        "rank": 39,
         "name": "The Hitchhiker's Guide to Agentic AI",
         "url": "https://arxiv.org/abs/2606.24937",
         "meta": null,
         "receipts": [],
         "badges": []
+      },
+      {
+        "rank": 40,
+        "name": "WorldCupArena: Fine-Grained Evaluation of Language Models and Deep-Research Agents on Football Forecasting",
+        "url": "https://huggingface.co/papers/2607.18084",
+        "meta": null,
+        "receipts": [],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
       }
     ],
     "news": [
@@ -2822,6 +4251,166 @@
         "name": "not much happened today",
         "url": "https://news.smol.ai/issues/26-05-21-not-much/",
         "meta": "Thu, 21 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-18-not-much/",
+        "meta": "Mon, 18 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "Google I/O 2026: Gemini 3.5 Flash, Omni, and Google\u2019s Agent Stack",
+        "url": "https://news.smol.ai/issues/26-05-19-not-much/",
+        "meta": "Mon, 18 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-15-not-much/",
+        "meta": "Fri, 15 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-14-not-much/",
+        "meta": "Thu, 14 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-13-not-much/",
+        "meta": "Wed, 13 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-12-not-much/",
+        "meta": "Tue, 12 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-11-not-much/",
+        "meta": "Mon, 11 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-08-not-much/",
+        "meta": "Fri, 08 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "GPT-Realtime-2, -Translate, and -Whisper: new SOTA realtime voice APIs",
+        "url": "https://news.smol.ai/issues/26-05-07-gpt-realtime-2/",
+        "meta": "Thu, 07 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "Anthropic-SpaceXai's 300MW/$5B/yr deal for Colossus I, ARR growth is 8000% annualized",
+        "url": "https://news.smol.ai/issues/26-05-06-anthropic-xai/",
+        "meta": "Wed, 06 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-05-not-much/",
+        "meta": "Mon, 04 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-04-not-much/",
+        "meta": "Mon, 04 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-20-not-much/",
+        "meta": "Mon, 04 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-22-not-much/",
+        "meta": "Mon, 04 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-05-01-not-much/",
+        "meta": "Fri, 01 May 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-04-30-not-much/",
+        "meta": "Thu, 30 Apr 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-04-29-not-much/",
+        "meta": "Wed, 29 Apr 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-04-28-not-much/",
+        "meta": "Tue, 28 Apr 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "not much happened today",
+        "url": "https://news.smol.ai/issues/26-04-27-not-much/",
+        "meta": "Mon, 27 Apr 2026",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
+        "name": "DeepSeek v4",
+        "url": "https://news.smol.ai/issues/26-04-24-deepseek-v4/",
+        "meta": "Fri, 24 Apr 2026",
         "receipts": [],
         "badges": []
       }
