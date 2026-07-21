@@ -336,13 +336,21 @@ def test_models_command_renders_entities_json(monkeypatch, capsys):
          "meta": {"model_task": "image-text-to-text"}},
     ], "status": "ok", "detail": None})
 
+    monkeypatch.setattr(cli.frontier, "fetch", lambda **kwargs: {"records": [
+        {"entity_type": "release", "entity_id": "https://openai.com/news/x", "url": "https://openai.com/news/x",
+         "name": "GPT-6", "source": "frontier", "signal": {"released_at": 1.0},
+         "meta": {"official": True, "lab": "OpenAI", "date": "Fri, 18 Jul 2026 00:00:00 GMT"}},
+    ], "status": "ok", "detail": None})
+
     assert main(["models", "--json", "--limit", "5"]) == 0
     out = json.loads(capsys.readouterr().out)
-    # ranked by HF trendingScore (heat), not lifetime downloads
-    assert out["entities"][0]["entity_id"] == "org/surging"
-    assert out["entities"][1]["entity_id"] == "org/old-popular"
-    assert out["entities"][0]["entity_type"] == "model"
-    assert out["entities"][0]["score"] > 0
+    # official lab releases come first, as their own tier
+    assert out["releases"][0]["lab"] == "OpenAI"
+    # HF section ranked by trendingScore (heat), not lifetime downloads
+    assert out["trending"][0]["entity_id"] == "org/surging"
+    assert out["trending"][1]["entity_id"] == "org/old-popular"
+    assert out["trending"][0]["entity_type"] == "model"
+    assert out["trending"][0]["score"] > 0
 
 
 def test_ingest_records_observations_and_is_strict_about_persistence(monkeypatch, capsys):
@@ -433,6 +441,7 @@ def test_setup_schedule_failure_is_reported_not_raised(monkeypatch, capsys):
 def test_brief_empty_store_is_friendly(monkeypatch, capsys):
     monkeypatch.setattr(cli, "open_cache", MemoryCache)
     monkeypatch.setattr(cli.smolai, "_request", lambda: None)  # offline: no news section
+    monkeypatch.setattr(cli.frontier, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
     assert main(["brief"]) == 0
     assert "Run `hotin ingest`" in capsys.readouterr().out
 

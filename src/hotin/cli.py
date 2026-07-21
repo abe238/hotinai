@@ -16,7 +16,7 @@ from .canonical import canonicalize
 from .coerce import finite_float
 from .config import config_dir, env_path, load_config
 from .render import color, hyperlink, sanitize
-from .sources import github, hfmodels, hfpapers, hn, npm, trends, reddit, smolai, youtube
+from .sources import frontier, github, hfmodels, hfpapers, hn, npm, trends, reddit, smolai, youtube
 
 
 COMMANDS = {
@@ -28,7 +28,8 @@ COMMANDS = {
     "trending": "show trending repositories",
     "reddit": "show Reddit signals",
     "youtube": "show YouTube signals",
-    "models": "show trending AI models (HuggingFace)",
+    "models": "show AI models — official lab releases first, then HuggingFace trending",
+    "releases": "show official releases from frontier AI lab blogs",
     "papers": "show trending AI papers (HuggingFace)",
     "news": "show recent AI news headlines (smol.ai / AINews)",
     "search": "search cached tools",
@@ -47,7 +48,7 @@ _BADGE_COLORS = {"fresh": "32", "rising": "38;5;208", "viral": "38;5;198",
 _ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
 # --limit only makes sense for commands that produce a ranked/list result.
 # update (refresh + health), setup, about, and show (one repo) don't take one.
-_LIST_COMMANDS = {"hot", "repos", "hn", "npm", "stars", "trending", "reddit", "youtube", "models", "papers", "news", "search"}
+_LIST_COMMANDS = {"hot", "repos", "hn", "npm", "stars", "trending", "reddit", "youtube", "models", "releases", "papers", "news", "search"}
 # Entity commands: (adapter, entity_type, metric weights for scoring, primary metric label).
 # Models rank by HuggingFace's trendingScore (heat right now), NOT lifetime
 # downloads — otherwise a hugely-adopted but old model (Kokoro-82M, ~10M
@@ -404,6 +405,88 @@ def _render_entities(entities: List[dict], arguments: argparse.Namespace, entity
             print("        " + color(context[:78], "2", enabled))
 
 
+def _render_releases(releases: List[dict], enabled: bool) -> None:
+    for item in releases:
+        meta = item.get("meta") if isinstance(item.get("meta"), dict) else {}
+        lab = color(_safe(meta.get("lab", ""))[:20].ljust(20), "38;5;45", enabled)
+        date = color(_safe(meta.get("date", ""))[:16].ljust(16), "2", enabled)
+        title = hyperlink(color(_safe(item.get("name", ""))[:60], "1", enabled),
+                          item.get("url") if isinstance(item.get("url"), str) else "", enabled)
+        print("  {}  {}  {}".format(lab, date, title))
+
+
+def _frontier_releases(limit: int) -> Tuple[List[dict], Optional[str]]:
+    """Best-effort fetch of frontier-lab releases; returns (records, detail)."""
+    try:
+        result = frontier.fetch(limit=limit, config=load_config())
+    except Exception as exc:
+        return [], str(exc) or "frontier fetch failed"
+    if not isinstance(result, dict):
+        return [], "invalid frontier result"
+    records = [r for r in (result.get("records") or []) if isinstance(r, dict)]
+    return records, result.get("detail") if isinstance(result.get("detail"), str) else None
+
+
+def _releases(arguments: argparse.Namespace) -> int:
+    limit = _normal_limit(arguments)
+    if limit is None:
+        return 2
+    releases, detail = _frontier_releases(limit)
+    if arguments.json:
+        _dump_json({"releases": [{"lab": r["meta"].get("lab"), "title": r.get("name"),
+                                  "url": r.get("url"), "date": r["meta"].get("date")} for r in releases],
+                    "unsupported": frontier.UNSUPPORTED, "detail": detail})
+        _attribution(arguments)
+        return 0 if releases else 1
+    if not releases:
+        print("No frontier releases right now{}.".format(": " + _safe(detail) if detail else ""), file=sys.stderr)
+        _attribution(arguments)
+        return 1
+    _render_releases(releases, _color_enabled(arguments))
+    print(color("labs without a public feed (not yet covered): {}".format(", ".join(frontier.UNSUPPORTED)),
+                "2", _color_enabled(arguments)))
+    _attribution(arguments)
+    return 0
+
+
+def _models(arguments: argparse.Namespace) -> int:
+    """Models view: official frontier-lab releases first, then HuggingFace trending."""
+    limit = _normal_limit(arguments)
+    if limit is None:
+        return 2
+    releases, _detail = _frontier_releases(min(limit, 6))
+    adapter, entity_type, metric_weights = _ENTITY_COMMANDS["models"]
+    with _cache_session() as cache:
+        try:
+            result = adapter.fetch(limit=limit, config=load_config())
+        except Exception as exc:
+            result = {"records": [], "status": "error", "detail": str(exc) or "fetch failed"}
+        if not isinstance(result, dict):
+            result = {"records": [], "status": "error", "detail": "invalid adapter result"}
+        for record in result.get("records") if isinstance(result.get("records"), list) else []:
+            if isinstance(record, dict):
+                cache.upsert(engine._cache_record(record))
+        merged = engine.merge_by_entity(cache.get_all(), entity_type, max_age_days=engine.EVIDENCE_WINDOW_DAYS)
+        ranked = engine.rank_entities(merged, metric_weights, limit=limit)
+        if arguments.json:
+            _dump_json({"releases": [{"lab": r["meta"].get("lab"), "title": r.get("name"),
+                                      "url": r.get("url"), "date": r["meta"].get("date")} for r in releases],
+                        "trending": ranked, "status": result.get("status")})
+            _attribution(arguments)
+            return 0
+        enabled = _color_enabled(arguments)
+        if releases:
+            print(color("Official releases", "1", enabled))
+            _render_releases(releases, enabled)
+        if ranked:
+            print(("\n" if releases else "") + color("Trending on HuggingFace", "1", enabled))
+            _render_entities(ranked, arguments, entity_type)
+        if not (releases or ranked):
+            print("No models right now.")
+        _attribution(arguments)
+        return 0
+
+
 def _entity_command(command: str, arguments: argparse.Namespace) -> int:
     limit = _normal_limit(arguments)
     if limit is None:
@@ -531,10 +614,12 @@ def _brief(arguments: argparse.Namespace) -> int:
         except Exception:
             news_text = None
         news = smolai.parse_news(news_text)[:6] if news_text else []
+        releases, _rel_detail = _frontier_releases(5)
 
         if arguments.json:
             _dump_json({
                 "rising": [{"repo": r.get("canonical_repo"), "stars_per_day": _finite(r.get("meta", {}).get("velocity_per_day"))} for r in rising],
+                "releases": [{"lab": r["meta"].get("lab"), "title": r.get("name"), "url": r.get("url"), "date": r["meta"].get("date")} for r in releases],
                 "top_repos": [{"repo": r.get("canonical_repo"), "score": _finite(r.get("score")), "badges": r.get("badges")} for r in repos[:5]],
                 "top_papers": [{"paper": p.get("entity_id"), "title": p.get("name"), "url": p.get("url"),
                                 "upvotes": _finite(_record_signal(p).get("paper_upvotes")),
@@ -548,7 +633,7 @@ def _brief(arguments: argparse.Namespace) -> int:
             return 0
 
         enabled = _color_enabled(arguments)
-        if not (repos or models or papers or news):
+        if not (repos or models or papers or news or releases):
             print("Nothing in the store yet. Run `hotin ingest` (or `hotin hot`) first to populate it.")
             _attribution(arguments)
             return 0
@@ -572,6 +657,9 @@ def _brief(arguments: argparse.Namespace) -> int:
             url = entity.get("url")
             return hyperlink(color(text, "1", enabled), url, enabled) if isinstance(url, str) and url else color(text, "1", enabled)
 
+        if releases:
+            header("Frontier lab releases")
+            _render_releases(releases, enabled)
         if models:
             header("Trending models")
             for model in models:
@@ -675,6 +763,10 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
     if command in {"hn", "npm", "stars", "trending", "reddit", "youtube"}:
         return _single_source(command, arguments)
+    if command == "releases":
+        return _releases(arguments)
+    if command == "models":
+        return _models(arguments)
     if command in _ENTITY_COMMANDS:
         return _entity_command(command, arguments)
     if command == "ingest":
