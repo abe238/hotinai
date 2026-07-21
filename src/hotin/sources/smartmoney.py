@@ -1,6 +1,6 @@
-"""the influencer-stars source AI-1000 GitHub-star signal adapter.
+"""AI-Insider GitHub-star signal adapter.
 
-the influencer-stars source's page is an unofficial React Server Components feed rather than a public
+The source page is an unofficial React Server Components feed rather than a public
 API.  The extraction is deliberately shape-based: it searches every RSC chunk
 for the repository rows instead of relying on a release-specific JSON path.
 """
@@ -46,7 +46,7 @@ def _decode_rsc_chunk(chunk: Any) -> Optional[str]:
 
 
 def _find_rows(obj: Any) -> Optional[List[Any]]:
-    """Recursively find a the influencer-stars source rows list whose entries have repository payloads."""
+    """Recursively find a rows list whose entries have repository payloads."""
     try:
         if isinstance(obj, dict):
             candidate = obj.get("rows")
@@ -113,7 +113,7 @@ def _freshness(value: Any, now: Optional[datetime] = None) -> str:
 
 
 def parse_rows(rows: Any, now: Optional[datetime] = None) -> List[Dict[str, Any]]:
-    """Purely turn the influencer-stars source rows into hotin Records; malformed rows are skipped."""
+    """Purely turn source rows into hotin Records; malformed rows are skipped."""
     if not isinstance(rows, list):
         return []
     records: List[Dict[str, Any]] = []
@@ -185,7 +185,7 @@ def _request_html() -> Optional[str]:
         THROTTLE.wait()
         with urllib.request.urlopen(request, timeout=30) as response:
             body = response.read()
-            LOGGER.debug("the influencer-stars source smartmoney final URL: %s", response.geturl())
+            LOGGER.debug("insider-signal final URL: %s", response.geturl())
         if not isinstance(body, bytes):
             return None
         return body.decode("utf-8")
@@ -196,7 +196,7 @@ def _request_html() -> Optional[str]:
 def fetch(
     query: Optional[str] = None, *, limit: int = 50, config: Optional[dict] = None
 ) -> Dict[str, Any]:
-    """Return repositories recently starred by the influencer-stars source's AI-1000 community."""
+    """Return repositories recently starred by the AI Insiders."""
     del query, config  # This is a public ranked feed, not a queryable API.
     try:
         requested_limit = _normalise_limit(limit)
@@ -204,13 +204,13 @@ def fetch(
             return {"records": [], "status": "empty", "detail": "limit is zero"}
         html = _request_html()
         if html is None:
-            return {"records": [], "status": "error", "detail": "insider request failed"}
+            return {"records": [], "status": "error", "detail": "insider-signal request failed"}
         rows = extract_rows_from_html(html)
         if rows is None:
             return {
                 "records": [],
                 "status": "error",
-                "detail": "insider page structure changed — no rows found in any RSC chunk",
+                "detail": "source page structure changed — no rows found in any RSC chunk",
             }
         records = parse_rows(rows)
         if not records:

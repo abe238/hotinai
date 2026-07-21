@@ -1,4 +1,4 @@
-"""the public repo-trends API weekly repository-momentum adapter."""
+"""Weekly repository-momentum adapter (a curated trend-signal API)."""
 
 from __future__ import annotations
 
@@ -37,7 +37,7 @@ def _column_names(columns: Any) -> Optional[List[str]]:
 
 
 def _row_values(row: Any, columns: List[str]) -> Optional[Dict[str, Any]]:
-    """Accept both the public repo-trends API's positional and object row representations."""
+    """Accept both the source's positional and object row representations."""
     if isinstance(row, dict):
         return row
     if not isinstance(row, list) or len(row) < len(columns):
@@ -49,7 +49,7 @@ def _row_values(row: Any, columns: List[str]) -> Optional[Dict[str, Any]]:
 
 
 def parse_response(payload: Any) -> List[Dict[str, Any]]:
-    """Purely convert an the public repo-trends API JSON response into hotin Records.
+    """Purely convert an the trend-signal source JSON response into hotin Records.
 
     Invalid response shapes and malformed rows are skipped.  This function has
     no network side effects so fixtures can exercise both row encodings.
@@ -161,7 +161,7 @@ def fetch(
     config: Optional[dict] = None,
     period: str = "past_week",
 ) -> Dict[str, Any]:
-    """Fetch the public repo-trends API's precomputed repository trends without an API key."""
+    """Fetch the source's precomputed repository trends without an API key."""
     del query, config
     try:
         requested_limit = _normalise_limit(limit)
@@ -170,16 +170,16 @@ def fetch(
 
         payload = _request_payload(_normalise_period(period))
         if payload is None:
-            return {"records": [], "status": "error", "detail": "trends request failed"}
+            return {"records": [], "status": "error", "detail": "trend-signal request failed"}
         if not _has_expected_shape(payload):
-            return {"records": [], "status": "error", "detail": "trends response was malformed"}
+            return {"records": [], "status": "error", "detail": "trend-signal response was malformed"}
 
         records = parse_response(payload)
         if not records:
             return {"records": [], "status": "empty", "detail": "no usable GitHub repositories found"}
         return {"records": records[:requested_limit], "status": "ok", "detail": None}
     except Exception:
-        return {"records": [], "status": "error", "detail": "trends fetch failed"}
+        return {"records": [], "status": "error", "detail": "trend-signal fetch failed"}
 
 
 def selftest() -> None:
