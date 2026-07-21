@@ -16,7 +16,7 @@ from .canonical import canonicalize
 from .coerce import finite_float
 from .config import config_dir, env_path, load_config
 from .render import color, hyperlink, sanitize
-from .sources import frontier, github, hfmodels, hfpapers, hn, npm, trends, reddit, smolai, youtube
+from .sources import insider_people, frontier, github, hfmodels, hfpapers, hn, npm, trends, reddit, smolai, youtube
 
 
 COMMANDS = {
@@ -28,10 +28,11 @@ COMMANDS = {
     "trending": "show trending repositories",
     "reddit": "show Reddit signals",
     "youtube": "show YouTube signals",
-    "models": "show AI models — official lab releases first, then HuggingFace trending",
-    "releases": "show official releases from frontier AI lab blogs",
+    "models": "show AI models — frontier-lab press releases first, then HuggingFace trending",
+    "releases": "show press releases / blog posts from frontier AI lab blogs",
     "papers": "show trending AI papers (HuggingFace)",
     "news": "show recent AI news headlines (smol.ai / AINews)",
+    "people": "show the the influencer-stars source AI 1000 — ranked accounts shaping AI",
     "search": "search cached tools",
     "show": "show one tool",
     "setup": "check config, or schedule automatic refreshes (--schedule)",
@@ -48,7 +49,7 @@ _BADGE_COLORS = {"fresh": "32", "rising": "38;5;208", "viral": "38;5;198",
 _ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
 # --limit only makes sense for commands that produce a ranked/list result.
 # update (refresh + health), setup, about, and show (one repo) don't take one.
-_LIST_COMMANDS = {"hot", "repos", "hn", "npm", "stars", "trending", "reddit", "youtube", "models", "releases", "papers", "news", "search"}
+_LIST_COMMANDS = {"hot", "repos", "hn", "npm", "stars", "trending", "reddit", "youtube", "models", "releases", "papers", "news", "people", "search"}
 # Entity commands: (adapter, entity_type, metric weights for scoring, primary metric label).
 # Models rank by HuggingFace's trendingScore (heat right now), NOT lifetime
 # downloads — otherwise a hugely-adopted but old model (Kokoro-82M, ~10M
@@ -449,6 +450,48 @@ def _releases(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def _people(arguments: argparse.Namespace) -> int:
+    """The the influencer-stars source AI 1000 — ranked accounts shaping AI, most influential first."""
+    limit = _normal_limit(arguments)
+    if limit is None:
+        return 2
+    try:
+        result = insider_people.fetch(limit=limit, config=load_config())
+    except Exception as exc:  # defensive: adapters shouldn't raise
+        result = {"records": [], "status": "error", "detail": str(exc) or "fetch failed"}
+    if not isinstance(result, dict):
+        result = {"records": [], "status": "error", "detail": "invalid adapter result"}
+    people = [p for p in (result.get("records") or []) if isinstance(p, dict)]
+    detail = result.get("detail") if isinstance(result.get("detail"), str) else None
+    if arguments.json:
+        _dump_json({"people": [{"rank": p.get("rank"), "handle": p.get("handle"), "name": p.get("name"),
+                                "category": p.get("category"), "github": p.get("github"),
+                                "ai1000_followers": _record_signal(p).get("ai1000_followers"),
+                                "rank_change": _record_signal(p).get("rank_change")} for p in people],
+                    "status": result.get("status"), "detail": detail})
+        _attribution(arguments)
+        return 0 if people else 1
+    if not people:
+        print("No AI 1000 rankings right now{}.".format(": " + _safe(detail) if detail else ""), file=sys.stderr)
+        _attribution(arguments)
+        return 1
+    enabled = _color_enabled(arguments)
+    for p in people:
+        change = _finite(_record_signal(p).get("rank_change"))
+        arrow = (color(" ↑{}".format(int(change)), "32", enabled) if change > 0
+                 else color(" ↓{}".format(int(-change)), "31", enabled) if change < 0 else "")
+        handle = _safe(p.get("handle", ""))
+        name = hyperlink(color(handle, "1", enabled), p.get("url") if isinstance(p.get("url"), str) else "", enabled)
+        print("{}  {}{}  {}  {}".format(
+            color("#{:<4}".format(int(_finite(p.get("rank")))), _score_color(1000 - _finite(p.get("rank")), 1000), enabled),
+            name, arrow,
+            color(_safe(p.get("name", "")), "2", enabled),
+            color(_safe(p.get("category", "")), "2", enabled)))
+    print(color("via the influencer-stars source AI 1000 — digg.com/tech/x/rankings", "2", enabled))
+    _attribution(arguments)
+    return 0
+
+
 def _models(arguments: argparse.Namespace) -> int:
     """Models view: official frontier-lab releases first, then HuggingFace trending."""
     limit = _normal_limit(arguments)
@@ -476,7 +519,7 @@ def _models(arguments: argparse.Namespace) -> int:
             return 0
         enabled = _color_enabled(arguments)
         if releases:
-            print(color("Official releases", "1", enabled))
+            print(color("Official press releases", "1", enabled))
             _render_releases(releases, enabled)
         if ranked:
             print(("\n" if releases else "") + color("Trending on HuggingFace", "1", enabled))
@@ -658,7 +701,7 @@ def _brief(arguments: argparse.Namespace) -> int:
             return hyperlink(color(text, "1", enabled), url, enabled) if isinstance(url, str) and url else color(text, "1", enabled)
 
         if releases:
-            header("Frontier lab releases")
+            header("Frontier lab press releases")
             _render_releases(releases, enabled)
         if models:
             header("Trending models")
@@ -775,6 +818,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         return _brief(arguments)
     if command == "news":
         return _news(arguments)
+    if command == "people":
+        return _people(arguments)
     if command in ("hot", "repos"):
         limit = _normal_limit(arguments)
         if limit is None:
