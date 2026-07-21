@@ -167,9 +167,11 @@ def news_rows(items: List[dict]) -> List[dict]:
     for item in items:
         if not isinstance(item, dict):
             continue
+        # AINews titles are mostly the "not much happened today" filler, so the
+        # date is the useful, clickable handle; fall back to the title if dateless.
         date = (_meta(item).get("date") or "")[:16]
-        rows.append({"rank": "·", "name": item.get("name") or "?", "url": item.get("url"),
-                     "meta": date or None, "receipts": [], "badges": []})
+        rows.append({"rank": "·", "name": date or item.get("name") or "?",
+                     "url": item.get("url"), "meta": None, "receipts": [], "badges": []})
     return rows
 
 

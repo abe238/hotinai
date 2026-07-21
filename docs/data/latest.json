@@ -253,7 +253,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "6k stars",
+            "label": "6.1k stars",
             "kind": "stars"
           }
         ],
@@ -407,7 +407,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "16k stars",
+            "label": "16.1k stars",
             "kind": "stars"
           }
         ],
@@ -459,7 +459,7 @@
             "kind": "insiders"
           },
           {
-            "label": "6k stars",
+            "label": "6.1k stars",
             "kind": "stars"
           }
         ],
@@ -533,7 +533,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "87k stars",
+            "label": "87.1k stars",
             "kind": "stars"
           }
         ],
@@ -577,7 +577,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "80.2k stars",
+            "label": "80.3k stars",
             "kind": "stars"
           }
         ],
@@ -656,7 +656,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "14.6k stars",
+            "label": "14.7k stars",
             "kind": "stars"
           }
         ],
@@ -1228,7 +1228,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "5.6k stars",
+            "label": "5.7k stars",
             "kind": "stars"
           }
         ],
@@ -1289,28 +1289,6 @@
       },
       {
         "rank": 59,
-        "name": "alxndrtl/little-book-rl",
-        "url": "https://github.com/alxndrtl/little-book-rl",
-        "meta": "The Little Book of Reinforcement Learning",
-        "receipts": [
-          {
-            "label": "\u2605 skirano \u00b7 insider",
-            "kind": "insiders"
-          },
-          {
-            "label": "211 pts",
-            "kind": "hn"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 60,
         "name": "op7418/guizang-social-card-skill",
         "url": "https://github.com/op7418/guizang-social-card-skill",
         "meta": null,
@@ -1327,6 +1305,28 @@
           },
           {
             "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 60,
+        "name": "alxndrtl/little-book-rl",
+        "url": "https://github.com/alxndrtl/little-book-rl",
+        "meta": "The Little Book of Reinforcement Learning",
+        "receipts": [
+          {
+            "label": "\u2605 skirano \u00b7 insider",
+            "kind": "insiders"
+          },
+          {
+            "label": "211 pts",
+            "kind": "hn"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
             "hot": false
           }
         ]
@@ -2253,24 +2253,6 @@
       },
       {
         "rank": 52,
-        "name": "lohhhha/lato.2",
-        "url": "https://github.com/lohhhha/lato.2",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "\u2605 andrew_n_carr \u00b7 insider",
-            "kind": "insiders"
-          }
-        ],
-        "badges": [
-          {
-            "label": "smart-money",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 53,
         "name": "lopopolo/harness-engineering",
         "url": "https://github.com/lopopolo/harness-engineering",
         "meta": null,
@@ -2288,7 +2270,7 @@
         ]
       },
       {
-        "rank": 54,
+        "rank": 53,
         "name": "mayfer/soldat-web",
         "url": "https://github.com/mayfer/soldat-web",
         "meta": null,
@@ -2306,7 +2288,7 @@
         ]
       },
       {
-        "rank": 55,
+        "rank": 54,
         "name": "michaelliv/pi-dynamic-workflows",
         "url": "https://github.com/michaelliv/pi-dynamic-workflows",
         "meta": null,
@@ -2324,7 +2306,7 @@
         ]
       },
       {
-        "rank": 56,
+        "rank": 55,
         "name": "microsoft/deepctt",
         "url": "https://github.com/microsoft/deepctt",
         "meta": null,
@@ -2342,7 +2324,7 @@
         ]
       },
       {
-        "rank": 57,
+        "rank": 56,
         "name": "microsoft/goodpoints",
         "url": "https://github.com/microsoft/goodpoints",
         "meta": null,
@@ -2360,7 +2342,7 @@
         ]
       },
       {
-        "rank": 58,
+        "rank": 57,
         "name": "microsoft/khsgd",
         "url": "https://github.com/microsoft/khsgd",
         "meta": null,
@@ -2378,7 +2360,7 @@
         ]
       },
       {
-        "rank": 59,
+        "rank": 58,
         "name": "microsoft/skillopt",
         "url": "https://github.com/microsoft/skillopt",
         "meta": null,
@@ -2396,13 +2378,31 @@
         ]
       },
       {
-        "rank": 60,
+        "rank": 59,
         "name": "midas-hand-org/midas_hand_mujoco",
         "url": "https://github.com/midas-hand-org/midas_hand_mujoco",
         "meta": null,
         "receipts": [
           {
             "label": "\u2605 kevin_zakka \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 60,
+        "name": "mit-han-lab/fouroversix",
+        "url": "https://github.com/mit-han-lab/fouroversix",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 code_star \u00b7 insider",
             "kind": "insiders"
           }
         ],
@@ -4008,481 +4008,481 @@
     "news": [
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 20 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-20-not-much/",
-        "meta": "Mon, 20 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Fri, 17 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-17-not-much/",
-        "meta": "Fri, 17 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Thu, 16 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-16-kimi-k30/",
-        "meta": "Thu, 16 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Wed, 15 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-15-thinky-inkling/",
-        "meta": "Wed, 15 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Tue, 14 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-14-not-much/",
-        "meta": "Tue, 14 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 13 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-13-not-much/",
-        "meta": "Mon, 13 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Fri, 10 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-10-not-much/",
-        "meta": "Fri, 10 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "OpenAI launches GPT 5.6 Sol/Terra/Luna",
+        "name": "Thu, 09 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-09-gpt-56/",
-        "meta": "Thu, 09 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Wed, 08 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-08-grok-45/",
-        "meta": "Wed, 08 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Tue, 07 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-07-not-much/",
-        "meta": "Tue, 07 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 06 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-06-not-much/",
-        "meta": "Mon, 06 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Thu, 02 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-02-not-much/",
-        "meta": "Thu, 02 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Wed, 01 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-01-not-much/",
-        "meta": "Wed, 01 Jul 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Tue, 30 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-30-sonnet5/",
-        "meta": "Tue, 30 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 29 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-29-not-much/",
-        "meta": "Mon, 29 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Fri, 26 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-26-gpt-56-preview/",
-        "meta": "Fri, 26 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Thu, 25 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-25-not-much/",
-        "meta": "Thu, 25 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Wed, 24 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-24-not-much/",
-        "meta": "Wed, 24 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Tue, 23 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-23-not-much/",
-        "meta": "Tue, 23 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 22 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-22-not-much/",
-        "meta": "Mon, 22 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Fri, 19 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-19-not-much/",
-        "meta": "Fri, 19 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Thu, 18 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-18-not-much/",
-        "meta": "Thu, 18 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "Midjourney Medical: scan your organs like you step on a scale",
+        "name": "Wed, 17 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-17-midjourney-medical/",
-        "meta": "Wed, 17 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "GLM 5.2: the top Frontend Coding model in the world, IndexShare reduces costs",
+        "name": "Tue, 16 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-16-glm-52/",
-        "meta": "Tue, 16 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Fri, 12 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-12-not-much/",
-        "meta": "Fri, 12 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Thu, 11 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-11-not-much/",
-        "meta": "Thu, 11 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Thu, 11 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-15-not-much/",
-        "meta": "Thu, 11 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Wed, 10 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-10-not-much/",
-        "meta": "Wed, 10 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "Anthropic Claude Fable 5",
+        "name": "Tue, 09 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-09-anthropic-claude-fable-5/",
-        "meta": "Tue, 09 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 08 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-08-not-much/",
-        "meta": "Mon, 08 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Fri, 05 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-05-not-much/",
-        "meta": "Fri, 05 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Thu, 04 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-04-not-much/",
-        "meta": "Thu, 04 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "Microsoft Build: MAI-Thinking-1 and MAI Family models, Surface RTX Spark Dev Box, and OpenClaw in Windows",
+        "name": "Tue, 02 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-02-msft-mai-2/",
-        "meta": "Tue, 02 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Tue, 02 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-03-not-much/",
-        "meta": "Tue, 02 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 01 Jun 2026",
         "url": "https://news.smol.ai/issues/26-06-01-not-much/",
-        "meta": "Mon, 01 Jun 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Fri, 29 May 2026",
         "url": "https://news.smol.ai/issues/26-05-29-not-much/",
-        "meta": "Fri, 29 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "Anthropic raises $65B in Series H at a $965B post-money valuation, releases Opus 4.8 and Dynamic Workflows",
+        "name": "Thu, 28 May 2026",
         "url": "https://news.smol.ai/issues/26-05-28-anthropic-series-h/",
-        "meta": "Thu, 28 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Tue, 26 May 2026",
         "url": "https://news.smol.ai/issues/26-05-26-not-much/",
-        "meta": "Tue, 26 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Tue, 26 May 2026",
         "url": "https://news.smol.ai/issues/26-05-27-not-much/",
-        "meta": "Tue, 26 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Thu, 21 May 2026",
         "url": "https://news.smol.ai/issues/26-05-21-not-much/",
-        "meta": "Thu, 21 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 18 May 2026",
         "url": "https://news.smol.ai/issues/26-05-18-not-much/",
-        "meta": "Mon, 18 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "Google I/O 2026: Gemini 3.5 Flash, Omni, and Google\u2019s Agent Stack",
+        "name": "Mon, 18 May 2026",
         "url": "https://news.smol.ai/issues/26-05-19-not-much/",
-        "meta": "Mon, 18 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Fri, 15 May 2026",
         "url": "https://news.smol.ai/issues/26-05-15-not-much/",
-        "meta": "Fri, 15 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Thu, 14 May 2026",
         "url": "https://news.smol.ai/issues/26-05-14-not-much/",
-        "meta": "Thu, 14 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Wed, 13 May 2026",
         "url": "https://news.smol.ai/issues/26-05-13-not-much/",
-        "meta": "Wed, 13 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Tue, 12 May 2026",
         "url": "https://news.smol.ai/issues/26-05-12-not-much/",
-        "meta": "Tue, 12 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 11 May 2026",
         "url": "https://news.smol.ai/issues/26-05-11-not-much/",
-        "meta": "Mon, 11 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Fri, 08 May 2026",
         "url": "https://news.smol.ai/issues/26-05-08-not-much/",
-        "meta": "Fri, 08 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "GPT-Realtime-2, -Translate, and -Whisper: new SOTA realtime voice APIs",
+        "name": "Thu, 07 May 2026",
         "url": "https://news.smol.ai/issues/26-05-07-gpt-realtime-2/",
-        "meta": "Thu, 07 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "Anthropic-SpaceXai's 300MW/$5B/yr deal for Colossus I, ARR growth is 8000% annualized",
+        "name": "Wed, 06 May 2026",
         "url": "https://news.smol.ai/issues/26-05-06-anthropic-xai/",
-        "meta": "Wed, 06 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 04 May 2026",
         "url": "https://news.smol.ai/issues/26-05-05-not-much/",
-        "meta": "Mon, 04 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 04 May 2026",
         "url": "https://news.smol.ai/issues/26-05-04-not-much/",
-        "meta": "Mon, 04 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 04 May 2026",
         "url": "https://news.smol.ai/issues/26-05-20-not-much/",
-        "meta": "Mon, 04 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 04 May 2026",
         "url": "https://news.smol.ai/issues/26-05-22-not-much/",
-        "meta": "Mon, 04 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Fri, 01 May 2026",
         "url": "https://news.smol.ai/issues/26-05-01-not-much/",
-        "meta": "Fri, 01 May 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Thu, 30 Apr 2026",
         "url": "https://news.smol.ai/issues/26-04-30-not-much/",
-        "meta": "Thu, 30 Apr 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Wed, 29 Apr 2026",
         "url": "https://news.smol.ai/issues/26-04-29-not-much/",
-        "meta": "Wed, 29 Apr 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Tue, 28 Apr 2026",
         "url": "https://news.smol.ai/issues/26-04-28-not-much/",
-        "meta": "Tue, 28 Apr 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "not much happened today",
+        "name": "Mon, 27 Apr 2026",
         "url": "https://news.smol.ai/issues/26-04-27-not-much/",
-        "meta": "Mon, 27 Apr 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       },
       {
         "rank": "\u00b7",
-        "name": "DeepSeek v4",
+        "name": "Fri, 24 Apr 2026",
         "url": "https://news.smol.ai/issues/26-04-24-deepseek-v4/",
-        "meta": "Fri, 24 Apr 2026",
+        "meta": null,
         "receipts": [],
         "badges": []
       }

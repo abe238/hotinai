@@ -176,14 +176,19 @@ def render_html(rows, *, entity="repos"):
                 '<span class="{}">{}</span>'.format(("badge " + cls).strip(), label)
             )
 
+        inner = name + meta_html
+        url = row.get("url")
+        if url:
+            inner = '<a href="{}" target="_blank" rel="noopener">{}</a>'.format(
+                html.escape(str(url), quote=True), inner)
+
         out.append(
             '<div class="row"><div class="rank">{rank}</div>'
-            '<div class="item"><div class="name">{name}{meta}</div>'
+            '<div class="item"><div class="name">{inner}</div>'
             '<div class="receipts">{chips}</div></div>'
             '<div class="badges">{badges}</div></div>'.format(
                 rank=rank,
-                name=name,
-                meta=meta_html,
+                inner=inner,
                 chips="".join(chips),
                 badges="".join(badges),
             )

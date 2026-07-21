@@ -68,6 +68,17 @@ def test_render_html_has_board_markup():
     assert 'class="badge smart"' in out
 
 
+def test_render_html_links_the_name():
+    out = render_html(ROWS)
+    # a row with a url wraps the name in an anchor that opens the source
+    assert ('<a href="https://github.com/vercel-labs/deepsec" '
+            'target="_blank" rel="noopener">') in out
+    # a url-less row has no dangling anchor but still shows the name
+    sparse = [{"rank": 1, "name": "bare/row", "receipts": [], "badges": []}]
+    assert "<a " not in render_html(sparse)
+    assert "bare/row" in render_html(sparse)
+
+
 def test_render_html_escapes_hostile_name():
     rows = [{"rank": 1, "name": "<script>alert(1)</script>", "receipts": [], "badges": []}]
     out = render_html(rows)
