@@ -325,14 +325,22 @@ def test_models_command_renders_entities_json(monkeypatch, capsys):
     cache = MemoryCache()
     monkeypatch.setattr(cli, "open_cache", lambda: cache)
     monkeypatch.setattr(cli.hfmodels, "fetch", lambda **kwargs: {"records": [
-        {"entity_type": "model", "entity_id": "org/m", "url": "https://huggingface.co/org/m",
-         "name": "org/m", "source": "hfmodels", "signal": {"model_downloads": 1000, "model_likes": 50},
-         "meta": {"model_task": "text-generation"}},
+        # Old, massively-downloaded but not trending — must NOT outrank the surging one.
+        {"entity_type": "model", "entity_id": "org/old-popular", "url": "https://huggingface.co/org/old-popular",
+         "name": "org/old-popular", "source": "hfmodels",
+         "signal": {"model_downloads": 9_000_000, "model_likes": 6000, "model_trending_score": 20},
+         "meta": {"model_task": "text-to-speech"}},
+        {"entity_type": "model", "entity_id": "org/surging", "url": "https://huggingface.co/org/surging",
+         "name": "org/surging", "source": "hfmodels",
+         "signal": {"model_downloads": 13000, "model_likes": 1200, "model_trending_score": 1200},
+         "meta": {"model_task": "image-text-to-text"}},
     ], "status": "ok", "detail": None})
 
     assert main(["models", "--json", "--limit", "5"]) == 0
     out = json.loads(capsys.readouterr().out)
-    assert out["entities"][0]["entity_id"] == "org/m"
+    # ranked by HF trendingScore (heat), not lifetime downloads
+    assert out["entities"][0]["entity_id"] == "org/surging"
+    assert out["entities"][1]["entity_id"] == "org/old-popular"
     assert out["entities"][0]["entity_type"] == "model"
     assert out["entities"][0]["score"] > 0
 

@@ -49,8 +49,12 @@ _ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
 # update (refresh + health), setup, about, and show (one repo) don't take one.
 _LIST_COMMANDS = {"hot", "repos", "hn", "npm", "stars", "trending", "reddit", "youtube", "models", "papers", "news", "search"}
 # Entity commands: (adapter, entity_type, metric weights for scoring, primary metric label).
+# Models rank by HuggingFace's trendingScore (heat right now), NOT lifetime
+# downloads — otherwise a hugely-adopted but old model (Kokoro-82M, ~10M
+# downloads) outranks a genuinely surging new one. Downloads/likes stay as
+# displayed context, not ranking weight.
 _ENTITY_COMMANDS = {
-    "models": (hfmodels, "model", {"model_downloads": 1.0, "model_likes": 0.5}),
+    "models": (hfmodels, "model", {"model_trending_score": 1.0}),
     "papers": (hfpapers, "paper", {"paper_upvotes": 1.0}),
 }
 
@@ -514,8 +518,8 @@ def _brief(arguments: argparse.Namespace) -> int:
                 repo.setdefault("meta", {})["paper_backed"] = True
         engine.annotate_velocity(merged, cache)
         repos = engine.rank(merged, limit=50)
-        models = engine.rank_entities(engine.merge_by_entity(rows, "model", max_age_days=window), {"model_downloads": 1.0, "model_likes": 0.5}, limit=5)
-        papers = engine.rank_entities(engine.merge_by_entity(rows, "paper", max_age_days=window), {"paper_upvotes": 1.0}, limit=5)
+        models = engine.rank_entities(engine.merge_by_entity(rows, "model", max_age_days=window), _ENTITY_COMMANDS["models"][2], limit=5)
+        papers = engine.rank_entities(engine.merge_by_entity(rows, "paper", max_age_days=window), _ENTITY_COMMANDS["papers"][2], limit=5)
         rising = sorted(
             (repo for repo in repos if repo.get("meta", {}).get("rising")),
             key=lambda repo: -_finite(repo.get("meta", {}).get("velocity_per_day")),
