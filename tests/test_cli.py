@@ -375,6 +375,10 @@ def test_brief_json_summarizes_repos_models_papers(monkeypatch, capsys):
     cache.upsert({"entity_type": "paper", "entity_id": "2601.1", "url": "u", "name": "A Paper", "source": "hfpapers",
                   "signal_json": {"signal": {"paper_upvotes": 42}, "meta": {}}, "fetched_at": now})
     monkeypatch.setattr(cli, "open_cache", lambda: cache)
+    feed = ('<rss><channel><item><title>Kimi K3 release</title>'
+            '<link>https://news.smol.ai/issues/1</link>'
+            '<pubDate>Fri, 17 Jul 2026 00:00:00 GMT</pubDate></item></channel></rss>')
+    monkeypatch.setattr(cli.smolai, "_request", lambda: feed)
 
     assert main(["brief", "--json"]) == 0
     out = json.loads(capsys.readouterr().out)
@@ -382,10 +386,12 @@ def test_brief_json_summarizes_repos_models_papers(monkeypatch, capsys):
     assert out["top_models"][0]["model"] == "o/m"
     assert out["top_papers"][0]["paper"] == "2601.1"
     assert out["top_papers"][0]["upvotes"] == 42
+    assert out["news"][0]["title"] == "Kimi K3 release"
 
 
 def test_brief_empty_store_is_friendly(monkeypatch, capsys):
     monkeypatch.setattr(cli, "open_cache", MemoryCache)
+    monkeypatch.setattr(cli.smolai, "_request", lambda: None)  # offline: no news section
     assert main(["brief"]) == 0
     assert "Run `hotin ingest`" in capsys.readouterr().out
 

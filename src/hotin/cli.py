@@ -479,6 +479,13 @@ def _brief(arguments: argparse.Namespace) -> int:
             (repo for repo in repos if repo.get("meta", {}).get("rising")),
             key=lambda repo: -_finite(repo.get("meta", {}).get("velocity_per_day")),
         )[:5]
+        # News is a best-effort live augmentation (smol.ai / AINews) — the one
+        # section not sourced from the local store. A failed fetch just omits it.
+        try:
+            news_text = smolai._request()
+        except Exception:
+            news_text = None
+        news = smolai.parse_news(news_text)[:6] if news_text else []
 
         if arguments.json:
             _dump_json({
@@ -486,12 +493,13 @@ def _brief(arguments: argparse.Namespace) -> int:
                 "top_repos": [{"repo": r.get("canonical_repo"), "score": _finite(r.get("score")), "badges": r.get("badges")} for r in repos[:5]],
                 "top_models": [{"model": m.get("entity_id"), "downloads": _finite(_record_signal(m).get("model_downloads"))} for m in models],
                 "top_papers": [{"paper": p.get("entity_id"), "title": p.get("name"), "upvotes": _finite(_record_signal(p).get("paper_upvotes"))} for p in papers],
+                "news": [{"title": n["name"], "url": n["url"], "date": n["meta"].get("date")} for n in news],
             })
             _attribution(arguments)
             return 0
 
         enabled = _color_enabled(arguments)
-        if not (repos or models or papers):
+        if not (repos or models or papers or news):
             print("Nothing in the store yet. Run `hotin ingest` (or `hotin hot`) first to populate it.")
             _attribution(arguments)
             return 0
@@ -523,6 +531,13 @@ def _brief(arguments: argparse.Namespace) -> int:
                 signal = _record_signal(paper)
                 print("  {}  {}".format(color("{} upvotes".format(_format_number(signal.get("paper_upvotes"))), "2", enabled),
                                         _safe(paper.get("name", ""))[:70]))
+        if news:
+            header("AI news (smol.ai / AINews)")
+            for item in news:
+                date = _safe(item["meta"].get("date", ""))[:16]
+                title = hyperlink(color(_safe(item["name"])[:70], "1", enabled),
+                                  item["url"] if isinstance(item.get("url"), str) else "", enabled)
+                print("  {}  {}".format(color(date, "2", enabled), title))
         _attribution(arguments)
         return 0
 
