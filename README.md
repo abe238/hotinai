@@ -60,7 +60,7 @@ Available commands:
 | `hotin brief` | a short daily digest of what's happening in AI |
 | `hotin search <query>` | search cached tools |
 | `hotin show <owner/repo>` | show one tool |
-| `hotin setup` | check local configuration |
+| `hotin setup` | check config, or schedule automatic refreshes |
 | `hotin update` | refresh all sources |
 | `hotin ingest` | refresh + record the time series (for a scheduler) |
 | `hotin about` | show project information |
@@ -84,6 +84,19 @@ $ hotin hot --limit 8
 ```
 
 The first line of each result is score, owner/repo (clickable in a real terminal), category, and badges; a dimmed second line shows the human title when it adds context the slug doesn't. `fresh` reflects recent repository activity. In a live terminal the score and badges are colored. Your output will differ — it reflects what is actually hot when you run it.
+
+## Keeping it fresh
+
+hotin's `rising` / `viral` badges and the `hotin brief` come from a recorded time series, so they get better the more often `hotin ingest` runs. `hotin setup` can install a scheduled job for you:
+
+```sh
+hotin setup                     # interactive: once a day (8am) or twice (8am & 8pm)
+hotin setup --schedule twice    # non-interactive: 8am & 8pm
+hotin setup --schedule daily    # 8am only
+hotin setup --schedule off      # remove it
+```
+
+On macOS/Linux this manages a marked block in your `crontab`; on Windows it creates `hotin-ingest` scheduled tasks. Either way it runs `python -m hotin ingest`, leaving the rest of your schedule untouched.
 
 ## Data Sources & Terms
 

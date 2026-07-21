@@ -33,7 +33,7 @@ COMMANDS = {
     "news": "show recent AI news headlines (smol.ai / AINews)",
     "search": "search cached tools",
     "show": "show one tool",
-    "setup": "check local configuration",
+    "setup": "check config, or schedule automatic refreshes (--schedule)",
     "update": "update hotin",
     "ingest": "refresh all sources and record the time series (for a scheduler)",
     "brief": "a short daily digest of what's happening in AI",
