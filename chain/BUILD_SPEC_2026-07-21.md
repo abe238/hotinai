@@ -14,7 +14,7 @@ hotin <entity> [--source X] [--since Nd] [--min-stars N] [--format F] [--limit N
 
 ### Entities (each self-ranked)
 - `repos` — fused, corroboration-ranked AI repos (the flagship board)
-- `people` — the influencer-stars source AI-1000 (already shipped: `sources/insider_people.py`)
+- `people` — influencer AI-1000 (already shipped: `sources/insider_people.py`)
 - `models` — HuggingFace trending + frontier-lab press releases (already built)
 - `papers` — HuggingFace daily papers + HN papers (already built)
 - `news` — smol.ai / AINews (already built)
@@ -49,7 +49,7 @@ Row { rank, title, desc, url, receipts:[{source, value, rank_of?}], badges:[flag
 
 ### Badges = the verdicts (what it means), outline chips
 - `fresh` — new or recently active
-- `smart-money` — ≥2 the influencer-stars source AI-1000 accounts starred it AND ≥2 sources
+- `smart-money` — ≥2 influencer AI-1000 accounts starred it AND ≥2 sources
 - `paper-backed` — linked from a currently-trending paper
 - `trending` — on GitHub's / the public repo-trends API's **own** top-list (external corroboration; top ~25, selective). **Viral folded in as one intensity step**: normal = dim violet outline; viral (multiple external lists + accelerating) = bright violet + soft glow.
 - `rising`/`viral` are **no longer separate badges** — rising is shown by the receipt number; viral is the glow intensity of `trending`.
@@ -66,17 +66,17 @@ Row is **rank-led** (score behind `--verbose`), description **inline** after the
 ### Ranking honesty
 Freshness scoring must keep established mega-repos (llama.cpp, pytorch) out of the top unless a genuine burst (release star-spike or paper link). The `trending` badge (external, velocity-based) reinforces this — a flat-velocity giant earns neither trending nor fresh.
 
-## 4. New source: `sources/collections_ai.py`
-the public repo-trends API AI collections (the `/trending/ai` engine), stdlib-only, no key.
+## 4. New source: `sources/trends_ai.py`
+The public repo-trends AI collections (the `/trending/ai` engine), stdlib-only, no key.
 - `GET https://api.ossinsight.io/v1/collections/` → filter to AI-topic collections.
 - `GET /v1/collections/{id}/ranking_by_stars/?period=past_28_days` → rows with `current_period_growth` (star-growth delta), `total`, `current_period_rank`.
-- Emit repo records; feed `repos` corroboration + the `trending` badge (this repo is on the public repo-trends API's AI trending) + the `stars +N` receipt (growth delta). Best-effort contract (`fetch(query, limit, config) -> {records, status, detail}`), never raises. Ships with tests.
+- Emit repo records; feed `repos` corroboration + the `trending` badge (this repo is on the public repo-trends AI trending) + the `stars +N` receipt (growth delta). Best-effort contract (`fetch(query, limit, config) -> {records, status, detail}`), never raises. Ships with tests.
 
 ## 5. Deferred (documented, NOT this build)
 `--category` filter (adopt only if volume justifies), `github.com/trending` scrape, `/trending/developers` → `people --source github`, multi-feed `news` RSS, `youtube Nk` receipt polish.
 
 ## 6. Acceptance
-- 210+ existing tests stay green; new tests for `refresh`, `--format`, `--since` parsing, `collections_ai`.
+- 210+ existing tests stay green; new tests for `refresh`, `--format`, `--since` parsing, `trends_ai`.
 - Live-drive every touched command via the repo `verify` skill (real CLI): `hotin`, `hotin --help` (grouped), `hotin repos --source hn`, `hotin repos --since 30d --min-stars 500`, `hotin --format md|html|json`, `hotin refresh --quiet`, `hotin models/papers/people/news`.
 - `--format html` output matches `docs/design-board.html`'s language; `--format md` matches its markdown section.
 - Input-sanitation battery still 0 crashes, now including the new flags.

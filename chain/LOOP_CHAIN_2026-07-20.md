@@ -14,8 +14,8 @@ Zero setup for the core, works on any fresh machine, gets sharper the more you u
   Python/SQLite builds — code MUST detect this and fall back to a `LIKE`-based search path**,
   never crash or require a rebuild (Sol P2 fix #2).
 - **SQLite-only. Zero database server. No Postgres, no pgvector — ever, as a requirement.**
-- **No required external binaries.** the influencer-stars source smart-money is Python-only (no Go binary; the existing
-  `insider-pp-cli` scrape pattern is reimplemented, not shelled out to).
+- **No required external binaries.** The influencer-stars smart-money source is Python-only (no Go binary; the existing
+  influencer-stars scrape pattern is reimplemented, not shelled out to).
 - **Smart-money stays PRIMARY and heavily weighted (revised 2026-07-20 — do not re-demote this).**
   Sol's original "demote" language conflated two different things: RESILIENCE (the `hot` command
   must not depend on the influencer-stars source's uptime to run at all) and SIGNAL WEIGHT (how much a working smart-money
@@ -26,7 +26,7 @@ Zero setup for the core, works on any fresh machine, gets sharper the more you u
   GitHub-stargazers-API" idea, which is DEAD; GitHub restricted `/repos/{o}/{r}/stargazers` to
   admins/collaborators June 30 2026, confirmed live 404 on real repos):**
   - **Primary: the influencer-stars source's own repo-centric recent-activity feed** (`/ai/github/stars`, what
-    `insider-pp-cli` already hits) — it already returns `most_recent_star_at` with real, hours-fresh
+    the influencer-stars scraper already hits) — it already returns `most_recent_star_at` with real, hours-fresh
     timestamps (verified live: `2026-07-19T23:41:12Z` on a same-day check). This is repo-centric,
     naturally fresh, and the influencer-stars source has already done the account-tracking/identity-joining work — no
     reason to rebuild that ourselves.
@@ -40,7 +40,7 @@ Zero setup for the core, works on any fresh machine, gets sharper the more you u
   - **REJECTED as the core mechanism, kept as the DISASTER-RECOVERY fallback (revised 2026-07-20
     per Abe: the influencer-stars source itself could also lose access, same as GitHub's stargazers endpoint did — treat
     that as a real, not hypothetical, failure mode; this fallback exists so smart-money doesn't
-    go completely dark if the influencer-stars source's feed is ever cut off, not as a routine alternate path):**
+    go completely dark if the influencer-stars feed is ever cut off, not as a routine alternate path):**
     bulk-crawling each of the ~1,000 cached AI-1000 usernames' starred-repo history via GraphQL
     (`user(login:).starredRepositories`, confirmed technically live/cheap in raw API points).
     Sol's second review killed it as the PRIMARY path: harvesting people's full star history on a
@@ -48,7 +48,7 @@ Zero setup for the core, works on any fresh machine, gets sharper the more you u
     shares the same abuse-pattern shape GitHub just restricted (mass collection of star
     relationship data), just inverted — a real risk of being closed next, and arguably not
     something to build the product's core on even if it stays open.
-    **If ever activated (the influencer-stars source feed confirmed dead, not just one bad fetch), it MUST run as a slow
+    **If ever activated (the influencer-stars feed confirmed dead, not just one bad fetch), it MUST run as a slow
     trickle, never a burst — the whole point is to never be the reason another source locks down**:
     spread the full ~1,000-account refresh across **at least 24 hours**, a low fixed rate (e.g. a
     few accounts per minute with real jittered sleep between each, not "as fast as the point
@@ -62,7 +62,7 @@ Zero setup for the core, works on any fresh machine, gets sharper the more you u
     term, but corroboration (independent-source agreement) stays the strongest multiplier; smart-
     money alone should not be able to single-handedly outrank a repo with zero independent
     corroboration, per Sol's balance note.
-- **Honest zero-key claim (Sol fix #2):** the **zero-key core** is GitHub + the public repo-trends API + HN + npm
+- **Honest zero-key claim (Sol fix #2):** the **zero-key core** is GitHub + the repo-trends source + HN + npm
   — this must be excellent with NO configuration. Reddit + YouTube are **key-unlocked social**
   (ScrapeCreators) and are documented as such, never blurred into "zero setup covers everything."
 - **No telemetry, ever** — not even anonymous/opt-in. (Standing decision, not up for silent
@@ -106,12 +106,12 @@ Zero setup for the core, works on any fresh machine, gets sharper the more you u
   only — not on every invocation. `--quiet` suppresses it. NEVER printed when stdout is piped or
   when `--json` is used (machine consumers never see marketing text mixed into output).
 - **Data-sources/terms section (Sol fix #10):** the license covers hotin's own code; it does not
-  relicense the influencer-stars source/Reddit/YouTube/npm/GitHub data. README gets an explicit "Data Sources & Terms"
+  relicense the influencer-stars/Reddit/YouTube/npm/GitHub data. README gets an explicit "Data Sources & Terms"
   section; cached third-party text (descriptions, titles) is minimized and TTL'd, not archived
   indefinitely; Reddit/YouTube adapters are labeled unofficial third-party integrations.
 
 ## The momentum reframe (fresh machine, zero accumulated history)
-- **the public repo-trends API** `/trends/repos?period=past_week` → precomputed weekly star-growth. Zero-key core.
+- **The repo-trends source** `/trends/repos?period=past_week` → precomputed weekly star-growth. Zero-key core.
 - **GitHub search** `created:>Nd sort:stars` → young-but-already-huge = implied velocity. Zero-key core.
 - **npm** week-over-week download growth. Zero-key core.
 - **HN** recency inside the window. Zero-key core.
@@ -139,7 +139,7 @@ Each adapter: stdlib-first, a `--selftest` with hostile-input fixtures, never ra
 
 **Primary credibility signal (resilience-optional, weight-primary — see the full spec above):**
 7. **smartmoney** — the influencer-stars source's repo-centric recent-GitHub-stars feed (`/ai/github/stars`), pure-Python
-   scrape (reimplements the `insider-pp-cli` pattern, no external binary). Best-effort TRANSPORT
+   scrape (reimplements the influencer-stars scraper pattern, no external binary). Best-effort TRANSPORT
    (engine ranks correctly if this adapter is entirely absent/broken this run) but a PRIMARY,
    heavily-weighted signal when it succeeds — not demoted in importance. Includes schema-drift
    detection, a freshness gate + 30-day retention with decay, and `unknown`-outside-window
@@ -158,7 +158,7 @@ Each adapter: stdlib-first, a `--selftest` with hostile-input fixtures, never ra
 - **credibility** — smart-money term (log starrers + rank bonus), zero when adapter absent.
 - **categories** — deterministic 6-core classifier (agents/app-building/dev-tools/inference/
   training/creative-media + uncategorized).
-- **momentum** — the public repo-trends API/npm/young-popular (+ optional local history).
+- **momentum** — repo-trends/npm/young-popular (+ optional local history).
 - **provenance-aware score** — `(momentum + credibility + signal) × corroboration × freshness`,
   and the per-source contribution to `signal`/`credibility` is retained per-record (not just the
   summed total) so `--verbose`/`--json` can show *why* a repo ranked where it did (Sol fix on

@@ -4,7 +4,7 @@
 All 8 adapters built (github, trends, hn, npm, reddit, youtube, smartmoney, x-stub) +
 throttle.py's shared politeness primitive. 110 tests green. Every adapter live-verified against
 its real API by hand, not just its own mocks — including the two hardest cases: smartmoney's
-pure-Python the influencer-stars source RSC scrape (caught the influencer-stars source mid-URL-drift: /ai/... -> /tech/... redirect) and
+pure-Python influencer-stars RSC scrape (caught the influencer-stars source mid-URL-drift: /ai/... -> /tech/... redirect) and
 youtube's ScrapeCreators integration (found + fixed a structural bug that made it permanently
 return zero records).
 ## Two real process/infra failures, both root-caused and fixed durably
@@ -25,7 +25,7 @@ and after the fix (not just re-running terra's own tests):
 - P1: youtube missing includeExtras=true meant description field never present -> permanently
   zero records regardless of real content. Verified live before (0 records, wrongly assumed
   "expected") and after (8 real records: lobehub/lobehub, ai-builder-club/sk, etc).
-- P2: committed the influencer-stars source fixture had real people's names/bios/social IDs - replaced with synthetic
+- P2: committed influencer-stars fixture had real people's names/bios/social IDs - replaced with synthetic
   data, re-scanned clean.
 - P2: reddit's query param was silently discarded - added /search routing, live-verified (real
   API call, correctly-empty result when no post in the result set had a link).

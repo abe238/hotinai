@@ -8,7 +8,7 @@ from hotin.sources import smartmoney
 FIXTURE = Path(__file__).parent / "fixtures" / "insider_rows_sample.json"
 
 
-def test_parse_synthetic_digg_fixture():
+def test_parse_synthetic_insider_fixture():
     rows = json.loads(FIXTURE.read_text(encoding="utf-8"))
     records = smartmoney.parse_rows(rows, now=datetime(2026, 7, 20, tzinfo=timezone.utc))
 
