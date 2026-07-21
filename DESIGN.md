@@ -9,8 +9,21 @@ colors:
   muted-slate: "#8b98a9"
   faint-slate: "#7a8696"
   signal-green: "#3fdd8a"
+  signal-green-soft: "#7ee9ae"
   prompt-amber: "#f2b45c"
   status-violet: "#a98bf5"
+  panel-raise: "#0e141d"
+  terminal-inner: "#080c12"
+  receipt-cyan: "#48c9d6"
+  src-npm: "#e06c5f"
+  src-hn: "#ff922b"
+  src-reddit: "#ff6b4a"
+  src-stars: "#f2c65c"
+  edge-amber: "#5c4728"
+  edge-green: "#1f5a3f"
+  edge-cyan: "#2b5a61"
+  edge-violet: "#3c3556"
+  trend-dim: "#9a8fc4"
 typography:
   display:
     fontFamily: "Iowan Old Style, Palatino Linotype, Palatino, Georgia, serif"
@@ -44,8 +57,10 @@ typography:
     fontWeight: 400
     letterSpacing: "0.02em"
 rounded:
+  chip: "5px"
   sm: "8px"
   md: "10px"
+  lg: "12px"
   pill: "20px"
 spacing:
   sm: "14px"
@@ -133,7 +148,17 @@ A near-black terminal palette where accent colors are assigned literal roles (si
 Flat by construction: there is no `box-shadow` anywhere in the stylesheet, including on the new terminal panel. Depth is conveyed two ways instead — hairline borders (`1px solid` wire-border) delineate every panel surface, and two large, soft radial gradients (signal-green at 9% opacity top-right, violet at 6% opacity lower-left) give the flat black body an atmospheric glow rather than a hard, empty void.
 
 ### Named Rules
-**The No-Shadow Rule.** Depth comes from border + glow, never from `box-shadow`. Introducing a drop shadow anywhere would contradict the flat terminal-panel language the whole page is built from.
+**The No-Shadow Rule.** Depth comes from border + glow, never from `box-shadow`. Introducing a *decorative* drop shadow (elevation, a floating panel) anywhere would contradict the flat terminal-panel language the whole page is built from.
+
+**The One Functional-Glow Exception.** There is exactly one sanctioned `box-shadow` in the system, and it is not depth: the **viral-`trending` badge** carries a soft violet glow as a *signal* (the rare "on multiple trending lists AND accelerating" state). It is the single most-important row-level verdict, and the glow is how it earns prominence without a filled background. This is a functional-color glow, categorically distinct from a decorative elevation shadow, and it is the only exception the No-Shadow Rule permits.
+
+## Output color system (CLI result rows)
+
+Distinct from the page's restrained accent palette (green/amber/violet, one job each), the ranked-result rows use a **functional data-encoding** color layer: each *source* has a fixed hue so the eye learns it once and reads it everywhere. Receipts (numbers) are source-colored; badges (verdicts) are colored outlines.
+
+- **Receipts** (numbers, source-colored): `src-npm` (#e06c5f), `src-hn` (#ff922b), `src-reddit` (#ff6b4a), `src-stars` (#f2c65c).
+- **Badges** (outline chips, one hue each): `fresh` → signal-green + edge-green border; `smart-money` → prompt-amber + edge-amber border; `paper-backed` → receipt-cyan + edge-cyan border; `trending` → trend-dim + edge-violet border, escalating to status-violet + glow at viral level.
+- **The receipts-vs-badges split is the product's core reading model** and must stay consistent across all three output surfaces (console, markdown, HTML): receipts answer *who points at it* (a number), badges answer *what it means* (a verdict). Terminals can't draw outlines or glow, so the console renders badges as colored/bold text and shows viral intensity via brightness; HTML and markdown use the outline chips.
 
 ## 5. Components
 

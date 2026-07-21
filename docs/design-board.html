@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hotin — output design board</title>
+<style>
+  :root{
+    --bg:#0a0e14; --panel:#0e141d; --line:#1b2432; --line2:#28344659;
+    --ink:#e6edf3; --dim:#8b98a9; --faint:#5f6b7a;
+    --signal:#3fdd8a; --amber:#f2b45c; --violet:#a98bf5; --cyan:#48c9d6; --pink:#ff7ac6;
+    --npm:#e06c5f; --hn:#ff922b; --reddit:#ff6b4a; --stars:#f2c65c; --trend:#a98bf5; --gh:#c9d4e0;
+    --mono:"SF Mono","JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--ink);line-height:1.55;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    padding:56px 24px 96px;
+    background-image:radial-gradient(900px 480px at 82% -8%,rgba(63,221,138,.07),transparent),
+      radial-gradient(680px 380px at -8% 24%,rgba(169,139,245,.05),transparent);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px;margin:0 auto}
+  h1{font-family:var(--serif);font-size:34px;font-weight:600;letter-spacing:-.02em}
+  h1 .g{color:var(--signal)}
+  .lede{color:var(--dim);font-size:15px;margin:10px 0 6px;max-width:60ch}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--faint);margin:52px 0 14px;display:flex;align-items:center;gap:12px}
+  .kicker::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  /* ---- terminal ---- */
+  .term{background:#080c12;border:1px solid var(--line);border-radius:12px;overflow:hidden;
+    box-shadow:0 24px 60px -30px rgba(0,0,0,.8)}
+  .bar{display:flex;align-items:center;gap:7px;padding:11px 15px;border-bottom:1px solid var(--line)}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+  .bar .t{font-family:var(--mono);font-size:11px;color:var(--faint);margin-left:8px}
+  .body{padding:18px 20px 22px;font-family:var(--mono);font-size:13.5px;line-height:1.95}
+  .cmd{color:var(--amber)}.cmd .$${color:var(--faint);margin-right:9px}
+  .row{display:grid;grid-template-columns:2.4ch 1fr auto;gap:14px;align-items:baseline}
+  .rank{color:var(--faint);text-align:right}
+  .repo{color:#fff;font-weight:600}
+  .desc{color:var(--faint);font-weight:400;font-size:.92em}
+  .sub{color:var(--faint);font-size:12px;grid-column:2/4;margin:-4px 0 6px;padding-left:0}
+  .receipts{color:var(--dim);font-size:12.5px}
+  .receipts .s{font-weight:600}
+  .up{color:var(--signal)}
+  .npm{color:var(--npm)}.hn{color:var(--hn)}.rd{color:var(--reddit)}.st{color:var(--stars)}.tr{color:var(--trend)}.gh{color:var(--gh)}
+  .badges{font-family:var(--mono);font-size:11px;text-align:right;white-space:nowrap}
+  .b{padding:1px 7px;border-radius:5px;margin-left:5px;font-weight:600}
+  .b.money{color:var(--amber);border:1px solid #5c4728}
+  .b.paper{color:var(--cyan);border:1px solid #2b5a61}
+  .b.fresh{color:var(--signal);border:1px solid #1f5a3f}
+  .b.trend{color:#9a8fc4;border:1px solid #3c3556}
+  .b.trend.hot{color:var(--violet);border:1px solid var(--violet);box-shadow:0 0 9px -1px rgba(169,139,245,.5)}
+  .foot{color:var(--faint);font-size:11.5px;margin-top:12px}
+
+  /* ---- markdown render ---- */
+  .md{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 4px}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--line)}
+  th{color:var(--faint);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  td a{color:var(--signal);text-decoration:none;font-weight:600}
+  td.rank{color:var(--faint);font-family:var(--mono);text-align:center;width:3ch}
+  .tag{font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .mono-src{font-family:var(--mono);font-size:12px;color:var(--dim)}
+  .raw{font-family:var(--mono);font-size:11.5px;color:var(--faint);white-space:pre;overflow-x:auto;
+    padding:12px 14px;border:1px dashed var(--line);border-radius:8px;margin-bottom:14px;background:#0b111a}
+
+  /* ---- html component ---- */
+  .cards{display:flex;flex-direction:column;gap:10px}
+  .card{display:grid;grid-template-columns:38px 1fr auto;gap:16px;align-items:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;
+    transition:border-color .18s ease,transform .18s ease}
+  .card:hover{border-color:#2c4a3c;transform:translateY(-1px)}
+  .num{font-family:var(--serif);font-size:26px;color:var(--faint);text-align:center;line-height:1}
+  .card.top .num{color:var(--signal)}
+  .name{font-size:16px;font-weight:650;color:#fff;letter-spacing:-.01em}
+  .name a{color:inherit;text-decoration:none}
+  .name a:hover{color:var(--signal)}
+  .ctx{color:var(--faint);font-size:12.5px;margin-top:2px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chip{font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:999px;
+    border:1px solid var(--line2);color:var(--dim);display:inline-flex;gap:5px;align-items:center}
+  .chip .dotc{width:6px;height:6px;border-radius:50%}
+  .chip.up{color:var(--signal);border-color:#1f5a3f}
+  .right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+  .flag{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.04em;
+    padding:3px 9px;border-radius:6px}
+  .flag.money{color:var(--amber);border:1px solid #5c4728}
+  .flag.fresh{color:var(--signal);border:1px solid #1f5a3f}
+  .flag.paper{color:var(--cyan);border:1px solid #2b5a61}
+  .flag.trend{color:#9a8fc4;border:1px solid #3c3556}
+  .flag.trend.hot{color:var(--violet);border:1px solid var(--violet);box-shadow:0 0 9px -1px rgba(169,139,245,.5)}
+  .note{color:var(--faint);font-size:12.5px;margin:8px 0 0}
+  /* ---- legend ---- */
+  .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:26px;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin:20px 0 4px}
+  .lg-h{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-bottom:12px}
+  .lg-h span{color:var(--faint);text-transform:none;letter-spacing:0}
+  .lg-row{display:flex;align-items:baseline;gap:12px;font-size:12.5px;color:var(--dim);margin:8px 0}
+  .lg-row .b{margin-left:0}
+  .lg-k{font-family:var(--mono);font-weight:600;font-size:12px;min-width:8.5ch;display:inline-block}
+  .lg-k.st{color:var(--stars)}.lg-k.npm{color:var(--npm)}.lg-k.hn{color:var(--hn)}.lg-k.rd{color:var(--reddit)}
+  code{font-family:var(--mono);background:#0b111a;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>hotin — <span class="g">output</span> design board</h1>
+  <p class="lede">Same data, three surfaces. The row model is <code>rank · repo · receipts · badges</code>. <b style="color:var(--ink)">Receipts are numbers</b> (who points at it); <b style="color:var(--ink)">badges are verdicts</b> (what it means). Legend first.</p>
+
+  <div class="legend">
+    <div>
+      <div class="lg-h">Receipts <span>· the numbers — who points at it</span></div>
+      <div class="lg-row"><span class="lg-k st">stars +N</span> stars gained this week</div>
+      <div class="lg-row"><span class="lg-k npm">npm N/wk</span> weekly npm downloads</div>
+      <div class="lg-row"><span class="lg-k hn">HN #N</span> Hacker News rank</div>
+      <div class="lg-row"><span class="lg-k rd">reddit N</span> Reddit score</div>
+    </div>
+    <div>
+      <div class="lg-h">Badges <span>· the verdicts — what it means</span></div>
+      <div class="lg-row"><span class="b fresh">fresh</span> new or recently active</div>
+      <div class="lg-row"><span class="b money">smart-money</span> AI-1000 accounts starred it</div>
+      <div class="lg-row"><span class="b paper">paper-backed</span> a trending paper links it</div>
+      <div class="lg-row"><span class="b trend">trending</span> on GitHub / the public repo-trends API's own list</div>
+      <div class="lg-row"><span class="b trend hot">trending</span> brighter/glow = multi-list + accelerating (was "viral")</div>
+    </div>
+  </div>
+
+  <!-- CONSOLE -->
+  <div class="kicker">1 · Console  (hotin)</div>
+  <div class="term">
+    <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="t">zsh — hotin</span></div>
+    <div class="body">
+      <div class="cmd"><span class="$">$</span>hotin</div>
+      <div class="row"><span class="rank">1</span><span class="repo">vercel-labs/deepsec<span class="desc"> - AI security scanner</span></span><span class="badges"><span class="b fresh">fresh</span></span></div>
+      <div class="receipts row"><span class="rank"></span><span class="receipts"><span class="hn s">HN&nbsp;#1</span> · <span class="npm s">npm&nbsp;1.2M/wk</span> · <span class="rd s">reddit&nbsp;340</span></span><span></span></div>
+
+      <div class="row"><span class="rank">2</span><span class="repo">xai-org/grok-build<span class="desc"> - Grok Build is open source</span></span><span class="badges"><span class="b trend hot">trending</span><span class="b money">smart-money</span><span class="b fresh">fresh</span></span></div>
+      <div class="receipts row"><span class="rank"></span><span class="receipts"><span class="st s">stars&nbsp;+2.1k</span> · <span class="hn s">HN&nbsp;#4</span> · <span class="rd s">reddit&nbsp;180</span></span><span></span></div>
+
+      <div class="row"><span class="rank">3</span><span class="repo">sgl-project/sglang<span class="desc"> - fast LLM serving engine</span></span><span class="badges"><span class="b trend">trending</span><span class="b paper">paper-backed</span></span></div>
+      <div class="receipts row"><span class="rank"></span><span class="receipts"><span class="st s">stars&nbsp;+680</span> · <span class="hn s">HN&nbsp;#12</span></span><span></span></div>
+
+      <div class="foot">7 sources · corroboration-ranked · run <span style="color:var(--dim)">hotin show &lt;repo&gt;</span> for the full receipts</div>
+    </div>
+  </div>
+  <p class="note">Rank-led (score behind <code>--verbose</code>). Every receipt is a number now; <code>trending</code> and <code>github</code> left receipts and became badges. Badges <b style="color:var(--dim)">stack</b> — grok-build is <span class="b trend hot" style="font-size:10px">trending</span> <span class="b money" style="font-size:10px">smart-money</span> <span class="b fresh" style="font-size:10px">fresh</span>. The brighter <span class="b trend hot" style="font-size:10px">trending</span> = the old "viral" (multi-list + accelerating); the dim <span class="b trend" style="font-size:10px">trending</span> = one list.</p>
+
+  <!-- MARKDOWN -->
+  <div class="kicker">2 · Markdown  (--format md)</div>
+  <div class="raw">## Hottest repos — 2026-07-20
+
+| # | Repo | Signals | |
+|---|------|---------|---|
+| 1 | [vercel-labs/deepsec](https://github.com/vercel-labs/deepsec) - AI security scanner | HN #1 · npm 1.2M/wk · reddit 340 | `fresh` |
+| 2 | [xai-org/grok-build](https://github.com/xai-org/grok-build) - Grok Build is open source | stars +2.1k · HN #4 · reddit 180 | `trending` `smart-money` `fresh` |
+| 3 | [sgl-project/sglang](https://github.com/sgl-project/sglang) - fast LLM serving engine | stars +680 · HN #12 | `trending` `paper-backed` |</div>
+  <div class="md">
+    <table>
+      <thead><tr><th>#</th><th>Repo</th><th>Signals</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="rank">1</td><td><a href="#">vercel-labs/deepsec</a> <span class="desc">- AI security scanner</span></td><td class="mono-src">HN #1 · npm 1.2M/wk · reddit 340</td><td class="tag">fresh</td></tr>
+        <tr><td class="rank">2</td><td><a href="#">xai-org/grok-build</a> <span class="desc">- Grok Build is open source</span></td><td class="mono-src">stars +2.1k · HN #4 · reddit 180</td><td class="tag">trending · smart-money · fresh</td></tr>
+        <tr><td class="rank">3</td><td><a href="#">sgl-project/sglang</a> <span class="desc">- fast LLM serving engine</span></td><td class="mono-src">stars +680 · HN #12</td><td class="tag">trending · paper-backed</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Renders cleanly on GitHub / in docs. Raw source above, rendered below — same row model, table skin.</p>
+
+  <!-- HTML -->
+  <div class="kicker">3 · HTML  (--format html)</div>
+  <div class="cards">
+    <div class="card top">
+      <div class="num">1</div>
+      <div>
+        <div class="name"><a href="#">vercel-labs/deepsec</a><span class="desc"> - AI security scanner</span></div>
+        <div class="chips">
+          <span class="chip"><span class="dotc" style="background:var(--hn)"></span>HN #1</span>
+          <span class="chip"><span class="dotc" style="background:var(--npm)"></span>npm 1.2M/wk</span>
+          <span class="chip"><span class="dotc" style="background:var(--reddit)"></span>reddit 340</span>
+        </div>
+      </div>
+      <div class="right"><span class="flag fresh">FRESH</span></div>
+    </div>
+    <div class="card">
+      <div class="num">2</div>
+      <div>
+        <div class="name"><a href="#">xai-org/grok-build</a><span class="desc"> - Grok Build is open source</span></div>
+        <div class="chips">
+          <span class="chip"><span class="dotc" style="background:var(--stars)"></span>stars +2.1k</span>
+          <span class="chip"><span class="dotc" style="background:var(--hn)"></span>HN #4</span>
+          <span class="chip"><span class="dotc" style="background:var(--reddit)"></span>reddit 180</span>
+        </div>
+      </div>
+      <div class="right"><span class="flag trend hot">TRENDING</span><span class="flag money">SMART-MONEY</span><span class="flag fresh">FRESH</span></div>
+    </div>
+    <div class="card">
+      <div class="num">3</div>
+      <div>
+        <div class="name"><a href="#">sgl-project/sglang</a><span class="desc"> - fast LLM serving engine</span></div>
+        <div class="chips">
+          <span class="chip"><span class="dotc" style="background:var(--stars)"></span>stars +680</span>
+          <span class="chip"><span class="dotc" style="background:var(--hn)"></span>HN #12</span>
+        </div>
+      </div>
+      <div class="right"><span class="flag trend">TRENDING</span><span class="flag paper">PAPER-BACKED</span></div>
+    </div>
+  </div>
+  <p class="note">Theme-aware page, receipts as chips (source-colored dot), badges as flags, hover lift, clickable. Self-contained — <code>hotin repos --format html &gt; board.html</code>.</p>
+</div>
+</body>
+</html>
