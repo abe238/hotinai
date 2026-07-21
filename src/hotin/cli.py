@@ -5,6 +5,7 @@ import contextlib
 import json
 import math
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -16,40 +17,41 @@ from .canonical import canonicalize
 from .coerce import finite_float
 from .config import config_dir, env_path, load_config
 from .render import color, hyperlink, sanitize
-from .sources import insider_people, frontier, github, hfmodels, hfpapers, hn, npm, trends, reddit, smolai, youtube
+from .sources import (insider_people, frontier, github, hfmodels, hfpapers, hn,
+                      npm, trends, collections_ai, reddit, smolai, youtube)
 
 
+# Entities (the nouns, each self-ranked) + MANAGE verbs. The raw single-source
+# feeds (hn/npm/stars/trending/reddit/youtube) are NOT commands — they are
+# `repos --source <name>` values. `refresh` replaces the old ingest+update.
 COMMANDS = {
-    "hot": "show the hottest AI tools (the flagship board)",
-    "repos": "show trending AI repos (same as hot)",
-    "hn": "show Hacker News signals",
-    "npm": "show npm signals",
-    "stars": "show GitHub star growth",
-    "trending": "show trending repositories",
-    "reddit": "show Reddit signals",
-    "youtube": "show YouTube signals",
-    "models": "show AI models — frontier-lab press releases first, then HuggingFace trending",
-    "releases": "show press releases / blog posts from frontier AI lab blogs",
-    "papers": "show trending AI papers (HuggingFace)",
-    "news": "show recent AI news headlines (smol.ai / AINews)",
-    "people": "show the the influencer-stars source AI 1000 — ranked accounts shaping AI",
-    "search": "search cached tools",
-    "show": "show one tool",
+    "repos": "trending AI repos — the flagship board (default)",
+    "people": "the the influencer-stars source AI 1000 — ranked accounts shaping AI",
+    "models": "AI models — frontier-lab press releases + HuggingFace trending",
+    "papers": "trending AI papers (HuggingFace)",
+    "news": "recent AI news headlines (smol.ai / AINews)",
+    "brief": "a one-shot digest across every entity",
+    "refresh": "refresh all sources, record a snapshot, report health (--quiet = headless)",
     "setup": "check config, or schedule automatic refreshes (--schedule)",
-    "update": "update hotin",
-    "ingest": "refresh all sources and record the time series (for a scheduler)",
-    "brief": "a short daily digest of what's happening in AI",
+    "search": "search cached tools",
+    "show": "show one repo (owner/repo)",
     "about": "show project information",
 }
 _RETENTION_DAYS = 30.0
 _INGEST_DEPTH = 100
 
 _BADGE_COLORS = {"fresh": "32", "rising": "38;5;208", "viral": "38;5;198",
-                 "smart-money": "38;5;220", "paper-backed": "38;5;45"}
+                 "smart-money": "38;5;220", "paper-backed": "38;5;45", "trending": "38;5;99"}
 _ATTRIBUTION = "hotin · what's hot in AI · github.com/abe238/hotinai"
-# --limit only makes sense for commands that produce a ranked/list result.
-# update (refresh + health), setup, about, and show (one repo) don't take one.
-_LIST_COMMANDS = {"hot", "repos", "hn", "npm", "stars", "trending", "reddit", "youtube", "models", "releases", "papers", "news", "people", "search"}
+# `repos --source X` shows a single upstream feed instead of the fused board.
+_REPO_SOURCE_ADAPTERS = {
+    "stars": github, "trending": trends, "trends-ai": collections_ai,
+    "hn": hn, "npm": npm, "reddit": reddit, "youtube": youtube,
+}
+_SOURCE_CHOICES = tuple(_REPO_SOURCE_ADAPTERS)
+_FORMATS = ("text", "json", "md", "html")
+# Commands that produce a ranked/list result and take --limit.
+_LIST_COMMANDS = {"repos", "models", "papers", "news", "people", "search"}
 # Entity commands: (adapter, entity_type, metric weights for scoring, primary metric label).
 # Models rank by HuggingFace's trendingScore (heat right now), NOT lifetime
 # downloads — otherwise a hugely-adopted but old model (Kokoro-82M, ~10M
@@ -64,13 +66,17 @@ _ENTITY_COMMANDS = {
 def _add_global_flags(
     parser: argparse.ArgumentParser, suppress_defaults: bool = False, include_limit: bool = True
 ) -> None:
-    default = argparse.SUPPRESS if suppress_defaults else False
-    parser.add_argument("--json", action="store_true", default=default, help="emit JSON output")
-    parser.add_argument("--no-color", action="store_true", default=default, help="disable ANSI color")
-    parser.add_argument("--quiet", action="store_true", default=default, help="reduce output")
-    parser.add_argument("--verbose", action="store_true", default=default, help="increase output")
+    bdefault = argparse.SUPPRESS if suppress_defaults else False
+    parser.add_argument("--format", choices=_FORMATS,
+                        default=argparse.SUPPRESS if suppress_defaults else "text",
+                        help="output format: text (default), json, md, html")
+    parser.add_argument("--json", action="store_const", const="json", dest="format",
+                        default=argparse.SUPPRESS, help="shorthand for --format json")
+    parser.add_argument("--quiet", action="store_true", default=bdefault, help="reduce output")
+    parser.add_argument("--verbose", action="store_true", default=bdefault, help="show scores and extra detail")
     if include_limit:
-        parser.add_argument("--limit", type=int, default=argparse.SUPPRESS if suppress_defaults else None, metavar="N", help="limit results")
+        parser.add_argument("--limit", type=int, default=argparse.SUPPRESS if suppress_defaults else None,
+                            metavar="N", help="limit results (default 20)")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -80,15 +86,34 @@ def build_parser() -> argparse.ArgumentParser:
     for command, description in COMMANDS.items():
         subparser = subcommands.add_parser(command, help=description, description=description)
         _add_global_flags(subparser, suppress_defaults=True, include_limit=(command in _LIST_COMMANDS))
-        if command == "setup":
+        if command == "repos":
+            subparser.add_argument("--source", choices=_SOURCE_CHOICES, default=None,
+                                   help="show one upstream feed instead of the fused board")
+            subparser.add_argument("--since", default=None, metavar="Nd",
+                                   help="only repos active within a window (e.g. 30d, 2w, 12h)")
+            subparser.add_argument("--min-stars", type=int, default=None, metavar="N",
+                                   help="only repos with at least N stars")
+        elif command == "setup":
             subparser.add_argument("--check", action="store_true", help="check local configuration")
             subparser.add_argument("--schedule", choices=("daily", "twice", "off"), default=None,
-                                   help="install/remove a scheduled `hotin ingest` (daily=8am, twice=8am+8pm)")
+                                   help="install/remove a scheduled `hotin refresh` (daily=8am, twice=8am+8pm)")
         elif command == "search":
             subparser.add_argument("query", nargs="?", default=None, help="text to search for")
         elif command == "show":
             subparser.add_argument("repo", help="GitHub owner/repository")
     return parser
+
+
+def _since_days(value: Any) -> Optional[float]:
+    """Parse a `--since` window (Nd|Nw|Nh) to days. None if unset; raises ValueError on junk."""
+    if value is None:
+        return None
+    text = str(value).strip().lower()
+    match = re.fullmatch(r"(\d+)\s*([dwh])", text)
+    if not match:
+        raise ValueError("--since must look like 30d, 2w, or 12h")
+    n = int(match.group(1))
+    return {"d": n, "w": n * 7, "h": n / 24.0}[match.group(2)]
 
 
 def _setup_check() -> int:
@@ -112,7 +137,7 @@ def _apply_schedule(choice: str) -> int:
 
 def _prompt_schedule() -> Optional[str]:
     """Ask whether to schedule ingest. Returns 'daily'/'twice'/'off', or None if declined."""
-    print("\nKeep hotin fresh by running `hotin ingest` on a schedule?")
+    print("\nKeep hotin fresh by running `hotin refresh` on a schedule?")
     print("  1) once a day   (8am)")
     print("  2) twice a day  (8am & 8pm)")
     print("  n) no thanks")
@@ -174,7 +199,8 @@ def _dump_json(payload: object) -> None:
 
 
 def _color_enabled(arguments: argparse.Namespace) -> bool:
-    return sys.stdout.isatty() and not getattr(arguments, "no_color", False)
+    del arguments  # color follows the TTY; no manual flag
+    return sys.stdout.isatty()
 
 
 def _safe(value: object) -> str:
@@ -314,19 +340,43 @@ def _cache_session() -> Iterator[Any]:
 
 
 def _normal_limit(arguments: argparse.Namespace) -> Optional[int]:
-    limit = arguments.limit if arguments.limit is not None else 50
+    limit = arguments.limit if getattr(arguments, "limit", None) is not None else 20
     if limit < 0:
         print("limit must be zero or greater", file=sys.stderr)
         return None
     return limit
 
 
-def _single_source(command: str, arguments: argparse.Namespace) -> int:
+def _filter_repos(merged: Dict[str, dict], arguments: argparse.Namespace) -> Dict[str, dict]:
+    """Apply `repos --min-stars` / `--since` filters to the merged repo map."""
+    min_stars = getattr(arguments, "min_stars", None)
+    since_days = _since_days(getattr(arguments, "since", None))
+    if not min_stars and since_days is None:
+        return merged
+    cutoff = (time.time() - since_days * 86400.0) if since_days is not None else None
+    kept: Dict[str, dict] = {}
+    for repo_id, repo in merged.items():
+        signal = repo.get("signal") if isinstance(repo.get("signal"), dict) else {}
+        if min_stars and finite_float(signal.get("stars"), 0.0) < min_stars:
+            continue
+        if cutoff is not None:
+            # Best-effort: keep repos with a recent activity/creation epoch; a repo
+            # with no usable date is kept rather than hidden.
+            dates = [finite_float(signal.get(k)) for k in ("pushed_at", "created_at", "fetched_at")]
+            dates = [d for d in dates if d > 0]
+            if dates and max(dates) < cutoff:
+                continue
+        kept[repo_id] = repo
+    return kept
+
+
+def _repo_source(command: str, arguments: argparse.Namespace) -> int:
     sources: Dict[str, Tuple[Any, Callable[[dict], Tuple[str, float]]]] = {
         "hn": (hn, _signal_metric("hn_points")),
         "npm": (npm, _signal_metric("npm_growth", "npm_downloads_week")),
         "stars": (github, _signal_metric("stars")),
         "trending": (trends, _trend_metric),
+        "trends-ai": (collections_ai, _signal_metric("stars_growth")),
         "reddit": (reddit, _signal_metric("reddit_score")),
         "youtube": (youtube, _signal_metric("youtube_views")),
     }
@@ -677,7 +727,7 @@ def _brief(arguments: argparse.Namespace) -> int:
 
         enabled = _color_enabled(arguments)
         if not (repos or models or papers or news or releases):
-            print("Nothing in the store yet. Run `hotin ingest` (or `hotin hot`) first to populate it.")
+            print("Nothing in the store yet. Run `hotin refresh` (or `hotin`) first to populate it.")
             _attribution(arguments)
             return 0
 
@@ -732,13 +782,13 @@ def _brief(arguments: argparse.Namespace) -> int:
         return 0
 
 
-def _ingest(arguments: argparse.Namespace) -> int:
-    """Refresh every source (repos + papers + models), append the time series, prune.
+def _refresh(arguments: argparse.Namespace) -> int:
+    """Refresh every source (repos + papers + models), record a snapshot, prune, report health.
 
-    Designed to be run on a schedule. It is the writer that turns hotin's snapshot
-    into a continuous picture. A run that could not PERSIST (SQLite fell to the
-    in-memory cache) exits non-zero, since an in-memory store won't survive to the
-    next scheduled run.
+    Replaces the old `ingest` + `update`. It is the writer that turns hotin's
+    snapshot into a continuous picture, and `--quiet` is the headless/scheduler
+    mode. A run that could not PERSIST (SQLite fell to the in-memory cache) exits
+    non-zero, since an in-memory store won't survive to the next scheduled run.
     """
     run_id = "run-{}".format(int(time.time()))
     now = time.time()
@@ -769,12 +819,13 @@ def _ingest(arguments: argparse.Namespace) -> int:
             _dump_json({"run_id": run_id, "persisted": persisted,
                         "sources": [{"source": s.source, "status": s.status, "detail": s.detail} for s in statuses]})
         else:
-            for status in statuses:
-                detail = " — {}".format(_safe(status.detail)) if status.detail else ""
-                print("{}  {}{}".format(_safe(status.source), _safe(status.status), detail))
+            if not arguments.quiet:
+                for status in statuses:
+                    detail = " — {}".format(_safe(status.detail)) if status.detail else ""
+                    print("{}  {}{}".format(_safe(status.source), _safe(status.status), detail))
             print("run {} recorded — cache {}".format(run_id, "persisted" if persisted else "NOT persisted (in-memory)"))
         if not persisted:
-            print("ingest did not persist (SQLite unavailable); a scheduled run needs a durable store", file=sys.stderr)
+            print("refresh did not persist (SQLite unavailable); a scheduled run needs a durable store", file=sys.stderr)
     finally:
         cache.close()
     exit_code = 0 if persisted else 1
@@ -787,7 +838,19 @@ def _ingest(arguments: argparse.Namespace) -> int:
 def main(argv: Optional[List[str]] = None) -> int:
     parser = build_parser()
     arguments = parser.parse_args(argv)
-    command = arguments.command or "hot"
+    command = arguments.command or "repos"
+    # Derive the legacy `arguments.json` flag from --format so every existing
+    # handler keeps working; md/html land with the output renderer.
+    fmt = getattr(arguments, "format", "text")
+    arguments.json = (fmt == "json")
+    if fmt in ("md", "html"):
+        print("(--format {} lands with the output renderer; showing text)".format(fmt), file=sys.stderr)
+    # Validate --since early: junk is a clean error, never a traceback.
+    if getattr(arguments, "since", None) is not None:
+        try:
+            _since_days(arguments.since)
+        except ValueError as exc:
+            parser.error(str(exc))
     if command == "setup":
         code = _setup_check() if arguments.check else _setup(arguments)
         _attribution(arguments)
@@ -804,23 +867,21 @@ def main(argv: Optional[List[str]] = None) -> int:
             print("hotin {} — What's hot in AI, from your terminal.".format(__version__))
             _attribution(arguments, force=True)
         return 0
-    if command in {"hn", "npm", "stars", "trending", "reddit", "youtube"}:
-        return _single_source(command, arguments)
-    if command == "releases":
-        return _releases(arguments)
     if command == "models":
         return _models(arguments)
     if command in _ENTITY_COMMANDS:
         return _entity_command(command, arguments)
-    if command == "ingest":
-        return _ingest(arguments)
+    if command == "refresh":
+        return _refresh(arguments)
     if command == "brief":
         return _brief(arguments)
     if command == "news":
         return _news(arguments)
     if command == "people":
         return _people(arguments)
-    if command in ("hot", "repos"):
+    if command == "repos":
+        if getattr(arguments, "source", None):
+            return _repo_source(arguments.source, arguments)
         limit = _normal_limit(arguments)
         if limit is None:
             return 2
@@ -835,6 +896,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             for repo_id, repo in merged.items():
                 if repo_id in links:
                     repo.setdefault("meta", {})["paper_backed"] = True
+            merged = _filter_repos(merged, arguments)
             engine.annotate_velocity(merged, cache)  # rising/viral from the observation store
             ranked = engine.rank(merged, limit=limit)
             # Health reflects the repo view specifically: a cache holding only
@@ -877,7 +939,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 if arguments.json:
                     _dump_json({"error": "not_cached", "repo": arguments.repo, "canonical_repo": canonical})
                 else:
-                    print("{} is not in the local cache yet — run `hotin hot` first to populate it.".format(_safe(arguments.repo)))
+                    print("{} is not in the local cache yet — run `hotin` first to populate it.".format(_safe(arguments.repo)))
             else:
                 scored = engine.score_repo(repo)
                 if arguments.json:
@@ -886,29 +948,6 @@ def main(argv: Optional[List[str]] = None) -> int:
                     _show_repo(scored, arguments)
             _attribution(arguments)
             return 0
-    if command == "update":
-        # update just refreshes every source and reports health; it isn't a ranked
-        # list, so it takes no --limit. Refresh to a sensible fixed depth.
-        with _cache_session() as cache:
-            statuses = engine.fetch_all(load_config(), limit=50, cache=cache, ttl=0)
-            exit_code, message = health.summarize(statuses, cache_has_data=bool(cache.get_all()))
-            if arguments.json:
-                _dump_json({"sources": [{"source": status.source, "status": status.status, "detail": status.detail} for status in statuses]})
-            else:
-                for status in statuses:
-                    detail = " — {}".format(_safe(status.detail)) if status.detail else ""
-                    print("{}  {}{}".format(_safe(status.source), _safe(status.status), detail))
-            if exit_code:
-                print(_safe(message), file=sys.stderr)
-            _attribution(arguments)
-        # Like `hot`: adapters can leave non-daemon network workers behind after
-        # the fetch deadline (e.g. a source still inside urlopen, or a throttle
-        # honoring a long server retry delay), which would otherwise block a
-        # normal interpreter exit for seconds to minutes. os._exit skips that join.
-        sys.stdout.flush()
-        sys.stderr.flush()
-        os._exit(exit_code)
-        return exit_code  # Allows unit tests to substitute os._exit().
     print("{}: not yet implemented".format(command))
     return 0
 

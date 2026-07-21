@@ -2,8 +2,8 @@ from hotin import schedule
 
 
 def test_cron_line_daily_and_twice():
-    assert schedule.cron_line("daily", "/py") == "0 8 * * * /py -m hotin ingest # hotin-managed"
-    assert schedule.cron_line("twice", "/py").startswith("0 8,20 * * * /py -m hotin ingest")
+    assert schedule.cron_line("daily", "/py") == "0 8 * * * /py -m hotin refresh --quiet # hotin-managed"
+    assert schedule.cron_line("twice", "/py").startswith("0 8,20 * * * /py -m hotin refresh --quiet")
 
 
 def test_merged_crontab_replaces_our_block_and_preserves_user_lines():

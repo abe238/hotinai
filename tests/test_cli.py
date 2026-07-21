@@ -57,7 +57,7 @@ def test_hot_prints_ranked_json_from_seeded_cache(monkeypatch, capsys):
     monkeypatch.setattr(cli, "open_cache", lambda: cache)
     monkeypatch.setattr(cli.engine, "fetch_all", fetch_all)
 
-    assert main(["hot", "--json", "--limit", "5"]) == 0
+    assert main(["repos", "--json", "--limit", "5"]) == 0
     output = json.loads(capsys.readouterr().out)
     assert output["tools"][0]["name"] == "Acme Agent"
     assert output["tools"][0]["category"] == "agents"
@@ -70,12 +70,12 @@ def test_hot_limit_zero_returns_zero_tools(monkeypatch, capsys):
     monkeypatch.setattr(cli, "open_cache", lambda: cache)
     monkeypatch.setattr(cli.engine, "fetch_all", lambda *args, **kwargs: [SourceStatus("github", "empty")])
 
-    assert main(["hot", "--json", "--limit", "0"]) == 0
+    assert main(["repos", "--json", "--limit", "0"]) == 0
     assert json.loads(capsys.readouterr().out)["tools"] == []
 
 
 def test_hot_rejects_negative_limit(capsys):
-    assert main(["hot", "--limit", "-1"]) == 2
+    assert main(["repos", "--limit", "-1"]) == 2
     assert "limit must be zero or greater" in capsys.readouterr().err
 
 
@@ -93,7 +93,7 @@ def test_hot_json_sanitizes_nonfinite_raw_signal(monkeypatch, capsys):
     monkeypatch.setattr(cli, "open_cache", lambda: cache)
     monkeypatch.setattr(cli.engine, "fetch_all", fetch_all)
 
-    assert main(["hot", "--json"]) == 0
+    assert main(["repos", "--json"]) == 0
     output = json.loads(capsys.readouterr().out)
     assert output["tools"][0]["signal"]["stars"] is None
 
@@ -112,7 +112,7 @@ def test_hot_exits_immediately_after_output(monkeypatch, statuses, expected_exit
     monkeypatch.setattr(cli.engine, "fetch_all", lambda *args, **kwargs: statuses)
     monkeypatch.setattr(cli.os, "_exit", exit_codes.append)
 
-    assert main(["hot", "--json"]) == expected_exit_code
+    assert main(["repos", "--json"]) == expected_exit_code
     assert exit_codes == [expected_exit_code]
 
 
@@ -142,7 +142,7 @@ def test_single_source_commands_sort_live_adapter_records(monkeypatch, capsys, c
     adapter = getattr(cli, adapter_name)
     monkeypatch.setattr(adapter, "fetch", lambda **kwargs: {"records": records, "status": "ok", "detail": None})
 
-    assert main([command, "--limit", "2"]) == 0
+    assert main(["repos", "--source", command, "--limit", "2"]) == 0
     assert capsys.readouterr().out.splitlines()[0].endswith(first_name)
 
 
@@ -150,17 +150,17 @@ def test_single_source_commands_sort_live_adapter_records(monkeypatch, capsys, c
 def test_single_source_errors_and_empty_results(monkeypatch, capsys, command, adapter_name):
     adapter = getattr(cli, adapter_name)
     monkeypatch.setattr(adapter, "fetch", lambda **kwargs: {"records": [], "status": "error", "detail": "network unavailable"})
-    assert main([command]) == 1
+    assert main(["repos", "--source", command]) == 1
     assert "network unavailable" in capsys.readouterr().err
 
     monkeypatch.setattr(adapter, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": "nothing found"})
-    assert main([command]) == 0
+    assert main(["repos", "--source", command]) == 0
     assert "No {} results".format(command) in capsys.readouterr().out
 
 
 def test_single_source_ok_without_usable_records_is_friendly(monkeypatch, capsys):
     monkeypatch.setattr(cli.hn, "fetch", lambda **kwargs: {"records": [], "status": "ok", "detail": None})
-    assert main(["hn"]) == 0
+    assert main(["repos", "--source", "hn"]) == 0
     assert "No hn results right now." in capsys.readouterr().out
 
 
@@ -217,7 +217,7 @@ def test_show_prints_provenance_and_missing_repo_is_normal(monkeypatch, capsys):
     assert "is not in the local cache yet" in capsys.readouterr().out
 
 
-def test_update_sets_zero_ttl_even_when_cache_is_fresh(monkeypatch, capsys):
+def test_refresh_sets_zero_ttl_and_reports_health(monkeypatch, capsys):
     cache = MemoryCache()
     cache.upsert(_cache_record("Fresh", "github", {"stars": 1}))
     seen = {}
@@ -228,8 +228,11 @@ def test_update_sets_zero_ttl_even_when_cache_is_fresh(monkeypatch, capsys):
 
     monkeypatch.setattr(cli, "open_cache", lambda: cache)
     monkeypatch.setattr(cli.engine, "fetch_all", fetch_all)
+    monkeypatch.setattr(cli.hfmodels, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
+    monkeypatch.setattr(cli.hfpapers, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
 
-    assert main(["update"]) == 0
+    # refresh records a snapshot + is strict about persistence: MemoryCache -> exit 1.
+    assert main(["refresh"]) == 1
     assert seen["ttl"] == 0
     assert "github  ok — refreshed" in capsys.readouterr().out
 
@@ -273,14 +276,14 @@ def test_hostile_adapter_text_is_never_rendered_as_terminal_control(monkeypatch,
     monkeypatch.setattr(cli.engine, "fetch_all", lambda *args, **kwargs: [SourceStatus("hn", "ok")])
     monkeypatch.setattr(cli.hn, "fetch", lambda **kwargs: {"records": [_source_record(hostile, {"hn_points": 10}, source="hn")], "status": "ok", "detail": None})
 
-    for argv in (["hot"], ["search", "agent"], ["show", "acme/agent"], ["hn"]):
+    for argv in (["repos"], ["search", "agent"], ["show", "acme/agent"], ["repos", "--source", "hn"]):
         assert main(argv) == 0
         output = capsys.readouterr().out
         assert "\x1b[31m" not in output
         assert "\u202e" not in output
 
 
-def test_badge_colors_respect_no_color_and_non_tty(monkeypatch, tmp_path, capsys):
+def test_badge_colors_follow_the_tty(monkeypatch, tmp_path, capsys):
     cache = MemoryCache()
     # pushed_at=now earns the (activity-based) "fresh" badge so there is a
     # colored badge to assert on; this test is about color on/off, not freshness.
@@ -290,12 +293,10 @@ def test_badge_colors_respect_no_color_and_non_tty(monkeypatch, tmp_path, capsys
     monkeypatch.setattr(cli.engine, "fetch_all", lambda *args, **kwargs: [SourceStatus("github", "ok")])
     monkeypatch.setattr(cli.sys.stdout, "isatty", lambda: True)
 
-    assert main(["hot", "--quiet"]) == 0
+    assert main(["repos", "--quiet"]) == 0
     assert "\x1b[" in capsys.readouterr().out
-    assert main(["hot", "--quiet", "--no-color"]) == 0
-    assert "\x1b[" not in capsys.readouterr().out
     monkeypatch.setattr(cli.sys.stdout, "isatty", lambda: False)
-    assert main(["hot", "--quiet"]) == 0
+    assert main(["repos", "--quiet"]) == 0
     assert "\x1b[" not in capsys.readouterr().out
 
 
@@ -371,7 +372,7 @@ def test_ingest_records_observations_and_is_strict_about_persistence(monkeypatch
     monkeypatch.setattr(cli.hfpapers, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
 
     # MemoryCache cannot persist a scheduled run -> exit 1 (strict).
-    assert main(["ingest", "--json"]) == 1
+    assert main(["refresh", "--json"]) == 1
     out = json.loads(capsys.readouterr().out)
     assert out["persisted"] is False
     assert out["run_id"].startswith("run-")
@@ -443,7 +444,7 @@ def test_brief_empty_store_is_friendly(monkeypatch, capsys):
     monkeypatch.setattr(cli.smolai, "_request", lambda: None)  # offline: no news section
     monkeypatch.setattr(cli.frontier, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
     assert main(["brief"]) == 0
-    assert "Run `hotin ingest`" in capsys.readouterr().out
+    assert "Run `hotin refresh`" in capsys.readouterr().out
 
 
 def test_news_command_shows_smol_headlines(monkeypatch, capsys):
