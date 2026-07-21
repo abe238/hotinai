@@ -1,8 +1,8 @@
-"""Install/remove a scheduled ``hotin ingest`` job to keep the store fresh.
+"""Install/remove a scheduled ``hotin refresh`` job to keep the store fresh.
 
 Cross-platform and stdlib-only: a managed ``crontab`` block on Unix/macOS, a
 set of ``schtasks`` entries on Windows. The scheduled command is
-``<python> -m hotin ingest`` (an absolute interpreter path always resolves under
+``<python> -m hotin refresh --quiet`` (an absolute interpreter path always resolves under
 cron's minimal PATH). Everything here is best-effort and reports what it did;
 the pure helpers (time spec, cron block editing, task names) are unit-tested,
 the thin subprocess wrappers are not.
@@ -25,7 +25,7 @@ _TASK_PREFIX = "hotin-ingest"  # Windows scheduled-task name prefix
 
 
 def _command(python_exe: str) -> str:
-    return "{} -m hotin ingest".format(python_exe)
+    return "{} -m hotin refresh --quiet".format(python_exe)
 
 
 def cron_line(frequency: str, python_exe: str) -> str:
@@ -98,7 +98,7 @@ def install(frequency: str, python_exe: Optional[str] = None) -> str:
     else:
         _apply_unix(frequency, python_exe)
         where = "crontab"
-    return "scheduled `hotin ingest` daily at {} via {}".format(times, where)
+    return "scheduled `hotin refresh` daily at {} via {}".format(times, where)
 
 
 def remove() -> str:
@@ -111,7 +111,7 @@ def remove() -> str:
 
 
 def demo() -> None:
-    assert cron_line("daily", "/py").startswith("0 8 * * * /py -m hotin ingest")
+    assert cron_line("daily", "/py").startswith("0 8 * * * /py -m hotin refresh --quiet")
     assert cron_line("twice", "/py").startswith("0 8,20 * * *")
     # our block replaces cleanly and never touches the user's own lines
     user = "0 5 * * * backup.sh"
