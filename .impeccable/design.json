@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-20T05:30:00Z",
+  "title": "Design System: hotin",
+  "extensions": {
+    "colorMeta": {
+      "signal-green": { "role": "primary", "displayName": "Signal Green", "canonical": "#3fdd8a", "tonalRamp": ["#062f1c", "#0c4d2d", "#146d3f", "#1f9256", "#2fb96f", "#3fdd8a", "#7ee9ae", "#c0f4d6"] },
+      "prompt-amber": { "role": "secondary", "displayName": "Prompt Amber", "canonical": "#f2b45c", "tonalRamp": ["#3d2708", "#63400d", "#8c5c14", "#b87c22", "#d99a3c", "#f2b45c", "#f7cb8c", "#fbe3bc"] },
+      "status-violet": { "role": "tertiary", "displayName": "Status Violet", "canonical": "#a98bf5", "tonalRamp": ["#251746", "#3c2673", "#573a9e", "#7454c8", "#8f6fe4", "#a98bf5", "#c3aef9", "#ddd1fc"] },
+      "terminal-void": { "role": "neutral", "displayName": "Terminal Void", "canonical": "#0a0e14", "tonalRamp": ["#020304", "#05070a", "#0a0e14", "#111722", "#1e2733", "#3a4552", "#6b7684", "#a3aab3"] },
+      "phosphor-white": { "role": "neutral", "displayName": "Phosphor White", "canonical": "#e6edf3", "tonalRamp": ["#3a4552", "#5a6675", "#8b98a9", "#b4bfc9", "#d0d9e0", "#e6edf3", "#f2f6f9", "#fafcfd"] },
+      "faint-slate": { "role": "neutral", "displayName": "Faint Slate", "canonical": "#7a8696", "tonalRamp": ["#2a3038", "#3f4750", "#556069", "#6b7681", "#7a8696", "#96a0ac", "#b6bfc8", "#dadee3"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The single H1 only. Not reused elsewhere." },
+      "label": { "displayName": "Label", "purpose": "Status pill only, since the eyebrow kicker was removed." },
+      "ui-label": { "displayName": "UI Label", "purpose": "Button labels: primary CTA and the copy-install button." },
+      "mono-row": { "displayName": "Mono Row", "purpose": "Ranked result rows inside the terminal demo panel." },
+      "caption": { "displayName": "Caption", "purpose": "Terminal window title-bar label and the footer." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "hover-border", "value": "border-color 0.15s cubic-bezier(.16,1,.3,1)", "purpose": "Buttons shifting border-color to signal-green on hover." },
+      { "name": "row-reveal", "value": "opacity/transform 0.5s cubic-bezier(.16,1,.3,1), staggered 0.25s per row", "purpose": "Terminal demo rows fade-and-rise into view on load. Disabled entirely under prefers-reduced-motion (rows show instantly)." },
+      { "name": "cursor-blink", "value": "opacity step-end 1s infinite", "purpose": "Terminal cursor block blink after the $ hotin line. Disabled under prefers-reduced-motion." }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Terminal Demo Panel",
+      "kind": "custom",
+      "refersTo": "terminal-demo",
+      "description": "The hero image: a windowed terminal that live-types the command and stages ranked results into view. The page's signature component.",
+      "html": "<div class=\"ds-term\" role=\"img\" aria-label=\"Simulated hotin terminal output\"><div class=\"ds-term-bar\"><span class=\"ds-term-dot\"></span><span class=\"ds-term-dot\"></span><span class=\"ds-term-dot\"></span><span class=\"ds-term-title\">zsh — hotin</span></div><div class=\"ds-term-body\"><div class=\"ds-term-prompt\"><span class=\"ds-term-dollar\">$</span>hotin<span class=\"ds-cursor\" aria-hidden=\"true\"></span></div><div class=\"ds-term-row\"><span class=\"ds-rank\">1</span><span class=\"ds-name\">vercel/next.js</span><span class=\"ds-tag\">↑ npm · HN #1</span></div></div></div>",
+      "css": ".ds-term { text-align: left; background: #111722; border: 1px solid #1e2733; border-radius: 10px; overflow: hidden; font-family: ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, Consolas, monospace; } .ds-term-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #1e2733; } .ds-term-dot { width: 9px; height: 9px; border-radius: 50%; background: #1e2733; } .ds-term-title { font-size: 11px; color: #7a8696; margin-left: 6px; } .ds-term-body { padding: 16px 18px 20px; font-size: 13.5px; line-height: 1.9; } .ds-term-prompt { color: #f2b45c; } .ds-term-dollar { color: #7a8696; margin-right: 8px; } .ds-cursor { display: inline-block; width: 7px; height: 15px; background: #3fdd8a; margin-left: 2px; vertical-align: -2px; animation: ds-blink 1s step-end infinite; } .ds-term-row { display: flex; gap: 10px; color: #8b98a9; } .ds-rank { color: #3fdd8a; width: 2ch; flex: none; text-align: right; } .ds-name { color: #e6edf3; } .ds-tag { color: #a98bf5; } @keyframes ds-blink { 50% { opacity: 0; } } @media (prefers-reduced-motion: reduce) { .ds-cursor { animation: none; } }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Signal-green bordered CTA: star the repo.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">⭐ Star it on GitHub</a>",
+      "css": ".ds-btn-primary { font-family: ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, Consolas, monospace; font-size: 14px; color: #3fdd8a; text-decoration: none; border: 1px solid #3fdd8a; background: #111722; border-radius: 8px; padding: 11px 18px; transition: border-color 0.15s ease, color 0.15s ease; display: inline-flex; align-items: center; gap: 8px; } .ds-btn-primary:hover { border-color: #7ee9ae; color: #7ee9ae; } .ds-btn-primary:focus-visible { outline: 2px solid #3fdd8a; outline-offset: 2px; }"
+    },
+    {
+      "name": "Copy Install Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Real copy-to-clipboard button (not a link); swaps label to a confirmation on click.",
+      "html": "<button class=\"ds-btn-secondary\" type=\"button\">$ pipx install hotin</button>",
+      "css": ".ds-btn-secondary { font-family: ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, Consolas, monospace; font-size: 14px; color: #e6edf3; border: 1px solid #1e2733; background: #111722; border-radius: 8px; padding: 11px 18px; cursor: pointer; transition: border-color 0.15s ease; display: inline-flex; align-items: center; gap: 8px; } .ds-btn-secondary:hover { border-color: #3fdd8a; } .ds-btn-secondary:focus-visible { outline: 2px solid #3fdd8a; outline-offset: 2px; } .ds-btn-secondary.is-copied { color: #3fdd8a; border-color: #3fdd8a; }"
+    },
+    {
+      "name": "Status Pill",
+      "kind": "chip",
+      "refersTo": "status-pill",
+      "description": "Honest pre-launch status badge, sentence case (not uppercase).",
+      "html": "<span class=\"ds-status\">still cooking · install anyway</span>",
+      "css": ".ds-status { font-family: ui-monospace, \"SF Mono\", \"JetBrains Mono\", Menlo, Consolas, monospace; font-size: 12px; letter-spacing: 0.06em; color: #a98bf5; border: 1px solid rgba(169,139,245,0.35); background: rgba(169,139,245,0.07); border-radius: 20px; padding: 6px 16px; display: inline-block; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Terminal That Talks Back",
+    "overview": "hotin.ai is a single dark hero built around one idea: don't describe the tool, run it. The centerpiece is a windowed terminal panel that live-types `$ hotin` and stages a ranked result list into view on load — the actual product experience, staged as the page's own hero image, not a stock screenshot or an icon grid. Everything else is quiet by comparison: a near-black, blue-tinted void lit by a single green signal color, a serif headline as the one warm human voice against otherwise all-monospace chrome, and copy that's honest and a little wry rather than corporate. Two soft radial gradients keep the flat black from feeling empty without ever reaching for a gradient-fill hero.",
+    "keyCharacteristics": [
+      "A live-staged terminal demo as the hero image — show, don't tell, taken literally",
+      "Near-black terminal void, lit by a single green signal color, not a neutral dark gray",
+      "Serif display against all-monospace UI chrome: one deliberate contrast axis",
+      "Flat by construction: no shadows anywhere; depth via hairline borders and radial glow",
+      "Honest, wry copy over corporate polish: no fake proof, no construction-cone cliché"
+    ],
+    "rules": [
+      { "name": "The One Job Rule", "body": "Every accent color (signal, amber, violet) has exactly one assigned use across the page.", "section": "colors" },
+      { "name": "The Serif-Is-Singular Rule", "body": "The serif face appears in exactly one place: the H1.", "section": "typography" },
+      { "name": "The No-Shadow Rule", "body": "Depth comes from border + glow, never from box-shadow, including on the terminal panel.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep every accent color to its one assigned job",
+      "Do keep depth border-and-glow based",
+      "Do keep the serif face confined to the H1",
+      "Do keep the terminal demo panel's data honestly staged/simulated, never implying a live API call or real usage numbers",
+      "Do respect prefers-reduced-motion for the row-reveal and cursor-blink animations"
+    ],
+    "donts": [
+      "Don't add a second serif or display face",
+      "Don't introduce box-shadow anywhere",
+      "Don't reuse prompt-amber or status-violet outside their current single roles",
+      "Don't reintroduce a small-caps, wide-tracked eyebrow kicker above the headline",
+      "Don't add fake social proof (star counts, testimonials, used-by logos) before there's real proof on hand"
+    ]
+  }
+}
