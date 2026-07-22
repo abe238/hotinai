@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-22",
-  "generated_pt": "Jul 22, 2026 \u00b7 5:00 AM PT",
+  "generated_pt": "Jul 22, 2026 \u00b7 8:00 AM PT",
   "entities": {
     "repos": [
       {
@@ -126,7 +126,7 @@
             "kind": "insiders"
           },
           {
-            "label": "14.3k stars",
+            "label": "14.4k stars",
             "kind": "stars"
           }
         ],
@@ -148,7 +148,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "30.4k stars",
+            "label": "30.5k stars",
             "kind": "stars"
           }
         ],
@@ -434,7 +434,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "16.9k stars",
+            "label": "17.1k stars",
             "kind": "stars"
           }
         ],
@@ -460,7 +460,7 @@
             "kind": "insiders"
           },
           {
-            "label": "7.6k stars",
+            "label": "7.8k stars",
             "kind": "stars"
           }
         ],
@@ -538,6 +538,24 @@
       },
       {
         "rank": 24,
+        "name": "lidge-jun/opencodex",
+        "url": "https://github.com/lidge-jun/opencodex",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "3.4k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 25,
         "name": "iofficeai/officecli",
         "url": "https://github.com/iofficeai/officecli",
         "meta": "OfficeCLI: Office suite for AI agents to read and edit Microsoft Office files",
@@ -550,7 +568,7 @@
         "badges": []
       },
       {
-        "rank": 25,
+        "rank": 26,
         "name": "stupside/castor",
         "url": "https://github.com/stupside/castor",
         "meta": "Better and Cheaper Than IPTV",
@@ -563,13 +581,13 @@
         "badges": []
       },
       {
-        "rank": 26,
+        "rank": 27,
         "name": "DietrichGebert/ponytail",
         "url": "https://github.com/DietrichGebert/ponytail",
         "meta": null,
         "receipts": [
           {
-            "label": "87.6k stars",
+            "label": "87.7k stars",
             "kind": "stars"
           }
         ],
@@ -585,7 +603,7 @@
         ]
       },
       {
-        "rank": 27,
+        "rank": 28,
         "name": "odysseus-dev/odysseus",
         "url": "https://github.com/odysseus-dev/odysseus",
         "meta": null,
@@ -607,7 +625,7 @@
         ]
       },
       {
-        "rank": 28,
+        "rank": 29,
         "name": "nexu-io/open-design",
         "url": "https://github.com/nexu-io/open-design",
         "meta": null,
@@ -629,7 +647,7 @@
         ]
       },
       {
-        "rank": 29,
+        "rank": 30,
         "name": "handy-computer/transcribe.cpp",
         "url": "https://github.com/handy-computer/transcribe.cpp",
         "meta": null,
@@ -651,35 +669,13 @@
         ]
       },
       {
-        "rank": 30,
+        "rank": 31,
         "name": "antirez/ds4",
         "url": "https://github.com/antirez/ds4",
         "meta": null,
         "receipts": [
           {
-            "label": "19k stars",
-            "kind": "stars"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 31,
-        "name": "Nutlope/hallmark",
-        "url": "https://github.com/Nutlope/hallmark",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "15.3k stars",
+            "label": "19.1k stars",
             "kind": "stars"
           }
         ],
@@ -696,6 +692,28 @@
       },
       {
         "rank": 32,
+        "name": "Nutlope/hallmark",
+        "url": "https://github.com/Nutlope/hallmark",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "15.4k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 33,
         "name": "XiaomiMiMo/MiMo-Code",
         "url": "https://github.com/XiaomiMiMo/MiMo-Code",
         "meta": null,
@@ -717,7 +735,7 @@
         ]
       },
       {
-        "rank": 33,
+        "rank": 34,
         "name": "t8y2/dbx",
         "url": "https://github.com/t8y2/dbx",
         "meta": null,
@@ -739,7 +757,7 @@
         ]
       },
       {
-        "rank": 34,
+        "rank": 35,
         "name": "alibaba/open-code-review",
         "url": "https://github.com/alibaba/open-code-review",
         "meta": null,
@@ -761,7 +779,7 @@
         ]
       },
       {
-        "rank": 35,
+        "rank": 36,
         "name": "virgiliojr94/book-to-skill",
         "url": "https://github.com/virgiliojr94/book-to-skill",
         "meta": null,
@@ -783,7 +801,7 @@
         ]
       },
       {
-        "rank": 36,
+        "rank": 37,
         "name": "zhaoxuya520/reverse-skill",
         "url": "https://github.com/zhaoxuya520/reverse-skill",
         "meta": null,
@@ -805,7 +823,7 @@
         ]
       },
       {
-        "rank": 37,
+        "rank": 38,
         "name": "freestylefly/awesome-gpt-image-2",
         "url": "https://github.com/freestylefly/awesome-gpt-image-2",
         "meta": null,
@@ -827,7 +845,7 @@
         ]
       },
       {
-        "rank": 38,
+        "rank": 39,
         "name": "EpicGames/lore",
         "url": "https://github.com/EpicGames/lore",
         "meta": null,
@@ -849,7 +867,7 @@
         ]
       },
       {
-        "rank": 39,
+        "rank": 40,
         "name": "nexu-io/html-anything",
         "url": "https://github.com/nexu-io/html-anything",
         "meta": null,
@@ -871,7 +889,7 @@
         ]
       },
       {
-        "rank": 40,
+        "rank": 41,
         "name": "simonlin1212/a-stock-data",
         "url": "https://github.com/simonlin1212/a-stock-data",
         "meta": null,
@@ -893,7 +911,7 @@
         ]
       },
       {
-        "rank": 41,
+        "rank": 42,
         "name": "omnigent-ai/omnigent",
         "url": "https://github.com/omnigent-ai/omnigent",
         "meta": null,
@@ -915,7 +933,7 @@
         ]
       },
       {
-        "rank": 42,
+        "rank": 43,
         "name": "AprilNEA/OpenLogi",
         "url": "https://github.com/AprilNEA/OpenLogi",
         "meta": null,
@@ -937,7 +955,7 @@
         ]
       },
       {
-        "rank": 43,
+        "rank": 44,
         "name": "FULU-Foundation/OrcaSlicer-bambulab",
         "url": "https://github.com/FULU-Foundation/OrcaSlicer-bambulab",
         "meta": null,
@@ -959,13 +977,13 @@
         ]
       },
       {
-        "rank": 44,
+        "rank": 45,
         "name": "StarTrail-org/PixelRAG",
         "url": "https://github.com/StarTrail-org/PixelRAG",
         "meta": null,
         "receipts": [
           {
-            "label": "7k stars",
+            "label": "7.1k stars",
             "kind": "stars"
           }
         ],
@@ -981,7 +999,7 @@
         ]
       },
       {
-        "rank": 45,
+        "rank": 46,
         "name": "open-gsd/gsd-core",
         "url": "https://github.com/open-gsd/gsd-core",
         "meta": null,
@@ -1003,7 +1021,7 @@
         ]
       },
       {
-        "rank": 46,
+        "rank": 47,
         "name": "simplifaisoul/osiris",
         "url": "https://github.com/simplifaisoul/osiris",
         "meta": null,
@@ -1025,7 +1043,7 @@
         ]
       },
       {
-        "rank": 47,
+        "rank": 48,
         "name": "Imbad0202/academic-research-skills-codex",
         "url": "https://github.com/Imbad0202/academic-research-skills-codex",
         "meta": null,
@@ -1047,7 +1065,7 @@
         ]
       },
       {
-        "rank": 48,
+        "rank": 49,
         "name": "vercel-labs/native",
         "url": "https://github.com/vercel-labs/native",
         "meta": null,
@@ -1069,7 +1087,7 @@
         ]
       },
       {
-        "rank": 49,
+        "rank": 50,
         "name": "deepseek-ai/DeepSpec",
         "url": "https://github.com/deepseek-ai/DeepSpec",
         "meta": null,
@@ -1091,7 +1109,7 @@
         ]
       },
       {
-        "rank": 50,
+        "rank": 51,
         "name": "anthropics/defending-code-reference-harness",
         "url": "https://github.com/anthropics/defending-code-reference-harness",
         "meta": null,
@@ -1113,7 +1131,7 @@
         ]
       },
       {
-        "rank": 51,
+        "rank": 52,
         "name": "teamchong/pxpipe",
         "url": "https://github.com/teamchong/pxpipe",
         "meta": null,
@@ -1135,7 +1153,29 @@
         ]
       },
       {
-        "rank": 52,
+        "rank": 53,
+        "name": "unicity-aos/aos-ce",
+        "url": "https://github.com/unicity-aos/aos-ce",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.4k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 54,
         "name": "opensquilla/opensquilla",
         "url": "https://github.com/opensquilla/opensquilla",
         "meta": null,
@@ -1157,29 +1197,7 @@
         ]
       },
       {
-        "rank": 53,
-        "name": "unicity-aos/aos-ce",
-        "url": "https://github.com/unicity-aos/aos-ce",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "6.2k stars",
-            "kind": "stars"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 54,
+        "rank": 55,
         "name": "zgwl/chinese-buy-us-stock-guide",
         "url": "https://github.com/zgwl/chinese-buy-us-stock-guide",
         "meta": null,
@@ -1201,7 +1219,7 @@
         ]
       },
       {
-        "rank": 55,
+        "rank": 56,
         "name": "1weiho/open-slide",
         "url": "https://github.com/1weiho/open-slide",
         "meta": null,
@@ -1223,7 +1241,7 @@
         ]
       },
       {
-        "rank": 56,
+        "rank": 57,
         "name": "XBuilderLAB/cheat-on-content",
         "url": "https://github.com/XBuilderLAB/cheat-on-content",
         "meta": null,
@@ -1245,7 +1263,7 @@
         ]
       },
       {
-        "rank": 57,
+        "rank": 58,
         "name": "datawhalechina/Agent-Learning-Hub",
         "url": "https://github.com/datawhalechina/Agent-Learning-Hub",
         "meta": null,
@@ -1267,35 +1285,13 @@
         ]
       },
       {
-        "rank": 58,
+        "rank": 59,
         "name": "erincatto/box3d",
         "url": "https://github.com/erincatto/box3d",
         "meta": null,
         "receipts": [
           {
             "label": "5.5k stars",
-            "kind": "stars"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 59,
-        "name": "KunAgent/Kun",
-        "url": "https://github.com/KunAgent/Kun",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "5.4k stars",
             "kind": "stars"
           }
         ],
@@ -1426,24 +1422,6 @@
       },
       {
         "rank": 6,
-        "name": "google/gnm",
-        "url": "https://github.com/google/gnm",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "\u2605 andrew_n_carr +1 insiders",
-            "kind": "insiders"
-          }
-        ],
-        "badges": [
-          {
-            "label": "smart-money",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 7,
         "name": "lmcache/lmcache",
         "url": "https://github.com/lmcache/lmcache",
         "meta": null,
@@ -1461,7 +1439,7 @@
         ]
       },
       {
-        "rank": 8,
+        "rank": 7,
         "name": "nstiwari/webgemma",
         "url": "https://github.com/nstiwari/webgemma",
         "meta": null,
@@ -1479,7 +1457,7 @@
         ]
       },
       {
-        "rank": 9,
+        "rank": 8,
         "name": "pixel-point/aval",
         "url": "https://github.com/pixel-point/aval",
         "meta": null,
@@ -1497,7 +1475,7 @@
         ]
       },
       {
-        "rank": 10,
+        "rank": 9,
         "name": "tavianator/bfs",
         "url": "https://github.com/tavianator/bfs",
         "meta": null,
@@ -1515,7 +1493,7 @@
         ]
       },
       {
-        "rank": 11,
+        "rank": 10,
         "name": "ymichael/bb",
         "url": "https://github.com/ymichael/bb",
         "meta": null,
@@ -1533,7 +1511,7 @@
         ]
       },
       {
-        "rank": 12,
+        "rank": 11,
         "name": "aisa-group/researcharena",
         "url": "https://github.com/aisa-group/researcharena",
         "meta": null,
@@ -1551,7 +1529,7 @@
         ]
       },
       {
-        "rank": 13,
+        "rank": 12,
         "name": "allenai/olmes",
         "url": "https://github.com/allenai/olmes",
         "meta": null,
@@ -1569,7 +1547,7 @@
         ]
       },
       {
-        "rank": 14,
+        "rank": 13,
         "name": "allenai/wildguard",
         "url": "https://github.com/allenai/wildguard",
         "meta": null,
@@ -1587,7 +1565,7 @@
         ]
       },
       {
-        "rank": 15,
+        "rank": 14,
         "name": "alpine-dav/ascent",
         "url": "https://github.com/alpine-dav/ascent",
         "meta": null,
@@ -1605,7 +1583,7 @@
         ]
       },
       {
-        "rank": 16,
+        "rank": 15,
         "name": "anima-research/chronicle",
         "url": "https://github.com/anima-research/chronicle",
         "meta": null,
@@ -1623,7 +1601,7 @@
         ]
       },
       {
-        "rank": 17,
+        "rank": 16,
         "name": "anima-research/connectome-host",
         "url": "https://github.com/anima-research/connectome-host",
         "meta": null,
@@ -1641,7 +1619,7 @@
         ]
       },
       {
-        "rank": 18,
+        "rank": 17,
         "name": "anima-research/wfe",
         "url": "https://github.com/anima-research/wfe",
         "meta": null,
@@ -1659,7 +1637,7 @@
         ]
       },
       {
-        "rank": 19,
+        "rank": 18,
         "name": "answerdotai/skill-plugins",
         "url": "https://github.com/answerdotai/skill-plugins",
         "meta": null,
@@ -1677,7 +1655,7 @@
         ]
       },
       {
-        "rank": 20,
+        "rank": 19,
         "name": "arcee-ai/nac",
         "url": "https://github.com/arcee-ai/nac",
         "meta": null,
@@ -1695,7 +1673,7 @@
         ]
       },
       {
-        "rank": 21,
+        "rank": 20,
         "name": "argonnecpac/diffsky",
         "url": "https://github.com/argonnecpac/diffsky",
         "meta": null,
@@ -1713,7 +1691,7 @@
         ]
       },
       {
-        "rank": 22,
+        "rank": 21,
         "name": "argonnecpac/opencosmo",
         "url": "https://github.com/argonnecpac/opencosmo",
         "meta": null,
@@ -1731,7 +1709,7 @@
         ]
       },
       {
-        "rank": 23,
+        "rank": 22,
         "name": "astropatty/cosmap",
         "url": "https://github.com/astropatty/cosmap",
         "meta": null,
@@ -1749,7 +1727,7 @@
         ]
       },
       {
-        "rank": 24,
+        "rank": 23,
         "name": "axiommath/imo2026",
         "url": "https://github.com/axiommath/imo2026",
         "meta": null,
@@ -1767,7 +1745,7 @@
         ]
       },
       {
-        "rank": 25,
+        "rank": 24,
         "name": "ayghri/i-have-adhd",
         "url": "https://github.com/ayghri/i-have-adhd",
         "meta": null,
@@ -1785,7 +1763,7 @@
         ]
       },
       {
-        "rank": 26,
+        "rank": 25,
         "name": "b-spline-policy/bspline-policy",
         "url": "https://github.com/b-spline-policy/bspline-policy",
         "meta": null,
@@ -1803,7 +1781,7 @@
         ]
       },
       {
-        "rank": 27,
+        "rank": 26,
         "name": "berops/claudie",
         "url": "https://github.com/berops/claudie",
         "meta": null,
@@ -1821,7 +1799,7 @@
         ]
       },
       {
-        "rank": 28,
+        "rank": 27,
         "name": "blaizzy/nativ",
         "url": "https://github.com/blaizzy/nativ",
         "meta": null,
@@ -1839,7 +1817,7 @@
         ]
       },
       {
-        "rank": 29,
+        "rank": 28,
         "name": "bledden/triton-msl",
         "url": "https://github.com/bledden/triton-msl",
         "meta": null,
@@ -1857,7 +1835,7 @@
         ]
       },
       {
-        "rank": 30,
+        "rank": 29,
         "name": "boogu-project/boogu-image",
         "url": "https://github.com/boogu-project/boogu-image",
         "meta": null,
@@ -1875,7 +1853,7 @@
         ]
       },
       {
-        "rank": 31,
+        "rank": 30,
         "name": "bytedance-seed/edgebench",
         "url": "https://github.com/bytedance-seed/edgebench",
         "meta": null,
@@ -1893,7 +1871,7 @@
         ]
       },
       {
-        "rank": 32,
+        "rank": 31,
         "name": "castorini/pyserini",
         "url": "https://github.com/castorini/pyserini",
         "meta": null,
@@ -1911,7 +1889,7 @@
         ]
       },
       {
-        "rank": 33,
+        "rank": 32,
         "name": "cgal/cgal",
         "url": "https://github.com/cgal/cgal",
         "meta": null,
@@ -1929,13 +1907,31 @@
         ]
       },
       {
-        "rank": 34,
+        "rank": 33,
         "name": "choochmeque/tauri-plugin-notifications",
         "url": "https://github.com/choochmeque/tauri-plugin-notifications",
         "meta": null,
         "receipts": [
           {
             "label": "\u2605 steipete \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 34,
+        "name": "chrislgarry/apollo-11",
+        "url": "https://github.com/chrislgarry/apollo-11",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 skirano \u00b7 insider",
             "kind": "insiders"
           }
         ],
@@ -2074,6 +2070,24 @@
       },
       {
         "rank": 42,
+        "name": "google/gnm",
+        "url": "https://github.com/google/gnm",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 deepfates \u00b7 insider",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 43,
         "name": "gregwar/microban",
         "url": "https://github.com/gregwar/microban",
         "meta": null,
@@ -2091,7 +2105,7 @@
         ]
       },
       {
-        "rank": 43,
+        "rank": 44,
         "name": "gumyr/build123d",
         "url": "https://github.com/gumyr/build123d",
         "meta": null,
@@ -2109,7 +2123,7 @@
         ]
       },
       {
-        "rank": 44,
+        "rank": 45,
         "name": "gwaithimirdain/narya",
         "url": "https://github.com/gwaithimirdain/narya",
         "meta": null,
@@ -2127,7 +2141,7 @@
         ]
       },
       {
-        "rank": 45,
+        "rank": 46,
         "name": "harbor-framework/terminal-bench-2",
         "url": "https://github.com/harbor-framework/terminal-bench-2",
         "meta": null,
@@ -2145,7 +2159,7 @@
         ]
       },
       {
-        "rank": 46,
+        "rank": 47,
         "name": "harbor-framework/terminal-bench-3",
         "url": "https://github.com/harbor-framework/terminal-bench-3",
         "meta": null,
@@ -2163,7 +2177,7 @@
         ]
       },
       {
-        "rank": 47,
+        "rank": 48,
         "name": "harveyai/harvey-labs",
         "url": "https://github.com/harveyai/harvey-labs",
         "meta": null,
@@ -2181,7 +2195,7 @@
         ]
       },
       {
-        "rank": 48,
+        "rank": 49,
         "name": "hkuds/deeptutor",
         "url": "https://github.com/hkuds/deeptutor",
         "meta": null,
@@ -2199,7 +2213,7 @@
         ]
       },
       {
-        "rank": 49,
+        "rank": 50,
         "name": "hugohe3/ppt-master",
         "url": "https://github.com/hugohe3/ppt-master",
         "meta": null,
@@ -2217,7 +2231,7 @@
         ]
       },
       {
-        "rank": 50,
+        "rank": 51,
         "name": "infatoshi/craftax.cu",
         "url": "https://github.com/infatoshi/craftax.cu",
         "meta": null,
@@ -2235,7 +2249,7 @@
         ]
       },
       {
-        "rank": 51,
+        "rank": 52,
         "name": "jamesx0416/chatlink",
         "url": "https://github.com/jamesx0416/chatlink",
         "meta": null,
@@ -2253,7 +2267,7 @@
         ]
       },
       {
-        "rank": 52,
+        "rank": 53,
         "name": "jaredks/rumps",
         "url": "https://github.com/jaredks/rumps",
         "meta": null,
@@ -2271,7 +2285,7 @@
         ]
       },
       {
-        "rank": 53,
+        "rank": 54,
         "name": "jmtomczak/vibeprompter",
         "url": "https://github.com/jmtomczak/vibeprompter",
         "meta": null,
@@ -2289,7 +2303,7 @@
         ]
       },
       {
-        "rank": 54,
+        "rank": 55,
         "name": "julian-adv/openmmo",
         "url": "https://github.com/julian-adv/openmmo",
         "meta": null,
@@ -2307,7 +2321,7 @@
         ]
       },
       {
-        "rank": 55,
+        "rank": 56,
         "name": "lablup/all-smi",
         "url": "https://github.com/lablup/all-smi",
         "meta": null,
@@ -2325,7 +2339,7 @@
         ]
       },
       {
-        "rank": 56,
+        "rank": 57,
         "name": "lamalab-org/openclatura",
         "url": "https://github.com/lamalab-org/openclatura",
         "meta": null,
@@ -2343,7 +2357,7 @@
         ]
       },
       {
-        "rank": 57,
+        "rank": 58,
         "name": "lean-dojo/torchlean",
         "url": "https://github.com/lean-dojo/torchlean",
         "meta": null,
@@ -2361,31 +2375,13 @@
         ]
       },
       {
-        "rank": 58,
-        "name": "lopopolo/harness-engineering",
-        "url": "https://github.com/lopopolo/harness-engineering",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "\u2605 deepfates \u00b7 insider",
-            "kind": "insiders"
-          }
-        ],
-        "badges": [
-          {
-            "label": "smart-money",
-            "hot": false
-          }
-        ]
-      },
-      {
         "rank": 59,
-        "name": "mainframecomputer/skills",
-        "url": "https://github.com/mainframecomputer/skills",
+        "name": "lijiaxin0111/open-d4rt",
+        "url": "https://github.com/lijiaxin0111/open-d4rt",
         "meta": null,
         "receipts": [
           {
-            "label": "\u2605 jsngr \u00b7 insider",
+            "label": "\u2605 andrew_n_carr \u00b7 insider",
             "kind": "insiders"
           }
         ],
@@ -2398,12 +2394,12 @@
       },
       {
         "rank": 60,
-        "name": "mayfer/soldat-web",
-        "url": "https://github.com/mayfer/soldat-web",
+        "name": "lopopolo/harness-engineering",
+        "url": "https://github.com/lopopolo/harness-engineering",
         "meta": null,
         "receipts": [
           {
-            "label": "\u2605 mayfer \u00b7 insider",
+            "label": "\u2605 deepfates \u00b7 insider",
             "kind": "insiders"
           }
         ],
@@ -2444,7 +2440,7 @@
             "kind": "npm"
           },
           {
-            "label": "2.6k likes",
+            "label": "2.7k likes",
             "kind": "stars"
           }
         ],
@@ -2461,7 +2457,7 @@
             "kind": "npm"
           },
           {
-            "label": "913 likes",
+            "label": "920 likes",
             "kind": "stars"
           }
         ],
@@ -2478,7 +2474,7 @@
             "kind": "npm"
           },
           {
-            "label": "579 likes",
+            "label": "586 likes",
             "kind": "stars"
           }
         ],
@@ -2495,7 +2491,7 @@
             "kind": "npm"
           },
           {
-            "label": "288 likes",
+            "label": "325 likes",
             "kind": "stars"
           }
         ],
@@ -2503,6 +2499,23 @@
       },
       {
         "rank": 6,
+        "name": "DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
+        "url": "https://huggingface.co/DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
+        "meta": "image-text-to-text",
+        "receipts": [
+          {
+            "label": "62.8k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "298 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 7,
         "name": "zai-org/GLM-5.2",
         "url": "https://huggingface.co/zai-org/GLM-5.2",
         "meta": "text-generation",
@@ -2513,23 +2526,6 @@
           },
           {
             "label": "4.3k likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 7,
-        "name": "DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
-        "url": "https://huggingface.co/DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
-        "meta": "image-text-to-text",
-        "receipts": [
-          {
-            "label": "62.8k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "286 likes",
             "kind": "stars"
           }
         ],
@@ -2572,7 +2568,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "485 likes",
+            "label": "487 likes",
             "kind": "stars"
           }
         ],
@@ -2580,6 +2576,19 @@
       },
       {
         "rank": 11,
+        "name": "Nanbeige/Nanbeige4.2-3B",
+        "url": "https://huggingface.co/Nanbeige/Nanbeige4.2-3B",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "180 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 12,
         "name": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF",
         "url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF",
         "meta": "image-text-to-text",
@@ -2596,19 +2605,6 @@
         "badges": []
       },
       {
-        "rank": 12,
-        "name": "Nanbeige/Nanbeige4.2-3B",
-        "url": "https://huggingface.co/Nanbeige/Nanbeige4.2-3B",
-        "meta": "text-generation",
-        "receipts": [
-          {
-            "label": "161 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 13,
         "name": "Motif-Technologies/Motif-3-Beta",
         "url": "https://huggingface.co/Motif-Technologies/Motif-3-Beta",
@@ -2619,7 +2615,7 @@
             "kind": "npm"
           },
           {
-            "label": "144 likes",
+            "label": "149 likes",
             "kind": "stars"
           }
         ],
@@ -2636,7 +2632,7 @@
             "kind": "npm"
           },
           {
-            "label": "153 likes",
+            "label": "154 likes",
             "kind": "stars"
           }
         ],
@@ -2653,7 +2649,7 @@
             "kind": "npm"
           },
           {
-            "label": "502 likes",
+            "label": "503 likes",
             "kind": "stars"
           }
         ],
@@ -2670,7 +2666,7 @@
             "kind": "npm"
           },
           {
-            "label": "245 likes",
+            "label": "246 likes",
             "kind": "stars"
           }
         ],
@@ -2687,7 +2683,7 @@
             "kind": "npm"
           },
           {
-            "label": "151 likes",
+            "label": "152 likes",
             "kind": "stars"
           }
         ],
@@ -2695,6 +2691,19 @@
       },
       {
         "rank": 18,
+        "name": "upstage/Solar-Open2-250B",
+        "url": "https://huggingface.co/upstage/Solar-Open2-250B",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "136 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 19,
         "name": "unsloth/inkling-GGUF",
         "url": "https://huggingface.co/unsloth/inkling-GGUF",
         "meta": "image-text-to-text",
@@ -2711,7 +2720,7 @@
         "badges": []
       },
       {
-        "rank": 19,
+        "rank": 20,
         "name": "prism-ml/Bonsai-27B-mlx-1bit",
         "url": "https://huggingface.co/prism-ml/Bonsai-27B-mlx-1bit",
         "meta": "text-generation",
@@ -2728,7 +2737,7 @@
         "badges": []
       },
       {
-        "rank": 20,
+        "rank": 21,
         "name": "moonshotai/Kimi-K2.7-Code",
         "url": "https://huggingface.co/moonshotai/Kimi-K2.7-Code",
         "meta": "image-text-to-text",
@@ -2745,23 +2754,6 @@
         "badges": []
       },
       {
-        "rank": 21,
-        "name": "OpenMOSS-Team/MOSS-Transcribe-Diarize",
-        "url": "https://huggingface.co/OpenMOSS-Team/MOSS-Transcribe-Diarize",
-        "meta": "audio-text-to-text",
-        "receipts": [
-          {
-            "label": "92.3k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "304 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 22,
         "name": "openbmb/MiniCPM-RobotTrack",
         "url": "https://huggingface.co/openbmb/MiniCPM-RobotTrack",
@@ -2772,7 +2764,7 @@
             "kind": "npm"
           },
           {
-            "label": "111 likes",
+            "label": "112 likes",
             "kind": "stars"
           }
         ],
@@ -2780,6 +2772,23 @@
       },
       {
         "rank": 23,
+        "name": "OpenMOSS-Team/MOSS-Transcribe-Diarize",
+        "url": "https://huggingface.co/OpenMOSS-Team/MOSS-Transcribe-Diarize",
+        "meta": "audio-text-to-text",
+        "receipts": [
+          {
+            "label": "92.3k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "305 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 24,
         "name": "google/gemma-4-31B-it",
         "url": "https://huggingface.co/google/gemma-4-31B-it",
         "meta": "image-text-to-text",
@@ -2796,23 +2805,6 @@
         "badges": []
       },
       {
-        "rank": 24,
-        "name": "prism-ml/Ternary-Bonsai-27B-mlx-2bit",
-        "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-mlx-2bit",
-        "meta": "text-generation",
-        "receipts": [
-          {
-            "label": "20.4k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "136 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 25,
         "name": "nvidia/Cosmos3-Edge",
         "url": "https://huggingface.co/nvidia/Cosmos3-Edge",
@@ -2823,7 +2815,7 @@
             "kind": "npm"
           },
           {
-            "label": "84 likes",
+            "label": "86 likes",
             "kind": "stars"
           }
         ],
@@ -2840,7 +2832,7 @@
             "kind": "npm"
           },
           {
-            "label": "100 likes",
+            "label": "101 likes",
             "kind": "stars"
           }
         ],
@@ -2865,12 +2857,12 @@
       },
       {
         "rank": 28,
-        "name": "Alissonerdx/LTX-Best-Face-ID",
-        "url": "https://huggingface.co/Alissonerdx/LTX-Best-Face-ID",
-        "meta": "text-to-video",
+        "name": "unsloth/Laguna-S-2.1-GGUF",
+        "url": "https://huggingface.co/unsloth/Laguna-S-2.1-GGUF",
+        "meta": "text-generation",
         "receipts": [
           {
-            "label": "229 likes",
+            "label": "83 likes",
             "kind": "stars"
           }
         ],
@@ -2878,16 +2870,16 @@
       },
       {
         "rank": 29,
-        "name": "poolside/Laguna-S-2.1-NVFP4",
-        "url": "https://huggingface.co/poolside/Laguna-S-2.1-NVFP4",
+        "name": "prism-ml/Ternary-Bonsai-27B-mlx-2bit",
+        "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-mlx-2bit",
         "meta": "text-generation",
         "receipts": [
           {
-            "label": "2k downloads",
+            "label": "20.4k downloads",
             "kind": "npm"
           },
           {
-            "label": "75 likes",
+            "label": "137 likes",
             "kind": "stars"
           }
         ],
@@ -2904,7 +2896,7 @@
             "kind": "npm"
           },
           {
-            "label": "74 likes",
+            "label": "81 likes",
             "kind": "stars"
           }
         ],
@@ -2912,6 +2904,36 @@
       },
       {
         "rank": 31,
+        "name": "poolside/Laguna-S-2.1-NVFP4",
+        "url": "https://huggingface.co/poolside/Laguna-S-2.1-NVFP4",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "2k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "80 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 32,
+        "name": "Alissonerdx/LTX-Best-Face-ID",
+        "url": "https://huggingface.co/Alissonerdx/LTX-Best-Face-ID",
+        "meta": "text-to-video",
+        "receipts": [
+          {
+            "label": "230 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 33,
         "name": "LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
         "url": "https://huggingface.co/LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
         "meta": "image-text-to-text",
@@ -2921,14 +2943,27 @@
             "kind": "npm"
           },
           {
-            "label": "98 likes",
+            "label": "100 likes",
             "kind": "stars"
           }
         ],
         "badges": []
       },
       {
-        "rank": 32,
+        "rank": 34,
+        "name": "microsoft/Mage-Flow",
+        "url": "https://huggingface.co/microsoft/Mage-Flow",
+        "meta": "text-to-image",
+        "receipts": [
+          {
+            "label": "75 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 35,
         "name": "thinkingmachines/Inkling-NVFP4",
         "url": "https://huggingface.co/thinkingmachines/Inkling-NVFP4",
         "meta": "image-text-to-text",
@@ -2945,7 +2980,7 @@
         "badges": []
       },
       {
-        "rank": 33,
+        "rank": 36,
         "name": "Wan-AI/Wan-Dancer-14B",
         "url": "https://huggingface.co/Wan-AI/Wan-Dancer-14B",
         "meta": "image-to-video",
@@ -2955,14 +2990,14 @@
             "kind": "npm"
           },
           {
-            "label": "154 likes",
+            "label": "155 likes",
             "kind": "stars"
           }
         ],
         "badges": []
       },
       {
-        "rank": 34,
+        "rank": 37,
         "name": "Cactus-Compute/needle",
         "url": "https://huggingface.co/Cactus-Compute/needle",
         "meta": null,
@@ -2979,49 +3014,6 @@
         "badges": []
       },
       {
-        "rank": 35,
-        "name": "unsloth/Laguna-S-2.1-GGUF",
-        "url": "https://huggingface.co/unsloth/Laguna-S-2.1-GGUF",
-        "meta": "text-generation",
-        "receipts": [
-          {
-            "label": "70 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 36,
-        "name": "AngelSlim/Hy3-GGUF",
-        "url": "https://huggingface.co/AngelSlim/Hy3-GGUF",
-        "meta": "text-generation",
-        "receipts": [
-          {
-            "label": "145k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "161 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 37,
-        "name": "upstage/Solar-Open2-250B",
-        "url": "https://huggingface.co/upstage/Solar-Open2-250B",
-        "meta": "text-generation",
-        "receipts": [
-          {
-            "label": "70 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 38,
         "name": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
         "url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
@@ -3032,7 +3024,7 @@
             "kind": "npm"
           },
           {
-            "label": "864 likes",
+            "label": "865 likes",
             "kind": "stars"
           }
         ],
@@ -3057,16 +3049,16 @@
       },
       {
         "rank": 40,
-        "name": "empero-ai/Qwythos-9B-v2-GGUF",
-        "url": "https://huggingface.co/empero-ai/Qwythos-9B-v2-GGUF",
-        "meta": "image-text-to-text",
+        "name": "AngelSlim/Hy3-GGUF",
+        "url": "https://huggingface.co/AngelSlim/Hy3-GGUF",
+        "meta": "text-generation",
         "receipts": [
           {
-            "label": "126k downloads",
+            "label": "145k downloads",
             "kind": "npm"
           },
           {
-            "label": "201 likes",
+            "label": "162 likes",
             "kind": "stars"
           }
         ],
@@ -3083,7 +3075,7 @@
             "kind": "npm"
           },
           {
-            "label": "684 likes",
+            "label": "687 likes",
             "kind": "stars"
           }
         ],
@@ -3091,16 +3083,16 @@
       },
       {
         "rank": 42,
-        "name": "OpenMOSS-Team/MOSS-SoundEffect-v2.0",
-        "url": "https://huggingface.co/OpenMOSS-Team/MOSS-SoundEffect-v2.0",
-        "meta": "text-to-audio",
+        "name": "empero-ai/Qwythos-9B-v2-GGUF",
+        "url": "https://huggingface.co/empero-ai/Qwythos-9B-v2-GGUF",
+        "meta": "image-text-to-text",
         "receipts": [
           {
-            "label": "1k downloads",
+            "label": "126k downloads",
             "kind": "npm"
           },
           {
-            "label": "114 likes",
+            "label": "202 likes",
             "kind": "stars"
           }
         ],
@@ -3117,7 +3109,7 @@
             "kind": "npm"
           },
           {
-            "label": "63 likes",
+            "label": "65 likes",
             "kind": "stars"
           }
         ],
@@ -3125,16 +3117,16 @@
       },
       {
         "rank": 44,
-        "name": "nvidia/Nemotron-3-Embed-8B-BF16",
-        "url": "https://huggingface.co/nvidia/Nemotron-3-Embed-8B-BF16",
-        "meta": "sentence-similarity",
+        "name": "OpenMOSS-Team/MOSS-SoundEffect-v2.0",
+        "url": "https://huggingface.co/OpenMOSS-Team/MOSS-SoundEffect-v2.0",
+        "meta": "text-to-audio",
         "receipts": [
           {
-            "label": "15.4k downloads",
+            "label": "1k downloads",
             "kind": "npm"
           },
           {
-            "label": "73 likes",
+            "label": "114 likes",
             "kind": "stars"
           }
         ],
@@ -3151,7 +3143,7 @@
             "kind": "npm"
           },
           {
-            "label": "173 likes",
+            "label": "174 likes",
             "kind": "stars"
           }
         ],
@@ -3168,7 +3160,7 @@
             "kind": "npm"
           },
           {
-            "label": "857 likes",
+            "label": "858 likes",
             "kind": "stars"
           }
         ],
@@ -3176,6 +3168,53 @@
       },
       {
         "rank": 47,
+        "name": "nvidia/Nemotron-3-Embed-8B-BF16",
+        "url": "https://huggingface.co/nvidia/Nemotron-3-Embed-8B-BF16",
+        "meta": "sentence-similarity",
+        "receipts": [
+          {
+            "label": "15.4k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "73 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 48,
+        "name": "internlm/Intern-S2-Preview-397B",
+        "url": "https://huggingface.co/internlm/Intern-S2-Preview-397B",
+        "meta": "image-text-to-text",
+        "receipts": [
+          {
+            "label": "94 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "58 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 49,
+        "name": "nineninesix/diamond-1.0",
+        "url": "https://huggingface.co/nineninesix/diamond-1.0",
+        "meta": "audio-to-audio",
+        "receipts": [
+          {
+            "label": "57 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 50,
         "name": "nvidia/Nemotron-3-Embed-1B-NVFP4",
         "url": "https://huggingface.co/nvidia/Nemotron-3-Embed-1B-NVFP4",
         "meta": "sentence-similarity",
@@ -3192,7 +3231,7 @@
         "badges": []
       },
       {
-        "rank": 48,
+        "rank": 51,
         "name": "Soofi-Project/Soofi-S-Base",
         "url": "https://huggingface.co/Soofi-Project/Soofi-S-Base",
         "meta": "text-generation",
@@ -3209,44 +3248,10 @@
         "badges": []
       },
       {
-        "rank": 49,
-        "name": "internlm/Intern-S2-Preview-397B",
-        "url": "https://huggingface.co/internlm/Intern-S2-Preview-397B",
-        "meta": "image-text-to-text",
-        "receipts": [
-          {
-            "label": "94 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "56 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 50,
-        "name": "mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
-        "url": "https://huggingface.co/mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "7.6k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "104 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 51,
-        "name": "microsoft/Mage-Flow",
-        "url": "https://huggingface.co/microsoft/Mage-Flow",
-        "meta": "text-to-image",
+        "rank": 52,
+        "name": "Lightricks/LTX-2.3-22b-IC-LoRA-Clean-Plate",
+        "url": "https://huggingface.co/Lightricks/LTX-2.3-22b-IC-LoRA-Clean-Plate",
+        "meta": "video-to-video",
         "receipts": [
           {
             "label": "57 likes",
@@ -3256,26 +3261,17 @@
         "badges": []
       },
       {
-        "rank": 52,
-        "name": "nineninesix/diamond-1.0",
-        "url": "https://huggingface.co/nineninesix/diamond-1.0",
-        "meta": "audio-to-audio",
-        "receipts": [
-          {
-            "label": "56 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 53,
-        "name": "Lightricks/LTX-2.3-22b-IC-LoRA-Clean-Plate",
-        "url": "https://huggingface.co/Lightricks/LTX-2.3-22b-IC-LoRA-Clean-Plate",
-        "meta": "video-to-video",
+        "name": "mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
+        "url": "https://huggingface.co/mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
+        "meta": null,
         "receipts": [
           {
-            "label": "55 likes",
+            "label": "7.6k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "105 likes",
             "kind": "stars"
           }
         ],
@@ -3288,7 +3284,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "961 likes",
+            "label": "963 likes",
             "kind": "stars"
           }
         ],
@@ -3296,6 +3292,23 @@
       },
       {
         "rank": 55,
+        "name": "fdtn-ai/antares-1b",
+        "url": "https://huggingface.co/fdtn-ai/antares-1b",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "74 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "59 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 56,
         "name": "mgwr/M87",
         "url": "https://huggingface.co/mgwr/M87",
         "meta": "text-to-image",
@@ -3305,24 +3318,7 @@
             "kind": "npm"
           },
           {
-            "label": "178 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 56,
-        "name": "InternScience/Agents-A1",
-        "url": "https://huggingface.co/InternScience/Agents-A1",
-        "meta": "text-generation",
-        "receipts": [
-          {
-            "label": "36.6k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "597 likes",
+            "label": "179 likes",
             "kind": "stars"
           }
         ],
@@ -3330,40 +3326,6 @@
       },
       {
         "rank": 57,
-        "name": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
-        "url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
-        "meta": "text-generation",
-        "receipts": [
-          {
-            "label": "515k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "1.3k likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 58,
-        "name": "InternScience/Agents-A1-4B",
-        "url": "https://huggingface.co/InternScience/Agents-A1-4B",
-        "meta": "text-generation",
-        "receipts": [
-          {
-            "label": "8.1k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "56 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 59,
         "name": "Qwen/Qwen3.6-35B-A3B",
         "url": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
         "meta": "image-text-to-text",
@@ -3380,17 +3342,51 @@
         "badges": []
       },
       {
-        "rank": 60,
-        "name": "GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-Thinking-GGUF",
-        "url": "https://huggingface.co/GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-Thinking-GGUF",
+        "rank": 58,
+        "name": "InternScience/Agents-A1",
+        "url": "https://huggingface.co/InternScience/Agents-A1",
         "meta": "text-generation",
         "receipts": [
           {
-            "label": "195k downloads",
+            "label": "36.6k downloads",
             "kind": "npm"
           },
           {
-            "label": "296 likes",
+            "label": "598 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 59,
+        "name": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
+        "url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "515k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "1.3k likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 60,
+        "name": "InternScience/Agents-A1-4B",
+        "url": "https://huggingface.co/InternScience/Agents-A1-4B",
+        "meta": "text-generation",
+        "receipts": [
+          {
+            "label": "8.1k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "56 likes",
             "kind": "stars"
           }
         ],
@@ -3418,6 +3414,24 @@
       },
       {
         "rank": 2,
+        "name": "ABot-World-0: Infinite Interactive World Rollout on a Single Desktop GPU",
+        "url": "https://huggingface.co/papers/2607.19191",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "96 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 3,
         "name": "RAGU: A Multi-Step GraphRAG Engine with a Compact Domain-Adapted LLM",
         "url": "https://huggingface.co/papers/2607.11683",
         "meta": null,
@@ -3435,7 +3449,20 @@
         ]
       },
       {
-        "rank": 3,
+        "rank": 4,
+        "name": "DataFlow-Harness: A Grounded Code-Agent Platform for Constructing Editable LLM Data Pipelines",
+        "url": "https://huggingface.co/papers/2607.16617",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "80 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 5,
         "name": "RESOURCE2SKILL: Distilling Executable Agent Skills from Human-Created Multimodal Resources",
         "url": "https://huggingface.co/papers/2606.29538",
         "meta": null,
@@ -3453,7 +3480,7 @@
         ]
       },
       {
-        "rank": 4,
+        "rank": 6,
         "name": "DeepSearch-World: Self-Distillation for Deep Search Agents in a Verifiable Environment",
         "url": "https://huggingface.co/papers/2607.07820",
         "meta": null,
@@ -3471,7 +3498,7 @@
         ]
       },
       {
-        "rank": 5,
+        "rank": 7,
         "name": "EvolvingWorld: An Open-Schema Framework for Co-Evolving Role-Play Agents and World Model in Interactive Literary World",
         "url": "https://huggingface.co/papers/2607.17250",
         "meta": null,
@@ -3489,7 +3516,25 @@
         ]
       },
       {
-        "rank": 6,
+        "rank": 8,
+        "name": "Text Template Tokens Are Implicit Semantic Registers in Diffusion Transformers",
+        "url": "https://huggingface.co/papers/2607.19139",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "65 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 9,
         "name": "SWE-Pruner Pro: The Coder LLM Already Knows What to Prune",
         "url": "https://huggingface.co/papers/2607.18213",
         "meta": null,
@@ -3507,57 +3552,13 @@
         ]
       },
       {
-        "rank": 7,
+        "rank": 10,
         "name": "Generative World Renderer at the Speed of Play",
         "url": "https://huggingface.co/papers/2607.18703",
         "meta": null,
         "receipts": [
           {
-            "label": "57 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 8,
-        "name": "DataFlow-Harness: A Grounded Code-Agent Platform for Constructing Editable LLM Data Pipelines",
-        "url": "https://huggingface.co/papers/2607.16617",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "55 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 9,
-        "name": "Loop the Loopies!",
-        "url": "https://huggingface.co/papers/2607.16051",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "49 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 10,
-        "name": "Text Template Tokens Are Implicit Semantic Registers in Diffusion Transformers",
-        "url": "https://huggingface.co/papers/2607.19139",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "48 upvotes",
+            "label": "63 upvotes",
             "kind": "paper"
           }
         ],
@@ -3570,6 +3571,55 @@
       },
       {
         "rank": 11,
+        "name": "Mage-Flow: An Efficient Native-Resolution Foundation Model for Image Generation and Editing",
+        "url": "https://huggingface.co/papers/2607.19064",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "52 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "name": "Loop the Loopies!",
+        "url": "https://huggingface.co/papers/2607.16051",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "49 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 13,
+        "name": "AlayaWorld: Interactive Long-Horizon World Modeling -- Full Technical Report",
+        "url": "https://huggingface.co/papers/2607.18367",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "44 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 14,
         "name": "HOMIE: Human-object Centric Video Personalization via Multimodal Intelligent Enchancement",
         "url": "https://huggingface.co/papers/2607.18217",
         "meta": null,
@@ -3587,43 +3637,7 @@
         ]
       },
       {
-        "rank": 12,
-        "name": "AlayaWorld: Interactive Long-Horizon World Modeling -- Full Technical Report",
-        "url": "https://huggingface.co/papers/2607.18367",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "40 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 13,
-        "name": "Mage-Flow: An Efficient Native-Resolution Foundation Model for Image Generation and Editing",
-        "url": "https://huggingface.co/papers/2607.19064",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "39 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 14,
+        "rank": 15,
         "name": "Apple-\u03c0: Benchmarking Thinking with Video Towards Law-Grounded Physical Intelligence",
         "url": "https://huggingface.co/papers/2607.16401",
         "meta": null,
@@ -3641,7 +3655,7 @@
         ]
       },
       {
-        "rank": 15,
+        "rank": 16,
         "name": "RynnBrain 1.1: Towards More Capable and Generalizable Embodied Foundation Model",
         "url": "https://huggingface.co/papers/2607.17977",
         "meta": null,
@@ -3654,13 +3668,13 @@
         "badges": []
       },
       {
-        "rank": 16,
+        "rank": 17,
         "name": "Stale but Stable: Staleness-Adaptive Trust Regions for Stabilizing Asynchronous Reinforcement Learning",
         "url": "https://huggingface.co/papers/2607.18722",
         "meta": null,
         "receipts": [
           {
-            "label": "25 upvotes",
+            "label": "28 upvotes",
             "kind": "paper"
           }
         ],
@@ -3672,7 +3686,7 @@
         ]
       },
       {
-        "rank": 17,
+        "rank": 18,
         "name": "GigaChat Audio: Time-aware Large Audio Language Model",
         "url": "https://huggingface.co/papers/2607.10387",
         "meta": null,
@@ -3685,7 +3699,7 @@
         "badges": []
       },
       {
-        "rank": 18,
+        "rank": 19,
         "name": "GigaAM Multilingual: Foundation Model for Underrepresented Languages",
         "url": "https://huggingface.co/papers/2607.10371",
         "meta": null,
@@ -3701,19 +3715,6 @@
             "hot": false
           }
         ]
-      },
-      {
-        "rank": 19,
-        "name": "ABot-World-0: Infinite Interactive World Rollout on a Single Desktop GPU",
-        "url": "https://huggingface.co/papers/2607.19191",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "21 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": []
       },
       {
         "rank": 20,
@@ -3792,6 +3793,24 @@
       },
       {
         "rank": 25,
+        "name": "AgentDebugX: An Open-Source Toolkit for Failure Observability, Attribution, and Recovery in LLM Agents",
+        "url": "https://huggingface.co/papers/2607.18754",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "13 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 26,
         "name": "Environment-free Synthetic Data Generation for API-Calling Agents",
         "url": "https://huggingface.co/papers/2607.16900",
         "meta": null,
@@ -3804,31 +3823,13 @@
         "badges": []
       },
       {
-        "rank": 26,
+        "rank": 27,
         "name": "Do Language Models Dream of Binding Molecules? Benchmarking LLMs under Spatial Constraints",
         "url": "https://huggingface.co/papers/2607.18144",
         "meta": null,
         "receipts": [
           {
             "label": "11 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 27,
-        "name": "AgentDebugX: An Open-Source Toolkit for Failure Observability, Attribution, and Recovery in LLM Agents",
-        "url": "https://huggingface.co/papers/2607.18754",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "10 upvotes",
             "kind": "paper"
           }
         ],
@@ -3898,6 +3899,24 @@
       },
       {
         "rank": 32,
+        "name": "Two-Level Meta-Rubrics for Evaluating Open-Ended Generation: GAMUT, a Benchmark for Factual Completeness",
+        "url": "https://huggingface.co/papers/2607.19322",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 33,
         "name": "Distilled Reinforcement Learning for LLM Post-training",
         "url": "https://huggingface.co/papers/2607.17247",
         "meta": null,
@@ -3915,7 +3934,7 @@
         ]
       },
       {
-        "rank": 33,
+        "rank": 34,
         "name": "The Geometry of Semantic Space: A Continuous Geometric Framework for the Transformer Architecture",
         "url": "https://huggingface.co/papers/2607.17146",
         "meta": null,
@@ -3926,24 +3945,6 @@
           }
         ],
         "badges": []
-      },
-      {
-        "rank": 34,
-        "name": "Two-Level Meta-Rubrics for Evaluating Open-Ended Generation: GAMUT, a Benchmark for Factual Completeness",
-        "url": "https://huggingface.co/papers/2607.19322",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "4 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
       },
       {
         "rank": 35,
@@ -3978,6 +3979,19 @@
       },
       {
         "rank": 37,
+        "name": "H^2SD: Hybrid Hindsight Self-Distillation",
+        "url": "https://huggingface.co/papers/2607.18955",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "3 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 38,
         "name": "ISO: An RLVR-Native Optimization Stack",
         "url": "https://huggingface.co/papers/2607.19331",
         "meta": null,
@@ -3995,7 +4009,7 @@
         ]
       },
       {
-        "rank": 38,
+        "rank": 39,
         "name": "JoyNexus: Service-Oriented Multi-Tenant Post-Training for VLA Models",
         "url": "https://huggingface.co/papers/2607.16074",
         "meta": null,
@@ -4008,7 +4022,25 @@
         "badges": []
       },
       {
-        "rank": 39,
+        "rank": 40,
+        "name": "Masked Visual Actions for Unified World Modeling",
+        "url": "https://huggingface.co/papers/2607.19343",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "3 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 41,
         "name": "Self-State Attacks on Self-Hosted AI Agents: How Far Can OS Defenses Go?",
         "url": "https://huggingface.co/papers/2607.17986",
         "meta": null,
@@ -4021,7 +4053,25 @@
         "badges": []
       },
       {
-        "rank": 40,
+        "rank": 42,
+        "name": "Transcription Policy as a Latent Variable: Activating Controllable Verbatim ASR with Word-Level Timing",
+        "url": "https://huggingface.co/papers/2607.18934",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "3 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 43,
         "name": "Appearance Pointers -- Multimodal Region Control of Diffusion Transformers",
         "url": "https://huggingface.co/papers/2607.19344",
         "meta": null,
@@ -4034,7 +4084,7 @@
         "badges": []
       },
       {
-        "rank": 41,
+        "rank": 44,
         "name": "Delineate Anything v2: A Global Foundation Model for Field Delineation",
         "url": "https://huggingface.co/papers/2607.19069",
         "meta": null,
@@ -4047,7 +4097,7 @@
         "badges": []
       },
       {
-        "rank": 42,
+        "rank": 45,
         "name": "Diagnosing and Calibrating Tool-Call Boundary Drift in Multi-Teacher On-Policy Distillation",
         "url": "https://huggingface.co/papers/2607.07050",
         "meta": null,
@@ -4060,7 +4110,7 @@
         "badges": []
       },
       {
-        "rank": 43,
+        "rank": 46,
         "name": "DiFA: Inference-Time Forward-Process Alignment for Diffusion Models",
         "url": "https://huggingface.co/papers/2607.17972",
         "meta": null,
@@ -4073,38 +4123,7 @@
         "badges": []
       },
       {
-        "rank": 44,
-        "name": "H^2SD: Hybrid Hindsight Self-Distillation",
-        "url": "https://huggingface.co/papers/2607.18955",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "2 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 45,
-        "name": "Masked Visual Actions for Unified World Modeling",
-        "url": "https://huggingface.co/papers/2607.19343",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "2 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 46,
+        "rank": 47,
         "name": "OpenLongTail: Generative Scaling of Long-Tail Driving Data",
         "url": "https://huggingface.co/papers/2607.09655",
         "meta": null,
@@ -4122,7 +4141,7 @@
         ]
       },
       {
-        "rank": 47,
+        "rank": 48,
         "name": "ReViV: Reconstructing the Viewer and the View in 4D from Monocular Egocentric Video",
         "url": "https://huggingface.co/papers/2607.17790",
         "meta": null,
@@ -4140,7 +4159,7 @@
         ]
       },
       {
-        "rank": 48,
+        "rank": 49,
         "name": "ShotPlan: Cinematic Video Generation with Learnable Planning Token",
         "url": "https://huggingface.co/papers/2607.17675",
         "meta": null,
@@ -4158,7 +4177,7 @@
         ]
       },
       {
-        "rank": 49,
+        "rank": 50,
         "name": "Token-Level Off-Policy Learning for Faithful Generation Under Distribution Shift",
         "url": "https://huggingface.co/papers/2607.17524",
         "meta": null,
@@ -4171,7 +4190,7 @@
         "badges": []
       },
       {
-        "rank": 50,
+        "rank": 51,
         "name": "Trajectory-aware Cross-view Geo-localization with Sequential Observations",
         "url": "https://huggingface.co/papers/2607.15491",
         "meta": null,
@@ -4189,7 +4208,7 @@
         ]
       },
       {
-        "rank": 51,
+        "rank": 52,
         "name": "Where Should Optimizer State Live? Tiered State Allocation for Memory-Efficient Mixture-of-Experts Training",
         "url": "https://huggingface.co/papers/2607.19058",
         "meta": null,
@@ -4207,7 +4226,7 @@
         ]
       },
       {
-        "rank": 52,
+        "rank": 53,
         "name": "WorldCupArena: Fine-Grained Evaluation of Language Models and Deep-Research Agents on Football Forecasting",
         "url": "https://huggingface.co/papers/2607.18084",
         "meta": null,
@@ -4225,7 +4244,7 @@
         ]
       },
       {
-        "rank": 53,
+        "rank": 54,
         "name": "Can Multimodal Large Language Models Understand OCT?",
         "url": "https://huggingface.co/papers/2607.16609",
         "meta": null,
@@ -4243,7 +4262,20 @@
         ]
       },
       {
-        "rank": 54,
+        "rank": 55,
+        "name": "Computational Humor with Multimodal LLMs: Methods, Datasets, Evaluation, and Challenges",
+        "url": "https://huggingface.co/papers/2607.19011",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "1 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 56,
         "name": "ConsiSpace: Learning Geometric Consistency Matters for Video Spatial Reasoning",
         "url": "https://huggingface.co/papers/2607.17599",
         "meta": null,
@@ -4256,7 +4288,7 @@
         "badges": []
       },
       {
-        "rank": 55,
+        "rank": 57,
         "name": "A sociotechnical threat model for AI-driven smart home devices",
         "url": "https://arxiv.org/abs/2602.09239",
         "meta": null,
@@ -4264,7 +4296,7 @@
         "badges": []
       },
       {
-        "rank": 56,
+        "rank": 58,
         "name": "A Study of Microsoft's Early 2026 Rollout of Claude Code and GitHub Copilot CLI",
         "url": "https://arxiv.org/abs/2607.01418",
         "meta": null,
@@ -4272,7 +4304,7 @@
         "badges": []
       },
       {
-        "rank": 57,
+        "rank": 59,
         "name": "Automation Without Understanding",
         "url": "https://arxiv.org/abs/2607.06377",
         "meta": null,
@@ -4280,25 +4312,9 @@
         "badges": []
       },
       {
-        "rank": 58,
+        "rank": 60,
         "name": "Billions of Sketches Reveal Hidden Cultural Variation in Human Concepts",
         "url": "https://arxiv.org/abs/2607.07267",
-        "meta": null,
-        "receipts": [],
-        "badges": []
-      },
-      {
-        "rank": 59,
-        "name": "Can LLMs Perform Deep Technical Comprehension of Computer Architecture Papers",
-        "url": "https://arxiv.org/abs/2607.11859",
-        "meta": null,
-        "receipts": [],
-        "badges": []
-      },
-      {
-        "rank": 60,
-        "name": "Co-evolution of self-replication and function in a digital primordial soup",
-        "url": "https://arxiv.org/abs/2607.09211",
         "meta": null,
         "receipts": [],
         "badges": []
