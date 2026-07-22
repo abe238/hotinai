@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-21",
-  "generated_pt": "Jul 21, 2026 \u00b7 8:00 PM PT",
+  "generated_pt": "Jul 21, 2026 \u00b7 8:28 PM PT",
   "entities": {
     "repos": [
       {
@@ -95,8 +95,8 @@
       },
       {
         "rank": 4,
-        "name": "Fei-Away/Codex-Dream-Skin",
-        "url": "https://github.com/Fei-Away/Codex-Dream-Skin",
+        "name": "fei-away/codex-dream-skin",
+        "url": "https://github.com/fei-away/codex-dream-skin",
         "meta": null,
         "receipts": [
           {
@@ -460,7 +460,7 @@
             "kind": "insiders"
           },
           {
-            "label": "7k stars",
+            "label": "7.1k stars",
             "kind": "stars"
           }
         ],
@@ -1202,8 +1202,8 @@
       },
       {
         "rank": 55,
-        "name": "XBuilderLAB/cheat-on-content",
-        "url": "https://github.com/XBuilderLAB/cheat-on-content",
+        "name": "unicity-aos/aos-ce",
+        "url": "https://github.com/unicity-aos/aos-ce",
         "meta": null,
         "receipts": [
           {
@@ -1224,8 +1224,8 @@
       },
       {
         "rank": 56,
-        "name": "unicity-aos/aos-ce",
-        "url": "https://github.com/unicity-aos/aos-ce",
+        "name": "XBuilderLAB/cheat-on-content",
+        "url": "https://github.com/XBuilderLAB/cheat-on-content",
         "meta": null,
         "receipts": [
           {

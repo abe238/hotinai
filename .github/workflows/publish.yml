@@ -1,0 +1,35 @@
+name: publish
+
+# Publish to PyPI when a GitHub Release is published, via PyPI Trusted
+# Publishing (OIDC) — no API token is stored or pasted anywhere. GitHub proves
+# its identity to PyPI with a short-lived token exchange.
+#
+# One-time setup on PyPI (needs your login):
+#   pypi.org/manage/project/hotin/settings/publishing/ -> Add trusted publisher
+#   -> GitHub Actions -> owner: abe238, repo: hotinai, workflow: publish.yml,
+#      environment: pypi
+#
+# Then releasing is: bump version -> tag -> create a GitHub Release. CI does the rest.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  pypi:
+    name: Build and publish to PyPI
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # required for OIDC trusted publishing
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+      - name: Build wheel + sdist
+        run: uv build
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

@@ -12,29 +12,25 @@ Beyond repos, hotin surfaces trending **AI models** (`hotin models`) and **paper
 
 ## Install
 
-Once hotin is published to PyPI, the standard install will be:
-
 ```sh
 pip install hotin
 ```
 
-From a checkout during pre-release development:
+hotin has zero dependencies, so a plain `pip install` is safe (nothing to conflict with). Prefer an isolated install, or don't want to install at all?
 
 ```sh
-pip install -e .
+uvx hotin              # run without installing (needs uv)
+uv tool install hotin  # persistent command via uv
+pipx install hotin     # persistent command via pipx
 ```
 
-Or install the current repository with pipx:
-
-```sh
-pipx install git+https://github.com/abe238/hotinai
-```
-
-A prebuilt single-file `hotin.pyz` will be attached to GitHub Releases as a zero-install option for a fresh machine. Run it with:
+No package manager, just Python? Grab the single-file `hotin.pyz` from the [latest release](https://github.com/abe238/hotinai/releases/latest) and run it:
 
 ```sh
 python hotin.pyz
 ```
+
+Developing on a checkout: `pip install -e .`.
 
 ## Quick start
 
