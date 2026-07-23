@@ -14,7 +14,7 @@ from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 from . import __version__, board, engine, health, render_board, schedule
 from .cache import MemoryCache, open_cache
 from .canonical import canonicalize
-from .coerce import finite_float
+from .coerce import finite_float, finite_int
 from .config import config_dir, env_path, load_config
 from .render import color, hyperlink, sanitize
 from .sources import (frontier, github, hfmodels, hfpapers, hn,
@@ -26,6 +26,7 @@ from .sources import (frontier, github, hfmodels, hfpapers, hn,
 # `repos --source <name>` values. `refresh` replaces the old ingest+update.
 COMMANDS = {
     "repos": "trending AI repos — the flagship board (default)",
+    "rising": "brand-new repos climbing fastest (velocity, not lifetime size)",
     "insiders": "repos the AI Insiders are backing (the smart-money signal)",
     "models": "AI models — frontier-lab press releases + trending model weights",
     "papers": "trending AI papers",
@@ -52,7 +53,7 @@ _REPO_SOURCE_ADAPTERS = {
 _SOURCE_CHOICES = tuple(_REPO_SOURCE_ADAPTERS)
 _FORMATS = ("text", "json", "md", "html")
 # Commands that produce a ranked/list result and take --limit.
-_LIST_COMMANDS = {"repos", "insiders", "models", "papers", "news", "search", "export"}
+_LIST_COMMANDS = {"repos", "rising", "insiders", "models", "papers", "news", "search", "export"}
 # Entity commands: (adapter, entity_type, metric weights for scoring, primary metric label).
 # Models rank by HuggingFace's trendingScore (heat right now), NOT lifetime
 # downloads — otherwise a hugely-adopted but old model (Kokoro-82M, ~10M
@@ -542,6 +543,73 @@ def _insiders(arguments: argparse.Namespace) -> int:
     return 0
 
 
+_RISING_QUERIES = ("agent", "llm", "mcp", "skill", "ai")
+_RISING_WINDOW_DAYS = 60
+_RISING_MAX_AGE = 90
+
+
+def _age_days(created_iso: Any) -> int:
+    """Whole days since an ISO8601 created_at (floored at 1); huge if unknown."""
+    if not isinstance(created_iso, str):
+        return 10 ** 6
+    try:
+        import datetime
+        created = datetime.date.fromisoformat(created_iso[:10])
+        return max((datetime.date.today() - created).days, 1)
+    except (ValueError, TypeError):
+        return 10 ** 6
+
+
+def _rising_velocity(record: dict) -> float:
+    signal = record.get("signal") if isinstance(record, dict) else None
+    stars = finite_int((signal or {}).get("stars"), 0)
+    return stars / _age_days((signal or {}).get("created_at"))
+
+
+def _rising_ranked(config: Optional[dict], limit: int) -> List[dict]:
+    """Freshest fast-climbing AI repos: union of domain-scoped GitHub searches,
+    ranked by star velocity (stars/day since creation). GitHub's own board ranks
+    by absolute stars, which buries young rockets under established mega-repos."""
+    pool: Dict[str, dict] = {}
+    for query in _RISING_QUERIES:
+        result = github.fetch(query, limit=50, config=config, days=_RISING_WINDOW_DAYS)
+        for record in (result.get("records") if isinstance(result, dict) else None) or []:
+            if not isinstance(record, dict):
+                continue
+            key = record.get("canonical_repo") or record.get("name")
+            meta = record.get("meta") if isinstance(record.get("meta"), dict) else {}
+            if key and key not in pool and not meta.get("archived"):
+                pool[key] = record
+    fresh = [r for r in pool.values()
+             if _age_days((r.get("signal") or {}).get("created_at")) <= _RISING_MAX_AGE]
+    fresh.sort(key=_rising_velocity, reverse=True)
+    ranked = fresh[: max(limit, 0)]
+    for record in ranked:
+        signal = record.setdefault("signal", {})
+        signal["age_days"] = _age_days(signal.get("created_at"))
+        signal["velocity_per_day"] = round(_rising_velocity(record), 1)
+    return ranked
+
+
+def _rising(arguments: argparse.Namespace) -> int:
+    """Rising view: brand-new repos climbing fastest (velocity, not lifetime size)."""
+    limit = _normal_limit(arguments)
+    if limit is None:
+        return 2
+    ranked = _rising_ranked(load_config(), limit or 20)
+    if getattr(arguments, "json", False):
+        _dump_json({"rising": [{"rank": i + 1, "repo": r.get("canonical_repo"),
+                                "url": r.get("url"),
+                                "stars": (r.get("signal") or {}).get("stars"),
+                                "velocity_per_day": (r.get("signal") or {}).get("velocity_per_day"),
+                                "age_days": (r.get("signal") or {}).get("age_days")}
+                               for i, r in enumerate(ranked)]})
+    else:
+        _render_rows(board.rising_rows(ranked), arguments)
+    _attribution(arguments)
+    return 0 if ranked else 1
+
+
 def _pacific_stamp() -> str:
     """Human 'last updated' stamp in Pacific time, to the minute.
 
@@ -593,8 +661,10 @@ def _export(arguments: argparse.Namespace) -> int:
     ins = [r for r in (ins_res.get("records") or []) if isinstance(r, dict)] if isinstance(ins_res, dict) else []
     news_text = smolai._request()
     news = smolai.parse_news(news_text)[:limit] if news_text else []
+    rising = _rising_ranked(config, 24)
     rows = {
-        "repos": board.repo_rows(repos), "insiders": board.insider_rows(ins),
+        "repos": board.repo_rows(repos), "rising": board.rising_rows(rising),
+        "insiders": board.insider_rows(ins),
         "models": board.model_rows(models), "papers": board.paper_rows(papers),
         "news": board.news_rows(news),
     }
@@ -956,6 +1026,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         return _brief(arguments)
     if command == "news":
         return _news(arguments)
+    if command == "rising":
+        return _rising(arguments)
     if command == "insiders":
         return _insiders(arguments)
     if command == "export":

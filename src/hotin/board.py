@@ -175,6 +175,37 @@ def news_rows(items: List[dict]) -> List[dict]:
     return rows
 
 
+def rising_rows(ranked: List[dict]) -> List[dict]:
+    """`hotin rising`: the freshest repos climbing fastest — velocity, not size.
+
+    Lead receipt is stars/day (why it's rising), then total stars and age so a
+    2-day-old rocket reads differently from a steady 60-day climber.
+    """
+    rows: List[dict] = []
+    for i, r in enumerate(ranked, 1):
+        if not isinstance(r, dict):
+            continue
+        s = _sig(r)
+        receipts: List[Dict[str, str]] = []
+        vel = finite_float(s.get("velocity_per_day"), 0.0)
+        if vel:
+            receipts.append({"label": "+{}/day".format(_num(vel)), "kind": "stars"})
+        stars = finite_int(s.get("stars"), 0)
+        if stars:
+            receipts.append({"label": "{} stars".format(_num(stars)), "kind": "stars"})
+        age = finite_int(s.get("age_days"), 0)
+        if age:
+            receipts.append({"label": "{}d old".format(age), "kind": "age"})
+        desc = _meta(r).get("description")
+        meta = desc.strip()[:80] if isinstance(desc, str) and desc.strip() else None
+        rows.append({
+            "rank": i, "name": r.get("canonical_repo") or r.get("name") or "?",
+            "url": r.get("url"), "meta": meta,
+            "receipts": receipts, "badges": [{"label": "fresh", "hot": False}],
+        })
+    return rows
+
+
 def demo() -> None:
     repo = {"canonical_repo": "a/b", "name": "A cool thing", "url": "u",
             "signal": {"smartmoney_starrers": 3, "hn_points": 936, "stars_growth": 2100},

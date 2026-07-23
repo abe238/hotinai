@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-22",
-  "generated_pt": "Jul 22, 2026 \u00b7 8:00 PM PT",
+  "generated_pt": "Jul 22, 2026 \u00b7 11:44 PM PT",
   "entities": {
     "repos": [
       {
@@ -40,7 +40,7 @@
             "kind": "insiders"
           },
           {
-            "label": "6.1k stars",
+            "label": "6.2k stars",
             "kind": "stars"
           },
           {
@@ -70,7 +70,7 @@
             "kind": "insiders"
           },
           {
-            "label": "21.8k stars",
+            "label": "21.9k stars",
             "kind": "stars"
           },
           {
@@ -126,7 +126,7 @@
             "kind": "insiders"
           },
           {
-            "label": "14.5k stars",
+            "label": "14.6k stars",
             "kind": "stars"
           }
         ],
@@ -143,28 +143,6 @@
       },
       {
         "rank": 6,
-        "name": "yuan1z0825/nature-skills",
-        "url": "https://github.com/yuan1z0825/nature-skills",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "30.5k stars",
-            "kind": "stars"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 7,
         "name": "bigpizzav3/codexplusplus",
         "url": "https://github.com/bigpizzav3/codexplusplus",
         "meta": null,
@@ -186,13 +164,13 @@
         ]
       },
       {
-        "rank": 8,
+        "rank": 7,
         "name": "langchain-ai/openwiki",
         "url": "https://github.com/langchain-ai/openwiki",
         "meta": null,
         "receipts": [
           {
-            "label": "12.9k stars",
+            "label": "13k stars",
             "kind": "stars"
           }
         ],
@@ -208,29 +186,7 @@
         ]
       },
       {
-        "rank": 9,
-        "name": "bradautomates/claude-video",
-        "url": "https://github.com/bradautomates/claude-video",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "9.6k stars",
-            "kind": "stars"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 10,
+        "rank": 8,
         "name": "x4gking/x4g",
         "url": "https://github.com/x4gking/x4g",
         "meta": null,
@@ -252,7 +208,7 @@
         ]
       },
       {
-        "rank": 11,
+        "rank": 9,
         "name": "oso95/scroll-world",
         "url": "https://github.com/oso95/scroll-world",
         "meta": null,
@@ -274,7 +230,7 @@
         ]
       },
       {
-        "rank": 12,
+        "rank": 10,
         "name": "cobusgreyling/loop-engineering",
         "url": "https://github.com/cobusgreyling/loop-engineering",
         "meta": null,
@@ -296,7 +252,7 @@
         ]
       },
       {
-        "rank": 13,
+        "rank": 11,
         "name": "XxHuberrr/Mineradio",
         "url": "https://github.com/XxHuberrr/Mineradio",
         "meta": null,
@@ -318,7 +274,7 @@
         ]
       },
       {
-        "rank": 14,
+        "rank": 12,
         "name": "yu9191/wloc",
         "url": "https://github.com/yu9191/wloc",
         "meta": null,
@@ -340,7 +296,7 @@
         ]
       },
       {
-        "rank": 15,
+        "rank": 13,
         "name": "laoma2053/awesome-zhuiju-free",
         "url": "https://github.com/laoma2053/awesome-zhuiju-free",
         "meta": null,
@@ -362,7 +318,7 @@
         ]
       },
       {
-        "rank": 16,
+        "rank": 14,
         "name": "darrylmorley/whatcable",
         "url": "https://github.com/darrylmorley/whatcable",
         "meta": null,
@@ -384,7 +340,7 @@
         ]
       },
       {
-        "rank": 17,
+        "rank": 15,
         "name": "moonshotai/kimi-code",
         "url": "https://github.com/moonshotai/kimi-code",
         "meta": null,
@@ -406,7 +362,7 @@
         ]
       },
       {
-        "rank": 18,
+        "rank": 16,
         "name": "dnshe/dnshe-freedomains",
         "url": "https://github.com/dnshe/dnshe-freedomains",
         "meta": null,
@@ -428,13 +384,13 @@
         ]
       },
       {
-        "rank": 19,
+        "rank": 17,
         "name": "baidu/unlimited-ocr",
         "url": "https://github.com/baidu/unlimited-ocr",
         "meta": null,
         "receipts": [
           {
-            "label": "17.5k stars",
+            "label": "17.7k stars",
             "kind": "stars"
           }
         ],
@@ -450,7 +406,7 @@
         ]
       },
       {
-        "rank": 20,
+        "rank": 18,
         "name": "ayghri/i-have-adhd",
         "url": "https://github.com/ayghri/i-have-adhd",
         "meta": null,
@@ -460,7 +416,7 @@
             "kind": "insiders"
           },
           {
-            "label": "8.4k stars",
+            "label": "8.6k stars",
             "kind": "stars"
           }
         ],
@@ -476,7 +432,7 @@
         ]
       },
       {
-        "rank": 21,
+        "rank": 19,
         "name": "googlecloudplatform/knowledge-catalog",
         "url": "https://github.com/googlecloudplatform/knowledge-catalog",
         "meta": null,
@@ -498,13 +454,13 @@
         ]
       },
       {
-        "rank": 22,
+        "rank": 20,
         "name": "lidge-jun/opencodex",
         "url": "https://github.com/lidge-jun/opencodex",
         "meta": null,
         "receipts": [
           {
-            "label": "3.7k stars",
+            "label": "3.8k stars",
             "kind": "stars"
           }
         ],
@@ -520,7 +476,7 @@
         ]
       },
       {
-        "rank": 23,
+        "rank": 21,
         "name": "withmarbleapp/os-taxonomy",
         "url": "https://github.com/withmarbleapp/os-taxonomy",
         "meta": null,
@@ -546,7 +502,7 @@
         ]
       },
       {
-        "rank": 24,
+        "rank": 22,
         "name": "malisper/pgrust",
         "url": "https://github.com/malisper/pgrust",
         "meta": "Postgres rewritten in Rust, now passing 100% of the Postgres regression tests",
@@ -559,7 +515,7 @@
         "badges": []
       },
       {
-        "rank": 25,
+        "rank": 23,
         "name": "iofficeai/officecli",
         "url": "https://github.com/iofficeai/officecli",
         "meta": "OfficeCLI: Office suite for AI agents to read and edit Microsoft Office files",
@@ -572,7 +528,33 @@
         "badges": []
       },
       {
-        "rank": 26,
+        "rank": 24,
+        "name": "marcelroed/gigatoken",
+        "url": "https://github.com/marcelroed/gigatoken",
+        "meta": "GigaToken: ~1000x faster Language model tokenization",
+        "receipts": [
+          {
+            "label": "\u2605 thesephist +1 insiders",
+            "kind": "insiders"
+          },
+          {
+            "label": "453 pts",
+            "kind": "hn"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 25,
         "name": "stupside/castor",
         "url": "https://github.com/stupside/castor",
         "meta": "Better and Cheaper Than IPTV",
@@ -585,7 +567,7 @@
         "badges": []
       },
       {
-        "rank": 27,
+        "rank": 26,
         "name": "DietrichGebert/ponytail",
         "url": "https://github.com/DietrichGebert/ponytail",
         "meta": null,
@@ -607,7 +589,7 @@
         ]
       },
       {
-        "rank": 28,
+        "rank": 27,
         "name": "odysseus-dev/odysseus",
         "url": "https://github.com/odysseus-dev/odysseus",
         "meta": null,
@@ -629,7 +611,7 @@
         ]
       },
       {
-        "rank": 29,
+        "rank": 28,
         "name": "nexu-io/open-design",
         "url": "https://github.com/nexu-io/open-design",
         "meta": null,
@@ -651,7 +633,7 @@
         ]
       },
       {
-        "rank": 30,
+        "rank": 29,
         "name": "handy-computer/transcribe.cpp",
         "url": "https://github.com/handy-computer/transcribe.cpp",
         "meta": null,
@@ -673,7 +655,7 @@
         ]
       },
       {
-        "rank": 31,
+        "rank": 30,
         "name": "antirez/ds4",
         "url": "https://github.com/antirez/ds4",
         "meta": null,
@@ -695,13 +677,13 @@
         ]
       },
       {
-        "rank": 32,
+        "rank": 31,
         "name": "Nutlope/hallmark",
         "url": "https://github.com/Nutlope/hallmark",
         "meta": null,
         "receipts": [
           {
-            "label": "15.7k stars",
+            "label": "15.8k stars",
             "kind": "stars"
           }
         ],
@@ -717,7 +699,7 @@
         ]
       },
       {
-        "rank": 33,
+        "rank": 32,
         "name": "XiaomiMiMo/MiMo-Code",
         "url": "https://github.com/XiaomiMiMo/MiMo-Code",
         "meta": null,
@@ -739,13 +721,13 @@
         ]
       },
       {
-        "rank": 34,
+        "rank": 33,
         "name": "t8y2/dbx",
         "url": "https://github.com/t8y2/dbx",
         "meta": null,
         "receipts": [
           {
-            "label": "11.2k stars",
+            "label": "11.3k stars",
             "kind": "stars"
           }
         ],
@@ -761,7 +743,7 @@
         ]
       },
       {
-        "rank": 35,
+        "rank": 34,
         "name": "alibaba/open-code-review",
         "url": "https://github.com/alibaba/open-code-review",
         "meta": null,
@@ -783,29 +765,7 @@
         ]
       },
       {
-        "rank": 36,
-        "name": "marcelroed/gigatoken",
-        "url": "https://github.com/marcelroed/gigatoken",
-        "meta": "GigaToken: ~1000x faster Language model tokenization",
-        "receipts": [
-          {
-            "label": "\u2605 thesephist \u00b7 insider",
-            "kind": "insiders"
-          },
-          {
-            "label": "387 pts",
-            "kind": "hn"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 37,
+        "rank": 35,
         "name": "virgiliojr94/book-to-skill",
         "url": "https://github.com/virgiliojr94/book-to-skill",
         "meta": null,
@@ -827,7 +787,7 @@
         ]
       },
       {
-        "rank": 38,
+        "rank": 36,
         "name": "zhaoxuya520/reverse-skill",
         "url": "https://github.com/zhaoxuya520/reverse-skill",
         "meta": null,
@@ -849,7 +809,7 @@
         ]
       },
       {
-        "rank": 39,
+        "rank": 37,
         "name": "freestylefly/awesome-gpt-image-2",
         "url": "https://github.com/freestylefly/awesome-gpt-image-2",
         "meta": null,
@@ -871,7 +831,7 @@
         ]
       },
       {
-        "rank": 40,
+        "rank": 38,
         "name": "EpicGames/lore",
         "url": "https://github.com/EpicGames/lore",
         "meta": null,
@@ -893,7 +853,7 @@
         ]
       },
       {
-        "rank": 41,
+        "rank": 39,
         "name": "nexu-io/html-anything",
         "url": "https://github.com/nexu-io/html-anything",
         "meta": null,
@@ -915,13 +875,13 @@
         ]
       },
       {
-        "rank": 42,
+        "rank": 40,
         "name": "simonlin1212/a-stock-data",
         "url": "https://github.com/simonlin1212/a-stock-data",
         "meta": null,
         "receipts": [
           {
-            "label": "7.6k stars",
+            "label": "7.7k stars",
             "kind": "stars"
           }
         ],
@@ -937,13 +897,13 @@
         ]
       },
       {
-        "rank": 43,
+        "rank": 41,
         "name": "omnigent-ai/omnigent",
         "url": "https://github.com/omnigent-ai/omnigent",
         "meta": null,
         "receipts": [
           {
-            "label": "7.6k stars",
+            "label": "7.7k stars",
             "kind": "stars"
           }
         ],
@@ -959,7 +919,7 @@
         ]
       },
       {
-        "rank": 44,
+        "rank": 42,
         "name": "AprilNEA/OpenLogi",
         "url": "https://github.com/AprilNEA/OpenLogi",
         "meta": null,
@@ -981,7 +941,7 @@
         ]
       },
       {
-        "rank": 45,
+        "rank": 43,
         "name": "StarTrail-org/PixelRAG",
         "url": "https://github.com/StarTrail-org/PixelRAG",
         "meta": null,
@@ -1003,7 +963,29 @@
         ]
       },
       {
-        "rank": 46,
+        "rank": 44,
+        "name": "simplifaisoul/osiris",
+        "url": "https://github.com/simplifaisoul/osiris",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "7.1k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 45,
         "name": "FULU-Foundation/OrcaSlicer-bambulab",
         "url": "https://github.com/FULU-Foundation/OrcaSlicer-bambulab",
         "meta": null,
@@ -1025,7 +1007,7 @@
         ]
       },
       {
-        "rank": 47,
+        "rank": 46,
         "name": "open-gsd/gsd-core",
         "url": "https://github.com/open-gsd/gsd-core",
         "meta": null,
@@ -1047,29 +1029,7 @@
         ]
       },
       {
-        "rank": 48,
-        "name": "simplifaisoul/osiris",
-        "url": "https://github.com/simplifaisoul/osiris",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "7k stars",
-            "kind": "stars"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 49,
+        "rank": 47,
         "name": "Imbad0202/academic-research-skills-codex",
         "url": "https://github.com/Imbad0202/academic-research-skills-codex",
         "meta": null,
@@ -1091,7 +1051,7 @@
         ]
       },
       {
-        "rank": 50,
+        "rank": 48,
         "name": "diegosouzapw/omniroute",
         "url": "https://github.com/diegosouzapw/omniroute",
         "meta": null,
@@ -1109,7 +1069,7 @@
         ]
       },
       {
-        "rank": 51,
+        "rank": 49,
         "name": "vercel-labs/native",
         "url": "https://github.com/vercel-labs/native",
         "meta": null,
@@ -1131,7 +1091,7 @@
         ]
       },
       {
-        "rank": 52,
+        "rank": 50,
         "name": "deepseek-ai/DeepSpec",
         "url": "https://github.com/deepseek-ai/DeepSpec",
         "meta": null,
@@ -1153,29 +1113,7 @@
         ]
       },
       {
-        "rank": 53,
-        "name": "anthropics/defending-code-reference-harness",
-        "url": "https://github.com/anthropics/defending-code-reference-harness",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "6.7k stars",
-            "kind": "stars"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 54,
+        "rank": 51,
         "name": "unicity-aos/aos-ce",
         "url": "https://github.com/unicity-aos/aos-ce",
         "meta": null,
@@ -1197,7 +1135,29 @@
         ]
       },
       {
-        "rank": 55,
+        "rank": 52,
+        "name": "anthropics/defending-code-reference-harness",
+        "url": "https://github.com/anthropics/defending-code-reference-harness",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "6.7k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 53,
         "name": "teamchong/pxpipe",
         "url": "https://github.com/teamchong/pxpipe",
         "meta": null,
@@ -1219,13 +1179,13 @@
         ]
       },
       {
-        "rank": 56,
+        "rank": 54,
         "name": "opensquilla/opensquilla",
         "url": "https://github.com/opensquilla/opensquilla",
         "meta": null,
         "receipts": [
           {
-            "label": "6.2k stars",
+            "label": "6.3k stars",
             "kind": "stars"
           }
         ],
@@ -1241,7 +1201,7 @@
         ]
       },
       {
-        "rank": 57,
+        "rank": 55,
         "name": "zgwl/chinese-buy-us-stock-guide",
         "url": "https://github.com/zgwl/chinese-buy-us-stock-guide",
         "meta": null,
@@ -1263,13 +1223,13 @@
         ]
       },
       {
-        "rank": 58,
+        "rank": 56,
         "name": "1weiho/open-slide",
         "url": "https://github.com/1weiho/open-slide",
         "meta": null,
         "receipts": [
           {
-            "label": "5.9k stars",
+            "label": "6k stars",
             "kind": "stars"
           }
         ],
@@ -1285,7 +1245,7 @@
         ]
       },
       {
-        "rank": 59,
+        "rank": 57,
         "name": "XBuilderLAB/cheat-on-content",
         "url": "https://github.com/XBuilderLAB/cheat-on-content",
         "meta": null,
@@ -1307,7 +1267,7 @@
         ]
       },
       {
-        "rank": 60,
+        "rank": 58,
         "name": "datawhalechina/Agent-Learning-Hub",
         "url": "https://github.com/datawhalechina/Agent-Learning-Hub",
         "meta": null,
@@ -1324,6 +1284,676 @@
           },
           {
             "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 59,
+        "name": "erincatto/box3d",
+        "url": "https://github.com/erincatto/box3d",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "5.5k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 60,
+        "name": "op7418/guizang-social-card-skill",
+        "url": "https://github.com/op7418/guizang-social-card-skill",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "5.4k stars",
+            "kind": "stars"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      }
+    ],
+    "rising": [
+      {
+        "rank": 1,
+        "name": "xai-org/grok-build",
+        "url": "https://github.com/xai-org/grok-build",
+        "meta": "SpaceXAI's coding agent harness and TUI. Fullscreen, mouse interactive, extensib",
+        "receipts": [
+          {
+            "label": "+2.7k/day",
+            "kind": "stars"
+          },
+          {
+            "label": "21.9k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "8d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "name": "dietrichgebert/ponytail",
+        "url": "https://github.com/DietrichGebert/ponytail",
+        "meta": "Makes your AI agent think like the laziest senior dev in the room. The best code",
+        "receipts": [
+          {
+            "label": "+2.2k/day",
+            "kind": "stars"
+          },
+          {
+            "label": "88k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "40d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "name": "odysseus-dev/odysseus",
+        "url": "https://github.com/odysseus-dev/odysseus",
+        "meta": "Self-hosted AI workspace.",
+        "receipts": [
+          {
+            "label": "+1.6k/day",
+            "kind": "stars"
+          },
+          {
+            "label": "83.6k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "52d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "name": "unicity-aos/aos-ce",
+        "url": "https://github.com/unicity-aos/aos-ce",
+        "meta": "AOS Community Edition: the open agent operating system.",
+        "receipts": [
+          {
+            "label": "+670/day",
+            "kind": "stars"
+          },
+          {
+            "label": "6.7k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "10d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "name": "lopopolo/harness-engineering",
+        "url": "https://github.com/lopopolo/harness-engineering",
+        "meta": "\ud83d\udc0e Ryan Lopopolo\u2019s anthology, field guide, and agent context bundle for harness e",
+        "receipts": [
+          {
+            "label": "+553/day",
+            "kind": "stars"
+          },
+          {
+            "label": "2.2k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "4d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "name": "langchain-ai/openwiki",
+        "url": "https://github.com/langchain-ai/openwiki",
+        "meta": "OpenWiki is a CLI that writes and maintains agent documentation for your codebas",
+        "receipts": [
+          {
+            "label": "+432/day",
+            "kind": "stars"
+          },
+          {
+            "label": "13k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "30d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "name": "oso95/scroll-world",
+        "url": "https://github.com/oso95/scroll-world",
+        "meta": "A skill that turn any brand into a scrollable 3D world",
+        "receipts": [
+          {
+            "label": "+305/day",
+            "kind": "stars"
+          },
+          {
+            "label": "4.9k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "16d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 8,
+        "name": "xiaomimimo/mimo-code",
+        "url": "https://github.com/XiaomiMiMo/MiMo-Code",
+        "meta": "MiMo Code: Where Models and Agents Co-Evolve",
+        "receipts": [
+          {
+            "label": "+294/day",
+            "kind": "stars"
+          },
+          {
+            "label": "12.3k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "42d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 9,
+        "name": "pireel/pireel",
+        "url": "https://github.com/pireel/pireel",
+        "meta": "Open-source, backend-free AI video editor for talking-head video \u2014 storyboarding",
+        "receipts": [
+          {
+            "label": "+267/day",
+            "kind": "stars"
+          },
+          {
+            "label": "534 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "2d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "name": "elder-plinius/t3mp3st",
+        "url": "https://github.com/elder-plinius/T3MP3ST",
+        "meta": "autonomous red teaming platform; multi-agent offensive-security meta-harness",
+        "receipts": [
+          {
+            "label": "+255/day",
+            "kind": "stars"
+          },
+          {
+            "label": "5.1k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "20d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 11,
+        "name": "cobusgreyling/loop-engineering",
+        "url": "https://github.com/cobusgreyling/loop-engineering",
+        "meta": "Practical patterns, starters & CLI tools for loop engineering with AI coding age",
+        "receipts": [
+          {
+            "label": "+214/day",
+            "kind": "stars"
+          },
+          {
+            "label": "9.2k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "43d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 12,
+        "name": "nethical6/conversation-steganography",
+        "url": "https://github.com/nethical6/conversation-steganography",
+        "meta": "Use LLMs to hide messages inside normal looking conversations",
+        "receipts": [
+          {
+            "label": "+203/day",
+            "kind": "stars"
+          },
+          {
+            "label": "1k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "5d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 13,
+        "name": "omnigent-ai/omnigent",
+        "url": "https://github.com/omnigent-ai/omnigent",
+        "meta": "Omnigent is an open-source AI agent framework and meta-harness: orchestrate Clau",
+        "receipts": [
+          {
+            "label": "+187/day",
+            "kind": "stars"
+          },
+          {
+            "label": "7.7k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "41d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 14,
+        "name": "helloianneo/ian-xiaohei-illustrations",
+        "url": "https://github.com/helloianneo/ian-xiaohei-illustrations",
+        "meta": "\u4e2d\u6587\u5c0f\u9ed1\u602a\u8bde\u6b63\u6587\u914d\u56fe\u751f\u6210 Skill | 16:9 \u767d\u5e95\u624b\u7ed8 | \u5c11\u91cf\u7ea2\u6a59\u84dd\u6279\u6ce8 | Codex Skill",
+        "receipts": [
+          {
+            "label": "+150/day",
+            "kind": "stars"
+          },
+          {
+            "label": "8.4k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "56d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "name": "synthetic-sciences/openscience",
+        "url": "https://github.com/synthetic-sciences/openscience",
+        "meta": "The open-source AI workbench for scientific research",
+        "receipts": [
+          {
+            "label": "+142/day",
+            "kind": "stars"
+          },
+          {
+            "label": "2.7k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "19d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 16,
+        "name": "penecho/penecho",
+        "url": "https://github.com/penecho/penecho",
+        "meta": "Think with AI beyond the chat box. A shared canvas for handwriting, equations, d",
+        "receipts": [
+          {
+            "label": "+135/day",
+            "kind": "stars"
+          },
+          {
+            "label": "1.1k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "8d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 17,
+        "name": "oomol-lab/open-connector",
+        "url": "https://github.com/oomol-lab/open-connector",
+        "meta": "Open-source auth gateway connecting 1000+ SaaS providers to AI agents through SD",
+        "receipts": [
+          {
+            "label": "+135/day",
+            "kind": "stars"
+          },
+          {
+            "label": "3.1k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "23d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 18,
+        "name": "startrail-org/pixelrag",
+        "url": "https://github.com/StarTrail-org/PixelRAG",
+        "meta": "The end of web parsing. The beginning of scalable pixel-native search. link: htt",
+        "receipts": [
+          {
+            "label": "+131/day",
+            "kind": "stars"
+          },
+          {
+            "label": "7.1k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "54d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 19,
+        "name": "isjiamu/gzh-design-skill",
+        "url": "https://github.com/isjiamu/gzh-design-skill",
+        "meta": "\u628a Markdown \u4e00\u952e\u6392\u6210\u53ef\u76f4\u63a5\u7c98\u8fdb\u516c\u4f17\u53f7\u7f16\u8f91\u5668\u7684\u7cbe\u81f4 HTML \u2014\u2014 6 \u5957\u7cbe\u9009\u4e3b\u9898 + \u4e3b\u9898\u751f\u6210\u5668 + \u53cc\u5173\u5361\u6821\u9a8c\u3002An AI-agent skill ",
+        "receipts": [
+          {
+            "label": "+116/day",
+            "kind": "stars"
+          },
+          {
+            "label": "2.4k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "21d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 20,
+        "name": "lidge-jun/opencodex",
+        "url": "https://github.com/lidge-jun/opencodex",
+        "meta": "Universal provider proxy for OpenAI Codex & Claude Code \u2014 use any LLM (Claude, G",
+        "receipts": [
+          {
+            "label": "+112/day",
+            "kind": "stars"
+          },
+          {
+            "label": "3.8k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "34d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 21,
+        "name": "sahir619/fable-method",
+        "url": "https://github.com/Sahir619/fable-method",
+        "meta": "The Fable Workflow: how Claude Fable 5 worked, distilled into skills any model c",
+        "receipts": [
+          {
+            "label": "+111/day",
+            "kind": "stars"
+          },
+          {
+            "label": "1.8k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "16d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "name": "vercel/eve",
+        "url": "https://github.com/vercel/eve",
+        "meta": "The Framework for Building Agents",
+        "receipts": [
+          {
+            "label": "+110/day",
+            "kind": "stars"
+          },
+          {
+            "label": "4k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "36d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 23,
+        "name": "alephaitech/workbuddyguide",
+        "url": "https://github.com/AlephAITech/WorkBuddyGuide",
+        "meta": "A practical, open-source guide to mastering WorkBuddy through real-world workflo",
+        "receipts": [
+          {
+            "label": "+102/day",
+            "kind": "stars"
+          },
+          {
+            "label": "1.2k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "12d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 24,
+        "name": "op7418/guizang-social-card-skill",
+        "url": "https://github.com/op7418/guizang-social-card-skill",
+        "meta": "\ud83e\udea7 Claude Code / Codex skill \u2014 generate Xiaohongshu carousels & WeChat 21:9+1:1 c",
+        "receipts": [
+          {
+            "label": "+97/day",
+            "kind": "stars"
+          },
+          {
+            "label": "5.4k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "56d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
             "hot": false
           }
         ]
@@ -1458,24 +2088,6 @@
       },
       {
         "rank": 8,
-        "name": "genivia/ugrep",
-        "url": "https://github.com/genivia/ugrep",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "\u2605 deepfates +1 insiders",
-            "kind": "insiders"
-          }
-        ],
-        "badges": [
-          {
-            "label": "smart-money",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 9,
         "name": "julian-adv/openmmo",
         "url": "https://github.com/julian-adv/openmmo",
         "meta": null,
@@ -1493,13 +2105,31 @@
         ]
       },
       {
-        "rank": 10,
+        "rank": 9,
         "name": "lmcache/lmcache",
         "url": "https://github.com/lmcache/lmcache",
         "meta": null,
         "receipts": [
           {
             "label": "\u2605 deepfates +1 insiders",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 10,
+        "name": "marcelroed/gigatoken",
+        "url": "https://github.com/marcelroed/gigatoken",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 jxmnop +1 insiders",
             "kind": "insiders"
           }
         ],
@@ -1638,24 +2268,6 @@
       },
       {
         "rank": 18,
-        "name": "tavianator/bfs",
-        "url": "https://github.com/tavianator/bfs",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "\u2605 deepfates +1 insiders",
-            "kind": "insiders"
-          }
-        ],
-        "badges": [
-          {
-            "label": "smart-money",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 19,
         "name": "thinking-machines-lab/tinker-cookbook",
         "url": "https://github.com/thinking-machines-lab/tinker-cookbook",
         "meta": null,
@@ -1673,7 +2285,7 @@
         ]
       },
       {
-        "rank": 20,
+        "rank": 19,
         "name": "tldraw/tldraw-offline",
         "url": "https://github.com/tldraw/tldraw-offline",
         "meta": null,
@@ -1691,7 +2303,7 @@
         ]
       },
       {
-        "rank": 21,
+        "rank": 20,
         "name": "wecoai/aideml",
         "url": "https://github.com/wecoai/aideml",
         "meta": null,
@@ -1709,13 +2321,31 @@
         ]
       },
       {
-        "rank": 22,
+        "rank": 21,
         "name": "xai-org/grok-build",
         "url": "https://github.com/xai-org/grok-build",
         "meta": null,
         "receipts": [
           {
             "label": "\u2605 deepfates +1 insiders",
+            "kind": "insiders"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 22,
+        "name": "acsandmann/rift",
+        "url": "https://github.com/acsandmann/rift",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 brandondamos \u00b7 insider",
             "kind": "insiders"
           }
         ],
@@ -2376,8 +3006,8 @@
       },
       {
         "rank": 59,
-        "name": "google/gnm",
-        "url": "https://github.com/google/gnm",
+        "name": "genivia/ugrep",
+        "url": "https://github.com/genivia/ugrep",
         "meta": null,
         "receipts": [
           {
@@ -2394,12 +3024,12 @@
       },
       {
         "rank": 60,
-        "name": "gregwar/microban",
-        "url": "https://github.com/gregwar/microban",
+        "name": "google/gnm",
+        "url": "https://github.com/google/gnm",
         "meta": null,
         "receipts": [
           {
-            "label": "\u2605 kevin_zakka \u00b7 insider",
+            "label": "\u2605 deepfates \u00b7 insider",
             "kind": "insiders"
           }
         ],
@@ -4353,6 +4983,14 @@
     "news": [
       {
         "rank": "\u00b7",
+        "name": "Wed, 22 Jul 2026",
+        "url": "https://news.smol.ai/issues/26-07-22-not-much/",
+        "meta": null,
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": "\u00b7",
         "name": "Tue, 21 Jul 2026",
         "url": "https://news.smol.ai/issues/26-07-21-not-much/",
         "meta": null,
@@ -4819,14 +5457,6 @@
         "rank": "\u00b7",
         "name": "Tue, 28 Apr 2026",
         "url": "https://news.smol.ai/issues/26-04-28-not-much/",
-        "meta": null,
-        "receipts": [],
-        "badges": []
-      },
-      {
-        "rank": "\u00b7",
-        "name": "Mon, 27 Apr 2026",
-        "url": "https://news.smol.ai/issues/26-04-27-not-much/",
         "meta": null,
         "receipts": [],
         "badges": []
