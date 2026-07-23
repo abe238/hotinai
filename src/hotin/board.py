@@ -106,13 +106,19 @@ def repo_rows(ranked: List[dict]) -> List[dict]:
             receipts.append({"label": "{}/wk".format(_num(finite_float(signal.get("npm_downloads_week")))), "kind": "npm"})
         if finite_int(signal.get("reddit_score"), 0):
             receipts.append({"label": "reddit {}".format(_num(finite_int(signal.get("reddit_score")))), "kind": "reddit"})
-        name = repo.get("name") if isinstance(repo.get("name"), str) else slug
-        meta = None
-        if name and name.casefold() != str(slug).casefold():
-            meta = name  # a human title (HN/Reddit) the slug doesn't carry
-            name = slug
+        raw_name = repo.get("name") if isinstance(repo.get("name"), str) else slug
+        # A human title (HN/Reddit) the slug doesn't carry, else the repo's own
+        # GitHub description — without this, GitHub-sourced rows (name == slug)
+        # showed just the bare owner/repo with no context.
+        title = raw_name if raw_name and raw_name.casefold() != str(slug).casefold() else None
+        desc = title or _meta(repo).get("description")
+        if isinstance(desc, str) and desc.strip():
+            clean = desc.strip()
+            meta = (clean[:100].rstrip() + "…") if len(clean) > 100 else clean
+        else:
+            meta = None
         rows.append({
-            "rank": i, "name": name, "url": repo.get("url"), "meta": meta,
+            "rank": i, "name": slug, "url": repo.get("url"), "meta": meta,
             "receipts": receipts, "badges": _badges(repo),
         })
     return rows
