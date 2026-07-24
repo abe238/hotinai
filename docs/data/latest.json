@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-24",
-  "generated_pt": "Jul 23, 2026 \u00b7 11:19 PM PT",
+  "generated_pt": "Jul 23, 2026 \u00b7 11:21 PM PT",
   "entities": {
     "repos": [
       {
@@ -477,7 +477,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -522,7 +522,7 @@
             "kind": "stars"
           },
           {
-            "label": "+463/day",
+            "label": "+465/day",
             "kind": "stars"
           },
           {
@@ -745,7 +745,7 @@
             "kind": "stars"
           },
           {
-            "label": "+578/day",
+            "label": "+579/day",
             "kind": "stars"
           },
           {
@@ -835,7 +835,7 @@
             "kind": "stars"
           },
           {
-            "label": "+224/day",
+            "label": "+225/day",
             "kind": "stars"
           },
           {
@@ -1039,7 +1039,7 @@
             "kind": "stars"
           },
           {
-            "label": "+297/day",
+            "label": "+298/day",
             "kind": "stars"
           },
           {
@@ -2557,7 +2557,7 @@
             "kind": "stars"
           },
           {
-            "label": "855 stars",
+            "label": "856 stars",
             "kind": "stars"
           },
           {
@@ -2683,11 +2683,11 @@
         "meta": null,
         "receipts": [
           {
-            "label": "+101/day",
+            "label": "+102/day",
             "kind": "stars"
           },
           {
-            "label": "101 stars",
+            "label": "102 stars",
             "kind": "stars"
           },
           {
@@ -4489,7 +4489,7 @@
         "rank": 2,
         "name": "thinkingmachines/Inkling",
         "url": "https://huggingface.co/thinkingmachines/Inkling",
-        "meta": "image-text-to-text \u00b7 transformers \u00b7 apache-2.0",
+        "meta": "Inkling is a general-purpose multimodal model that accepts text, image and audio inputs and generates text outputs. It is intended for use i\u2026",
         "receipts": [
           {
             "label": "24.7k downloads",
@@ -4506,7 +4506,7 @@
         "rank": 3,
         "name": "poolside/Laguna-S-2.1",
         "url": "https://huggingface.co/poolside/Laguna-S-2.1",
-        "meta": "text-generation \u00b7 transformers \u00b7 openmdw-1.1",
+        "meta": "Laguna S 2.1 is a 118B total parameter Mixture-of-Experts model with 8B activated parameters per token, designed for agentic coding and long\u2026",
         "receipts": [
           {
             "label": "13.3k downloads",
@@ -4523,7 +4523,7 @@
         "rank": 4,
         "name": "upstage/Solar-Open2-250B",
         "url": "https://huggingface.co/upstage/Solar-Open2-250B",
-        "meta": "text-generation \u00b7 transformers \u00b7 other",
+        "meta": "Solar Open 2 is Upstage\u2019s 250B-A15B open-weight large language model, built for agentic use cases such as office productivity, document-inte\u2026",
         "receipts": [
           {
             "label": "362 downloads",
@@ -4540,7 +4540,7 @@
         "rank": 5,
         "name": "DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
         "url": "https://huggingface.co/DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF",
-        "meta": "image-text-to-text \u00b7 apache-2.0",
+        "meta": "The strongest, smartest open source multi-stage model fine tune for consumer hardware ever and BUILT on consumer hardware via Unsloth.",
         "receipts": [
           {
             "label": "335k downloads",
@@ -4557,7 +4557,7 @@
         "rank": 6,
         "name": "prism-ml/Ternary-Bonsai-27B-gguf",
         "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf",
-        "meta": "text-generation \u00b7 llama.cpp \u00b7 apache-2.0",
+        "meta": "Each weight takes a value from {\u22121, 0, +1}, with one shared FP16 scale factor for every group of 128 weights. A ternary value carries log\u20823\u2026",
         "receipts": [
           {
             "label": "576k downloads",
@@ -4574,7 +4574,7 @@
         "rank": 7,
         "name": "Nanbeige/Nanbeige4.2-3B",
         "url": "https://huggingface.co/Nanbeige/Nanbeige4.2-3B",
-        "meta": "text-generation \u00b7 transformers \u00b7 apache-2.0",
+        "meta": "Nanbeige4.2-3B is a compact agentic model built on Nanbeige4.2-3B-Base, designed to combine strong agentic behavior with broad reasoning and\u2026",
         "receipts": [
           {
             "label": "4.5k downloads",
@@ -4591,7 +4591,7 @@
         "rank": 8,
         "name": "zai-org/GLM-5.2",
         "url": "https://huggingface.co/zai-org/GLM-5.2",
-        "meta": "text-generation \u00b7 transformers \u00b7 mit",
+        "meta": "GLM-5.2 supports deployment with the following frameworks. Feel free to try them out:",
         "receipts": [
           {
             "label": "596k downloads",
@@ -4608,7 +4608,7 @@
         "rank": 9,
         "name": "prism-ml/Bonsai-27B-gguf",
         "url": "https://huggingface.co/prism-ml/Bonsai-27B-gguf",
-        "meta": "text-generation \u00b7 llama.cpp \u00b7 apache-2.0",
+        "meta": "Each weight is a single sign bit: 0 maps to \u2212scale, 1 maps to +scale. Every group of 128 weights shares one FP16 scale factor.",
         "receipts": [
           {
             "label": "1.9M downloads",
@@ -4625,7 +4625,7 @@
         "rank": 10,
         "name": "HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
         "url": "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive",
-        "meta": "image-text-to-text \u00b7 apache-2.0",
+        "meta": "Qwen3.6-35B-A3B uncensored by HauhauCS. 0/465 Refusals.",
         "receipts": [
           {
             "label": "2M downloads",
@@ -4642,7 +4642,7 @@
         "rank": 11,
         "name": "conradlocke/krea2-identity-edit",
         "url": "https://huggingface.co/conradlocke/krea2-identity-edit",
-        "meta": "other",
+        "meta": "\u2615 Support on Ko-fi, all tips go straight to GPU compute for future versions.",
         "receipts": [
           {
             "label": "520 likes",
@@ -4655,7 +4655,7 @@
         "rank": 12,
         "name": "microsoft/Mage-Flow",
         "url": "https://huggingface.co/microsoft/Mage-Flow",
-        "meta": "text-to-image \u00b7 diffusers \u00b7 mit",
+        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
         "receipts": [
           {
             "label": "411 downloads",
@@ -4672,7 +4672,7 @@
         "rank": 13,
         "name": "Motif-Technologies/Motif-3-Beta",
         "url": "https://huggingface.co/Motif-Technologies/Motif-3-Beta",
-        "meta": "text-generation \u00b7 transformers",
+        "meta": "Motif-3 is a large-scale Mixture-of-Experts (MoE) language model built from the ground up by Motif Technologies following a fully in-house,\u2026",
         "receipts": [
           {
             "label": "1.9k downloads",
@@ -4689,7 +4689,7 @@
         "rank": 14,
         "name": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF",
         "url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF",
-        "meta": "image-text-to-text \u00b7 gguf \u00b7 apache-2.0",
+        "meta": "GGUF quantizations of empero-ai/Qwythos-9B-Claude-Mythos-5-1M for llama.cpp, Ollama, LM Studio, jan, KoboldCpp, and other GGUF runtimes.",
         "receipts": [
           {
             "label": "2.1M downloads",
@@ -4723,7 +4723,7 @@
         "rank": 16,
         "name": "unsloth/Laguna-S-2.1-GGUF",
         "url": "https://huggingface.co/unsloth/Laguna-S-2.1-GGUF",
-        "meta": "text-generation \u00b7 transformers \u00b7 openmdw-1.1",
+        "meta": "Laguna S 2.1 is a 118B total parameter Mixture-of-Experts model with 8B activated parameters per token, designed for agentic coding and long\u2026",
         "receipts": [
           {
             "label": "28.5k downloads",
@@ -4740,7 +4740,7 @@
         "rank": 17,
         "name": "bottlecapai/ThinkingCap-Qwen3.6-27B",
         "url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B",
-        "meta": "image-text-to-text \u00b7 transformers \u00b7 apache-2.0",
+        "meta": "Capability of Qwen3.6-27B with 50% less thinking tokens on average, and over 90% less in best cases. Achieved via finetuning Qwen3.6-27B (Qw\u2026",
         "receipts": [
           {
             "label": "25.2k downloads",
@@ -4757,7 +4757,7 @@
         "rank": 18,
         "name": "moonshotai/Kimi-K2.7-Code",
         "url": "https://huggingface.co/moonshotai/Kimi-K2.7-Code",
-        "meta": "image-text-to-text \u00b7 transformers \u00b7 other",
+        "meta": "Kimi-K2.7-Code has the same architecture as Kimi-K2.5/Kimi-K2.6, and the deployment method can be directly reused.",
         "receipts": [
           {
             "label": "767k downloads",
@@ -4774,7 +4774,7 @@
         "rank": 19,
         "name": "poolside/Laguna-S-2.1-NVFP4",
         "url": "https://huggingface.co/poolside/Laguna-S-2.1-NVFP4",
-        "meta": "text-generation \u00b7 vllm \u00b7 openmdw-1.1",
+        "meta": "Benchmarks as of 21 July 2026. Laguna S 2.1 in bold; a dash (-) marks a benchmark a model was not evaluated on. Scores marked are as reporte\u2026",
         "receipts": [
           {
             "label": "52.2k downloads",
@@ -4791,7 +4791,7 @@
         "rank": 20,
         "name": "ATH-MaaS/OvisOCR2",
         "url": "https://huggingface.co/ATH-MaaS/OvisOCR2",
-        "meta": "image-text-to-text \u00b7 transformers \u00b7 apache-2.0",
+        "meta": "We are pleased to announce the release of OvisOCR2, a compact 0.8B end-to-end model for page-level document parsing. Given a document page i\u2026",
         "receipts": [
           {
             "label": "26.9k downloads",
