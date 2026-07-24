@@ -167,9 +167,10 @@ def model_rows(ranked: List[dict]) -> List[dict]:
             receipts.append({"label": "{} downloads".format(_num(finite_int(s.get("model_downloads")))), "kind": "npm"})
         if finite_int(s.get("model_likes"), 0):
             receipts.append({"label": "{} likes".format(_num(finite_int(s.get("model_likes")))), "kind": "stars"})
-        # small description: task · library · license, whichever exist
+        # prefer the card's own intro sentence; fall back to task · library · license
         bits = [_meta(m).get(k) for k in ("model_task", "model_library", "model_license")]
-        desc = " · ".join(b for b in bits if isinstance(b, str) and b.strip())
+        tags = " · ".join(b for b in bits if isinstance(b, str) and b.strip())
+        desc = _clip(_meta(m).get("model_description"), 140) or tags
         rows.append({"rank": i, "name": m.get("entity_id") or m.get("name") or "?",
                      "url": m.get("url"), "meta": desc or None,
                      "receipts": receipts, "badges": _badges(m)})

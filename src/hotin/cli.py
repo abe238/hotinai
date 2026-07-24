@@ -1037,8 +1037,9 @@ def _refresh(arguments: argparse.Namespace) -> int:
                     if isinstance(record, dict):
                         cache.upsert(engine._cache_record(record))
         healed = hfpapers.backfill_summaries(cache)
-        if healed and not arguments.quiet:
-            print("healed {} paper summaries".format(healed))
+        healed_models = hfmodels.backfill_descriptions(cache)
+        if (healed or healed_models) and not arguments.quiet and not arguments.json:
+            print("healed {} paper summaries, {} model descriptions".format(healed, healed_models))
         cache.record_observations(engine.observations_from_cache(cache.get_all(), run_id, now))
         cache.prune_observations(now - _RETENTION_DAYS * 86400.0)
         persisted = not isinstance(cache, MemoryCache) and getattr(cache, "_fallback", None) is None

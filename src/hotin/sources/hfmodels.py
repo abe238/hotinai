@@ -6,6 +6,8 @@ by the HF model id (``org/name``); never a repo. Never raises.
 
 from __future__ import annotations
 
+import json
+import re
 import urllib.parse
 from typing import Any, Dict, List, Optional
 
@@ -99,6 +101,97 @@ def fetch(
         return {"records": records[:requested_limit], "status": "ok", "detail": None}
     except Exception:
         return {"records": [], "status": "error", "detail": "hfmodels fetch failed"}
+
+
+_CODE_LINE_RE = re.compile(r"^(from |import |def |class )|[=;]\s*\S+\(|\)\s*$")
+# Doc-section openers are setup text, not a description of the model itself.
+_DOC_OPENER_RE = re.compile(
+    r"^(inference|installation|install|usage|quick\s*start|requirements|setup|how to)\b", re.I)
+
+
+def card_first_paragraph(text: Any) -> Optional[str]:
+    """First prose paragraph of a model-card README: skips YAML frontmatter,
+    fenced code, headings, badges, tables, and code-shaped lines. Pure."""
+    if not isinstance(text, str) or not text.strip():
+        return None
+    if text.startswith("---"):
+        end = text.find("\n---", 3)
+        if end > 0:
+            text = text[end + 4:]
+    prose: List[str] = []
+    in_fence = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        if not stripped:
+            if prose:
+                break  # paragraph ended
+            continue
+        if stripped.startswith(("#", "!", "<", "|", "[", "---", "=", ">",
+                                "- ", "* ", "+ ")) or re.match(r"^\d+[.)] ", stripped):
+            prose = []
+            continue
+        if _CODE_LINE_RE.search(stripped):
+            prose = []
+            continue
+        if not prose and _DOC_OPENER_RE.match(stripped):
+            continue
+        prose.append(stripped)
+    if not prose:
+        return None
+    para = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", " ".join(prose))  # unlink
+    para = re.sub(r"[*_`]", "", para)
+    para = para.replace(" — ", ", ").replace("—", "-")  # house style: no em dashes
+    para = re.sub(r"\s+", " ", para).strip()
+    return para if len(para) >= 40 else None
+
+
+def fetch_description(model_id: str) -> Optional[str]:
+    """One model's card intro from its README, or None. Throttled with the host."""
+    if not isinstance(model_id, str) or not model_id.strip():
+        return None
+    text = _hf.request_text(
+        "https://huggingface.co/{}/raw/main/README.md".format(model_id.strip()))
+    return card_first_paragraph(text[:20000] if isinstance(text, str) else None)
+
+
+def backfill_descriptions(cache: Any, *, max_calls: int = 20) -> int:
+    """Heal cached model rows lacking a card description (same convergence
+    story as hfpapers.backfill_summaries: bounded per refresh, any cache).
+    Never raises; returns how many rows were healed."""
+    healed = 0
+    try:
+        for raw in cache.get_all():
+            if healed >= max_calls:
+                break
+            if not isinstance(raw, dict) or raw.get("entity_type") != "model":
+                continue
+            if raw.get("source") not in (None, "", SOURCE):
+                continue
+            payload = raw.get("signal_json")
+            try:
+                payload = json.loads(payload) if isinstance(payload, str) else (payload or {})
+            except (TypeError, ValueError):
+                continue
+            meta = payload.get("meta") if isinstance(payload.get("meta"), dict) else {}
+            if meta.get("model_description") is not None:
+                continue
+            desc = fetch_description(raw.get("entity_id"))
+            # cache "" for cards with no usable prose so we don't refetch forever
+            meta["model_description"] = desc or ""
+            payload["meta"] = meta
+            updated = dict(raw)
+            updated["signal_json"] = payload
+            updated["fetched_at"] = raw.get("fetched_at")  # heal meta, keep age
+            cache.upsert(updated)
+            healed += 1
+    except Exception:
+        return healed
+    return healed
 
 
 def selftest() -> None:
