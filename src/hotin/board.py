@@ -56,6 +56,22 @@ def _age_days(created_at: Any, now: Optional[float] = None) -> int:
     return max(0, int(seconds // 86400))
 
 
+_MONTHS = ("", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+def _date_label(created_at: Any, now: Optional[float] = None) -> Optional[str]:
+    """Compact human release date: 'Jul 14' this year, 'Oct 2024' otherwise."""
+    match = _ISO_DATE_RE.match(created_at) if isinstance(created_at, str) else None
+    if not match:
+        return None
+    year, month, day = int(match.group(1)), int(match.group(2)), int(match.group(3))
+    if not 1 <= month <= 12:
+        return None
+    this_year = time.gmtime(time.time() if now is None else now).tm_year
+    return "{} {}".format(_MONTHS[month], day if year == this_year else year)
+
+
 def _clip(desc: Any, limit: int = 100) -> Optional[str]:
     """Board meta line: a tidy description or None, never an empty string."""
     if not isinstance(desc, str) or not desc.strip():
@@ -193,6 +209,9 @@ def model_rows(ranked: List[dict]) -> List[dict]:
             receipts.append({"label": "{} downloads".format(_num(finite_int(s.get("model_downloads")))), "kind": "npm"})
         if finite_int(s.get("model_likes"), 0):
             receipts.append({"label": "{} likes".format(_num(finite_int(s.get("model_likes")))), "kind": "stars"})
+        released = _date_label(s.get("created_at"))
+        if released:
+            receipts.append({"label": "released {}".format(released), "kind": "age"})
         # prefer the card's own intro sentence; fall back to task · library · license;
         # a gated model with neither still gets the honest note
         bits = [_meta(m).get(k) for k in ("model_task", "model_library", "model_license")]
@@ -291,6 +310,12 @@ def demo() -> None:
                        "meta": {"model_task": "text-generation",
                                 "model_library": "transformers", "model_license": "mit"}}])
     assert mod[0]["meta"] == "text-generation · transformers · mit"
+    dated = model_rows([{"entity_id": "o/d", "url": "u",
+                         "signal": {"model_likes": 1, "created_at": "2024-10-03T00:00:00Z"},
+                         "meta": {}}])
+    assert any(r["label"] == "released Oct 2024" for r in dated[0]["receipts"])
+    assert _date_label("2026-07-14T13:23:14.000Z", now=1784900000.0) == "Jul 14"
+    assert _date_label("junk") is None
     gated = model_rows([{"entity_id": "g/m", "url": "u", "signal": {},
                          "meta": {"model_gated": True, "model_description": ""}}])
     assert gated[0]["meta"] == "gated · access request required"
