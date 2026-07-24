@@ -128,6 +128,55 @@ def fetch(
         return {"records": [], "status": "error", "detail": "hfpapers fetch failed"}
 
 
+def fetch_summary(arxiv_id: str) -> Optional[str]:
+    """One paper's abstract from the HF API, or None. Throttled with the host."""
+    if not isinstance(arxiv_id, str) or not arxiv_id.strip():
+        return None
+    text = _hf.request_text("https://huggingface.co/api/papers/{}".format(arxiv_id.strip()))
+    if text is None:
+        return None
+    try:
+        summary = (json.loads(text).get("summary") or "").strip()
+    except (TypeError, ValueError, AttributeError):
+        return None
+    return summary or None
+
+
+def backfill_summaries(cache: Any, *, max_calls: int = 30) -> int:
+    """Heal cached paper rows that predate summary capture (any environment:
+    local Macs and the CI runner's actions-cache alike). Bounded per run so a
+    refresh never turns into a crawl; the cache converges across runs. Never
+    raises; returns how many rows were healed."""
+    healed = 0
+    try:
+        for raw in cache.get_all():
+            if healed >= max_calls:
+                break
+            if not isinstance(raw, dict) or raw.get("entity_type") != "paper":
+                continue
+            payload = raw.get("signal_json")
+            try:
+                payload = json.loads(payload) if isinstance(payload, str) else (payload or {})
+            except (TypeError, ValueError):
+                continue
+            meta = payload.get("meta") if isinstance(payload.get("meta"), dict) else {}
+            if meta.get("paper_summary"):
+                continue
+            summary = fetch_summary(raw.get("entity_id"))
+            if not summary:
+                continue
+            meta["paper_summary"] = summary
+            payload["meta"] = meta
+            updated = dict(raw)
+            updated["signal_json"] = payload
+            updated["fetched_at"] = raw.get("fetched_at")  # heal meta, keep age
+            cache.upsert(updated)
+            healed += 1
+    except Exception:
+        return healed
+    return healed
+
+
 def selftest() -> None:
     """Extraction + parser checks against a realistic and hostile fixture."""
     props = {
