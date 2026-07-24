@@ -1,6 +1,6 @@
 {
-  "generated": "2026-07-24",
-  "generated_pt": "Jul 23, 2026 \u00b7 10:15 PM PT",
+  "generated": "2026-07-23",
+  "generated_pt": "Jul 23, 2026 \u00b7 10:18 PM PT",
   "entities": {
     "repos": [
       {
@@ -1427,110 +1427,6 @@
             "kind": "stars"
           },
           {
-            "label": "6d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 7,
-        "name": "xiaomimimo/mimo-code",
-        "url": "https://github.com/XiaomiMiMo/MiMo-Code",
-        "meta": "MiMo Code: Where Models and Agents Co-Evolve",
-        "receipts": [
-          {
-            "label": "+281/day",
-            "kind": "stars"
-          },
-          {
-            "label": "12.4k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "44d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 8,
-        "name": "oso95/scroll-world",
-        "url": "https://github.com/oso95/scroll-world",
-        "meta": "A skill that turn any brand into a scrollable 3D world",
-        "receipts": [
-          {
-            "label": "+279/day",
-            "kind": "stars"
-          },
-          {
-            "label": "5k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "18d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 9,
-        "name": "elder-plinius/t3mp3st",
-        "url": "https://github.com/elder-plinius/T3MP3ST",
-        "meta": "autonomous red teaming platform; multi-agent offensive-security meta-harness",
-        "receipts": [
-          {
-            "label": "+233/day",
-            "kind": "stars"
-          },
-          {
-            "label": "5.1k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "22d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 10,
-        "name": "vincentwei1021/video-shotcraft",
-        "url": "https://github.com/Vincentwei1021/video-shotcraft",
-        "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
-        "receipts": [
-          {
-            "label": "+209/day",
-            "kind": "stars"
-          },
-          {
-            "label": "1k stars",
-            "kind": "stars"
-          },
-          {
             "label": "5d old",
             "kind": "age"
           }
@@ -1939,7 +1835,7 @@
         "meta": "Removes 20+ patterns of AI slop from any piece of writing.",
         "receipts": [
           {
-            "label": "+126/day",
+            "label": "+127/day",
             "kind": "stars"
           },
           {
@@ -2021,7 +1917,7 @@
             "kind": "stars"
           },
           {
-            "label": "1.8k stars",
+            "label": "1.9k stars",
             "kind": "stars"
           },
           {
@@ -2047,7 +1943,7 @@
             "kind": "stars"
           },
           {
-            "label": "1.9k stars",
+            "label": "4k stars",
             "kind": "stars"
           },
           {
@@ -2173,7 +2069,7 @@
         "meta": "\u534a\u8c03\u7eb8\u62fc\u8d34 B-roll \u751f\u6210 skill\uff1a\u4e09\u95f8\u95e8\u5ba1\u6279\uff0cGemini Omni Flash \u9996\u5c3e\u5e27\u7ec4\u88c5\u52a8\u753b | Editorial halftone paper",
         "receipts": [
           {
-            "label": "+86/day",
+            "label": "+91/day",
             "kind": "stars"
           },
           {
@@ -2227,7 +2123,7 @@
         "meta": "Dotted thought-orb loading indicators for AI & agent UIs \u2014 six tuned states, two",
         "receipts": [
           {
-            "label": "+283/day",
+            "label": "+424/day",
             "kind": "stars"
           },
           {
@@ -2253,7 +2149,7 @@
         "meta": "Agent skill: convert Chinese story copy or ordered images into a hand-drawn diar",
         "receipts": [
           {
-            "label": "+209/day",
+            "label": "+290/day",
             "kind": "stars"
           },
           {
@@ -2309,7 +2205,7 @@
             "kind": "stars"
           },
           {
-            "label": "580 stars",
+            "label": "1k stars",
             "kind": "stars"
           },
           {
@@ -2430,35 +2326,9 @@
       },
       {
         "rank": 10,
-        "name": "slvdev/esp32-ai",
-        "url": "https://github.com/slvDev/esp32-ai",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "+81/day",
-            "kind": "stars"
-          },
-          {
-            "label": "81 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "1d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 11,
-        "name": "kinetinode/claude-fable-5-system-prompt-clean",
-        "url": "https://github.com/KinetiNode/claude-fable-5-system-prompt-clean",
-        "meta": "the optimized, token-efficient version of the leaked Claude Fable 5 / Mythos 5 s",
+        "name": "kritt-ai/open-kritt",
+        "url": "https://github.com/Kritt-ai/open-kritt",
+        "meta": "Orchestrate AI agents to find real vulnerabilities in code.",
         "receipts": [
           {
             "label": "+121/day",
@@ -2481,10 +2351,10 @@
         ]
       },
       {
-        "rank": 12,
-        "name": "nextweb4/official-document-ai-assistant",
-        "url": "https://github.com/NextWeb4/official-document-ai-assistant",
-        "meta": "Local official-document review, formatting repair, and compliant export desktop ",
+        "rank": 11,
+        "name": "kinetinode/claude-fable-5-system-prompt-clean",
+        "url": "https://github.com/KinetiNode/claude-fable-5-system-prompt-clean",
+        "meta": "the optimized, token-efficient version of the leaked Claude Fable 5 / Mythos 5 s",
         "receipts": [
           {
             "label": "+99/day",
@@ -2534,12 +2404,12 @@
       },
       {
         "rank": 13,
-        "name": "risa-labs-inc/bossconsole",
-        "url": "https://github.com/risa-labs-inc/BossConsole",
-        "meta": "Open-source, multi-platform harness for AI agents \u2014 a native, multi-threaded ope",
+        "name": "0xwilliamortiz/andrej-karpathy-skills",
+        "url": "https://github.com/0xwilliamortiz/andrej-karpathy-skills",
+        "meta": "Behavioral guardrails for Claude Code, distilled from Andrej Karpathy's field no",
         "receipts": [
           {
-            "label": "+56/day",
+            "label": "+84/day",
             "kind": "stars"
           },
           {
@@ -2547,7 +2417,7 @@
             "kind": "stars"
           },
           {
-            "label": "3d old",
+            "label": "2d old",
             "kind": "age"
           }
         ],
@@ -2560,20 +2430,20 @@
       },
       {
         "rank": 14,
-        "name": "0xwilliamortiz/andrej-karpathy-skills",
-        "url": "https://github.com/0xwilliamortiz/andrej-karpathy-skills",
-        "meta": "Behavioral guardrails for Claude Code, distilled from Andrej Karpathy's field no",
+        "name": "slvdev/esp32-ai",
+        "url": "https://github.com/slvDev/esp32-ai",
+        "meta": null,
         "receipts": [
           {
-            "label": "+56/day",
+            "label": "+82/day",
             "kind": "stars"
           },
           {
-            "label": "169 stars",
+            "label": "82 stars",
             "kind": "stars"
           },
           {
-            "label": "3d old",
+            "label": "1d old",
             "kind": "age"
           }
         ],
@@ -2621,7 +2491,7 @@
             "kind": "stars"
           },
           {
-            "label": "159 stars",
+            "label": "79 stars",
             "kind": "stars"
           },
           {
@@ -4230,7 +4100,7 @@
             "kind": "npm"
           },
           {
-            "label": "479 likes",
+            "label": "467 likes",
             "kind": "stars"
           }
         ],
@@ -4281,7 +4151,7 @@
             "kind": "npm"
           },
           {
-            "label": "330 likes",
+            "label": "324 likes",
             "kind": "stars"
           }
         ],
@@ -4805,7 +4675,7 @@
             "kind": "npm"
           },
           {
-            "label": "122 likes",
+            "label": "121 likes",
             "kind": "stars"
           }
         ],
@@ -4944,6 +4814,40 @@
         "badges": []
       },
       {
+        "rank": 48,
+        "name": "microsoft/Mage-Flow-Edit-Turbo",
+        "url": "https://huggingface.co/microsoft/Mage-Flow-Edit-Turbo",
+        "meta": "image-to-image \u00b7 diffusers \u00b7 mit",
+        "receipts": [
+          {
+            "label": "361 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "59 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 49,
+        "name": "prism-ml/Ternary-Bonsai-27B-mlx-2bit",
+        "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-mlx-2bit",
+        "meta": "text-generation \u00b7 mlx \u00b7 apache-2.0",
+        "receipts": [
+          {
+            "label": "27.6k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "144 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
         "rank": 50,
         "name": "Cactus-Compute/needle",
         "url": "https://huggingface.co/Cactus-Compute/needle",
@@ -4996,23 +4900,6 @@
       },
       {
         "rank": 53,
-        "name": "prism-ml/Ternary-Bonsai-27B-mlx-2bit",
-        "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-mlx-2bit",
-        "meta": "text-generation \u00b7 mlx \u00b7 apache-2.0",
-        "receipts": [
-          {
-            "label": "27.6k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "144 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 54,
         "name": "Qwen/Qwen3.6-27B",
         "url": "https://huggingface.co/Qwen/Qwen3.6-27B",
         "meta": "image-text-to-text \u00b7 transformers \u00b7 apache-2.0",
@@ -5046,24 +4933,7 @@
         "badges": []
       },
       {
-        "rank": 56,
-        "name": "black-forest-labs/FLUX.1-dev",
-        "url": "https://huggingface.co/black-forest-labs/FLUX.1-dev",
-        "meta": "text-to-image \u00b7 diffusers \u00b7 other",
-        "receipts": [
-          {
-            "label": "5.8k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "189 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 57,
+        "rank": 55,
         "name": "Lightricks/LTX-2.3",
         "url": "https://huggingface.co/Lightricks/LTX-2.3",
         "meta": "image-to-video \u00b7 diffusers \u00b7 other",
@@ -5080,7 +4950,24 @@
         "badges": []
       },
       {
-        "rank": 58,
+        "rank": 56,
+        "name": "mgwr/M87",
+        "url": "https://huggingface.co/mgwr/M87",
+        "meta": "text-to-image \u00b7 diffusers \u00b7 apache-2.0",
+        "receipts": [
+          {
+            "label": "5.8k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "189 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 57,
         "name": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
         "url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
         "meta": "text-generation \u00b7 gguf \u00b7 apache-2.0",
@@ -5575,135 +5462,6 @@
         ]
       },
       {
-        "rank": 18,
-        "name": "Apple-\u03c0: Benchmarking Thinking with Video Towards Law-Grounded Physical Intelligence",
-        "url": "https://huggingface.co/papers/2607.16401",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "19 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 19,
-        "name": "ReflectWorld-MM: An Entity-Oriented Multimodal Memory System for Open-Ended Video Streams",
-        "url": "https://huggingface.co/papers/2607.09759",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "19 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 20,
-        "name": "Understanding Reasoning from Pretraining to Post-Training",
-        "url": "https://huggingface.co/papers/2607.16097",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "19 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 21,
-        "name": "Visual Contrastive Self-Distillation",
-        "url": "https://huggingface.co/papers/2607.21556",
-        "meta": "On-policy self-distillation (OPSD) is promising as it removes the external teacher required by on-policy distillation (OPD), yet it still ne\u2026",
-        "receipts": [
-          {
-            "label": "19 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 22,
-        "name": "An Exam for Active Observers",
-        "url": "https://huggingface.co/papers/2607.16165",
-        "meta": "Human vision is a closed loop: gaze is continuously redirected by intermediate hypotheses rather than a single snapshot. Decades of psychoph\u2026",
-        "receipts": [
-          {
-            "label": "18 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 23,
-        "name": "Qwen-Music Technical Report",
-        "url": "https://huggingface.co/papers/2607.11699",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "18 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 24,
-        "name": "Group Entropy-Controlled Policy Optimization",
-        "url": "https://huggingface.co/papers/2607.16850",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "16 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 25,
-        "name": "Recursive Harness Self-Improvement",
-        "url": "https://huggingface.co/papers/2607.15524",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "14 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 26,
         "name": "FlowMimic: Mask-free Visual Editing and Generation with Pixel-pair Warped Flow Field for Online Video Editing Data Generation and Modality Mimicry",
         "url": "https://huggingface.co/papers/2607.18227",
@@ -5779,49 +5537,13 @@
         "badges": []
       },
       {
-        "rank": 29,
-        "name": "Scaling Laws for Hypernetwork-Based Knowledge Injection in Large Language Models",
-        "url": "https://huggingface.co/papers/2607.19604",
-        "meta": "Injecting factual knowledge into large language models (LLMs) reliably and at scale remains an open challenge. Hypernetworks provide a promi\u2026",
+        "rank": 31,
+        "name": "Do Language Models Dream of Binding Molecules? Benchmarking LLMs under Spatial Constraints",
+        "url": "https://huggingface.co/papers/2607.18144",
+        "meta": "Structure-based drug design (SBDD) leverages the 3D structure of protein targets, often complemented by other spatial constraints, to genera\u2026",
         "receipts": [
           {
             "label": "11 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 30,
-        "name": "Generalizable VLA Finetuning via Representation Anchoring and Language-Action Alignment",
-        "url": "https://huggingface.co/papers/2607.13429",
-        "meta": "Finetuning a pretrained vision-language model (VLM) on robot demonstrations via behavior cloning (BC) has become the standard recipe for vis\u2026",
-        "receipts": [
-          {
-            "label": "10 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 31,
-        "name": "S1-Omni: A Unified Multimodal Reasoning Model for Scientific Understanding, Prediction, and Generation",
-        "url": "https://huggingface.co/papers/2607.15686",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "10 upvotes",
             "kind": "paper"
           }
         ],
@@ -5981,9 +5703,9 @@
       },
       {
         "rank": 41,
-        "name": "DiffGI: Differentiable Geometry Images for High-Fidelity Thin-Shell 3D Generation",
-        "url": "https://huggingface.co/papers/2607.13365",
-        "meta": "Existing 3D generative models predominantly rely on implicit volumetric representations, which enforce watertight topology and struggle to r\u2026",
+        "name": "ATSplat: Compact Feed-forward 3D Gaussian Splatting with Adaptive Token Expansion",
+        "url": "https://huggingface.co/papers/2607.20417",
+        "meta": "3D Gaussian Splatting (3DGS) achieves high-quality novel-view synthesis by optimizing freely placed primitives in 3D and adaptively densifyi\u2026",
         "receipts": [
           {
             "label": "4 upvotes",
@@ -6056,9 +5778,9 @@
       },
       {
         "rank": 46,
-        "name": "Distilled Reinforcement Learning for LLM Post-training",
-        "url": "https://huggingface.co/papers/2607.17247",
-        "meta": "Large language model (LLM) post-training is essential for improving reasoning, adaptation, and alignment. Existing methods mainly follow two\u2026",
+        "name": "EduPanel: A Three-Agent LLM Judge for Teaching Videos -- Reliability, Complementarity, and Human Trust Calibration",
+        "url": "https://huggingface.co/papers/2607.18529",
+        "meta": "Teaching videos are becoming a major medium for education, creating a growing need for scalable evaluation of their pedagogical quality. Exi\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -6074,9 +5796,9 @@
       },
       {
         "rank": 47,
-        "name": "DocOps: A Verifiable Benchmark for Autonomous Agents in Complex Document Operations",
-        "url": "https://huggingface.co/papers/2607.19865",
-        "meta": "As autonomous agents rapidly evolve, their ability to reliably manipulate ubiquitous digital documents has become critical for enabling gene\u2026",
+        "name": "FlashRT: Agent Harness for Guiding Agents to Deploy Real-Time Multimodal Applications",
+        "url": "https://huggingface.co/papers/2607.18171",
+        "meta": "Real-time multimodal applications, including voice agents and interactive video generation, compose heterogeneous models into pipelines whos\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -6115,32 +5837,6 @@
             "hot": false
           }
         ]
-      },
-      {
-        "rank": 48,
-        "name": "FVAttn: Adaptive Sparse Attention with Runtime Load Balancing for Video Generation",
-        "url": "https://huggingface.co/papers/2607.16190",
-        "meta": "Video Diffusion Transformers process long spatio-temporal sequences, making self-attention the main bottleneck in high-resolution video gene\u2026",
-        "receipts": [
-          {
-            "label": "4 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 49,
-        "name": "Beyond Success Rate: Cost-Aware Evaluation of Offensive and Defensive Security Agents",
-        "url": "https://huggingface.co/papers/2607.15263",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "3 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": []
       },
       {
         "rank": 50,
@@ -6255,9 +5951,9 @@
       },
       {
         "rank": 57,
-        "name": "ATSplat: Compact Feed-forward 3D Gaussian Splatting with Adaptive Token Expansion",
-        "url": "https://huggingface.co/papers/2607.20417",
-        "meta": "3D Gaussian Splatting (3DGS) achieves high-quality novel-view synthesis by optimizing freely placed primitives in 3D and adaptively densifyi\u2026",
+        "name": "Delineate Anything v2: A Global Foundation Model for Field Delineation",
+        "url": "https://huggingface.co/papers/2607.19069",
+        "meta": "Accurate agricultural field boundary delineation at large scale is a foundational task for food security, supply chain transparency, and car\u2026",
         "receipts": [
           {
             "label": "2 upvotes",
@@ -6268,45 +5964,9 @@
       },
       {
         "rank": 58,
-        "name": "G-MAD: A Game-Based Data Generation Framework for Multi-View RGB-T Aerial Object Detection",
-        "url": "https://huggingface.co/papers/2607.19942",
-        "meta": "This work introduces G-MAD, an open-source framework that uses Arma3 to generate synchronized multi-view RGB-T data for aerial object detect\u2026",
-        "receipts": [
-          {
-            "label": "2 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 59,
-        "name": "OpenLongTail: Generative Scaling of Long-Tail Driving Data",
-        "url": "https://huggingface.co/papers/2607.09655",
-        "meta": "Scaling robust driving policies is fundamentally bottlenecked by the scarcity of edge cases in curated datasets. While the real world contin\u2026",
-        "receipts": [
-          {
-            "label": "2 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 60,
-        "name": "Predictive Divergence Masks for LLM RL",
-        "url": "https://huggingface.co/papers/2607.10848",
-        "meta": "Reinforcement learning for large language models (LLMs) typically relies on trust-region masks to stabilize off-policy updates. The dominant\u2026",
+        "name": "Diagnosing and Calibrating Tool-Call Boundary Drift in Multi-Teacher On-Policy Distillation",
+        "url": "https://huggingface.co/papers/2607.07050",
+        "meta": "Agentic language models must learn when to call tools, when to consume tool responses, and when to answer directly. This makes multi-teacher\u2026",
         "receipts": [
           {
             "label": "2 upvotes",
