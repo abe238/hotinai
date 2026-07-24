@@ -9,6 +9,8 @@ surfaces stay identical.
 
 from __future__ import annotations
 
+import re
+import time
 from typing import Any, Dict, List, Optional
 
 from .coerce import finite_float, finite_int
@@ -34,6 +36,24 @@ def _sig(record: dict) -> dict:
 def _meta(record: dict) -> dict:
     meta = record.get("meta")
     return meta if isinstance(meta, dict) else {}
+
+
+_ISO_DATE_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})")
+
+
+def _age_days(created_at: Any, now: Optional[float] = None) -> int:
+    """Whole days since an ISO-8601 creation date; 0 when unknown/invalid."""
+    match = _ISO_DATE_RE.match(created_at) if isinstance(created_at, str) else None
+    if not match:
+        return 0
+    try:
+        import calendar
+        created = calendar.timegm((int(match.group(1)), int(match.group(2)),
+                                   int(match.group(3)), 0, 0, 0, 0, 0, 0))
+    except (ValueError, OverflowError):
+        return 0
+    seconds = (time.time() if now is None else now) - created
+    return max(0, int(seconds // 86400))
 
 
 def _clip(desc: Any, limit: int = 100) -> Optional[str]:
@@ -108,12 +128,18 @@ def repo_rows(ranked: List[dict]) -> List[dict]:
             receipts.append({"label": "+{} stars".format(_num(growth)), "kind": "stars"})
         elif finite_int(signal.get("stars"), 0):
             receipts.append({"label": "{} stars".format(_num(finite_int(signal.get("stars")))), "kind": "stars"})
+        vel = finite_float(_meta(repo).get("velocity_per_day"), 0.0)
+        if vel:
+            receipts.append({"label": "+{}/day".format(_num(vel)), "kind": "stars"})
         if finite_int(signal.get("hn_points"), 0):
             receipts.append({"label": "{} pts".format(_num(finite_int(signal.get("hn_points")))), "kind": "hn"})
         if finite_float(signal.get("npm_downloads_week"), 0.0):
             receipts.append({"label": "{}/wk".format(_num(finite_float(signal.get("npm_downloads_week")))), "kind": "npm"})
         if finite_int(signal.get("reddit_score"), 0):
             receipts.append({"label": "reddit {}".format(_num(finite_int(signal.get("reddit_score")))), "kind": "reddit"})
+        age = _age_days(signal.get("created_at"))
+        if age:
+            receipts.append({"label": "{}d old".format(age), "kind": "age"})
         raw_name = repo.get("name") if isinstance(repo.get("name"), str) else slug
         # A human title (HN/Reddit) the slug doesn't carry, else the repo's own
         # GitHub description — without this, GitHub-sourced rows (name == slug)
@@ -236,15 +262,21 @@ def rising_rows(ranked: List[dict]) -> List[dict]:
 
 
 def demo() -> None:
+    import time as _t
+    five_days_ago = _t.strftime("%Y-%m-%dT00:00:00Z", _t.gmtime(_t.time() - 5 * 86400))
     repo = {"canonical_repo": "a/b", "name": "A cool thing", "url": "u",
-            "signal": {"smartmoney_starrers": 3, "hn_points": 936, "stars_growth": 2100},
-            "meta": {"top_insider": "karpathy"}, "badges": ["fresh", "viral", "smart-money"]}
+            "signal": {"smartmoney_starrers": 3, "hn_points": 936, "stars_growth": 2100,
+                       "created_at": five_days_ago},
+            "meta": {"top_insider": "karpathy", "velocity_per_day": 457.0},
+            "badges": ["fresh", "viral", "smart-money"]}
     rows = repo_rows([repo])
     r = rows[0]
     assert r["rank"] == 1 and r["name"] == "a/b" and r["meta"] == "A cool thing"
     labels = [x["label"] for x in r["receipts"]]
     assert any("karpathy +2 insiders" in x for x in labels), labels
     assert any("+2.1k stars" in x for x in labels) and any("936 pts" in x for x in labels)
+    assert any("+457/day" in x for x in labels), labels
+    assert any(x == "5d old" for x in labels), labels
     badges = {(b["label"], b["hot"]) for b in r["badges"]}
     assert ("trending", True) in badges and ("fresh", False) in badges and ("smart-money", False) in badges
     ins = insider_rows([{"canonical_repo": "x/y", "url": "u", "signal": {"insider_stars": 5},
