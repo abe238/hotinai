@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-24",
-  "generated_pt": "Jul 23, 2026 \u00b7 11:21 PM PT",
+  "generated_pt": "Jul 23, 2026 \u00b7 11:23 PM PT",
   "entities": {
     "repos": [
       {
@@ -143,7 +143,7 @@
           },
           {
             "label": "trending",
-            "hot": false
+            "hot": true
           }
         ]
       },
@@ -207,7 +207,7 @@
           },
           {
             "label": "trending",
-            "hot": false
+            "hot": true
           }
         ]
       },
@@ -372,7 +372,7 @@
             "kind": "stars"
           },
           {
-            "label": "+211/day",
+            "label": "+210/day",
             "kind": "stars"
           },
           {
@@ -387,7 +387,7 @@
           },
           {
             "label": "trending",
-            "hot": false
+            "hot": true
           }
         ]
       },
@@ -447,7 +447,7 @@
           },
           {
             "label": "trending",
-            "hot": false
+            "hot": true
           }
         ]
       },
@@ -477,7 +477,7 @@
           },
           {
             "label": "trending",
-            "hot": false
+            "hot": true
           }
         ]
       },
@@ -805,7 +805,7 @@
             "kind": "stars"
           },
           {
-            "label": "+327/day",
+            "label": "+328/day",
             "kind": "stars"
           },
           {
@@ -2291,7 +2291,7 @@
         "meta": "Universal provider proxy for OpenAI Codex & Claude Code \u2014 use any LLM (Claude, G",
         "receipts": [
           {
-            "label": "+118/day",
+            "label": "+119/day",
             "kind": "stars"
           },
           {
@@ -4513,7 +4513,7 @@
             "kind": "npm"
           },
           {
-            "label": "534 likes",
+            "label": "535 likes",
             "kind": "stars"
           }
         ],
