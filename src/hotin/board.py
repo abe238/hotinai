@@ -181,7 +181,7 @@ def paper_rows(ranked: List[dict]) -> List[dict]:
     for i, p in enumerate(ranked, 1):
         up = finite_int(_sig(p).get("paper_upvotes"), 0)
         rows.append({"rank": i, "name": p.get("name") or p.get("entity_id") or "?",
-                     "url": p.get("url"), "meta": None,
+                     "url": p.get("url"), "meta": _clip(_meta(p).get("paper_summary"), 140),
                      "receipts": ([{"label": "{} upvotes".format(_num(up)), "kind": "paper"}] if up else []),
                      "badges": [{"label": "paper-backed", "hot": False}] if _meta(p).get("linked_repo") else []})
     return rows
@@ -255,6 +255,9 @@ def demo() -> None:
                        "meta": {"model_task": "text-generation",
                                 "model_library": "transformers", "model_license": "mit"}}])
     assert mod[0]["meta"] == "text-generation · transformers · mit"
+    pap = paper_rows([{"entity_id": "1", "url": "u", "signal": {"paper_upvotes": 3},
+                       "meta": {"paper_summary": "  A short abstract. ", "linked_repo": "a/b"}}])
+    assert pap[0]["meta"] == "A short abstract."
     assert news_rows([{"name": "hi", "meta": {"date": "Fri, 18 Jul 2026"}}])[0]["rank"] == "·"
     print("board demo: ok")
 

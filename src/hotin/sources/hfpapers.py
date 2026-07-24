@@ -79,6 +79,9 @@ def parse_papers(props: Any) -> List[Dict[str, Any]]:
                 signal["created_at"] = published.strip()
 
             meta: Dict[str, Any] = {"paper_title": name}
+            summary = paper.get("summary") or entry.get("summary")
+            if isinstance(summary, str) and summary.strip():
+                meta["paper_summary"] = summary.strip()
             names = _author_names(paper.get("authors"))
             if names:
                 meta["paper_authors"] = names
@@ -136,6 +139,7 @@ def selftest() -> None:
                     "id": "2607.14530", "title": "xHC: Expanded Hyper-Connections", "upvotes": 33,
                     "authors": [{"name": "A. Researcher"}, {"name": "B. Scientist"}],
                     "githubRepo": "https://github.com/Example/xhc", "publishedAt": "2026-07-19T00:00:00Z",
+                    "summary": "Expands residual hyper-connections for deeper nets.",
                 },
             },
             {"paper": {"id": "  "}},          # blank id -> skipped
@@ -149,6 +153,7 @@ def selftest() -> None:
     assert records[0]["meta"]["paper_title"].startswith("xHC")
     assert records[0]["meta"]["paper_authors"] == ["A. Researcher", "B. Scientist"]
     assert records[0]["meta"]["linked_repo"] == "example/xhc"
+    assert records[0]["meta"]["paper_summary"].startswith("Expands residual")
     assert records[0]["url"] == "https://huggingface.co/papers/2607.14530"
 
     escaped = '<div data-target="DailyPapers" data-props="{&quot;dailyPapers&quot;:[]}">'
