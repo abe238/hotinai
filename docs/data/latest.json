@@ -1,10 +1,48 @@
 {
   "generated": "2026-07-24",
-  "generated_pt": "Jul 24, 2026 \u00b7 11:27 AM PT",
+  "generated_pt": "Jul 24, 2026 \u00b7 2:23 PM PT",
   "entities": {
     "repos": [
       {
         "rank": 1,
+        "name": "vercel-labs/deepsec",
+        "url": "https://github.com/vercel-labs/deepsec",
+        "meta": "Deepsec is a security harness for finding vulnerabilities in your codebase powered by coding agents",
+        "receipts": [
+          {
+            "label": "\u2605 smolix \u00b7 insider",
+            "kind": "insiders"
+          },
+          {
+            "label": "6.3k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "+59/day",
+            "kind": "stars"
+          },
+          {
+            "label": "58 pts",
+            "kind": "hn"
+          },
+          {
+            "label": "85d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 2,
         "name": "xai-org/grok-build",
         "url": "https://github.com/xai-org/grok-build",
         "meta": "Grok Build is open source",
@@ -18,7 +56,7 @@
             "kind": "stars"
           },
           {
-            "label": "+412/day",
+            "label": "+406/day",
             "kind": "stars"
           },
           {
@@ -46,7 +84,7 @@
         ]
       },
       {
-        "rank": 2,
+        "rank": 3,
         "name": "justvugg/colibri",
         "url": "https://github.com/justvugg/colibri",
         "meta": "Show HN: Getting GLM 5.2 running on my slow computer",
@@ -56,7 +94,7 @@
             "kind": "stars"
           },
           {
-            "label": "+448/day",
+            "label": "+446/day",
             "kind": "stars"
           },
           {
@@ -65,44 +103,6 @@
           },
           {
             "label": "23d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 3,
-        "name": "vercel-labs/deepsec",
-        "url": "https://github.com/vercel-labs/deepsec",
-        "meta": "Deepsec is a security harness for finding vulnerabilities in your codebase powered by coding agents",
-        "receipts": [
-          {
-            "label": "\u2605 smolix \u00b7 insider",
-            "kind": "insiders"
-          },
-          {
-            "label": "6.3k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "+60/day",
-            "kind": "stars"
-          },
-          {
-            "label": "58 pts",
-            "kind": "hn"
-          },
-          {
-            "label": "85d old",
             "kind": "age"
           }
         ],
@@ -128,11 +128,11 @@
             "kind": "insiders"
           },
           {
-            "label": "14.9k stars",
+            "label": "13.1k stars",
             "kind": "stars"
           },
           {
-            "label": "+398/day",
+            "label": "+389/day",
             "kind": "stars"
           },
           {
@@ -162,7 +162,7 @@
             "kind": "stars"
           },
           {
-            "label": "+295/day",
+            "label": "+286/day",
             "kind": "stars"
           },
           {
@@ -196,7 +196,7 @@
             "kind": "stars"
           },
           {
-            "label": "+587/day",
+            "label": "+583/day",
             "kind": "stars"
           },
           {
@@ -226,7 +226,7 @@
             "kind": "stars"
           },
           {
-            "label": "+135/day",
+            "label": "+132/day",
             "kind": "stars"
           },
           {
@@ -256,7 +256,7 @@
             "kind": "stars"
           },
           {
-            "label": "+139/day",
+            "label": "+137/day",
             "kind": "stars"
           },
           {
@@ -282,11 +282,11 @@
         "meta": "Rebuild the object in a reference image as a code-only, procedural, quality-gated, animation-ready T\u2026",
         "receipts": [
           {
-            "label": "3.9k stars",
+            "label": "4k stars",
             "kind": "stars"
           },
           {
-            "label": "+1.2k/day",
+            "label": "+1k/day",
             "kind": "stars"
           },
           {
@@ -346,7 +346,7 @@
             "kind": "stars"
           },
           {
-            "label": "+136/day",
+            "label": "+133/day",
             "kind": "stars"
           },
           {
@@ -376,7 +376,7 @@
             "kind": "stars"
           },
           {
-            "label": "+220/day",
+            "label": "+218/day",
             "kind": "stars"
           },
           {
@@ -402,11 +402,11 @@
         "meta": "Unlimited OCR Works: Welcome the Era of One-shot Long-horizon Parsing.",
         "receipts": [
           {
-            "label": "18.6k stars",
+            "label": "18.7k stars",
             "kind": "stars"
           },
           {
-            "label": "+877/day",
+            "label": "+864/day",
             "kind": "stars"
           },
           {
@@ -466,7 +466,7 @@
             "kind": "stars"
           },
           {
-            "label": "+204/day",
+            "label": "+201/day",
             "kind": "stars"
           },
           {
@@ -500,7 +500,7 @@
             "kind": "stars"
           },
           {
-            "label": "+1.3k/day",
+            "label": "+1.2k/day",
             "kind": "stars"
           },
           {
@@ -530,7 +530,7 @@
             "kind": "stars"
           },
           {
-            "label": "+111/day",
+            "label": "+110/day",
             "kind": "stars"
           },
           {
@@ -560,7 +560,7 @@
             "kind": "stars"
           },
           {
-            "label": "+153/day",
+            "label": "+152/day",
             "kind": "stars"
           },
           {
@@ -586,11 +586,11 @@
         "meta": "\ud83c\udf10 DNSHE Official - Stable & Free Subdomains for Developers. Support 180-day renewal window, Anycast\u2026",
         "receipts": [
           {
-            "label": "7.2k stars",
+            "label": "7.3k stars",
             "kind": "stars"
           },
           {
-            "label": "+177/day",
+            "label": "+174/day",
             "kind": "stars"
           },
           {
@@ -637,6 +637,40 @@
       },
       {
         "rank": 21,
+        "name": "withmarbleapp/os-taxonomy",
+        "url": "https://github.com/withmarbleapp/os-taxonomy",
+        "meta": null,
+        "receipts": [
+          {
+            "label": "\u2605 maxhodak_ \u00b7 insider",
+            "kind": "insiders"
+          },
+          {
+            "label": "3.7k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "+46/day",
+            "kind": "stars"
+          },
+          {
+            "label": "16d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 22,
         "name": "blaizzy/nativ",
         "url": "https://github.com/blaizzy/nativ",
         "meta": "Local AI, native to your Mac. Chat, serve, monitor, and connect MLX models from one macOS app.",
@@ -662,7 +696,7 @@
         ]
       },
       {
-        "rank": 22,
+        "rank": 23,
         "name": "lidge-jun/opencodex",
         "url": "https://github.com/lidge-jun/opencodex",
         "meta": "Universal provider proxy for OpenAI Codex & Claude Code \u2014 use any LLM (Claude, Gemini, Grok, DeepSee\u2026",
@@ -672,7 +706,7 @@
             "kind": "stars"
           },
           {
-            "label": "+456/day",
+            "label": "+429/day",
             "kind": "stars"
           },
           {
@@ -692,7 +726,7 @@
         ]
       },
       {
-        "rank": 23,
+        "rank": 24,
         "name": "googlecloudplatform/knowledge-catalog",
         "url": "https://github.com/GoogleCloudPlatform/knowledge-catalog",
         "meta": "Google Cloud Knowledge Catalog Tools and Samples",
@@ -702,7 +736,7 @@
             "kind": "stars"
           },
           {
-            "label": "+48/day",
+            "label": "+47/day",
             "kind": "stars"
           },
           {
@@ -717,12 +751,12 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
       {
-        "rank": 24,
+        "rank": 25,
         "name": "corebunch/instatic",
         "url": "https://github.com/corebunch/instatic",
         "meta": "The open-source alternative to Webflow, Framer and WordPress. Agentic self-hosted visual CMS outputt\u2026",
@@ -732,7 +766,7 @@
             "kind": "stars"
           },
           {
-            "label": "+147/day",
+            "label": "+155/day",
             "kind": "stars"
           },
           {
@@ -748,40 +782,6 @@
           {
             "label": "trending",
             "hot": true
-          }
-        ]
-      },
-      {
-        "rank": 25,
-        "name": "withmarbleapp/os-taxonomy",
-        "url": "https://github.com/withmarbleapp/os-taxonomy",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "\u2605 maxhodak_ \u00b7 insider",
-            "kind": "insiders"
-          },
-          {
-            "label": "3.6k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "+46/day",
-            "kind": "stars"
-          },
-          {
-            "label": "16d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
           }
         ]
       },
@@ -826,7 +826,7 @@
             "kind": "stars"
           },
           {
-            "label": "+134/day",
+            "label": "+131/day",
             "kind": "stars"
           },
           {
@@ -886,7 +886,7 @@
             "kind": "stars"
           },
           {
-            "label": "+56/day",
+            "label": "+55/day",
             "kind": "stars"
           },
           {
@@ -916,7 +916,7 @@
             "kind": "stars"
           },
           {
-            "label": "+332/day",
+            "label": "+329/day",
             "kind": "stars"
           },
           {
@@ -976,7 +976,7 @@
             "kind": "stars"
           },
           {
-            "label": "+249/day",
+            "label": "+233/day",
             "kind": "stars"
           },
           {
@@ -1162,7 +1162,7 @@
             "kind": "stars"
           },
           {
-            "label": "+66/day",
+            "label": "+65/day",
             "kind": "stars"
           },
           {
@@ -1188,11 +1188,11 @@
         "meta": "Anti-AI-slop design skill for Claude Code, Cursor, and Codex.",
         "receipts": [
           {
-            "label": "16.9k stars",
+            "label": "17k stars",
             "kind": "stars"
           },
           {
-            "label": "+718/day",
+            "label": "+717/day",
             "kind": "stars"
           },
           {
@@ -1278,11 +1278,11 @@
         "meta": "Open-source & free \u2014 Battle-tested at Alibaba's scale. Hybrid architecture code review tool: determi\u2026",
         "receipts": [
           {
-            "label": "12.3k stars",
+            "label": "12.4k stars",
             "kind": "stars"
           },
           {
-            "label": "+378/day",
+            "label": "+376/day",
             "kind": "stars"
           },
           {
@@ -1312,67 +1312,11 @@
             "kind": "stars"
           },
           {
-            "label": "+269/day",
+            "label": "+263/day",
             "kind": "stars"
           },
           {
             "label": "86d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 45,
-        "name": "bytedance-seed/edgebench",
-        "url": "https://github.com/bytedance-seed/edgebench",
-        "meta": "Benchmarks autonomous AI agents on 134 real-world tasks by measuring performance trajectories over 1\u2026",
-        "receipts": [
-          {
-            "label": "\u2605 deepfates \u00b7 insider",
-            "kind": "insiders"
-          },
-          {
-            "label": "361 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "31d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 46,
-        "name": "virgiliojr94/book-to-skill",
-        "url": "https://github.com/virgiliojr94/book-to-skill",
-        "meta": "Turn any technical book PDF into a Claude Code skill \u2014 ready to study, reference, and use while you\u2026",
-        "receipts": [
-          {
-            "label": "9.5k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "+165/day",
-            "kind": "stars"
-          },
-          {
-            "label": "84d old",
             "kind": "age"
           }
         ],
@@ -1391,6 +1335,44 @@
     "repos7": [
       {
         "rank": 1,
+        "name": "vercel-labs/deepsec",
+        "url": "https://github.com/vercel-labs/deepsec",
+        "meta": "Deepsec is a security harness for finding vulnerabilities in your codebase powered by coding agents",
+        "receipts": [
+          {
+            "label": "\u2605 smolix \u00b7 insider",
+            "kind": "insiders"
+          },
+          {
+            "label": "6.3k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "+59/day",
+            "kind": "stars"
+          },
+          {
+            "label": "58 pts",
+            "kind": "hn"
+          },
+          {
+            "label": "85d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 2,
         "name": "xai-org/grok-build",
         "url": "https://github.com/xai-org/grok-build",
         "meta": "Grok Build is open source",
@@ -1404,7 +1386,7 @@
             "kind": "stars"
           },
           {
-            "label": "+412/day",
+            "label": "+406/day",
             "kind": "stars"
           },
           {
@@ -1432,7 +1414,7 @@
         ]
       },
       {
-        "rank": 2,
+        "rank": 3,
         "name": "justvugg/colibri",
         "url": "https://github.com/justvugg/colibri",
         "meta": "Show HN: Getting GLM 5.2 running on my slow computer",
@@ -1442,7 +1424,7 @@
             "kind": "stars"
           },
           {
-            "label": "+448/day",
+            "label": "+446/day",
             "kind": "stars"
           },
           {
@@ -1451,44 +1433,6 @@
           },
           {
             "label": "23d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 3,
-        "name": "vercel-labs/deepsec",
-        "url": "https://github.com/vercel-labs/deepsec",
-        "meta": "Deepsec is a security harness for finding vulnerabilities in your codebase powered by coding agents",
-        "receipts": [
-          {
-            "label": "\u2605 smolix \u00b7 insider",
-            "kind": "insiders"
-          },
-          {
-            "label": "6.3k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "+60/day",
-            "kind": "stars"
-          },
-          {
-            "label": "58 pts",
-            "kind": "hn"
-          },
-          {
-            "label": "85d old",
             "kind": "age"
           }
         ],
@@ -1514,11 +1458,11 @@
             "kind": "insiders"
           },
           {
-            "label": "14.9k stars",
+            "label": "13.1k stars",
             "kind": "stars"
           },
           {
-            "label": "+398/day",
+            "label": "+389/day",
             "kind": "stars"
           },
           {
@@ -1548,7 +1492,7 @@
             "kind": "stars"
           },
           {
-            "label": "+295/day",
+            "label": "+286/day",
             "kind": "stars"
           },
           {
@@ -1578,7 +1522,7 @@
             "kind": "stars"
           },
           {
-            "label": "+135/day",
+            "label": "+132/day",
             "kind": "stars"
           },
           {
@@ -1608,7 +1552,7 @@
             "kind": "stars"
           },
           {
-            "label": "+139/day",
+            "label": "+137/day",
             "kind": "stars"
           },
           {
@@ -1634,11 +1578,11 @@
         "meta": "Rebuild the object in a reference image as a code-only, procedural, quality-gated, animation-ready T\u2026",
         "receipts": [
           {
-            "label": "3.9k stars",
+            "label": "4k stars",
             "kind": "stars"
           },
           {
-            "label": "+1.2k/day",
+            "label": "+1k/day",
             "kind": "stars"
           },
           {
@@ -1698,7 +1642,7 @@
             "kind": "stars"
           },
           {
-            "label": "+136/day",
+            "label": "+133/day",
             "kind": "stars"
           },
           {
@@ -1724,11 +1668,11 @@
         "meta": "Unlimited OCR Works: Welcome the Era of One-shot Long-horizon Parsing.",
         "receipts": [
           {
-            "label": "18.6k stars",
+            "label": "18.7k stars",
             "kind": "stars"
           },
           {
-            "label": "+877/day",
+            "label": "+864/day",
             "kind": "stars"
           },
           {
@@ -1788,7 +1732,7 @@
             "kind": "stars"
           },
           {
-            "label": "+204/day",
+            "label": "+201/day",
             "kind": "stars"
           },
           {
@@ -1822,7 +1766,7 @@
             "kind": "stars"
           },
           {
-            "label": "+1.3k/day",
+            "label": "+1.2k/day",
             "kind": "stars"
           },
           {
@@ -1852,7 +1796,7 @@
             "kind": "stars"
           },
           {
-            "label": "+153/day",
+            "label": "+152/day",
             "kind": "stars"
           },
           {
@@ -1934,7 +1878,7 @@
             "kind": "stars"
           },
           {
-            "label": "+456/day",
+            "label": "+429/day",
             "kind": "stars"
           },
           {
@@ -1964,7 +1908,7 @@
             "kind": "stars"
           },
           {
-            "label": "+48/day",
+            "label": "+47/day",
             "kind": "stars"
           },
           {
@@ -1979,7 +1923,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -1994,7 +1938,7 @@
             "kind": "stars"
           },
           {
-            "label": "+147/day",
+            "label": "+155/day",
             "kind": "stars"
           },
           {
@@ -2024,7 +1968,7 @@
             "kind": "stars"
           },
           {
-            "label": "+134/day",
+            "label": "+131/day",
             "kind": "stars"
           },
           {
@@ -2054,7 +1998,7 @@
             "kind": "stars"
           },
           {
-            "label": "+56/day",
+            "label": "+55/day",
             "kind": "stars"
           },
           {
@@ -2084,7 +2028,7 @@
             "kind": "stars"
           },
           {
-            "label": "+332/day",
+            "label": "+329/day",
             "kind": "stars"
           },
           {
@@ -2136,7 +2080,7 @@
             "kind": "stars"
           },
           {
-            "label": "+66/day",
+            "label": "+65/day",
             "kind": "stars"
           },
           {
@@ -2192,11 +2136,11 @@
         "meta": "Open-source & free \u2014 Battle-tested at Alibaba's scale. Hybrid architecture code review tool: determi\u2026",
         "receipts": [
           {
-            "label": "12.3k stars",
+            "label": "12.4k stars",
             "kind": "stars"
           },
           {
-            "label": "+378/day",
+            "label": "+376/day",
             "kind": "stars"
           },
           {
@@ -2226,41 +2170,11 @@
             "kind": "stars"
           },
           {
-            "label": "+269/day",
+            "label": "+263/day",
             "kind": "stars"
           },
           {
             "label": "86d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 29,
-        "name": "virgiliojr94/book-to-skill",
-        "url": "https://github.com/virgiliojr94/book-to-skill",
-        "meta": "Turn any technical book PDF into a Claude Code skill \u2014 ready to study, reference, and use while you\u2026",
-        "receipts": [
-          {
-            "label": "9.5k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "+165/day",
-            "kind": "stars"
-          },
-          {
-            "label": "84d old",
             "kind": "age"
           }
         ],
@@ -2440,7 +2354,7 @@
         "meta": "A skill that turn any brand into a scrollable 3D world",
         "receipts": [
           {
-            "label": "+283/day",
+            "label": "+284/day",
             "kind": "stars"
           },
           {
@@ -2492,7 +2406,7 @@
         "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
         "receipts": [
           {
-            "label": "+274/day",
+            "label": "+280/day",
             "kind": "stars"
           },
           {
@@ -2544,7 +2458,7 @@
         "meta": "Practical patterns, starters & CLI tools for loop engineering with AI coding age",
         "receipts": [
           {
-            "label": "+207/day",
+            "label": "+208/day",
             "kind": "stars"
           },
           {
@@ -2669,6 +2583,32 @@
       },
       {
         "rank": 16,
+        "name": "penecho/penecho",
+        "url": "https://github.com/penecho/penecho",
+        "meta": "Think with AI beyond the chat box. A shared canvas for handwriting, equations, d",
+        "receipts": [
+          {
+            "label": "+147/day",
+            "kind": "stars"
+          },
+          {
+            "label": "1.5k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "10d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 17,
         "name": "helloianneo/ian-xiaohei-illustrations",
         "url": "https://github.com/helloianneo/ian-xiaohei-illustrations",
         "meta": "\u4e2d\u6587\u5c0f\u9ed1\u602a\u8bde\u6b63\u6587\u914d\u56fe\u751f\u6210 Skill | 16:9 \u767d\u5e95\u624b\u7ed8 | \u5c11\u91cf\u7ea2\u6a59\u84dd\u6279\u6ce8 | Codex Skill",
@@ -2694,39 +2634,13 @@
         ]
       },
       {
-        "rank": 17,
-        "name": "penecho/penecho",
-        "url": "https://github.com/penecho/penecho",
-        "meta": "Think with AI beyond the chat box. A shared canvas for handwriting, equations, d",
-        "receipts": [
-          {
-            "label": "+145/day",
-            "kind": "stars"
-          },
-          {
-            "label": "1.5k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "10d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
         "rank": 18,
         "name": "petergyang/no-ai-slop",
         "url": "https://github.com/petergyang/no-ai-slop",
         "meta": "Removes 20+ patterns of AI slop from any piece of writing.",
         "receipts": [
           {
-            "label": "+135/day",
+            "label": "+136/day",
             "kind": "stars"
           },
           {
@@ -2860,7 +2774,7 @@
             "kind": "stars"
           },
           {
-            "label": "981 stars",
+            "label": "982 stars",
             "kind": "stars"
           },
           {
@@ -3087,20 +3001,20 @@
       },
       {
         "rank": 2,
-        "name": "jakubantalik/thinking-orbs",
-        "url": "https://github.com/Jakubantalik/thinking-orbs",
-        "meta": "Dotted thought-orb loading indicators for AI & agent UIs \u2014 six tuned states, two",
+        "name": "slvdev/esp32-ai",
+        "url": "https://github.com/slvDev/esp32-ai",
+        "meta": null,
         "receipts": [
           {
-            "label": "+306/day",
+            "label": "+350/day",
             "kind": "stars"
           },
           {
-            "label": "919 stars",
+            "label": "350 stars",
             "kind": "stars"
           },
           {
-            "label": "3d old",
+            "label": "1d old",
             "kind": "age"
           }
         ],
@@ -3113,20 +3027,20 @@
       },
       {
         "rank": 3,
-        "name": "slvdev/esp32-ai",
-        "url": "https://github.com/slvDev/esp32-ai",
-        "meta": null,
+        "name": "jakubantalik/thinking-orbs",
+        "url": "https://github.com/Jakubantalik/thinking-orbs",
+        "meta": "Dotted thought-orb loading indicators for AI & agent UIs \u2014 six tuned states, two",
         "receipts": [
           {
-            "label": "+306/day",
+            "label": "+309/day",
             "kind": "stars"
           },
           {
-            "label": "306 stars",
+            "label": "926 stars",
             "kind": "stars"
           },
           {
-            "label": "1d old",
+            "label": "3d old",
             "kind": "age"
           }
         ],
@@ -3144,7 +3058,7 @@
         "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
         "receipts": [
           {
-            "label": "+274/day",
+            "label": "+280/day",
             "kind": "stars"
           },
           {
@@ -3170,11 +3084,11 @@
         "meta": "Local AI, native to your Mac. Chat, serve, monitor, and connect MLX models from ",
         "receipts": [
           {
-            "label": "+213/day",
+            "label": "+214/day",
             "kind": "stars"
           },
           {
-            "label": "853 stars",
+            "label": "857 stars",
             "kind": "stars"
           },
           {
@@ -3196,11 +3110,11 @@
         "meta": "Agent skill: convert Chinese story copy or ordered images into a hand-drawn diar",
         "receipts": [
           {
-            "label": "+201/day",
+            "label": "+202/day",
             "kind": "stars"
           },
           {
-            "label": "604 stars",
+            "label": "605 stars",
             "kind": "stars"
           },
           {
@@ -3252,7 +3166,7 @@
             "kind": "stars"
           },
           {
-            "label": "372 stars",
+            "label": "373 stars",
             "kind": "stars"
           },
           {
@@ -3278,7 +3192,7 @@
             "kind": "stars"
           },
           {
-            "label": "180 stars",
+            "label": "181 stars",
             "kind": "stars"
           },
           {
@@ -3330,7 +3244,7 @@
             "kind": "stars"
           },
           {
-            "label": "404 stars",
+            "label": "406 stars",
             "kind": "stars"
           },
           {
@@ -3378,11 +3292,11 @@
         "meta": "Graph engineering for AI agents: the 9-stage knowledge-graph pipeline (translate",
         "receipts": [
           {
-            "label": "+61/day",
+            "label": "+68/day",
             "kind": "stars"
           },
           {
-            "label": "61 stars",
+            "label": "68 stars",
             "kind": "stars"
           },
           {
@@ -3425,6 +3339,32 @@
       },
       {
         "rank": 15,
+        "name": "danilo-znamerovszkij/draw-your-font",
+        "url": "https://github.com/danilo-znamerovszkij/draw-your-font",
+        "meta": "Turn a photo of your handwriting into a real font (TTF/WOFF/WOFF2) - free, open ",
+        "receipts": [
+          {
+            "label": "+59/day",
+            "kind": "stars"
+          },
+          {
+            "label": "118 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "2d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 16,
         "name": "risa-labs-inc/bossconsole",
         "url": "https://github.com/risa-labs-inc/BossConsole",
         "meta": "Open-source, multi-platform harness for AI agents \u2014 a native, multi-threaded ope",
@@ -3434,7 +3374,7 @@
             "kind": "stars"
           },
           {
-            "label": "174 stars",
+            "label": "175 stars",
             "kind": "stars"
           },
           {
@@ -3450,7 +3390,33 @@
         ]
       },
       {
-        "rank": 16,
+        "rank": 17,
+        "name": "role1776/netmon",
+        "url": "https://github.com/Role1776/netmon",
+        "meta": "Self-hosted network monitor \u2014 hourly speed tests, LAN device counts via ARP scan",
+        "receipts": [
+          {
+            "label": "+57/day",
+            "kind": "stars"
+          },
+          {
+            "label": "172 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "3d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 18,
         "name": "0xwilliamortiz/andrej-karpathy-skills",
         "url": "https://github.com/0xwilliamortiz/andrej-karpathy-skills",
         "meta": "Behavioral guardrails for Claude Code, distilled from Andrej Karpathy's field no",
@@ -3476,7 +3442,7 @@
         ]
       },
       {
-        "rank": 17,
+        "rank": 19,
         "name": "hahhforest/pi-textbook",
         "url": "https://github.com/hahhforest/pi-textbook",
         "meta": "\u300a\u52a8\u624b\u5b66 Pi\u300b\uff1a\u6cbf 15 \u4e2a\u771f\u5b9e checkpoint \u4ece\u96f6\u6784\u5efa Pi-style Agent",
@@ -3486,7 +3452,7 @@
             "kind": "stars"
           },
           {
-            "label": "167 stars",
+            "label": "168 stars",
             "kind": "stars"
           },
           {
@@ -3502,43 +3468,17 @@
         ]
       },
       {
-        "rank": 18,
-        "name": "role1776/netmon",
-        "url": "https://github.com/Role1776/netmon",
-        "meta": "Self-hosted network monitor \u2014 hourly speed tests, LAN device counts via ARP scan",
-        "receipts": [
-          {
-            "label": "+55/day",
-            "kind": "stars"
-          },
-          {
-            "label": "164 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "3d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 19,
+        "rank": 20,
         "name": "seanj1ang/design-judge-skills",
         "url": "https://github.com/SeanJ1ang/design-judge-skills",
         "meta": "Evidence-driven Agent Skills for design award research, evaluation, award matchi",
         "receipts": [
           {
-            "label": "+54/day",
+            "label": "+56/day",
             "kind": "stars"
           },
           {
-            "label": "327 stars",
+            "label": "333 stars",
             "kind": "stars"
           },
           {
@@ -3554,7 +3494,33 @@
         ]
       },
       {
-        "rank": 20,
+        "rank": 21,
+        "name": "trycaspian/caspian-sdk",
+        "url": "https://github.com/TryCaspian/caspian-sdk",
+        "meta": "One identity for your AI agent across Slack, Discord, Telegram, WhatsApp, Instag",
+        "receipts": [
+          {
+            "label": "+54/day",
+            "kind": "stars"
+          },
+          {
+            "label": "215 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "4d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 22,
         "name": "ddcat-ai/open-ai-canvas",
         "url": "https://github.com/ddcat-ai/open-ai-canvas",
         "meta": "\u9762\u5411 AI \u5f71\u89c6\u521b\u4f5c\u7684\u5f00\u6e90\u65e0\u9650\u753b\u5e03\u5de5\u4f5c\u53f0\uff0c\u96c6\u6210\u591a\u6a21\u6001\u751f\u6210\u3001\u5206\u955c\u7f16\u6392\u3001\u7d20\u6750\u7ba1\u7406\u4e0e Agent \u5de5\u4f5c\u6d41\u3002",
@@ -3580,7 +3546,7 @@
         ]
       },
       {
-        "rank": 21,
+        "rank": 23,
         "name": "paxlabs-inc/machine-genome",
         "url": "https://github.com/paxlabs-inc/machine-genome",
         "meta": "Machine Genome is an open identity and provenance protocol for models, agents, h",
@@ -3595,58 +3561,6 @@
           },
           {
             "label": "4d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 22,
-        "name": "trycaspian/caspian-sdk",
-        "url": "https://github.com/TryCaspian/caspian-sdk",
-        "meta": "One identity for your AI agent across Slack, Discord, Telegram, WhatsApp, Instag",
-        "receipts": [
-          {
-            "label": "+53/day",
-            "kind": "stars"
-          },
-          {
-            "label": "211 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "4d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 23,
-        "name": "danilo-znamerovszkij/draw-your-font",
-        "url": "https://github.com/danilo-znamerovszkij/draw-your-font",
-        "meta": "Turn a photo of your handwriting into a real font (TTF/WOFF/WOFF2) - free, open ",
-        "receipts": [
-          {
-            "label": "+50/day",
-            "kind": "stars"
-          },
-          {
-            "label": "100 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "2d old",
             "kind": "age"
           }
         ],
@@ -3737,20 +3651,20 @@
       },
       {
         "rank": 27,
-        "name": "rindig/icm-architect",
-        "url": "https://github.com/RinDig/icm-architect",
-        "meta": "Claude skill: design any process, idea, or problem into an ICM workspace (folder",
+        "name": "invaro/opentax-engine",
+        "url": "https://github.com/Invaro/opentax-engine",
+        "meta": "The deterministic tax engine for AI agents. Highest score ever recorded on TaxCa",
         "receipts": [
           {
-            "label": "+42/day",
+            "label": "+44/day",
             "kind": "stars"
           },
           {
-            "label": "252 stars",
+            "label": "87 stars",
             "kind": "stars"
           },
           {
-            "label": "6d old",
+            "label": "2d old",
             "kind": "age"
           }
         ],
@@ -3763,20 +3677,20 @@
       },
       {
         "rank": 28,
-        "name": "invaro/opentax-engine",
-        "url": "https://github.com/Invaro/opentax-engine",
-        "meta": "The deterministic tax engine for AI agents. Highest score ever recorded on TaxCa",
+        "name": "rindig/icm-architect",
+        "url": "https://github.com/RinDig/icm-architect",
+        "meta": "Claude skill: design any process, idea, or problem into an ICM workspace (folder",
         "receipts": [
           {
             "label": "+42/day",
             "kind": "stars"
           },
           {
-            "label": "84 stars",
+            "label": "253 stars",
             "kind": "stars"
           },
           {
-            "label": "2d old",
+            "label": "6d old",
             "kind": "age"
           }
         ],
@@ -3903,32 +3817,6 @@
       },
       {
         "rank": 3,
-        "name": "doordash-oss/doordash-cli",
-        "url": "https://github.com/doordash-oss/doordash-cli",
-        "meta": "Provides a command-line interface to search DoorDash restaurants, browse menus, build carts, and pla\u2026",
-        "receipts": [
-          {
-            "label": "\u2605 deepfates",
-            "kind": "insiders"
-          },
-          {
-            "label": "peterjliu",
-            "kind": "insiders"
-          },
-          {
-            "label": "24d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "smart-money",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 4,
         "name": "minghinmatthewlam/openbench",
         "url": "https://github.com/minghinmatthewlam/openbench",
         "meta": "Benchmarks coding-agent harnesses by executing identical models and tasks across wrappers like codex\u2026",
@@ -3958,7 +3846,7 @@
         ]
       },
       {
-        "rank": 5,
+        "rank": 4,
         "name": "plasma-ai/fractal",
         "url": "https://github.com/plasma-ai/fractal",
         "meta": "Implements hierarchical agent loops that recursively self-organize into trees of git worktrees with\u2026",
@@ -3988,7 +3876,7 @@
         ]
       },
       {
-        "rank": 6,
+        "rank": 5,
         "name": "recursive-knowledge/ksi",
         "url": "https://github.com/recursive-knowledge/ksi",
         "meta": "Runs disposable agents on custom tasks in sandboxed containers, distills forum discussions into reus\u2026",
@@ -4018,7 +3906,7 @@
         ]
       },
       {
-        "rank": 7,
+        "rank": 6,
         "name": "sirallap/agentglass",
         "url": "https://github.com/sirallap/agentglass",
         "meta": "Monitors and controls AI coding agents across providers with real-time telemetry, costs, and integra\u2026",
@@ -4048,7 +3936,7 @@
         ]
       },
       {
-        "rank": 8,
+        "rank": 7,
         "name": "sunblaze-ucb/exploitgym",
         "url": "https://github.com/sunblaze-ucb/exploitgym",
         "meta": "Benchmarks AI agents on developing exploits from real-world vulnerabilities in userspace programs, V\u2026",
@@ -4078,7 +3966,7 @@
         ]
       },
       {
-        "rank": 9,
+        "rank": 8,
         "name": "aisa-group/researcharena",
         "url": "https://github.com/aisa-group/researcharena",
         "meta": "Evaluates AI agents on autonomous R&D tasks with hidden sabotage side-tasks and tests monitor detect\u2026",
@@ -4104,7 +3992,7 @@
         ]
       },
       {
-        "rank": 10,
+        "rank": 9,
         "name": "axiommath/imo2026",
         "url": "https://github.com/axiommath/imo2026",
         "meta": "Provides formal Lean 4 statements and verified proofs for all six IMO 2026 problems.",
@@ -4130,7 +4018,7 @@
         ]
       },
       {
-        "rank": 11,
+        "rank": 10,
         "name": "blaizzy/nativ",
         "url": "https://github.com/blaizzy/nativ",
         "meta": "Bundles MLX models into a native macOS SwiftUI app for local chat, model management, analytics, and\u2026",
@@ -4156,7 +4044,7 @@
         ]
       },
       {
-        "rank": 12,
+        "rank": 11,
         "name": "blue-guardrails/cheap-ocr",
         "url": "https://github.com/blue-guardrails/cheap-ocr",
         "meta": "Converts PDFs to Markdown/JSON via VLM OCR and layout detection at >14 pages/sec on one GPU.",
@@ -4182,7 +4070,7 @@
         ]
       },
       {
-        "rank": 13,
+        "rank": 12,
         "name": "boogu-project/boogu-image",
         "url": "https://github.com/boogu-project/boogu-image",
         "meta": "Releases Apache-2.0 checkpoints and inference code for unified text-to-image generation, fast infere\u2026",
@@ -4208,33 +4096,7 @@
         ]
       },
       {
-        "rank": 14,
-        "name": "bytedance-seed/edgebench",
-        "url": "https://github.com/bytedance-seed/edgebench",
-        "meta": "Benchmarks autonomous AI agents on 134 real-world tasks by measuring performance trajectories over 1\u2026",
-        "receipts": [
-          {
-            "label": "\u2605 deepfates",
-            "kind": "insiders"
-          },
-          {
-            "label": "361 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "31d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "smart-money",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 15,
+        "rank": 13,
         "name": "davidhdev/canvas-ui",
         "url": "https://github.com/davidhdev/canvas-ui",
         "meta": "Supplies framework-agnostic canvas components applying WebGL effects over live interactive HTML.",
@@ -4260,7 +4122,7 @@
         ]
       },
       {
-        "rank": 16,
+        "rank": 14,
         "name": "dietrichgebert/ponytail",
         "url": "https://github.com/dietrichgebert/ponytail",
         "meta": "Supplies minimal-code rules and hooks for AI coding agents across multiple tools.",
@@ -4274,11 +4136,37 @@
             "kind": "stars"
           },
           {
-            "label": "+587/day",
+            "label": "+583/day",
             "kind": "stars"
           },
           {
             "label": "42d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 15,
+        "name": "gregwar/microban",
+        "url": "https://github.com/gregwar/microban",
+        "meta": "Supplies CAD files, 3D-printable parts, assembly docs, and Python control software for a compact Ras\u2026",
+        "receipts": [
+          {
+            "label": "\u2605 kevin_zakka",
+            "kind": "insiders"
+          },
+          {
+            "label": "4 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "7d old",
             "kind": "age"
           }
         ],
@@ -4346,6 +4234,32 @@
             "hot": false
           }
         ]
+      },
+      {
+        "rank": 3,
+        "name": "gregwar/microban",
+        "url": "https://github.com/gregwar/microban",
+        "meta": "Supplies CAD files, 3D-printable parts, assembly docs, and Python control software for a compact Ras\u2026",
+        "receipts": [
+          {
+            "label": "\u2605 kevin_zakka",
+            "kind": "insiders"
+          },
+          {
+            "label": "4 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "7d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "smart-money",
+            "hot": false
+          }
+        ]
       }
     ],
     "models": [
@@ -4381,7 +4295,7 @@
             "kind": "npm"
           },
           {
-            "label": "580 likes",
+            "label": "596 likes",
             "kind": "stars"
           },
           {
@@ -4423,7 +4337,7 @@
             "kind": "npm"
           },
           {
-            "label": "533 likes",
+            "label": "537 likes",
             "kind": "stars"
           },
           {
@@ -4444,7 +4358,7 @@
             "kind": "npm"
           },
           {
-            "label": "465 likes",
+            "label": "473 likes",
             "kind": "stars"
           },
           {
@@ -4465,7 +4379,7 @@
             "kind": "npm"
           },
           {
-            "label": "357 likes",
+            "label": "362 likes",
             "kind": "stars"
           },
           {
@@ -4528,7 +4442,7 @@
             "kind": "npm"
           },
           {
-            "label": "630 likes",
+            "label": "632 likes",
             "kind": "stars"
           },
           {
@@ -4549,7 +4463,7 @@
             "kind": "npm"
           },
           {
-            "label": "214 likes",
+            "label": "223 likes",
             "kind": "stars"
           },
           {
@@ -4566,7 +4480,7 @@
         "meta": "\u2615 Support on Ko-fi, all tips go straight to GPU compute for future versions.",
         "receipts": [
           {
-            "label": "527 likes",
+            "label": "530 likes",
             "kind": "stars"
           },
           {
@@ -4587,7 +4501,7 @@
             "kind": "npm"
           },
           {
-            "label": "182 likes",
+            "label": "183 likes",
             "kind": "stars"
           },
           {
@@ -4608,7 +4522,7 @@
             "kind": "npm"
           },
           {
-            "label": "164 likes",
+            "label": "169 likes",
             "kind": "stars"
           },
           {
@@ -4629,7 +4543,7 @@
             "kind": "npm"
           },
           {
-            "label": "170 likes",
+            "label": "171 likes",
             "kind": "stars"
           },
           {
@@ -4662,6 +4576,27 @@
       },
       {
         "rank": 16,
+        "name": "poolside/Laguna-S-2.1-GGUF",
+        "url": "https://huggingface.co/poolside/Laguna-S-2.1-GGUF",
+        "meta": "GGUF conversions of Laguna S 2.1 for llama.cpp, plus the DFlash speculative-decoding draft model. See the base model card for architecture d\u2026",
+        "receipts": [
+          {
+            "label": "62.1k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "129 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 13",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 17,
         "name": "bottlecapai/ThinkingCap-Qwen3.6-27B",
         "url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B",
         "meta": "Capability of Qwen3.6-27B with 50% less thinking tokens on average, and over 90% less in best cases. Achieved via finetuning Qwen3.6-27B (Qw\u2026",
@@ -4682,70 +4617,7 @@
         "badges": []
       },
       {
-        "rank": 17,
-        "name": "poolside/Laguna-S-2.1-NVFP4",
-        "url": "https://huggingface.co/poolside/Laguna-S-2.1-NVFP4",
-        "meta": "Benchmarks as of 21 July 2026. Laguna S 2.1 in bold; a dash (-) marks a benchmark a model was not evaluated on. Scores marked are as reporte\u2026",
-        "receipts": [
-          {
-            "label": "89.2k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "126 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 2",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 18,
-        "name": "poolside/Laguna-S-2.1-GGUF",
-        "url": "https://huggingface.co/poolside/Laguna-S-2.1-GGUF",
-        "meta": "GGUF conversions of Laguna S 2.1 for llama.cpp, plus the DFlash speculative-decoding draft model. See the base model card for architecture d\u2026",
-        "receipts": [
-          {
-            "label": "62.1k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "125 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 13",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 19,
-        "name": "ATH-MaaS/OvisOCR2",
-        "url": "https://huggingface.co/ATH-MaaS/OvisOCR2",
-        "meta": "We are pleased to announce the release of OvisOCR2, a compact 0.8B end-to-end model for page-level document parsing. Given a document page i\u2026",
-        "receipts": [
-          {
-            "label": "30.3k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "274 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 13",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 20,
         "name": "fdtn-ai/antares-1b",
         "url": "https://huggingface.co/fdtn-ai/antares-1b",
         "meta": "text-generation \u00b7 transformers \u00b7 apache-2.0",
@@ -4755,7 +4627,7 @@
             "kind": "npm"
           },
           {
-            "label": "138 likes",
+            "label": "143 likes",
             "kind": "stars"
           },
           {
@@ -4766,7 +4638,28 @@
         "badges": []
       },
       {
-        "rank": 21,
+        "rank": 19,
+        "name": "poolside/Laguna-S-2.1-NVFP4",
+        "url": "https://huggingface.co/poolside/Laguna-S-2.1-NVFP4",
+        "meta": "Benchmarks as of 21 July 2026. Laguna S 2.1 in bold; a dash (-) marks a benchmark a model was not evaluated on. Scores marked are as reporte\u2026",
+        "receipts": [
+          {
+            "label": "89.2k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "128 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 2",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 20,
         "name": "moonshotai/Kimi-K2.7-Code",
         "url": "https://huggingface.co/moonshotai/Kimi-K2.7-Code",
         "meta": "Kimi-K2.7-Code has the same architecture as Kimi-K2.5/Kimi-K2.6, and the deployment method can be directly reused.",
@@ -4787,49 +4680,28 @@
         "badges": []
       },
       {
-        "rank": 22,
-        "name": "openbmb/MiniCPM-RobotTrack",
-        "url": "https://huggingface.co/openbmb/MiniCPM-RobotTrack",
-        "meta": "robotics \u00b7 transformers \u00b7 apache-2.0",
-        "receipts": [
-          {
-            "label": "349 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "121 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 18",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 23,
-        "name": "nvidia/Cosmos3-Edge",
-        "url": "https://huggingface.co/nvidia/Cosmos3-Edge",
-        "meta": "NVIDIA Cosmos\u2122 is a world foundation model platform designed to accelerate the development of Physical AI by enabling machines to understand\u2026",
+        "rank": 21,
+        "name": "ATH-MaaS/OvisOCR2",
+        "url": "https://huggingface.co/ATH-MaaS/OvisOCR2",
+        "meta": "We are pleased to announce the release of OvisOCR2, a compact 0.8B end-to-end model for page-level document parsing. Given a document page i\u2026",
         "receipts": [
           {
             "label": "30.3k downloads",
             "kind": "npm"
           },
           {
-            "label": "109 likes",
+            "label": "274 likes",
             "kind": "stars"
           },
           {
-            "label": "released Jul 1",
+            "label": "released Jul 13",
             "kind": "age"
           }
         ],
         "badges": []
       },
       {
-        "rank": 24,
+        "rank": 22,
         "name": "Kwaipilot/KAT-Coder-V2.5-Dev",
         "url": "https://huggingface.co/Kwaipilot/KAT-Coder-V2.5-Dev",
         "meta": "Following the release of KAT-Coder-V2.5 in July, we are pleased to release the open-weight version KAT-Coder-V2.5-Dev, an MOE model with a t\u2026",
@@ -4839,7 +4711,7 @@
             "kind": "npm"
           },
           {
-            "label": "105 likes",
+            "label": "115 likes",
             "kind": "stars"
           },
           {
@@ -4850,7 +4722,70 @@
         "badges": []
       },
       {
+        "rank": 23,
+        "name": "openbmb/MiniCPM-RobotTrack",
+        "url": "https://huggingface.co/openbmb/MiniCPM-RobotTrack",
+        "meta": "robotics \u00b7 transformers \u00b7 apache-2.0",
+        "receipts": [
+          {
+            "label": "349 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "122 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 18",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 24,
+        "name": "nvidia/Cosmos3-Edge",
+        "url": "https://huggingface.co/nvidia/Cosmos3-Edge",
+        "meta": "NVIDIA Cosmos\u2122 is a world foundation model platform designed to accelerate the development of Physical AI by enabling machines to understand\u2026",
+        "receipts": [
+          {
+            "label": "30.3k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "110 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 1",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
         "rank": 25,
+        "name": "LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V5-GGUF",
+        "url": "https://huggingface.co/LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V5-GGUF",
+        "meta": "Model is based on HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive base.",
+        "receipts": [
+          {
+            "label": "36.7k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "128 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 13",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 26,
         "name": "OpenMOSS-Team/MOSS-VL-Realtime",
         "url": "https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime",
         "meta": "MOSS-VL-Realtime is the realtime streaming checkpoint of the MOSS-VL release, part of the OpenMOSS ecosystem for open visual understanding.",
@@ -4871,27 +4806,6 @@
         "badges": []
       },
       {
-        "rank": 26,
-        "name": "LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V5-GGUF",
-        "url": "https://huggingface.co/LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V5-GGUF",
-        "meta": "Model is based on HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive base.",
-        "receipts": [
-          {
-            "label": "36.7k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "126 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 13",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 27,
         "name": "baseten/GLM-5.2-Vision-NVFP4",
         "url": "https://huggingface.co/baseten/GLM-5.2-Vision-NVFP4",
@@ -4902,7 +4816,7 @@
             "kind": "npm"
           },
           {
-            "label": "85 likes",
+            "label": "86 likes",
             "kind": "stars"
           },
           {
@@ -4914,6 +4828,27 @@
       },
       {
         "rank": 28,
+        "name": "unsloth/Ornith-1.0-35B-GGUF",
+        "url": "https://huggingface.co/unsloth/Ornith-1.0-35B-GGUF",
+        "meta": "Aloha! \ud83c\udf3a Today, we are releasing Ornith-1.0, a self-improving family of open-source models for agentic coding.",
+        "receipts": [
+          {
+            "label": "84.2k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "87 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 17",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 29,
         "name": "LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
         "url": "https://huggingface.co/LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
         "meta": "Model is based on HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive base.",
@@ -4934,7 +4869,7 @@
         "badges": []
       },
       {
-        "rank": 29,
+        "rank": 30,
         "name": "Lightricks/LTX-2.3-22b-IC-LoRA-Clean-Plate",
         "url": "https://huggingface.co/Lightricks/LTX-2.3-22b-IC-LoRA-Clean-Plate",
         "meta": "video-to-video \u00b7 other",
@@ -4951,55 +4886,13 @@
         "badges": []
       },
       {
-        "rank": 30,
-        "name": "unsloth/Ornith-1.0-35B-GGUF",
-        "url": "https://huggingface.co/unsloth/Ornith-1.0-35B-GGUF",
-        "meta": "Aloha! \ud83c\udf3a Today, we are releasing Ornith-1.0, a self-improving family of open-source models for agentic coding.",
-        "receipts": [
-          {
-            "label": "84.2k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "84 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 17",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 31,
-        "name": "krea/Krea-2-Turbo",
-        "url": "https://huggingface.co/krea/Krea-2-Turbo",
-        "meta": "text-to-image \u00b7 diffusers \u00b7 other",
-        "receipts": [
-          {
-            "label": "221k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "707 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jun 18",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 32,
         "name": "Alissonerdx/LTX-Best-Face-ID",
         "url": "https://huggingface.co/Alissonerdx/LTX-Best-Face-ID",
         "meta": "An identity-preserving reference-to-video LoRA for LTX-2.3 (22B). Give it a reference photo of a person + a text prompt, and it generates a\u2026",
         "receipts": [
           {
-            "label": "248 likes",
+            "label": "249 likes",
             "kind": "stars"
           },
           {
@@ -5010,7 +4903,7 @@
         "badges": []
       },
       {
-        "rank": 33,
+        "rank": 32,
         "name": "microsoft/Mage-Flow-Edit-Turbo",
         "url": "https://huggingface.co/microsoft/Mage-Flow-Edit-Turbo",
         "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
@@ -5020,7 +4913,7 @@
             "kind": "npm"
           },
           {
-            "label": "67 likes",
+            "label": "68 likes",
             "kind": "stars"
           },
           {
@@ -5031,28 +4924,28 @@
         "badges": []
       },
       {
-        "rank": 34,
-        "name": "prism-ml/Bonsai-27B-mlx-1bit",
-        "url": "https://huggingface.co/prism-ml/Bonsai-27B-mlx-1bit",
-        "meta": "Each weight is a single sign bit: 0 maps to \u2212scale, 1 maps to +scale. Every group of 128 weights shares one FP16 scale factor.",
+        "rank": 33,
+        "name": "krea/Krea-2-Turbo",
+        "url": "https://huggingface.co/krea/Krea-2-Turbo",
+        "meta": "text-to-image \u00b7 diffusers \u00b7 other",
         "receipts": [
           {
-            "label": "35.8k downloads",
+            "label": "221k downloads",
             "kind": "npm"
           },
           {
-            "label": "174 likes",
+            "label": "708 likes",
             "kind": "stars"
           },
           {
-            "label": "released Jul 4",
+            "label": "released Jun 18",
             "kind": "age"
           }
         ],
         "badges": []
       },
       {
-        "rank": 35,
+        "rank": 34,
         "name": "poolside/Laguna-XS-2.1",
         "url": "https://huggingface.co/poolside/Laguna-XS-2.1",
         "meta": "We used the highest publicly-referenced scores for all comparison models across each benchmark. In all cases these were official scores publ\u2026",
@@ -5062,7 +4955,7 @@
             "kind": "npm"
           },
           {
-            "label": "164 likes",
+            "label": "166 likes",
             "kind": "stars"
           },
           {
@@ -5073,7 +4966,7 @@
         "badges": []
       },
       {
-        "rank": 36,
+        "rank": 35,
         "name": "ai-sage/GigaAM-Multilingual",
         "url": "https://huggingface.co/ai-sage/GigaAM-Multilingual",
         "meta": "GigaAM Multilingual is a family of Conformer-based foundation models (220M / 600M parameters) pre-trained with a HuBERT-style objective on 2\u2026",
@@ -5088,6 +4981,27 @@
           },
           {
             "label": "released Jul 14",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 36,
+        "name": "prism-ml/Bonsai-27B-mlx-1bit",
+        "url": "https://huggingface.co/prism-ml/Bonsai-27B-mlx-1bit",
+        "meta": "Each weight is a single sign bit: 0 maps to \u2212scale, 1 maps to +scale. Every group of 128 weights shares one FP16 scale factor.",
+        "receipts": [
+          {
+            "label": "35.8k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "174 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 4",
             "kind": "age"
           }
         ],
@@ -5137,27 +5051,6 @@
       },
       {
         "rank": 39,
-        "name": "Wan-AI/Wan-Dancer-14B",
-        "url": "https://huggingface.co/Wan-AI/Wan-Dancer-14B",
-        "meta": "image-to-video \u00b7 diffusers \u00b7 apache-2.0",
-        "receipts": [
-          {
-            "label": "3.9k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "166 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 10",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 40,
         "name": "badtheorylabs/BTL-3",
         "url": "https://huggingface.co/badtheorylabs/BTL-3",
         "meta": "BTL-3 is a 27B open-weight agent model built for agentic coding, structural tool use, repository work, failure recovery, and long multi-turn\u2026",
@@ -5178,7 +5071,7 @@
         "badges": []
       },
       {
-        "rank": 41,
+        "rank": 40,
         "name": "bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF",
         "url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF",
         "meta": "GGUF / llama.cpp quantizations of bottlecapai/ThinkingCap-Qwen3.6-27B, capability of Qwen3.6-27B with 50% less thinking tokens on average, a\u2026",
@@ -5188,7 +5081,7 @@
             "kind": "npm"
           },
           {
-            "label": "188 likes",
+            "label": "189 likes",
             "kind": "stars"
           },
           {
@@ -5199,21 +5092,42 @@
         "badges": []
       },
       {
-        "rank": 42,
-        "name": "OpenMOSS-Team/MOSS-SoundEffect-v2.0",
-        "url": "https://huggingface.co/OpenMOSS-Team/MOSS-SoundEffect-v2.0",
-        "meta": "MOSS-SoundEffect v2.0 is a text-to-audio model with a Diffusion Transformer (DiT) backbone trained with the Flow Matching objective, paired\u2026",
+        "rank": 41,
+        "name": "Wan-AI/Wan-Dancer-14B",
+        "url": "https://huggingface.co/Wan-AI/Wan-Dancer-14B",
+        "meta": "image-to-video \u00b7 diffusers \u00b7 apache-2.0",
         "receipts": [
           {
-            "label": "1.8k downloads",
+            "label": "3.9k downloads",
             "kind": "npm"
           },
           {
-            "label": "123 likes",
+            "label": "166 likes",
             "kind": "stars"
           },
           {
-            "label": "released May 25",
+            "label": "released Jul 10",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 42,
+        "name": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
+        "url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
+        "meta": "v2 is built for coding + agentic work, writing code, running commands, using tools, debugging, multi-step technical tasks. The clearest sign\u2026",
+        "receipts": [
+          {
+            "label": "473k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "1.3k likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jun 19",
             "kind": "age"
           }
         ],
@@ -5242,20 +5156,20 @@
       },
       {
         "rank": 44,
-        "name": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
-        "url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
-        "meta": "v2 is built for coding + agentic work, writing code, running commands, using tools, debugging, multi-step technical tasks. The clearest sign\u2026",
+        "name": "OpenMOSS-Team/MOSS-SoundEffect-v2.0",
+        "url": "https://huggingface.co/OpenMOSS-Team/MOSS-SoundEffect-v2.0",
+        "meta": "MOSS-SoundEffect v2.0 is a text-to-audio model with a Diffusion Transformer (DiT) backbone trained with the Flow Matching objective, paired\u2026",
         "receipts": [
           {
-            "label": "473k downloads",
+            "label": "1.8k downloads",
             "kind": "npm"
           },
           {
-            "label": "1.3k likes",
+            "label": "123 likes",
             "kind": "stars"
           },
           {
-            "label": "released Jun 19",
+            "label": "released May 25",
             "kind": "age"
           }
         ],
@@ -5284,48 +5198,6 @@
       },
       {
         "rank": 46,
-        "name": "nvidia/Nemotron-3-Embed-1B-BF16",
-        "url": "https://huggingface.co/nvidia/Nemotron-3-Embed-1B-BF16",
-        "meta": "The model generates dense vector embeddings from multilingual text inputs, enabling retrieval, semantic search, and (agentic) RAG workflows.\u2026",
-        "receipts": [
-          {
-            "label": "245k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "108 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 14",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 47,
-        "name": "prism-ml/Ternary-Bonsai-27B-mlx-2bit",
-        "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-mlx-2bit",
-        "meta": "Each weight takes a value from {\u22121, 0, +1}, with one shared FP16 scale factor for every group of 128 weights. A ternary value carries log\u20823\u2026",
-        "receipts": [
-          {
-            "label": "28.7k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "144 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 4",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 48,
         "name": "ProCreations/grug-27b",
         "url": "https://huggingface.co/ProCreations/grug-27b",
         "meta": "grug get big brain now. 27B brain. biggest grug yet that actually work.",
@@ -5335,7 +5207,7 @@
             "kind": "npm"
           },
           {
-            "label": "49 likes",
+            "label": "50 likes",
             "kind": "stars"
           },
           {
@@ -5346,13 +5218,13 @@
         "badges": []
       },
       {
-        "rank": 49,
+        "rank": 47,
         "name": "audnai/penclaw-Kimi-K3.0-abliterated-GGUF",
         "url": "https://huggingface.co/audnai/penclaw-Kimi-K3.0-abliterated-GGUF",
         "meta": null,
         "receipts": [
           {
-            "label": "59 likes",
+            "label": "61 likes",
             "kind": "stars"
           },
           {
@@ -5363,21 +5235,84 @@
         "badges": []
       },
       {
-        "rank": 50,
-        "name": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
-        "url": "https://huggingface.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
-        "meta": "Qwythos-9B is a full-parameter reasoning model built on top of a deeply uncensored Qwen3.5-9B base and post-trained on over 500 million toke\u2026",
+        "rank": 48,
+        "name": "deepreinforce-ai/Ornith-1.0-35B-GGUF",
+        "url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF",
+        "meta": "Aloha! \ud83c\udf3a Today, we are releasing Ornith-1.0, a self-improving family of open-source models for agentic coding.",
         "receipts": [
           {
-            "label": "198k downloads",
+            "label": "2.8M downloads",
             "kind": "npm"
           },
           {
-            "label": "879 likes",
+            "label": "957 likes",
             "kind": "stars"
           },
           {
-            "label": "released Jun 19",
+            "label": "released Jun 25",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 49,
+        "name": "microsoft/Fara1.5-27B",
+        "url": "https://huggingface.co/microsoft/Fara1.5-27B",
+        "meta": "Fara1.5-27B is a multimodal computer use agent (CUA) for web browsers, from Microsoft Research AI Frontiers. It observes the browser through\u2026",
+        "receipts": [
+          {
+            "label": "990 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "49 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 17",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 50,
+        "name": "microsoft/Mage-Flow-Turbo",
+        "url": "https://huggingface.co/microsoft/Mage-Flow-Turbo",
+        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
+        "receipts": [
+          {
+            "label": "701 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "48 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 51,
+        "name": "PaddlePaddle/HPD-Parsing",
+        "url": "https://huggingface.co/PaddlePaddle/HPD-Parsing",
+        "meta": "We introduce HPD-Parsing, a lightweight (1B) and high-throughput document parsing model built on a Hierarchical Parallel Decoding paradigm.\u2026",
+        "receipts": [
+          {
+            "label": "514 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "49 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
             "kind": "age"
           }
         ],
@@ -5396,7 +5331,7 @@
             "kind": "npm"
           },
           {
-            "label": "533 likes",
+            "label": "537 likes",
             "kind": "stars"
           },
           {
@@ -5417,7 +5352,7 @@
             "kind": "npm"
           },
           {
-            "label": "465 likes",
+            "label": "473 likes",
             "kind": "stars"
           },
           {
@@ -5438,7 +5373,7 @@
             "kind": "npm"
           },
           {
-            "label": "357 likes",
+            "label": "362 likes",
             "kind": "stars"
           },
           {
@@ -5459,7 +5394,7 @@
             "kind": "npm"
           },
           {
-            "label": "214 likes",
+            "label": "223 likes",
             "kind": "stars"
           },
           {
@@ -5480,7 +5415,7 @@
             "kind": "npm"
           },
           {
-            "label": "182 likes",
+            "label": "183 likes",
             "kind": "stars"
           },
           {
@@ -5501,7 +5436,7 @@
             "kind": "npm"
           },
           {
-            "label": "164 likes",
+            "label": "169 likes",
             "kind": "stars"
           },
           {
@@ -5522,7 +5457,7 @@
             "kind": "npm"
           },
           {
-            "label": "170 likes",
+            "label": "171 likes",
             "kind": "stars"
           },
           {
@@ -5543,7 +5478,7 @@
             "kind": "npm"
           },
           {
-            "label": "138 likes",
+            "label": "143 likes",
             "kind": "stars"
           },
           {
@@ -5555,27 +5490,6 @@
       },
       {
         "rank": 9,
-        "name": "openbmb/MiniCPM-RobotTrack",
-        "url": "https://huggingface.co/openbmb/MiniCPM-RobotTrack",
-        "meta": "robotics \u00b7 transformers \u00b7 apache-2.0",
-        "receipts": [
-          {
-            "label": "349 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "121 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 18",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 10,
         "name": "Kwaipilot/KAT-Coder-V2.5-Dev",
         "url": "https://huggingface.co/Kwaipilot/KAT-Coder-V2.5-Dev",
         "meta": "Following the release of KAT-Coder-V2.5 in July, we are pleased to release the open-weight version KAT-Coder-V2.5-Dev, an MOE model with a t\u2026",
@@ -5585,11 +5499,32 @@
             "kind": "npm"
           },
           {
-            "label": "105 likes",
+            "label": "115 likes",
             "kind": "stars"
           },
           {
             "label": "released Jul 23",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 10,
+        "name": "openbmb/MiniCPM-RobotTrack",
+        "url": "https://huggingface.co/openbmb/MiniCPM-RobotTrack",
+        "meta": "robotics \u00b7 transformers \u00b7 apache-2.0",
+        "receipts": [
+          {
+            "label": "349 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "122 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 18",
             "kind": "age"
           }
         ],
@@ -5606,7 +5541,7 @@
             "kind": "npm"
           },
           {
-            "label": "85 likes",
+            "label": "86 likes",
             "kind": "stars"
           },
           {
@@ -5618,6 +5553,27 @@
       },
       {
         "rank": 12,
+        "name": "unsloth/Ornith-1.0-35B-GGUF",
+        "url": "https://huggingface.co/unsloth/Ornith-1.0-35B-GGUF",
+        "meta": "Aloha! \ud83c\udf3a Today, we are releasing Ornith-1.0, a self-improving family of open-source models for agentic coding.",
+        "receipts": [
+          {
+            "label": "84.2k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "87 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 17",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 13,
         "name": "Lightricks/LTX-2.3-22b-IC-LoRA-Clean-Plate",
         "url": "https://huggingface.co/Lightricks/LTX-2.3-22b-IC-LoRA-Clean-Plate",
         "meta": "video-to-video \u00b7 other",
@@ -5634,27 +5590,6 @@
         "badges": []
       },
       {
-        "rank": 13,
-        "name": "unsloth/Ornith-1.0-35B-GGUF",
-        "url": "https://huggingface.co/unsloth/Ornith-1.0-35B-GGUF",
-        "meta": "Aloha! \ud83c\udf3a Today, we are releasing Ornith-1.0, a self-improving family of open-source models for agentic coding.",
-        "receipts": [
-          {
-            "label": "84.2k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "84 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 17",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 14,
         "name": "microsoft/Mage-Flow-Edit-Turbo",
         "url": "https://huggingface.co/microsoft/Mage-Flow-Edit-Turbo",
@@ -5665,7 +5600,7 @@
             "kind": "npm"
           },
           {
-            "label": "67 likes",
+            "label": "68 likes",
             "kind": "stars"
           },
           {
@@ -5728,7 +5663,7 @@
             "kind": "npm"
           },
           {
-            "label": "49 likes",
+            "label": "50 likes",
             "kind": "stars"
           },
           {
@@ -5745,11 +5680,74 @@
         "meta": null,
         "receipts": [
           {
-            "label": "59 likes",
+            "label": "61 likes",
             "kind": "stars"
           },
           {
             "label": "released Jul 18",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 19,
+        "name": "microsoft/Fara1.5-27B",
+        "url": "https://huggingface.co/microsoft/Fara1.5-27B",
+        "meta": "Fara1.5-27B is a multimodal computer use agent (CUA) for web browsers, from Microsoft Research AI Frontiers. It observes the browser through\u2026",
+        "receipts": [
+          {
+            "label": "990 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "49 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 17",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 20,
+        "name": "microsoft/Mage-Flow-Turbo",
+        "url": "https://huggingface.co/microsoft/Mage-Flow-Turbo",
+        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
+        "receipts": [
+          {
+            "label": "701 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "48 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 21,
+        "name": "PaddlePaddle/HPD-Parsing",
+        "url": "https://huggingface.co/PaddlePaddle/HPD-Parsing",
+        "meta": "We introduce HPD-Parsing, a lightweight (1B) and high-throughput document parsing model built on a Hierarchical Parallel Decoding paradigm.\u2026",
+        "receipts": [
+          {
+            "label": "514 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "49 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
             "kind": "age"
           }
         ],
@@ -5935,7 +5933,7 @@
         "meta": "Embodied visual tracking (EVT) requires a mobile agent to continuously follow a specific target described in natural language using only onb\u2026",
         "receipts": [
           {
-            "label": "42 upvotes",
+            "label": "43 upvotes",
             "kind": "paper"
           },
           {
@@ -6440,7 +6438,7 @@
         "meta": "We introduce SANA-Video 2.0, a hybrid video diffusion transformer instantiated at 5B and 14B scales under a unified architecture. Designed t\u2026",
         "receipts": [
           {
-            "label": "13 upvotes",
+            "label": "14 upvotes",
             "kind": "paper"
           },
           {
@@ -7022,7 +7020,7 @@
         "meta": "Embodied visual tracking (EVT) requires a mobile agent to continuously follow a specific target described in natural language using only onb\u2026",
         "receipts": [
           {
-            "label": "42 upvotes",
+            "label": "43 upvotes",
             "kind": "paper"
           },
           {
@@ -7427,7 +7425,7 @@
         "meta": "We introduce SANA-Video 2.0, a hybrid video diffusion transformer instantiated at 5B and 14B scales under a unified architecture. Designed t\u2026",
         "receipts": [
           {
-            "label": "13 upvotes",
+            "label": "14 upvotes",
             "kind": "paper"
           },
           {
