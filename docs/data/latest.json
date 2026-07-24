@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-23",
-  "generated_pt": "Jul 23, 2026 \u00b7 7:11 PM PT",
+  "generated_pt": "Jul 23, 2026 \u00b7 7:14 PM PT",
   "entities": {
     "repos": [
       {
@@ -1561,7 +1561,7 @@
             "kind": "stars"
           },
           {
-            "label": "955 stars",
+            "label": "956 stars",
             "kind": "stars"
           },
           {
@@ -2213,7 +2213,7 @@
             "kind": "stars"
           },
           {
-            "label": "955 stars",
+            "label": "956 stars",
             "kind": "stars"
           },
           {
@@ -5044,7 +5044,7 @@
         "rank": 1,
         "name": "TimeLens2: Generalist Video Temporal Grounding with Multimodal LLMs",
         "url": "https://huggingface.co/papers/2607.17423",
-        "meta": null,
+        "meta": "Video multimodal large language models (MLLMs) can describe what happens in a video, but rarely identify when the supporting evidence occurs\u2026",
         "receipts": [
           {
             "label": "106 upvotes",
@@ -5062,7 +5062,7 @@
         "rank": 2,
         "name": "ABot-World-0: Infinite Interactive World Rollout on a Single Desktop GPU",
         "url": "https://huggingface.co/papers/2607.19191",
-        "meta": null,
+        "meta": "We present ABot-World-0, an action-conditioned video world model for real-time, long-horizon closed-loop interaction, supported by a multi-s\u2026",
         "receipts": [
           {
             "label": "96 upvotes",
@@ -5080,7 +5080,7 @@
         "rank": 3,
         "name": "RAGU: A Multi-Step GraphRAG Engine with a Compact Domain-Adapted LLM",
         "url": "https://huggingface.co/papers/2607.11683",
-        "meta": null,
+        "meta": "Graph retrieval-augmented generation (GraphRAG) enhances large language models with structured knowledge, yet existing systems construct kno\u2026",
         "receipts": [
           {
             "label": "84 upvotes",
@@ -5098,7 +5098,7 @@
         "rank": 4,
         "name": "DataFlow-Harness: A Grounded Code-Agent Platform for Constructing Editable LLM Data Pipelines",
         "url": "https://huggingface.co/papers/2607.16617",
-        "meta": null,
+        "meta": "Large language models (LLMs) are increasingly used to automate data-processing workflows, yet coding agents typically produce scripts that a\u2026",
         "receipts": [
           {
             "label": "80 upvotes",
@@ -5111,7 +5111,7 @@
         "rank": 5,
         "name": "RESOURCE2SKILL: Distilling Executable Agent Skills from Human-Created Multimodal Resources",
         "url": "https://huggingface.co/papers/2606.29538",
-        "meta": null,
+        "meta": "Skills are a useful abstraction for software agents, turning human and agent experience into reusable procedural knowledge. Yet existing ski\u2026",
         "receipts": [
           {
             "label": "72 upvotes",
@@ -5129,7 +5129,7 @@
         "rank": 6,
         "name": "DeepSearch-World: Self-Distillation for Deep Search Agents in a Verifiable Environment",
         "url": "https://huggingface.co/papers/2607.07820",
-        "meta": null,
+        "meta": "Training tool-use agents to improve from their own experience remains challenging, as supervised fine-tuning relies on fixed teacher-distill\u2026",
         "receipts": [
           {
             "label": "69 upvotes",
@@ -5147,7 +5147,7 @@
         "rank": 7,
         "name": "EvolvingWorld: An Open-Schema Framework for Co-Evolving Role-Play Agents and World Model in Interactive Literary World",
         "url": "https://huggingface.co/papers/2607.17250",
-        "meta": null,
+        "meta": "This paper introduces EvolvingWorld, a framework and benchmark for character and world co-evolution in interactive literary worlds. Existing\u2026",
         "receipts": [
           {
             "label": "65 upvotes",
@@ -5165,7 +5165,7 @@
         "rank": 8,
         "name": "Text Template Tokens Are Implicit Semantic Registers in Diffusion Transformers",
         "url": "https://huggingface.co/papers/2607.19139",
-        "meta": null,
+        "meta": "Text-to-image diffusion transformers (DiTs) jointly process text and image tokens, yet their internal computation during denoising remains p\u2026",
         "receipts": [
           {
             "label": "65 upvotes",
@@ -5183,7 +5183,7 @@
         "rank": 9,
         "name": "SWE-Pruner Pro: The Coder LLM Already Knows What to Prune",
         "url": "https://huggingface.co/papers/2607.18213",
-        "meta": null,
+        "meta": "Pruning long context for coding agents has been a vital technology for efficient context management. While existing context pruning methods\u2026",
         "receipts": [
           {
             "label": "64 upvotes",
@@ -5201,7 +5201,7 @@
         "rank": 10,
         "name": "Generative World Renderer at the Speed of Play",
         "url": "https://huggingface.co/papers/2607.18703",
-        "meta": null,
+        "meta": "Generative world renderer AlayaRenderer receives structured world states exported from physics engines and synthesizes RGB frames. Unlike mo\u2026",
         "receipts": [
           {
             "label": "63 upvotes",
@@ -5219,7 +5219,7 @@
         "rank": 11,
         "name": "Mage-Flow: An Efficient Native-Resolution Foundation Model for Image Generation and Editing",
         "url": "https://huggingface.co/papers/2607.19064",
-        "meta": null,
+        "meta": "Large-scale visual generators are increasingly capable but costly to train, fine-tune, and deploy. We introduce Mage-Flow, a compact 4B-scal\u2026",
         "receipts": [
           {
             "label": "52 upvotes",
@@ -5237,7 +5237,7 @@
         "rank": 12,
         "name": "Loop the Loopies!",
         "url": "https://huggingface.co/papers/2607.16051",
-        "meta": null,
+        "meta": "We present Loopie, the most powerful looped Transformer to date. The Loopie series consists of two Mixture-of-Experts (MoE) models: a 20B-pa\u2026",
         "receipts": [
           {
             "label": "49 upvotes",
@@ -5250,7 +5250,7 @@
         "rank": 13,
         "name": "SLAI T-Rex: Full-Parameter Post-training of the DeepSeek-V4 Family on Ascend SuperPOD",
         "url": "https://huggingface.co/papers/2607.20145",
-        "meta": null,
+        "meta": "Full-parameter post-training of trillion-parameter-scale MoE models introduces substantial system-level challenges for large-scale distribut\u2026",
         "receipts": [
           {
             "label": "45 upvotes",
@@ -5268,7 +5268,7 @@
         "rank": 14,
         "name": "AlayaWorld: Interactive Long-Horizon World Modeling -- Full Technical Report",
         "url": "https://huggingface.co/papers/2607.18367",
-        "meta": null,
+        "meta": "Unlike conventional video game development, which relies on labor-intensive pipelines for asset production, animation, physics, and programm\u2026",
         "receipts": [
           {
             "label": "44 upvotes",
@@ -5286,7 +5286,7 @@
         "rank": 15,
         "name": "HOMIE: Human-object Centric Video Personalization via Multimodal Intelligent Enchancement",
         "url": "https://huggingface.co/papers/2607.18217",
-        "meta": null,
+        "meta": "Human-object centric video personalization (HOCVP) is a core task within subject-driven video generation. However, existing methods suffer f\u2026",
         "receipts": [
           {
             "label": "44 upvotes",
@@ -5304,7 +5304,7 @@
         "rank": 16,
         "name": "Apple-\u03c0: Benchmarking Thinking with Video Towards Law-Grounded Physical Intelligence",
         "url": "https://huggingface.co/papers/2607.16401",
-        "meta": null,
+        "meta": "Modern video generation models are increasingly hailed as emerging world models with an internalized grasp of physical law. Yet existing ben\u2026",
         "receipts": [
           {
             "label": "35 upvotes",
@@ -5322,7 +5322,7 @@
         "rank": 17,
         "name": "RynnBrain 1.1: Towards More Capable and Generalizable Embodied Foundation Model",
         "url": "https://huggingface.co/papers/2607.17977",
-        "meta": null,
+        "meta": "We present RynnBrain 1.1, a family of embodied foundation models spanning 2B, 9B, and 122B-A10B scales. Trained with a unified spatio-tempor\u2026",
         "receipts": [
           {
             "label": "31 upvotes",
@@ -5335,7 +5335,7 @@
         "rank": 18,
         "name": "Self Gradient Forcing: Native Long Video Extrapolation",
         "url": "https://huggingface.co/papers/2607.20368",
-        "meta": null,
+        "meta": "Recent autoregressive video diffusion methods are increasingly built upon Self Forcing, where the student is trained on histories produced b\u2026",
         "receipts": [
           {
             "label": "29 upvotes",
@@ -5353,7 +5353,7 @@
         "rank": 19,
         "name": "Stale but Stable: Staleness-Adaptive Trust Regions for Stabilizing Asynchronous Reinforcement Learning",
         "url": "https://huggingface.co/papers/2607.18722",
-        "meta": null,
+        "meta": "Asynchronous reinforcement learning improves throughput by decoupling rollout generation from optimization, but staleness is an inevitable b\u2026",
         "receipts": [
           {
             "label": "28 upvotes",
@@ -5371,7 +5371,7 @@
         "rank": 20,
         "name": "Beyond Relevance-Centric Retrieval: Rubric-Oriented Document Set Selection and Ranking",
         "url": "https://huggingface.co/papers/2607.19747",
-        "meta": null,
+        "meta": "As large language models and AI agents become the primary consumers of search results, document set quality determines the upper bound of do\u2026",
         "receipts": [
           {
             "label": "24 upvotes",
@@ -5389,7 +5389,7 @@
         "rank": 21,
         "name": "GigaChat Audio: Time-aware Large Audio Language Model",
         "url": "https://huggingface.co/papers/2607.10387",
-        "meta": null,
+        "meta": "Temporal grounding in long recordings remains challenging for audio-conditioned LLMs. We present a time-aware audio LLM that answers questio\u2026",
         "receipts": [
           {
             "label": "24 upvotes",
@@ -5402,7 +5402,7 @@
         "rank": 22,
         "name": "GigaAM Multilingual: Foundation Model for Underrepresented Languages",
         "url": "https://huggingface.co/papers/2607.10371",
-        "meta": null,
+        "meta": "Despite recent scaling successes, multilingual ASR performance remains highly uneven, with long-tail languages suffering from severe data sc\u2026",
         "receipts": [
           {
             "label": "23 upvotes",
@@ -5420,7 +5420,7 @@
         "rank": 23,
         "name": "Group Entropy-Controlled Policy Optimization",
         "url": "https://huggingface.co/papers/2607.16850",
-        "meta": null,
+        "meta": "Entropy control has become an effective tool in reinforcement learning (RL) of large language models (LLMs), helping balance exploration-exp\u2026",
         "receipts": [
           {
             "label": "21 upvotes",
@@ -5433,7 +5433,7 @@
         "rank": 24,
         "name": "ReflectWorld-MM: An Entity-Oriented Multimodal Memory System for Open-Ended Video Streams",
         "url": "https://huggingface.co/papers/2607.09759",
-        "meta": null,
+        "meta": "Building assistants that can continually watch the world, remember what they see, and reason over their accumulated experience is a long-sta\u2026",
         "receipts": [
           {
             "label": "21 upvotes",
@@ -5451,7 +5451,7 @@
         "rank": 25,
         "name": "An Exam for Active Observers",
         "url": "https://huggingface.co/papers/2607.16165",
-        "meta": null,
+        "meta": "Human vision is a closed loop: gaze is continuously redirected by intermediate hypotheses rather than a single snapshot. Decades of psychoph\u2026",
         "receipts": [
           {
             "label": "20 upvotes",
@@ -5469,7 +5469,7 @@
         "rank": 26,
         "name": "FlowMimic: Mask-free Visual Editing and Generation with Pixel-pair Warped Flow Field for Online Video Editing Data Generation and Modality Mimicry",
         "url": "https://huggingface.co/papers/2607.18227",
-        "meta": null,
+        "meta": "In line with the prevailing direction of vision research, we explore the integration of both generation and editing capabilities for video a\u2026",
         "receipts": [
           {
             "label": "17 upvotes",
@@ -5482,7 +5482,7 @@
         "rank": 27,
         "name": "Open-AoE: An Open Egocentric Manipulation Dataset and Toolchain for Embodied Learning",
         "url": "https://huggingface.co/papers/2607.14183",
-        "meta": null,
+        "meta": "Egocentric videos of human manipulation provide scalable supervision for embodied intelligence, yet existing resources rarely combine low-co\u2026",
         "receipts": [
           {
             "label": "16 upvotes",
@@ -5500,7 +5500,7 @@
         "rank": 28,
         "name": "SciForma: Structure-Faithful Generation of Scientific Diagrams",
         "url": "https://huggingface.co/papers/2607.18091",
-        "meta": null,
+        "meta": "Structural fidelity is essential to scientific methodology diagrams. To communicate research logic, these diagrams must faithfully render co\u2026",
         "receipts": [
           {
             "label": "15 upvotes",
@@ -5513,7 +5513,7 @@
         "rank": 29,
         "name": "AgentDebugX: An Open-Source Toolkit for Failure Observability, Attribution, and Recovery in LLM Agents",
         "url": "https://huggingface.co/papers/2607.18754",
-        "meta": null,
+        "meta": "LLM agent failures are difficult to debug because the step where an error surfaces is often not the one that caused it. Existing observabili\u2026",
         "receipts": [
           {
             "label": "13 upvotes",
@@ -5531,7 +5531,7 @@
         "rank": 30,
         "name": "Environment-free Synthetic Data Generation for API-Calling Agents",
         "url": "https://huggingface.co/papers/2607.16900",
-        "meta": null,
+        "meta": "Training API-calling large language model (LLM) agents demands massive amounts of high-quality trajectories. However, collecting such data a\u2026",
         "receipts": [
           {
             "label": "13 upvotes",
@@ -5544,7 +5544,7 @@
         "rank": 31,
         "name": "Do Language Models Dream of Binding Molecules? Benchmarking LLMs under Spatial Constraints",
         "url": "https://huggingface.co/papers/2607.18144",
-        "meta": null,
+        "meta": "Structure-based drug design (SBDD) leverages the 3D structure of protein targets, often complemented by other spatial constraints, to genera\u2026",
         "receipts": [
           {
             "label": "11 upvotes",
@@ -5562,7 +5562,7 @@
         "rank": 32,
         "name": "Scaling Laws for Hypernetwork-Based Knowledge Injection in Large Language Models",
         "url": "https://huggingface.co/papers/2607.19604",
-        "meta": null,
+        "meta": "Injecting factual knowledge into large language models (LLMs) reliably and at scale remains an open challenge. Hypernetworks provide a promi\u2026",
         "receipts": [
           {
             "label": "11 upvotes",
@@ -5580,7 +5580,7 @@
         "rank": 33,
         "name": "DiffGI: Differentiable Geometry Images for High-Fidelity Thin-Shell 3D Generation",
         "url": "https://huggingface.co/papers/2607.13365",
-        "meta": null,
+        "meta": "Existing 3D generative models predominantly rely on implicit volumetric representations, which enforce watertight topology and struggle to r\u2026",
         "receipts": [
           {
             "label": "10 upvotes",
@@ -5593,7 +5593,7 @@
         "rank": 34,
         "name": "Generalizable VLA Finetuning via Representation Anchoring and Language-Action Alignment",
         "url": "https://huggingface.co/papers/2607.13429",
-        "meta": null,
+        "meta": "Finetuning a pretrained vision-language model (VLM) on robot demonstrations via behavior cloning (BC) has become the standard recipe for vis\u2026",
         "receipts": [
           {
             "label": "10 upvotes",
@@ -5611,7 +5611,7 @@
         "rank": 35,
         "name": "Beyond Euclidean Clipping: Overcoming Exploration Collapse in LLM RL via Riemannian Isometric Policy Optimization",
         "url": "https://huggingface.co/papers/2607.10169",
-        "meta": null,
+        "meta": "Reinforcement learning (RL) has become a dominant paradigm for enhancing LLMs' reasoning capabilities. However, RL algorithms with PPO-Clip\u2026",
         "receipts": [
           {
             "label": "9 upvotes",
@@ -5629,7 +5629,7 @@
         "rank": 36,
         "name": "HarmoHOI: Harmonizing Appearance and 3D Motion for Multi-view Hand-Object Interaction Synthesis",
         "url": "https://huggingface.co/papers/2607.17097",
-        "meta": null,
+        "meta": "Hand-Object Interaction (HOI) synthesis is a cornerstone for animation production and embodied AI. Despite the strong priors of video founda\u2026",
         "receipts": [
           {
             "label": "7 upvotes",
@@ -5647,7 +5647,7 @@
         "rank": 37,
         "name": "LLM-as-a-Coach: Experiential Learning for Non-Verifiable Tasks",
         "url": "https://huggingface.co/papers/2607.18110",
-        "meta": null,
+        "meta": "Reinforcement learning (RL) on open-ended tasks compresses an LLM's rubric-based evaluation into a scalar reward, discarding rich textual fe\u2026",
         "receipts": [
           {
             "label": "7 upvotes",
@@ -5660,7 +5660,7 @@
         "rank": 38,
         "name": "HPD-Parsing: Hierarchical Parallel Document Parsing",
         "url": "https://huggingface.co/papers/2607.18839",
-        "meta": null,
+        "meta": "Efficient teamwork typically combines global coordination with parallel execution, a principle not yet fully reflected in unified Vision-Lan\u2026",
         "receipts": [
           {
             "label": "6 upvotes",
@@ -5673,7 +5673,7 @@
         "rank": 39,
         "name": "Two-Level Meta-Rubrics for Evaluating Open-Ended Generation: GAMUT, a Benchmark for Factual Completeness",
         "url": "https://huggingface.co/papers/2607.19322",
-        "meta": null,
+        "meta": "Evaluating the factuality of long-form generations has focused predominantly on precision, measuring whether the claims a model makes are co\u2026",
         "receipts": [
           {
             "label": "6 upvotes",
@@ -5691,7 +5691,7 @@
         "rank": 40,
         "name": "Distilled Reinforcement Learning for LLM Post-training",
         "url": "https://huggingface.co/papers/2607.17247",
-        "meta": null,
+        "meta": "Large language model (LLM) post-training is essential for improving reasoning, adaptation, and alignment. Existing methods mainly follow two\u2026",
         "receipts": [
           {
             "label": "5 upvotes",
@@ -5709,7 +5709,7 @@
         "rank": 41,
         "name": "ATSplat: Compact Feed-forward 3D Gaussian Splatting with Adaptive Token Expansion",
         "url": "https://huggingface.co/papers/2607.20417",
-        "meta": null,
+        "meta": "3D Gaussian Splatting (3DGS) achieves high-quality novel-view synthesis by optimizing freely placed primitives in 3D and adaptively densifyi\u2026",
         "receipts": [
           {
             "label": "4 upvotes",
@@ -5722,7 +5722,7 @@
         "rank": 42,
         "name": "DocOps: A Verifiable Benchmark for Autonomous Agents in Complex Document Operations",
         "url": "https://huggingface.co/papers/2607.19865",
-        "meta": null,
+        "meta": "As autonomous agents rapidly evolve, their ability to reliably manipulate ubiquitous digital documents has become critical for enabling gene\u2026",
         "receipts": [
           {
             "label": "4 upvotes",
@@ -5740,7 +5740,7 @@
         "rank": 43,
         "name": "FVAttn: Adaptive Sparse Attention with Runtime Load Balancing for Video Generation",
         "url": "https://huggingface.co/papers/2607.16190",
-        "meta": null,
+        "meta": "Video Diffusion Transformers process long spatio-temporal sequences, making self-attention the main bottleneck in high-resolution video gene\u2026",
         "receipts": [
           {
             "label": "4 upvotes",
@@ -5753,7 +5753,7 @@
         "rank": 44,
         "name": "The Geometry of Semantic Space: A Continuous Geometric Framework for the Transformer Architecture",
         "url": "https://huggingface.co/papers/2607.17146",
-        "meta": null,
+        "meta": "We present a continuous geometric framework that models the discrete algebraic operations of the Transformer architecture as an integro-diff\u2026",
         "receipts": [
           {
             "label": "4 upvotes",
@@ -5766,7 +5766,7 @@
         "rank": 45,
         "name": "EduPanel: A Three-Agent LLM Judge for Teaching Videos -- Reliability, Complementarity, and Human Trust Calibration",
         "url": "https://huggingface.co/papers/2607.18529",
-        "meta": null,
+        "meta": "Teaching videos are becoming a major medium for education, creating a growing need for scalable evaluation of their pedagogical quality. Exi\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -5784,7 +5784,7 @@
         "rank": 46,
         "name": "FlashRT: Agent Harness for Guiding Agents to Deploy Real-Time Multimodal Applications",
         "url": "https://huggingface.co/papers/2607.18171",
-        "meta": null,
+        "meta": "Real-time multimodal applications, including voice agents and interactive video generation, compose heterogeneous models into pipelines whos\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -5797,7 +5797,7 @@
         "rank": 47,
         "name": "H^2SD: Hybrid Hindsight Self-Distillation",
         "url": "https://huggingface.co/papers/2607.18955",
-        "meta": null,
+        "meta": "Reinforcement learning with verifiable rewards (RLVR) has substantially improved the reasoning capabilities of large language models on task\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -5810,7 +5810,7 @@
         "rank": 48,
         "name": "ISO: An RLVR-Native Optimization Stack",
         "url": "https://huggingface.co/papers/2607.19331",
-        "meta": null,
+        "meta": "Reinforcement learning with verifiable rewards (RLVR) is rapidly advancing the reasoning capabilities of language models, yet the optimizati\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -5828,7 +5828,7 @@
         "rank": 49,
         "name": "JoyNexus: Service-Oriented Multi-Tenant Post-Training for VLA Models",
         "url": "https://huggingface.co/papers/2607.16074",
-        "meta": null,
+        "meta": "The post-training of Vision-Language-Action (VLA) models is essential due to the diversity of simulators, robot embodiments, and task object\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -5841,7 +5841,7 @@
         "rank": 50,
         "name": "Masked Visual Actions for Unified World Modeling",
         "url": "https://huggingface.co/papers/2607.19343",
-        "meta": null,
+        "meta": "Video models absorb rich priors over how the visual world moves, interacts, and responds to contact, making them promising substrates for ro\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -5859,7 +5859,7 @@
         "rank": 51,
         "name": "Self-State Attacks on Self-Hosted AI Agents: How Far Can OS Defenses Go?",
         "url": "https://huggingface.co/papers/2607.17986",
-        "meta": null,
+        "meta": "Self-hosted AI agents read and write their own memory and configuration files to function. An agent may get compromised via corruption of it\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -5872,7 +5872,7 @@
         "rank": 52,
         "name": "SLPO: Scaling Latent Reasoning via a Surrogate Policy",
         "url": "https://huggingface.co/papers/2607.19691",
-        "meta": null,
+        "meta": "Reinforcement learning with verifiable rewards has become the predominant recipe for eliciting test-time scaling in explicit Chain-of-Though\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -5890,7 +5890,7 @@
         "rank": 53,
         "name": "Trace: A Taxonomy-Guided Environment for Multidomain Visual Reasoning",
         "url": "https://huggingface.co/papers/2607.19790",
-        "meta": null,
+        "meta": "Reinforcement learning with verifiable rewards (RLVR) has substantially improved language-model reasoning, yet its extension to vision-langu\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -5908,7 +5908,7 @@
         "rank": 54,
         "name": "Transcription Policy as a Latent Variable: Activating Controllable Verbatim ASR with Word-Level Timing",
         "url": "https://huggingface.co/papers/2607.18934",
-        "meta": null,
+        "meta": "Modern ASR models trained on heterogeneously annotated data treat transcription style (verbatim vs. intended) as an uncontrolled latent vari\u2026",
         "receipts": [
           {
             "label": "3 upvotes",
@@ -5926,7 +5926,7 @@
         "rank": 55,
         "name": "Appearance Pointers -- Multimodal Region Control of Diffusion Transformers",
         "url": "https://huggingface.co/papers/2607.19344",
-        "meta": null,
+        "meta": "Controllable image generation remains challenging for creative professionals, who often require precise regional control over materials, obj\u2026",
         "receipts": [
           {
             "label": "2 upvotes",
@@ -5939,7 +5939,7 @@
         "rank": 56,
         "name": "Delineate Anything v2: A Global Foundation Model for Field Delineation",
         "url": "https://huggingface.co/papers/2607.19069",
-        "meta": null,
+        "meta": "Accurate agricultural field boundary delineation at large scale is a foundational task for food security, supply chain transparency, and car\u2026",
         "receipts": [
           {
             "label": "2 upvotes",
@@ -5952,7 +5952,7 @@
         "rank": 57,
         "name": "Diagnosing and Calibrating Tool-Call Boundary Drift in Multi-Teacher On-Policy Distillation",
         "url": "https://huggingface.co/papers/2607.07050",
-        "meta": null,
+        "meta": "Agentic language models must learn when to call tools, when to consume tool responses, and when to answer directly. This makes multi-teacher\u2026",
         "receipts": [
           {
             "label": "2 upvotes",
@@ -5965,7 +5965,7 @@
         "rank": 58,
         "name": "DiFA: Inference-Time Forward-Process Alignment for Diffusion Models",
         "url": "https://huggingface.co/papers/2607.17972",
-        "meta": null,
+        "meta": "The prevailing inference framework for diffusion models formulates generation fundamentally as a problem of numerical integration. This pers\u2026",
         "receipts": [
           {
             "label": "2 upvotes",
@@ -5978,7 +5978,7 @@
         "rank": 59,
         "name": "G-MAD: A Game-Based Data Generation Framework for Multi-View RGB-T Aerial Object Detection",
         "url": "https://huggingface.co/papers/2607.19942",
-        "meta": null,
+        "meta": "This work introduces G-MAD, an open-source framework that uses Arma3 to generate synchronized multi-view RGB-T data for aerial object detect\u2026",
         "receipts": [
           {
             "label": "2 upvotes",
@@ -5996,7 +5996,7 @@
         "rank": 60,
         "name": "OpenLongTail: Generative Scaling of Long-Tail Driving Data",
         "url": "https://huggingface.co/papers/2607.09655",
-        "meta": null,
+        "meta": "Scaling robust driving policies is fundamentally bottlenecked by the scarcity of edge cases in curated datasets. While the real world contin\u2026",
         "receipts": [
           {
             "label": "2 upvotes",
