@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-23",
-  "generated_pt": "Jul 23, 2026 \u00b7 10:33 PM PT",
+  "generated_pt": "Jul 23, 2026 \u00b7 10:39 PM PT",
   "entities": {
     "repos": [
       {
@@ -1523,7 +1523,7 @@
         "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
         "receipts": [
           {
-            "label": "+263/day",
+            "label": "+264/day",
             "kind": "stars"
           },
           {
@@ -2123,11 +2123,11 @@
         "meta": "Dotted thought-orb loading indicators for AI & agent UIs \u2014 six tuned states, two",
         "receipts": [
           {
-            "label": "+424/day",
+            "label": "+425/day",
             "kind": "stars"
           },
           {
-            "label": "849 stars",
+            "label": "850 stars",
             "kind": "stars"
           },
           {
@@ -2175,7 +2175,7 @@
         "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
         "receipts": [
           {
-            "label": "+263/day",
+            "label": "+264/day",
             "kind": "stars"
           },
           {
@@ -4042,7 +4042,7 @@
         "rank": 1,
         "name": "baidu/Unlimited-OCR",
         "url": "https://huggingface.co/baidu/Unlimited-OCR",
-        "meta": "- [2026/07/21] \ud83e\udd1d Thanks to the ms-swift community for their support, our model now supports training with ms-swift. - [2026/07/03] \ud83e\udd1d Thanks\u2026",
+        "meta": "Inference using Huggingface transformers on NVIDIA GPUs. Requirements tested on python 3.12.3 + CUDA12.9\uff1a",
         "receipts": [
           {
             "label": "2.4M downloads",
@@ -4127,7 +4127,7 @@
         "rank": 6,
         "name": "prism-ml/Ternary-Bonsai-27B-gguf",
         "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf",
-        "meta": "- Discord \u2014 join the community for support, discussion, and updates",
+        "meta": "Each weight takes a value from {\u22121, 0, +1}, with one shared FP16 scale factor for every group of 128 weights. A ternary value carries log\u20823\u2026",
         "receipts": [
           {
             "label": "576k downloads",
@@ -4161,7 +4161,7 @@
         "rank": 8,
         "name": "zai-org/GLM-5.2",
         "url": "https://huggingface.co/zai-org/GLM-5.2",
-        "meta": "We're introducing GLM-5.2, our latest flagship model for long-horizon tasks. It marks a substantial leap in long-horizon task capability ove\u2026",
+        "meta": "GLM-5.2 supports deployment with the following frameworks. Feel free to try them out:",
         "receipts": [
           {
             "label": "596k downloads",
@@ -4191,7 +4191,7 @@
         "rank": 10,
         "name": "prism-ml/Bonsai-27B-gguf",
         "url": "https://huggingface.co/prism-ml/Bonsai-27B-gguf",
-        "meta": "- Discord \u2014 join the community for support, discussion, and updates",
+        "meta": "Each weight is a single sign bit: 0 maps to \u2212scale, 1 maps to +scale. Every group of 128 weights shares one FP16 scale factor.",
         "receipts": [
           {
             "label": "1.9M downloads",
@@ -4225,7 +4225,7 @@
         "rank": 12,
         "name": "conradlocke/krea2-identity-edit",
         "url": "https://huggingface.co/conradlocke/krea2-identity-edit",
-        "meta": "\u2615 Support on Ko-fi \u2014 all tips go straight to GPU compute for future versions.",
+        "meta": "\u2615 Support on Ko-fi, all tips go straight to GPU compute for future versions.",
         "receipts": [
           {
             "label": "518 likes",
@@ -4459,7 +4459,7 @@
         "rank": 26,
         "name": "prism-ml/Bonsai-27B-mlx-1bit",
         "url": "https://huggingface.co/prism-ml/Bonsai-27B-mlx-1bit",
-        "meta": "Full 27B-class reasoning in binary transformer weights \u2014 the first 27B-class model to run on a phone",
+        "meta": "Full 27B-class reasoning in binary transformer weights, the first 27B-class model to run on a phone",
         "receipts": [
           {
             "label": "34.3k downloads",
@@ -4702,7 +4702,7 @@
         "rank": 41,
         "name": "Wan-AI/Wan-Dancer-14B",
         "url": "https://huggingface.co/Wan-AI/Wan-Dancer-14B",
-        "meta": "July 13, 2026: \ud83d\udc83 We introduce Wan-Dancer, a method can generate long-duration, high-quality, rhythmic dance videos from music with global st\u2026",
+        "meta": "image-to-video \u00b7 diffusers \u00b7 apache-2.0",
         "receipts": [
           {
             "label": "3.6k downloads",
@@ -4736,7 +4736,7 @@
         "rank": 43,
         "name": "bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF",
         "url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF",
-        "meta": "GGUF / llama.cpp quantizations of bottlecapai/ThinkingCap-Qwen3.6-27B \u2014 capability of Qwen3.6-27B with 50% less thinking tokens on average,\u2026",
+        "meta": "GGUF / llama.cpp quantizations of bottlecapai/ThinkingCap-Qwen3.6-27B, capability of Qwen3.6-27B with 50% less thinking tokens on average, a\u2026",
         "receipts": [
           {
             "label": "359k downloads",
@@ -4834,7 +4834,7 @@
         "rank": 49,
         "name": "prism-ml/Ternary-Bonsai-27B-mlx-2bit",
         "url": "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-mlx-2bit",
-        "meta": "Full 27B-class reasoning in ternary transformer weights \u2014 on everyday laptops",
+        "meta": "Full 27B-class reasoning in ternary transformer weights, on everyday laptops",
         "receipts": [
           {
             "label": "27.6k downloads",
@@ -4970,7 +4970,7 @@
         "rank": 57,
         "name": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
         "url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
-        "meta": "v2 is built for coding + agentic work \u2014 writing code, running commands, using tools, debugging, multi-step technical tasks. The clearest sig\u2026",
+        "meta": "v2 is built for coding + agentic work, writing code, running commands, using tools, debugging, multi-step technical tasks. The clearest sign\u2026",
         "receipts": [
           {
             "label": "482k downloads",
@@ -5021,7 +5021,7 @@
         "rank": 60,
         "name": "AngelSlim/Hy3-GGUF",
         "url": "https://huggingface.co/AngelSlim/Hy3-GGUF",
-        "meta": "Low-bit quantized Hy3 (hyv3) GGUFs for llama.cpp \u2014 ready to run out of the box, with MTP self-speculative decoding. This repo ships the quan\u2026",
+        "meta": "Low-bit quantized Hy3 (hyv3) GGUFs for llama.cpp, ready to run out of the box, with MTP self-speculative decoding. This repo ships the quant\u2026",
         "receipts": [
           {
             "label": "217k downloads",
