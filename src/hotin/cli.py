@@ -737,6 +737,22 @@ def _export(arguments: argparse.Namespace) -> int:
                                       _ENTITY_COMMANDS["papers"][2], limit=limit)
     ins_res = insiders.fetch(limit=limit, config=config)
     ins = [r for r in (ins_res.get("records") or []) if isinstance(r, dict)] if isinstance(ins_res, dict) else []
+    # The Digg page carries no repo creation date; the refresh heal fetches each
+    # one once from the GitHub API into the cached insiders rows. Read them back
+    # so the live fetch gets dated (the 7d/60d windows key on this).
+    with _cache_session() as _c:
+        _dates = {}
+        for _raw in _c.get_all():
+            _r = engine._decoded_record(_raw)
+            if _r and _r.get("source") == insiders.SOURCE:
+                _created = (_r.get("signal") or {}).get("created_at")
+                if _created:
+                    _dates[_r.get("entity_id")] = _created
+    for rec in ins:
+        if rec.setdefault("signal", {}).get("created_at") is None:
+            known_date = _dates.get(rec.get("canonical_repo"))
+            if known_date:
+                rec["signal"]["created_at"] = known_date
     # Borrow board facts (age, velocity, HN points) from the fused repo map when
     # an insiders repo is also tracked there; the Digg page alone doesn't carry them.
     for rec in ins:
@@ -756,10 +772,11 @@ def _export(arguments: argparse.Namespace) -> int:
     rising = _rising_ranked(config, 30)
     rising7 = _rising_ranked(config, 30, max_age=7)
 
-    # 7d variants for every tab (site default), --since date semantics.
-    # repos/insiders: window on ACTIVITY (push / insider star), undated kept so
-    # non-github-corroborated rows aren't hidden; models/papers/news: window on
-    # the item's own release/publish date, undated dropped (nothing to claim).
+    # Both windows are strictly enforced on every tab: the 60d container holds
+    # items dated within 60 days, the 7d one within 7; undated rows drop from
+    # both (a window you can't verify isn't a window). Date basis per tab:
+    # repos = latest ACTIVITY (push/creation), insiders = the repo's own
+    # creation date, models/papers/news = release/publish date.
     def _repo_activity(r):
         s = r.get("signal") if isinstance(r.get("signal"), dict) else {}
         return s.get("pushed_at") or s.get("created_at")
@@ -767,19 +784,25 @@ def _export(arguments: argparse.Namespace) -> int:
     def _sig_date(key):
         return lambda r: (r.get("signal") or {}).get(key) if isinstance(r.get("signal"), dict) else None
 
-    repos7 = _fresh_records(repos, 7, _repo_activity, keep_undated=True)
-    ins7 = _fresh_records(ins, 7, _sig_date("most_recent_star_at"), keep_undated=True)
-    models7 = _fresh_records(models, 7, _sig_date("created_at"), keep_undated=False)
-    papers7 = _fresh_records(papers, 7, _sig_date("created_at"), keep_undated=False)
-    news7 = _fresh_records(news, 7, lambda r: (r.get("meta") or {}).get("date"), keep_undated=False)
+    def _windows(records, date_of):
+        return (_fresh_records(records, 60, date_of, keep_undated=False),
+                _fresh_records(records, 7, date_of, keep_undated=False))
+
+    repos60, repos7 = _windows(repos, _repo_activity)
+    # insiders window on the REPO'S OWN creation date (user call): the smart-money
+    # view of young repos; an insider star on a 3-year-old repo is not "new".
+    ins60, ins7 = _windows(ins, _sig_date("created_at"))
+    models60, models7 = _windows(models, _sig_date("created_at"))
+    papers60, papers7 = _windows(papers, _sig_date("created_at"))
+    news60, news7 = _windows(news, lambda r: (r.get("meta") or {}).get("date"))
 
     rows = {
-        "repos": board.repo_rows(repos), "repos7": board.repo_rows(repos7),
+        "repos": board.repo_rows(repos60), "repos7": board.repo_rows(repos7),
         "rising": board.rising_rows(rising), "rising7": board.rising_rows(rising7),
-        "insiders": board.insider_rows(ins), "insiders7": board.insider_rows(ins7),
-        "models": board.model_rows(models), "models7": board.model_rows(models7),
-        "papers": board.paper_rows(papers), "papers7": board.paper_rows(papers7),
-        "news": board.news_rows(news), "news7": board.news_rows(news7),
+        "insiders": board.insider_rows(ins60), "insiders7": board.insider_rows(ins7),
+        "models": board.model_rows(models60), "models7": board.model_rows(models7),
+        "papers": board.paper_rows(papers60), "papers7": board.paper_rows(papers7),
+        "news": board.news_rows(news60), "news7": board.news_rows(news7),
     }
     stamp = datetime.date.today().isoformat()
     stamp_pt = _pacific_stamp()
@@ -1081,17 +1104,27 @@ def _refresh(arguments: argparse.Namespace) -> int:
     # and the bounded heal can never catch up.
     _PRESERVED_META = ("model_description", "model_gated", "paper_summary")
     preserved: Dict[tuple, Dict[str, Any]] = {}
+    preserved_sig: Dict[tuple, Dict[str, Any]] = {}
     for _raw in cache.get_all():
         _rec = engine._decoded_record(_raw)
-        if _rec is None or _rec.get("entity_type") not in ("model", "paper"):
+        if _rec is None:
             continue
-        _meta = _rec.get("meta") or {}
-        _keep = {k: _meta[k] for k in _PRESERVED_META if k in _meta}
-        if _keep:
-            preserved[(_rec.get("entity_type"), _rec.get("entity_id"), _rec.get("source"))] = _keep
+        _key = (_rec.get("entity_type"), _rec.get("entity_id"), _rec.get("source"))
+        if _rec.get("entity_type") in ("model", "paper"):
+            _meta = _rec.get("meta") or {}
+            _keep = {k: _meta[k] for k in _PRESERVED_META if k in _meta}
+            if _keep:
+                preserved[_key] = _keep
+        # insiders rows: the healed repo creation date (Digg never sends one)
+        if _rec.get("source") == insiders.SOURCE and (_rec.get("signal") or {}).get("created_at") is not None:
+            preserved_sig[_key] = {"created_at": (_rec.get("signal") or {})["created_at"]}
     try:
         statuses = list(engine.fetch_all(config, limit=_INGEST_DEPTH, cache=cache, ttl=0))
-        for adapter, _entity_type, _weights in _ENTITY_COMMANDS.values():
+        # insiders joins the persisted sources so its rows can be healed
+        # (repo creation dates) and windowed like everything else.
+        extra_adapters = [insiders]
+        for adapter, _entity_type, _weights in (
+                list(_ENTITY_COMMANDS.values()) + [(a, None, None) for a in extra_adapters]):
             try:
                 result = adapter.fetch(limit=_INGEST_DEPTH, config=config)
             except Exception as exc:  # adapters shouldn't raise; ingest never crashes
@@ -1104,16 +1137,27 @@ def _refresh(arguments: argparse.Namespace) -> int:
                 ))
                 for record in result.get("records") if isinstance(result.get("records"), list) else []:
                     if isinstance(record, dict):
-                        keep = preserved.get((record.get("entity_type"),
-                                              record.get("entity_id"), record.get("source")))
+                        key = (record.get("entity_type"),
+                               record.get("entity_id"), record.get("source"))
+                        keep = preserved.get(key)
                         if keep:
                             meta = record.get("meta") if isinstance(record.get("meta"), dict) else {}
                             record["meta"] = {**keep, **meta}
+                        keep_sig = preserved_sig.get(key)
+                        if keep_sig:
+                            sig = record.get("signal") if isinstance(record.get("signal"), dict) else {}
+                            record["signal"] = {**keep_sig,
+                                                **{k: v for k, v in sig.items() if v is not None}}
                         cache.upsert(engine._cache_record(record))
         healed = hfpapers.backfill_summaries(cache)
         healed_models = hfmodels.backfill_descriptions(cache)
-        if (healed or healed_models) and not arguments.quiet and not arguments.json:
-            print("healed {} paper summaries, {} model descriptions".format(healed, healed_models))
+        from .config import get as _config_get
+        gh_token = _config_get(config, "GITHUB_TOKEN")
+        healed_dates = insiders.backfill_created_at(
+            cache, gh_token if isinstance(gh_token, str) and gh_token.strip() else None)
+        if (healed or healed_models or healed_dates) and not arguments.quiet and not arguments.json:
+            print("healed {} paper summaries, {} model descriptions, {} insider repo dates".format(
+                healed, healed_models, healed_dates))
         cache.record_observations(engine.observations_from_cache(cache.get_all(), run_id, now))
         cache.prune_observations(now - _RETENTION_DAYS * 86400.0)
         persisted = not isinstance(cache, MemoryCache) and getattr(cache, "_fallback", None) is None

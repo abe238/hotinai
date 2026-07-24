@@ -162,6 +162,59 @@ def _normalise_limit(limit: Any) -> int:
     return 50 if value is None else max(0, value)
 
 
+def fetch_created_at(repo_id: Any, token: Optional[str] = None) -> Optional[str]:
+    """One repo's immutable creation date from the GitHub API, or None."""
+    if not isinstance(repo_id, str) or "/" not in repo_id:
+        return None
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": USER_AGENT}
+    if token:
+        headers["Authorization"] = "Bearer {}".format(token)
+    try:
+        request = urllib.request.Request(
+            "https://api.github.com/repos/{}".format(repo_id.strip()), headers=headers)
+        THROTTLE.wait()
+        with urllib.request.urlopen(request, timeout=20) as response:
+            payload = json.loads(response.read().decode("utf-8", "replace"))
+        created = payload.get("created_at") if isinstance(payload, dict) else None
+        return created.strip() if isinstance(created, str) and created.strip() else None
+    except Exception:
+        return None
+
+
+def backfill_created_at(cache: Any, token: Optional[str] = None, *, max_calls: int = 40) -> int:
+    """Heal cached insiders rows missing the repo creation date (needed for the
+    site's 7d/60d windows; the Digg page doesn't carry it). Dates are immutable,
+    so each repo costs one API call ever; 404/private cache '' so we never
+    refetch. Bounded per run; never raises; returns rows healed."""
+    healed = 0
+    try:
+        for raw in cache.get_all():
+            if healed >= max_calls:
+                break
+            if not isinstance(raw, dict) or raw.get("entity_type") != "repo":
+                continue
+            if raw.get("source") != SOURCE:
+                continue
+            payload = raw.get("signal_json")
+            try:
+                payload = json.loads(payload) if isinstance(payload, str) else (payload or {})
+            except (TypeError, ValueError):
+                continue
+            signal = payload.get("signal") if isinstance(payload.get("signal"), dict) else {}
+            if signal.get("created_at") is not None:
+                continue
+            signal["created_at"] = fetch_created_at(raw.get("entity_id"), token) or ""
+            payload["signal"] = signal
+            updated = dict(raw)
+            updated["signal_json"] = payload
+            updated["fetched_at"] = raw.get("fetched_at")  # heal, keep age
+            cache.upsert(updated)
+            healed += 1
+    except Exception:
+        return healed
+    return healed
+
+
 def fetch(
     query: Optional[str] = None, *, limit: int = 50, config: Optional[dict] = None
 ) -> Dict[str, Any]:

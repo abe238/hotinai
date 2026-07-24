@@ -230,6 +230,10 @@ def test_refresh_sets_zero_ttl_and_reports_health(monkeypatch, capsys):
     monkeypatch.setattr(cli.engine, "fetch_all", fetch_all)
     monkeypatch.setattr(cli.hfmodels, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
     monkeypatch.setattr(cli.hfpapers, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
+    monkeypatch.setattr(cli.insiders, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
+    monkeypatch.setattr(cli.hfpapers, "backfill_summaries", lambda cache, **kw: 0)
+    monkeypatch.setattr(cli.hfmodels, "backfill_descriptions", lambda cache, **kw: 0)
+    monkeypatch.setattr(cli.insiders, "backfill_created_at", lambda cache, *a, **kw: 0)
 
     # refresh records a snapshot + is strict about persistence: MemoryCache -> exit 1.
     assert main(["refresh"]) == 1
@@ -370,9 +374,11 @@ def test_ingest_records_observations_and_is_strict_about_persistence(monkeypatch
         {"entity_type": "model", "entity_id": "o/m", "url": "u", "name": "o/m", "source": "hfmodels",
          "signal": {"model_downloads": 5, "model_likes": 2}, "meta": {}}], "status": "ok", "detail": None})
     monkeypatch.setattr(cli.hfpapers, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
+    monkeypatch.setattr(cli.insiders, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
     # keep the self-heal passes off the network in unit tests
     monkeypatch.setattr(cli.hfpapers, "backfill_summaries", lambda cache, **kw: 0)
     monkeypatch.setattr(cli.hfmodels, "backfill_descriptions", lambda cache, **kw: 0)
+    monkeypatch.setattr(cli.insiders, "backfill_created_at", lambda cache, *a, **kw: 0)
 
     # MemoryCache cannot persist a scheduled run -> exit 1 (strict).
     assert main(["refresh", "--json"]) == 1

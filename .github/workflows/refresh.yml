@@ -46,6 +46,7 @@ jobs:
         env:
           SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           hotin refresh || echo "refresh reported issues (non-fatal)"
           hotin export --limit 60

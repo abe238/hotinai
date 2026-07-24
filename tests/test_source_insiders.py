@@ -86,3 +86,40 @@ def test_fetch_zero_limit_is_empty():
 
 def test_selftest():
     insiders.selftest()
+
+
+class FakeCache:
+    def __init__(self, rows):
+        self.rows = rows
+        self.upserts = []
+
+    def get_all(self):
+        return list(self.rows)
+
+    def upsert(self, record):
+        self.upserts.append(record)
+
+
+def _ins_row(rid, signal):
+    import json as _json
+    return {"entity_type": "repo", "entity_id": rid, "source": "insiders",
+            "fetched_at": 7.0,
+            "signal_json": _json.dumps({"signal": signal, "meta": {"insiders": []}})}
+
+
+def test_backfill_created_at_heals_and_remembers_failures(monkeypatch):
+    cache = FakeCache([
+        _ins_row("a/new", {"insider_stars": 2}),                      # healed
+        _ins_row("b/known", {"insider_stars": 1, "created_at": "2026-07-20"}),  # skipped
+        _ins_row("c/gone", {"insider_stars": 1}),                     # 404 -> "" cached
+        {"entity_type": "repo", "entity_id": "x/y", "source": "github",
+         "signal_json": "{}"},                                        # not insiders
+    ])
+    monkeypatch.setattr(insiders, "fetch_created_at",
+                        lambda rid, token=None: {"a/new": "2026-07-22T01:00:00Z"}.get(rid))
+    healed = insiders.backfill_created_at(cache)
+    assert healed == 2
+    sig = {u["entity_id"]: u["signal_json"]["signal"] for u in cache.upserts}
+    assert sig["a/new"]["created_at"] == "2026-07-22T01:00:00Z"
+    assert sig["c/gone"]["created_at"] == ""  # known-failure marker, no refetch loop
+    assert cache.upserts[0]["fetched_at"] == 7.0
