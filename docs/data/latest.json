@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-24",
-  "generated_pt": "Jul 24, 2026 \u00b7 12:04 AM PT",
+  "generated_pt": "Jul 24, 2026 \u00b7 12:10 AM PT",
   "entities": {
     "repos": [
       {
@@ -3576,7 +3576,7 @@
         "meta": "Removes 20+ patterns of AI slop from any piece of writing.",
         "receipts": [
           {
-            "label": "+122/day",
+            "label": "+123/day",
             "kind": "stars"
           },
           {
@@ -4119,6 +4119,32 @@
       },
       {
         "rank": 12,
+        "name": "hahhforest/pi-textbook",
+        "url": "https://github.com/hahhforest/pi-textbook",
+        "meta": "\u300a\u52a8\u624b\u5b66 Pi\u300b\uff1a\u6cbf 15 \u4e2a\u771f\u5b9e checkpoint \u4ece\u96f6\u6784\u5efa Pi-style Agent",
+        "receipts": [
+          {
+            "label": "+53/day",
+            "kind": "stars"
+          },
+          {
+            "label": "160 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "3d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 13,
         "name": "paxlabs-inc/machine-genome",
         "url": "https://github.com/paxlabs-inc/machine-genome",
         "meta": "Machine Genome is an open identity and provenance protocol for models, agents, h",
@@ -4133,32 +4159,6 @@
           },
           {
             "label": "4d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 13,
-        "name": "hahhforest/pi-textbook",
-        "url": "https://github.com/hahhforest/pi-textbook",
-        "meta": "\u300a\u52a8\u624b\u5b66 Pi\u300b\uff1a\u6cbf 15 \u4e2a\u771f\u5b9e checkpoint \u4ece\u96f6\u6784\u5efa Pi-style Agent",
-        "receipts": [
-          {
-            "label": "+53/day",
-            "kind": "stars"
-          },
-          {
-            "label": "159 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "3d old",
             "kind": "age"
           }
         ],
@@ -4327,6 +4327,32 @@
       },
       {
         "rank": 20,
+        "name": "brandon030722/ark-ui-skill",
+        "url": "https://github.com/Brandon030722/ark-ui-skill",
+        "meta": "Evidence-based Codex skill for five Ark-adjacent UI families and four applicatio",
+        "receipts": [
+          {
+            "label": "+40/day",
+            "kind": "stars"
+          },
+          {
+            "label": "161 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "4d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 21,
         "name": "ddcat-ai/open-ai-canvas",
         "url": "https://github.com/ddcat-ai/open-ai-canvas",
         "meta": "\u9762\u5411 AI \u5f71\u89c6\u521b\u4f5c\u7684\u5f00\u6e90\u65e0\u9650\u753b\u5e03\u5de5\u4f5c\u53f0\uff0c\u96c6\u6210\u591a\u6a21\u6001\u751f\u6210\u3001\u5206\u955c\u7f16\u6392\u3001\u7d20\u6750\u7ba1\u7406\u4e0e Agent \u5de5\u4f5c\u6d41\u3002",
@@ -4341,32 +4367,6 @@
           },
           {
             "label": "2d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 21,
-        "name": "brandon030722/ark-ui-skill",
-        "url": "https://github.com/Brandon030722/ark-ui-skill",
-        "meta": "Evidence-based Codex skill for five Ark-adjacent UI families and four applicatio",
-        "receipts": [
-          {
-            "label": "+40/day",
-            "kind": "stars"
-          },
-          {
-            "label": "160 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "4d old",
             "kind": "age"
           }
         ],
@@ -6958,6 +6958,10 @@
           {
             "label": "2.9k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jun 19",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -6975,6 +6979,10 @@
           {
             "label": "1.5k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 14",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -6992,6 +7000,10 @@
           {
             "label": "519 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 13",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7009,6 +7021,10 @@
           {
             "label": "467 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 22",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7026,6 +7042,10 @@
           {
             "label": "404 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 17",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7043,6 +7063,10 @@
           {
             "label": "986 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 4",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7060,6 +7084,10 @@
           {
             "label": "324 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7077,6 +7105,10 @@
           {
             "label": "4.4k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jun 16",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7090,6 +7122,10 @@
           {
             "label": "308 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7107,6 +7143,10 @@
           {
             "label": "620 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 4",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7124,6 +7164,10 @@
           {
             "label": "3k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Apr 17",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7137,6 +7181,10 @@
           {
             "label": "518 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 7",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7154,6 +7202,10 @@
           {
             "label": "188 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7171,6 +7223,10 @@
           {
             "label": "174 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 20",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7188,6 +7244,10 @@
           {
             "label": "2.4k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jun 19",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7205,6 +7265,10 @@
           {
             "label": "165 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 18",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7222,6 +7286,10 @@
           {
             "label": "150 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7239,6 +7307,10 @@
           {
             "label": "529 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 6",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7256,6 +7328,10 @@
           {
             "label": "1.2k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jun 11",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7273,6 +7349,10 @@
           {
             "label": "118 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 2",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7290,6 +7370,10 @@
           {
             "label": "257 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 13",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7307,6 +7391,10 @@
           {
             "label": "113 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 13",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7324,6 +7412,10 @@
           {
             "label": "121 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7341,6 +7433,10 @@
           {
             "label": "117 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 18",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7358,6 +7454,10 @@
           {
             "label": "102 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 1",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7375,6 +7475,10 @@
           {
             "label": "173 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 4",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7392,6 +7496,10 @@
           {
             "label": "3.3k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Mar 11",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7409,6 +7517,10 @@
           {
             "label": "118 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 13",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7426,6 +7538,10 @@
           {
             "label": "320 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released May 19",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7443,6 +7559,10 @@
           {
             "label": "926 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released May 15",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7460,6 +7580,10 @@
           {
             "label": "1.8k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jan 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7477,6 +7601,10 @@
           {
             "label": "76 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 20",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7494,6 +7622,10 @@
           {
             "label": "100 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 13",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7511,6 +7643,10 @@
           {
             "label": "2.5k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Apr 15",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7524,6 +7660,10 @@
           {
             "label": "243 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 5",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7537,6 +7677,10 @@
           {
             "label": "71 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 23",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7554,6 +7698,10 @@
           {
             "label": "702 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jun 18",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7567,6 +7715,10 @@
           {
             "label": "70 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 19",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7584,6 +7736,10 @@
           {
             "label": "121 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released May 25",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7601,6 +7757,10 @@
           {
             "label": "68 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 17",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7618,6 +7778,10 @@
           {
             "label": "163 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 10",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7635,6 +7799,10 @@
           {
             "label": "160 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 13",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7652,6 +7820,10 @@
           {
             "label": "185 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 1",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7669,6 +7841,10 @@
           {
             "label": "212 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 9",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7686,6 +7862,10 @@
           {
             "label": "60 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 16",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7703,6 +7883,10 @@
           {
             "label": "107 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 14",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7716,6 +7900,10 @@
           {
             "label": "62 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 15",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7733,6 +7921,10 @@
           {
             "label": "59 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7750,6 +7942,10 @@
           {
             "label": "144 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 4",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7767,6 +7963,10 @@
           {
             "label": "302 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Mar 16",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7784,6 +7984,10 @@
           {
             "label": "115 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 10",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7801,6 +8005,10 @@
           {
             "label": "156 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jun 20",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7818,6 +8026,10 @@
           {
             "label": "2k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Apr 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7835,6 +8047,10 @@
           {
             "label": "51 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 20",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7852,6 +8068,10 @@
           {
             "label": "1.7k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Mar 4",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7869,6 +8089,10 @@
           {
             "label": "189 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 7",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7886,6 +8110,10 @@
           {
             "label": "1.3k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jun 19",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7903,6 +8131,10 @@
           {
             "label": "13.8k likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 2024",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7920,6 +8152,10 @@
           {
             "label": "866 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 2",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7937,6 +8173,10 @@
           {
             "label": "165 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 13",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7956,6 +8196,10 @@
           {
             "label": "467 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 22",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7973,6 +8217,10 @@
           {
             "label": "404 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 17",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -7990,6 +8238,10 @@
           {
             "label": "324 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8003,6 +8255,10 @@
           {
             "label": "308 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8020,6 +8276,10 @@
           {
             "label": "188 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8037,6 +8297,10 @@
           {
             "label": "174 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 20",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8054,6 +8318,10 @@
           {
             "label": "165 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 18",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8071,6 +8339,10 @@
           {
             "label": "150 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8088,6 +8360,10 @@
           {
             "label": "121 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8105,6 +8381,10 @@
           {
             "label": "117 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 18",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8122,6 +8402,10 @@
           {
             "label": "76 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 20",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8135,6 +8419,10 @@
           {
             "label": "71 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 23",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8148,6 +8436,10 @@
           {
             "label": "70 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 19",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8165,6 +8457,10 @@
           {
             "label": "68 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 17",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8182,6 +8478,10 @@
           {
             "label": "59 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
           }
         ],
         "badges": []
@@ -8199,6 +8499,10 @@
           {
             "label": "51 likes",
             "kind": "stars"
+          },
+          {
+            "label": "released Jul 20",
+            "kind": "age"
           }
         ],
         "badges": []
