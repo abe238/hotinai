@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-24",
-  "generated_pt": "Jul 23, 2026 \u00b7 11:18 PM PT",
+  "generated_pt": "Jul 23, 2026 \u00b7 11:19 PM PT",
   "entities": {
     "repos": [
       {
@@ -120,7 +120,7 @@
       {
         "rank": 4,
         "name": "fei-away/codex-dream-skin",
-        "url": "https://github.com/Fei-Away/Codex-Dream-Skin",
+        "url": "https://github.com/fei-away/codex-dream-skin",
         "meta": "Codex Dream Skin",
         "receipts": [
           {
@@ -162,7 +162,7 @@
             "kind": "stars"
           },
           {
-            "label": "+429/day",
+            "label": "+430/day",
             "kind": "stars"
           },
           {
@@ -184,7 +184,7 @@
       {
         "rank": 6,
         "name": "bigpizzav3/codexplusplus",
-        "url": "https://github.com/BigPizzaV3/CodexPlusPlus",
+        "url": "https://github.com/bigpizzav3/codexplusplus",
         "meta": "An enhanced tool for CodexApp, striving to make Codex better to use and more comfortable \u4e00\u4e2aCodexApp\u7684\u2026",
         "receipts": [
           {
@@ -252,7 +252,7 @@
             "kind": "stars"
           },
           {
-            "label": "+44/day",
+            "label": "+45/day",
             "kind": "stars"
           },
           {
@@ -334,7 +334,7 @@
       {
         "rank": 11,
         "name": "x4gking/x4g",
-        "url": "https://github.com/x4gKing/X4G",
+        "url": "https://github.com/x4gking/x4g",
         "meta": null,
         "receipts": [
           {
@@ -364,7 +364,7 @@
       {
         "rank": 12,
         "name": "moonshotai/kimi-code",
-        "url": "https://github.com/MoonshotAI/kimi-code",
+        "url": "https://github.com/moonshotai/kimi-code",
         "meta": "Kimi Code CLI  \u2014  The Starting Point for Next-Gen Agents",
         "receipts": [
           {
@@ -394,7 +394,7 @@
       {
         "rank": 13,
         "name": "baidu/unlimited-ocr",
-        "url": "https://github.com/baidu/Unlimited-OCR",
+        "url": "https://github.com/baidu/unlimited-ocr",
         "meta": "Unlimited OCR Works: Welcome the Era of One-shot Long-horizon Parsing.",
         "receipts": [
           {
@@ -424,7 +424,7 @@
       {
         "rank": 14,
         "name": "yu9191/wloc",
-        "url": "https://github.com/Yu9191/wloc",
+        "url": "https://github.com/yu9191/wloc",
         "meta": "\u4fee\u6539 Apple \u7f51\u7edc\u5b9a\u4f4d\uff08gs-loc\uff09\u8fd4\u56de\u5750\u6807 \u00b7 \u652f\u6301 Surge / Quantumult X / Loon / Stash \u00b7 \u5feb\u6377\u6307\u4ee4\u4e00\u952e\u8bbe\u7f6e/\u6062\u590d\u5b9a\u4f4d",
         "receipts": [
           {
@@ -477,14 +477,14 @@
           },
           {
             "label": "trending",
-            "hot": false
+            "hot": true
           }
         ]
       },
       {
         "rank": 16,
         "name": "dnshe/dnshe-freedomains",
-        "url": "https://github.com/dnshe/DNSHE-FreeDomains",
+        "url": "https://github.com/dnshe/dnshe-freedomains",
         "meta": "\ud83c\udf10 DNSHE Official - Stable & Free Subdomains for Developers. Support 180-day renewal window, Anycast\u2026",
         "receipts": [
           {
@@ -537,7 +537,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -835,7 +835,7 @@
             "kind": "stars"
           },
           {
-            "label": "+225/day",
+            "label": "+224/day",
             "kind": "stars"
           },
           {
@@ -1039,7 +1039,7 @@
             "kind": "stars"
           },
           {
-            "label": "+296/day",
+            "label": "+297/day",
             "kind": "stars"
           },
           {
@@ -1099,7 +1099,7 @@
             "kind": "stars"
           },
           {
-            "label": "+174/day",
+            "label": "+175/day",
             "kind": "stars"
           },
           {
@@ -1297,7 +1297,7 @@
             "kind": "stars"
           },
           {
-            "label": "+58/day",
+            "label": "+57/day",
             "kind": "stars"
           },
           {
@@ -4808,7 +4808,7 @@
         "rank": 21,
         "name": "poolside/Laguna-S-2.1-GGUF",
         "url": "https://huggingface.co/poolside/Laguna-S-2.1-GGUF",
-        "meta": null,
+        "meta": "GGUF conversions of Laguna S 2.1 for llama.cpp, plus the DFlash speculative-decoding draft model. See the base model card for architecture d\u2026",
         "receipts": [
           {
             "label": "25.4k downloads",
@@ -4859,7 +4859,7 @@
         "rank": 24,
         "name": "nvidia/Cosmos3-Edge",
         "url": "https://huggingface.co/nvidia/Cosmos3-Edge",
-        "meta": "cosmos \u00b7 other",
+        "meta": "NVIDIA Cosmos\u2122 is a world foundation model platform designed to accelerate the development of Physical AI by enabling machines to understand\u2026",
         "receipts": [
           {
             "label": "28.5k downloads",
@@ -4893,7 +4893,7 @@
         "rank": 26,
         "name": "google/gemma-4-31B-it",
         "url": "https://huggingface.co/google/gemma-4-31B-it",
-        "meta": "image-text-to-text \u00b7 transformers \u00b7 apache-2.0",
+        "meta": "Gemma is a family of open models built by Google DeepMind. Gemma 4 models are multimodal, handling text and image input (with audio supporte\u2026",
         "receipts": [
           {
             "label": "12.7M downloads",
@@ -4910,7 +4910,7 @@
         "rank": 27,
         "name": "OpenMOSS-Team/MOSS-Transcribe-Diarize",
         "url": "https://huggingface.co/OpenMOSS-Team/MOSS-Transcribe-Diarize",
-        "meta": "audio-text-to-text \u00b7 transformers \u00b7 apache-2.0",
+        "meta": "MOSS-Transcribe-Diarize 0.9B is an end-to-end audio understanding model for long-form multi-speaker transcription, diarization, timestamps,\u2026",
         "receipts": [
           {
             "label": "112k downloads",
@@ -4927,7 +4927,7 @@
         "rank": 28,
         "name": "LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V5-GGUF",
         "url": "https://huggingface.co/LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V5-GGUF",
-        "meta": "image-text-to-text \u00b7 hermes \u00b7 apache-2.0",
+        "meta": "Model is based on HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive base.",
         "receipts": [
           {
             "label": "25k downloads",
@@ -4944,7 +4944,7 @@
         "rank": 29,
         "name": "prism-ml/Bonsai-27B-mlx-1bit",
         "url": "https://huggingface.co/prism-ml/Bonsai-27B-mlx-1bit",
-        "meta": "text-generation \u00b7 mlx \u00b7 apache-2.0",
+        "meta": "Each weight is a single sign bit: 0 maps to \u2212scale, 1 maps to +scale. Every group of 128 weights shares one FP16 scale factor.",
         "receipts": [
           {
             "label": "34.3k downloads",
@@ -4961,7 +4961,7 @@
         "rank": 30,
         "name": "baseten/GLM-5.2-Vision-NVFP4",
         "url": "https://huggingface.co/baseten/GLM-5.2-Vision-NVFP4",
-        "meta": "image-text-to-text \u00b7 sglang \u00b7 mit",
+        "meta": "GLM-5.2 with sight. A vision-language model that bolts the MoonViT vision encoder from Kimi-K2.6 onto GLM-5.2 through a trained PatchMerger\u2026",
         "receipts": [
           {
             "label": "73 downloads",
@@ -4978,7 +4978,7 @@
         "rank": 31,
         "name": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
         "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
-        "meta": "text-to-speech \u00b7 apache-2.0",
+        "meta": "Qwen3-TTS covers 10 major languages (Chinese, English, Japanese, Korean, German, French, Russian, Portuguese, Spanish, and Italian) as well\u2026",
         "receipts": [
           {
             "label": "2.5M downloads",
@@ -4995,7 +4995,7 @@
         "rank": 32,
         "name": "nvidia/nemotron-3.5-asr-streaming-0.6b",
         "url": "https://huggingface.co/nvidia/nemotron-3.5-asr-streaming-0.6b",
-        "meta": "automatic-speech-recognition \u00b7 nemo \u00b7 other",
+        "meta": "Nemotron 3.5 ASR is a multilingual, streaming Automatic Speech Recognition (ASR) model engineered to deliver high-quality multilingual trans\u2026",
         "receipts": [
           {
             "label": "750k downloads",
@@ -5012,7 +5012,7 @@
         "rank": 33,
         "name": "Kwaipilot/KAT-Coder-V2.5-Dev",
         "url": "https://huggingface.co/Kwaipilot/KAT-Coder-V2.5-Dev",
-        "meta": "text-generation \u00b7 transformers \u00b7 apache-2.0",
+        "meta": "Following the release of KAT-Coder-V2.5 in July, we are pleased to release the open-weight version KAT-Coder-V2.5-Dev, an MOE model with a t\u2026",
         "receipts": [
           {
             "label": "78 likes",
@@ -5025,7 +5025,7 @@
         "rank": 34,
         "name": "Qwen/Qwen3.6-35B-A3B",
         "url": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
-        "meta": "image-text-to-text \u00b7 transformers \u00b7 apache-2.0",
+        "meta": "Following the February release of the Qwen3.5 series, we're pleased to share the first open-weight variant of Qwen3.6. Built on direct feedb\u2026",
         "receipts": [
           {
             "label": "6.5M downloads",
@@ -5059,7 +5059,7 @@
         "rank": 36,
         "name": "Alissonerdx/LTX-Best-Face-ID",
         "url": "https://huggingface.co/Alissonerdx/LTX-Best-Face-ID",
-        "meta": "text-to-video \u00b7 other",
+        "meta": "An identity-preserving reference-to-video LoRA for LTX-2.3 (22B). Give it a reference photo of a person + a text prompt, and it generates a\u2026",
         "receipts": [
           {
             "label": "244 likes",
@@ -5102,7 +5102,7 @@
         "rank": 39,
         "name": "OpenMOSS-Team/MOSS-SoundEffect-v2.0",
         "url": "https://huggingface.co/OpenMOSS-Team/MOSS-SoundEffect-v2.0",
-        "meta": "text-to-audio \u00b7 diffusers \u00b7 apache-2.0",
+        "meta": "MOSS-SoundEffect v2.0 is a text-to-audio model with a Diffusion Transformer (DiT) backbone trained with the Flow Matching objective, paired\u2026",
         "receipts": [
           {
             "label": "1.7k downloads",
@@ -5119,7 +5119,7 @@
         "rank": 40,
         "name": "unsloth/Ornith-1.0-35B-GGUF",
         "url": "https://huggingface.co/unsloth/Ornith-1.0-35B-GGUF",
-        "meta": "text-generation \u00b7 mit",
+        "meta": "Aloha! \ud83c\udf3a Today, we are releasing Ornith-1.0, a self-improving family of open-source models for agentic coding.",
         "receipts": [
           {
             "label": "77.2k downloads",
@@ -5136,7 +5136,7 @@
         "rank": 41,
         "name": "microsoft/Mage-Flow-Edit-Turbo",
         "url": "https://huggingface.co/microsoft/Mage-Flow-Edit-Turbo",
-        "meta": "image-to-image \u00b7 diffusers \u00b7 mit",
+        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
         "receipts": [
           {
             "label": "361 downloads",
@@ -5861,6 +5861,24 @@
       },
       {
         "rank": 24,
+        "name": "ReferTrack: Referring Then Tracking for Embodied Visual Tracking",
+        "url": "https://huggingface.co/papers/2607.20061",
+        "meta": "Embodied visual tracking (EVT) requires a mobile agent to continuously follow a specific target described in natural language using only onb\u2026",
+        "receipts": [
+          {
+            "label": "17 upvotes",
+            "kind": "paper"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 25,
         "name": "Group Entropy-Controlled Policy Optimization",
         "url": "https://huggingface.co/papers/2607.16850",
         "meta": "Entropy control has become an effective tool in reinforcement learning (RL) of large language models (LLMs), helping balance exploration-exp\u2026",
@@ -5871,24 +5889,6 @@
           }
         ],
         "badges": []
-      },
-      {
-        "rank": 25,
-        "name": "ReferTrack: Referring Then Tracking for Embodied Visual Tracking",
-        "url": "https://huggingface.co/papers/2607.20061",
-        "meta": "Embodied visual tracking (EVT) requires a mobile agent to continuously follow a specific target described in natural language using only onb\u2026",
-        "receipts": [
-          {
-            "label": "16 upvotes",
-            "kind": "paper"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
       },
       {
         "rank": 26,
