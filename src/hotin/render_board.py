@@ -151,7 +151,7 @@ def render_html(rows, *, entity="repos"):
         name = html.escape(str(row.get("name", "")))
         meta = row.get("meta")
         meta_html = (
-            '<span class="meta">{}</span>'.format(html.escape(str(meta)))
+            '<span class="meta"> - {}</span>'.format(html.escape(str(meta)))
             if meta not in (None, "")
             else ""
         )

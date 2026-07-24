@@ -68,6 +68,13 @@ def test_render_html_has_board_markup():
     assert 'class="badge smart"' in out
 
 
+def test_render_html_separates_name_from_meta():
+    out = render_html(ROWS)
+    # the description must not abut the name ("deepsecAI security scanner");
+    # HTML matches the console convention: name - meta
+    assert '<span class="meta"> - AI security scanner</span>' in out
+
+
 def test_render_html_links_the_name():
     out = render_html(ROWS)
     # a row with a url wraps the name in an anchor that opens the source
