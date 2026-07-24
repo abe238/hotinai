@@ -143,6 +143,29 @@ def _dated_within(value: Any, cutoff) -> bool:
     return parsed is not None and parsed >= cutoff
 
 
+def _within_window(value: Any, days: float) -> Optional[bool]:
+    """True/False if `value` parses to a date inside the last `days`;
+    None when there is no usable date (caller decides keep-vs-drop)."""
+    parsed = _parse_date(value)
+    if parsed is None:
+        return None
+    import datetime
+    return parsed >= datetime.date.today() - datetime.timedelta(days=int(days))
+
+
+def _fresh_records(records: List[dict], days: float, date_of, *, keep_undated: bool) -> List[dict]:
+    """The site's per-tab freshness window: same date semantics as --since
+    (`_parse_date`), with each entity's keep-undated stance made explicit."""
+    kept = []
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        verdict = _within_window(date_of(record), days)
+        if verdict or (verdict is None and keep_undated):
+            kept.append(record)
+    return kept
+
+
 def _since_cutoff(arguments: argparse.Namespace):
     """Resolve --since to a cutoff date. Returns (cutoff|None, exit_code|None):
     cutoff is None when --since is unset; exit_code is 2 when it is malformed."""
@@ -718,12 +741,31 @@ def _export(arguments: argparse.Namespace) -> int:
     news = smolai.parse_news(news_text)[:limit] if news_text else []
     rising = _rising_ranked(config, 30)
     rising7 = _rising_ranked(config, 30, max_age=7)
+
+    # 7d variants for every tab (site default), --since date semantics.
+    # repos/insiders: window on ACTIVITY (push / insider star), undated kept so
+    # non-github-corroborated rows aren't hidden; models/papers/news: window on
+    # the item's own release/publish date, undated dropped (nothing to claim).
+    def _repo_activity(r):
+        s = r.get("signal") if isinstance(r.get("signal"), dict) else {}
+        return s.get("pushed_at") or s.get("created_at")
+
+    def _sig_date(key):
+        return lambda r: (r.get("signal") or {}).get(key) if isinstance(r.get("signal"), dict) else None
+
+    repos7 = _fresh_records(repos, 7, _repo_activity, keep_undated=True)
+    ins7 = _fresh_records(ins, 7, _sig_date("most_recent_star_at"), keep_undated=True)
+    models7 = _fresh_records(models, 7, _sig_date("created_at"), keep_undated=False)
+    papers7 = _fresh_records(papers, 7, _sig_date("created_at"), keep_undated=False)
+    news7 = _fresh_records(news, 7, lambda r: (r.get("meta") or {}).get("date"), keep_undated=False)
+
     rows = {
-        "repos": board.repo_rows(repos), "rising": board.rising_rows(rising),
-        "rising7": board.rising_rows(rising7),
-        "insiders": board.insider_rows(ins),
-        "models": board.model_rows(models), "papers": board.paper_rows(papers),
-        "news": board.news_rows(news),
+        "repos": board.repo_rows(repos), "repos7": board.repo_rows(repos7),
+        "rising": board.rising_rows(rising), "rising7": board.rising_rows(rising7),
+        "insiders": board.insider_rows(ins), "insiders7": board.insider_rows(ins7),
+        "models": board.model_rows(models), "models7": board.model_rows(models7),
+        "papers": board.paper_rows(papers), "papers7": board.paper_rows(papers7),
+        "news": board.news_rows(news), "news7": board.news_rows(news7),
     }
     stamp = datetime.date.today().isoformat()
     stamp_pt = _pacific_stamp()

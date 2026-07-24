@@ -141,7 +141,9 @@ def parse_repos(html: Any) -> List[Dict[str, Any]]:
                 "url": "https://github.com/{}".format(canonical),
                 "name": canonical,
                 "source": SOURCE,
-                "signal": {"insider_stars": insider_stars},
+                "signal": {"insider_stars": insider_stars,
+                           "most_recent_star_at": obj.get("most_recent_star_at")
+                           if isinstance(obj.get("most_recent_star_at"), str) else None},
                 "meta": {"insiders": usernames, "top_insider": top_insider,
                          "description": obj.get("description")
                          if isinstance(obj.get("description"), str) else None},
