@@ -716,9 +716,11 @@ def _export(arguments: argparse.Namespace) -> int:
     ins = [r for r in (ins_res.get("records") or []) if isinstance(r, dict)] if isinstance(ins_res, dict) else []
     news_text = smolai._request()
     news = smolai.parse_news(news_text)[:limit] if news_text else []
-    rising = _rising_ranked(config, 24)
+    rising = _rising_ranked(config, 30)
+    rising7 = _rising_ranked(config, 30, max_age=7)
     rows = {
         "repos": board.repo_rows(repos), "rising": board.rising_rows(rising),
+        "rising7": board.rising_rows(rising7),
         "insiders": board.insider_rows(ins),
         "models": board.model_rows(models), "papers": board.paper_rows(papers),
         "news": board.news_rows(news),
