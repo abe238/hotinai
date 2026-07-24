@@ -49,6 +49,13 @@ def parse_models(payload: Any) -> List[Dict[str, Any]]:
             task = item.get("pipeline_tag")
             if isinstance(task, str) and task.strip():
                 meta["model_task"] = task.strip()
+            library = item.get("library_name")
+            if isinstance(library, str) and library.strip():
+                meta["model_library"] = library.strip()
+            for tag in item.get("tags") or []:
+                if isinstance(tag, str) and tag.startswith("license:"):
+                    meta["model_license"] = tag[len("license:"):]
+                    break
             created = item.get("createdAt")
             if isinstance(created, str) and created.strip():
                 signal["created_at"] = created.strip()

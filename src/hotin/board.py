@@ -36,6 +36,14 @@ def _meta(record: dict) -> dict:
     return meta if isinstance(meta, dict) else {}
 
 
+def _clip(desc: Any, limit: int = 100) -> Optional[str]:
+    """Board meta line: a tidy description or None, never an empty string."""
+    if not isinstance(desc, str) or not desc.strip():
+        return None
+    clean = desc.strip()
+    return (clean[:limit].rstrip() + "…") if len(clean) > limit else clean
+
+
 def _insider_receipt(record: dict) -> Optional[Dict[str, str]]:
     """`★ karpathy +38 insiders` when the AI Insiders are on a repo."""
     n = finite_int(_sig(record).get("smartmoney_starrers") or _sig(record).get("insider_stars"), 0)
@@ -111,12 +119,7 @@ def repo_rows(ranked: List[dict]) -> List[dict]:
         # GitHub description — without this, GitHub-sourced rows (name == slug)
         # showed just the bare owner/repo with no context.
         title = raw_name if raw_name and raw_name.casefold() != str(slug).casefold() else None
-        desc = title or _meta(repo).get("description")
-        if isinstance(desc, str) and desc.strip():
-            clean = desc.strip()
-            meta = (clean[:100].rstrip() + "…") if len(clean) > 100 else clean
-        else:
-            meta = None
+        meta = _clip(title or _meta(repo).get("description"))
         rows.append({
             "rank": i, "name": slug, "url": repo.get("url"), "meta": meta,
             "receipts": receipts, "badges": _badges(repo),
@@ -125,18 +128,31 @@ def repo_rows(ranked: List[dict]) -> List[dict]:
 
 
 def insider_rows(records: List[dict]) -> List[dict]:
-    """`hotin insiders`: repos the AI Insiders are backing, receipts led by names."""
+    """`hotin insiders`: repos the AI Insiders are backing.
+
+    Receipts spell out WHO: one chip per insider in AI-1000 rank order
+    (the source already sorts them), capped at six plus a "+N more" tail.
+    Meta carries the repo's own description."""
     rows: List[dict] = []
     for i, rec in enumerate(records, 1):
         if not isinstance(rec, dict):
             continue
-        receipts = []
-        insider = _insider_receipt(rec)
-        if insider:
-            receipts.append(insider)
+        receipts: List[Dict[str, str]] = []
+        names = _meta(rec).get("insiders")
+        names = [n for n in names if isinstance(n, str)] if isinstance(names, list) else []
+        total = finite_int(_sig(rec).get("insider_stars"), 0) or len(names)
+        for j, name in enumerate(names[:6]):
+            receipts.append({"label": ("★ " + name) if j == 0 else name, "kind": "insiders"})
+        if total > len(names[:6]):
+            receipts.append({"label": "+{} more".format(total - len(names[:6])), "kind": ""})
+        if not receipts:
+            insider = _insider_receipt(rec)
+            if insider:
+                receipts.append(insider)
         rows.append({
             "rank": i, "name": rec.get("canonical_repo") or rec.get("name") or "?",
-            "url": rec.get("url"), "meta": None, "receipts": receipts,
+            "url": rec.get("url"), "meta": _clip(_meta(rec).get("description")),
+            "receipts": receipts,
             "badges": [{"label": "smart-money", "hot": False}],
         })
     return rows
@@ -151,8 +167,11 @@ def model_rows(ranked: List[dict]) -> List[dict]:
             receipts.append({"label": "{} downloads".format(_num(finite_int(s.get("model_downloads")))), "kind": "npm"})
         if finite_int(s.get("model_likes"), 0):
             receipts.append({"label": "{} likes".format(_num(finite_int(s.get("model_likes")))), "kind": "stars"})
+        # small description: task · library · license, whichever exist
+        bits = [_meta(m).get(k) for k in ("model_task", "model_library", "model_license")]
+        desc = " · ".join(b for b in bits if isinstance(b, str) and b.strip())
         rows.append({"rank": i, "name": m.get("entity_id") or m.get("name") or "?",
-                     "url": m.get("url"), "meta": (_meta(m).get("model_task") or None),
+                     "url": m.get("url"), "meta": desc or None,
                      "receipts": receipts, "badges": _badges(m)})
     return rows
 
@@ -225,8 +244,17 @@ def demo() -> None:
     badges = {(b["label"], b["hot"]) for b in r["badges"]}
     assert ("trending", True) in badges and ("fresh", False) in badges and ("smart-money", False) in badges
     ins = insider_rows([{"canonical_repo": "x/y", "url": "u", "signal": {"insider_stars": 5},
-                         "meta": {"insiders": ["simonw", "deepfates"], "top_insider": "simonw"}}])
-    assert ins[0]["receipts"][0]["label"] == "★ simonw +4 insiders"
+                         "meta": {"insiders": ["simonw", "deepfates"], "top_insider": "simonw",
+                                  "description": "a local whisper wrapper"}}])
+    ins_labels = [x["label"] for x in ins[0]["receipts"]]
+    # every known name in rank order, then the honest remainder
+    assert ins_labels == ["★ simonw", "deepfates", "+3 more"], ins_labels
+    assert ins[0]["meta"] == "a local whisper wrapper"
+    mod = model_rows([{"entity_id": "org/m", "url": "u",
+                       "signal": {"model_downloads": 10, "model_likes": 2},
+                       "meta": {"model_task": "text-generation",
+                                "model_library": "transformers", "model_license": "mit"}}])
+    assert mod[0]["meta"] == "text-generation · transformers · mit"
     assert news_rows([{"name": "hi", "meta": {"date": "Fri, 18 Jul 2026"}}])[0]["rank"] == "·"
     print("board demo: ok")
 

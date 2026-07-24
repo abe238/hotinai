@@ -40,7 +40,8 @@ def test_parses_repos_dedupes_and_picks_top_insider():
     second = records[1]
     assert second["signal"]["insider_stars"] == 4
     assert second["meta"]["top_insider"] == "d"  # lowest rank wins, not first listed
-    assert second["meta"]["insiders"] == ["a", "b", "c", "d", "e"]  # capped at five, in order
+    # names come back in AI-1000 rank order (most influential first)
+    assert second["meta"]["insiders"] == ["d", "b", "f", "e", "c", "a"]
 
 
 def test_hostile_and_empty_inputs_are_safe():
@@ -56,7 +57,8 @@ def test_hostile_and_empty_inputs_are_safe():
     records = insiders.parse_repos(messy)
     by_id = {r["entity_id"]: r for r in records}
     assert by_id["ok/repo"]["signal"]["insider_stars"] == 0  # overflow coerced to default
-    assert by_id["ok/repo"]["meta"] == {"insiders": [], "top_insider": None}
+    assert by_id["ok/repo"]["meta"] == {"insiders": [], "top_insider": None,
+                                        "description": None}
     assert by_id["keys/missing"]["signal"]["insider_stars"] == 0
 
 

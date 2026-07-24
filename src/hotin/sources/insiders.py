@@ -94,25 +94,22 @@ def _iter_repo_objects(blob: str):
 
 
 def _read_starrers(starrers: Any) -> Tuple[List[str], Optional[str]]:
-    """Return up to five insider usernames and the lowest-rank (most influential)."""
-    usernames: List[str] = []
-    top_username: Optional[str] = None
-    top_rank: Optional[int] = None
+    """Return up to twelve insider usernames in AI-1000 rank order (most
+    influential first; unranked last) and the top-ranked one."""
     if not isinstance(starrers, list):
-        return usernames, top_username
+        return [], None
+    seen: List[Tuple[int, str]] = []
     for starrer in starrers:
         if not isinstance(starrer, dict):
             continue
         username = starrer.get("username")
         if not isinstance(username, str) or not username.strip():
             continue
-        username = username.strip()
-        if len(usernames) < 5:
-            usernames.append(username)
         rank = finite_int(starrer.get("rank"))
-        if rank is not None and (top_rank is None or rank < top_rank):
-            top_rank, top_username = rank, username
-    return usernames, top_username
+        seen.append((rank if rank is not None else 10**9, username.strip()))
+    seen.sort(key=lambda pair: pair[0])
+    usernames = [name for _, name in seen[:12]]
+    return usernames, (usernames[0] if usernames else None)
 
 
 def parse_repos(html: Any) -> List[Dict[str, Any]]:
@@ -145,7 +142,9 @@ def parse_repos(html: Any) -> List[Dict[str, Any]]:
                 "name": canonical,
                 "source": SOURCE,
                 "signal": {"insider_stars": insider_stars},
-                "meta": {"insiders": usernames, "top_insider": top_insider},
+                "meta": {"insiders": usernames, "top_insider": top_insider,
+                         "description": obj.get("description")
+                         if isinstance(obj.get("description"), str) else None},
             }
     except (AttributeError, TypeError, ValueError, OverflowError, re.error):
         return []
@@ -191,7 +190,8 @@ def selftest() -> None:
             {"full_name": "Owner/Repo", "distinct_starrers": 3,
              "starrers": [{"username": "karpathy", "rank": 5}, {"username": "ilya", "rank": 1}]},
             {"full_name": "owner/repo", "distinct_starrers": 9,  # dup canonical, higher stars
-             "starrers": [{"username": "sama", "rank": 2}, {"username": "greg", "rank": 4}]},
+             "description": "an agent harness",
+             "starrers": [{"username": "greg", "rank": 4}, {"username": "sama", "rank": 2}]},
             {"full_name": "not a repo", "distinct_starrers": 1e309},  # invalid + overflow, skipped
         ],
         separators=(",", ":"),
@@ -201,7 +201,9 @@ def selftest() -> None:
     top = records[0]
     assert top["entity_type"] == "repo" and top["entity_id"] == "owner/repo"
     assert top["signal"]["insider_stars"] == 9  # dedupe kept the higher count
+    # starrers arrive page-ordered greg(4), sama(2); output is AI-1000 rank order
     assert top["meta"]["top_insider"] == "sama" and top["meta"]["insiders"] == ["sama", "greg"]
+    assert top["meta"]["description"] == "an agent harness"
     assert parse_repos("garbage") == [] and parse_repos(None) == []
     print("insiders selftest: ok")
 
