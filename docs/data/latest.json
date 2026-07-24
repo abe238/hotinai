@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-23",
-  "generated_pt": "Jul 23, 2026 \u00b7 7:02 PM PT",
+  "generated_pt": "Jul 23, 2026 \u00b7 7:11 PM PT",
   "entities": {
     "repos": [
       {
@@ -379,7 +379,7 @@
           },
           {
             "label": "trending",
-            "hot": false
+            "hot": true
           }
         ]
       },
@@ -441,7 +441,7 @@
           },
           {
             "label": "trending",
-            "hot": false
+            "hot": true
           }
         ]
       },
@@ -890,6 +890,14 @@
       },
       {
         "rank": 41,
+        "name": "stablyai/orca",
+        "url": "https://github.com/stablyai/orca",
+        "meta": "My NEW AI Terminal and Code Editor // Orca Review",
+        "receipts": [],
+        "badges": []
+      },
+      {
+        "rank": 42,
         "name": "epicgames/lore",
         "url": "https://github.com/EpicGames/lore",
         "meta": "Lore is a next-generation, open source version control system",
@@ -909,14 +917,6 @@
             "hot": false
           }
         ]
-      },
-      {
-        "rank": 42,
-        "name": "stablyai/orca",
-        "url": "https://github.com/stablyai/orca",
-        "meta": "My NEW AI Terminal and Code Editor // Orca Review",
-        "receipts": [],
-        "badges": []
       },
       {
         "rank": 43,
@@ -1318,6 +1318,32 @@
     "rising": [
       {
         "rank": 1,
+        "name": "xai-org/grok-build",
+        "url": "https://github.com/xai-org/grok-build",
+        "meta": "SpaceXAI's coding agent harness and TUI. Fullscreen, mouse interactive, extensib",
+        "receipts": [
+          {
+            "label": "+2.5k/day",
+            "kind": "stars"
+          },
+          {
+            "label": "22.1k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "9d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 2,
         "name": "dietrichgebert/ponytail",
         "url": "https://github.com/DietrichGebert/ponytail",
         "meta": "Makes your AI agent think like the laziest senior dev in the room. The best code",
@@ -1343,7 +1369,7 @@
         ]
       },
       {
-        "rank": 2,
+        "rank": 3,
         "name": "odysseus-dev/odysseus",
         "url": "https://github.com/odysseus-dev/odysseus",
         "meta": "Self-hosted AI workspace.",
@@ -1369,7 +1395,85 @@
         ]
       },
       {
-        "rank": 3,
+        "rank": 4,
+        "name": "unicity-aos/aos-ce",
+        "url": "https://github.com/unicity-aos/aos-ce",
+        "meta": "AOS Community Edition: the open agent operating system.",
+        "receipts": [
+          {
+            "label": "+625/day",
+            "kind": "stars"
+          },
+          {
+            "label": "6.9k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "11d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "name": "lopopolo/harness-engineering",
+        "url": "https://github.com/lopopolo/harness-engineering",
+        "meta": "\ud83d\udc0e Ryan Lopopolo\u2019s anthology, field guide, and agent context bundle for harness e",
+        "receipts": [
+          {
+            "label": "+455/day",
+            "kind": "stars"
+          },
+          {
+            "label": "2.3k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "5d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "name": "langchain-ai/openwiki",
+        "url": "https://github.com/langchain-ai/openwiki",
+        "meta": "OpenWiki is a CLI that writes and maintains agent documentation for your codebas",
+        "receipts": [
+          {
+            "label": "+421/day",
+            "kind": "stars"
+          },
+          {
+            "label": "13.1k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "31d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 7,
         "name": "oso95/scroll-world",
         "url": "https://github.com/oso95/scroll-world",
         "meta": "A skill that turn any brand into a scrollable 3D world",
@@ -1395,7 +1499,7 @@
         ]
       },
       {
-        "rank": 4,
+        "rank": 8,
         "name": "xiaomimimo/mimo-code",
         "url": "https://github.com/XiaomiMiMo/MiMo-Code",
         "meta": "MiMo Code: Where Models and Agents Co-Evolve",
@@ -1421,7 +1525,7 @@
         ]
       },
       {
-        "rank": 5,
+        "rank": 9,
         "name": "elder-plinius/t3mp3st",
         "url": "https://github.com/elder-plinius/T3MP3ST",
         "meta": "autonomous red teaming platform; multi-agent offensive-security meta-harness",
@@ -1447,17 +1551,17 @@
         ]
       },
       {
-        "rank": 6,
+        "rank": 10,
         "name": "vincentwei1021/video-shotcraft",
         "url": "https://github.com/Vincentwei1021/video-shotcraft",
         "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
         "receipts": [
           {
-            "label": "+238/day",
+            "label": "+239/day",
             "kind": "stars"
           },
           {
-            "label": "951 stars",
+            "label": "955 stars",
             "kind": "stars"
           },
           {
@@ -1473,7 +1577,7 @@
         ]
       },
       {
-        "rank": 7,
+        "rank": 11,
         "name": "pireel/pireel",
         "url": "https://github.com/pireel/pireel",
         "meta": "Open-source, backend-free AI video editor for talking-head video \u2014 storyboarding",
@@ -1499,7 +1603,7 @@
         ]
       },
       {
-        "rank": 8,
+        "rank": 12,
         "name": "cobusgreyling/loop-engineering",
         "url": "https://github.com/cobusgreyling/loop-engineering",
         "meta": "Practical patterns, starters & CLI tools for loop engineering with AI coding age",
@@ -1525,7 +1629,7 @@
         ]
       },
       {
-        "rank": 9,
+        "rank": 13,
         "name": "mighty-alien/mev-arbitrage-bot",
         "url": "https://github.com/MIgHTy-alIeN/MEV-Arbitrage-Bot",
         "meta": "An arbitrage bot is a smart contract connected to an external automation script ",
@@ -1551,7 +1655,7 @@
         ]
       },
       {
-        "rank": 10,
+        "rank": 14,
         "name": "omnigent-ai/omnigent",
         "url": "https://github.com/omnigent-ai/omnigent",
         "meta": "Omnigent is an open-source AI agent framework and meta-harness: orchestrate Clau",
@@ -1577,7 +1681,7 @@
         ]
       },
       {
-        "rank": 11,
+        "rank": 15,
         "name": "nethical6/conversation-steganography",
         "url": "https://github.com/nethical6/conversation-steganography",
         "meta": "Use LLMs to hide messages inside normal looking conversations",
@@ -1603,7 +1707,7 @@
         ]
       },
       {
-        "rank": 12,
+        "rank": 16,
         "name": "helloianneo/ian-xiaohei-illustrations",
         "url": "https://github.com/helloianneo/ian-xiaohei-illustrations",
         "meta": "\u4e2d\u6587\u5c0f\u9ed1\u602a\u8bde\u6b63\u6587\u914d\u56fe\u751f\u6210 Skill | 16:9 \u767d\u5e95\u624b\u7ed8 | \u5c11\u91cf\u7ea2\u6a59\u84dd\u6279\u6ce8 | Codex Skill",
@@ -1629,7 +1733,7 @@
         ]
       },
       {
-        "rank": 13,
+        "rank": 17,
         "name": "penecho/penecho",
         "url": "https://github.com/penecho/penecho",
         "meta": "Think with AI beyond the chat box. A shared canvas for handwriting, equations, d",
@@ -1655,7 +1759,7 @@
         ]
       },
       {
-        "rank": 14,
+        "rank": 18,
         "name": "synthetic-sciences/openscience",
         "url": "https://github.com/synthetic-sciences/openscience",
         "meta": "The open-source AI workbench for scientific research",
@@ -1681,7 +1785,7 @@
         ]
       },
       {
-        "rank": 15,
+        "rank": 19,
         "name": "oomol-lab/open-connector",
         "url": "https://github.com/oomol-lab/open-connector",
         "meta": "Open-source auth gateway connecting 1000+ SaaS providers to AI agents through SD",
@@ -1707,7 +1811,7 @@
         ]
       },
       {
-        "rank": 16,
+        "rank": 20,
         "name": "startrail-org/pixelrag",
         "url": "https://github.com/StarTrail-org/PixelRAG",
         "meta": "The end of web parsing. The beginning of scalable pixel-native search. link: htt",
@@ -1733,7 +1837,7 @@
         ]
       },
       {
-        "rank": 17,
+        "rank": 21,
         "name": "petergyang/no-ai-slop",
         "url": "https://github.com/petergyang/no-ai-slop",
         "meta": "Removes 20+ patterns of AI slop from any piece of writing.",
@@ -1759,7 +1863,7 @@
         ]
       },
       {
-        "rank": 18,
+        "rank": 22,
         "name": "lidge-jun/opencodex",
         "url": "https://github.com/lidge-jun/opencodex",
         "meta": "Universal provider proxy for OpenAI Codex & Claude Code \u2014 use any LLM (Claude, G",
@@ -1785,7 +1889,7 @@
         ]
       },
       {
-        "rank": 19,
+        "rank": 23,
         "name": "isjiamu/gzh-design-skill",
         "url": "https://github.com/isjiamu/gzh-design-skill",
         "meta": "\u628a Markdown \u4e00\u952e\u6392\u6210\u53ef\u76f4\u63a5\u7c98\u8fdb\u516c\u4f17\u53f7\u7f16\u8f91\u5668\u7684\u7cbe\u81f4 HTML \u2014\u2014 6 \u5957\u7cbe\u9009\u4e3b\u9898 + \u4e3b\u9898\u751f\u6210\u5668 + \u53cc\u5173\u5361\u6821\u9a8c\u3002An AI-agent skill ",
@@ -1811,7 +1915,7 @@
         ]
       },
       {
-        "rank": 20,
+        "rank": 24,
         "name": "sahir619/fable-method",
         "url": "https://github.com/Sahir619/fable-method",
         "meta": "The Fable Workflow: how Claude Fable 5 worked, distilled into skills any model c",
@@ -1837,7 +1941,33 @@
         ]
       },
       {
-        "rank": 21,
+        "rank": 25,
+        "name": "vercel/eve",
+        "url": "https://github.com/vercel/eve",
+        "meta": "The Framework for Building Agents",
+        "receipts": [
+          {
+            "label": "+108/day",
+            "kind": "stars"
+          },
+          {
+            "label": "4k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "37d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 26,
         "name": "op7418/guizang-social-card-skill",
         "url": "https://github.com/op7418/guizang-social-card-skill",
         "meta": "\ud83e\udea7 Claude Code / Codex skill \u2014 generate Xiaohongshu carousels & WeChat 21:9+1:1 c",
@@ -1863,7 +1993,7 @@
         ]
       },
       {
-        "rank": 22,
+        "rank": 27,
         "name": "alephaitech/workbuddyguide",
         "url": "https://github.com/AlephAITech/WorkBuddyGuide",
         "meta": "A practical, open-source guide to mastering WorkBuddy through real-world workflo",
@@ -1889,7 +2019,7 @@
         ]
       },
       {
-        "rank": 23,
+        "rank": 28,
         "name": "chuspeeism/dashi-ppt-skill",
         "url": "https://github.com/chuspeeism/dashi-ppt-skill",
         "meta": "An AI-agent skill that generates browser-editable presentations from multiple vi",
@@ -1915,7 +2045,7 @@
         ]
       },
       {
-        "rank": 24,
+        "rank": 29,
         "name": "davidondrej/skills",
         "url": "https://github.com/davidondrej/skills",
         "meta": "access to david ondrej's personal agent skills",
@@ -1941,7 +2071,7 @@
         ]
       },
       {
-        "rank": 25,
+        "rank": 30,
         "name": "intuition-lab/personal-model",
         "url": "https://github.com/Intuition-Lab/personal-model",
         "meta": "Build your HUMAN.md.",
@@ -1956,136 +2086,6 @@
           },
           {
             "label": "13d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 26,
-        "name": "pyang5166/gbro-collage-broll",
-        "url": "https://github.com/pyang5166/gbro-collage-broll",
-        "meta": "\u534a\u8c03\u7eb8\u62fc\u8d34 B-roll \u751f\u6210 skill\uff1a\u4e09\u95f8\u95e8\u5ba1\u6279\uff0cGemini Omni Flash \u9996\u5c3e\u5e27\u7ec4\u88c5\u52a8\u753b | Editorial halftone paper",
-        "receipts": [
-          {
-            "label": "+90/day",
-            "kind": "stars"
-          },
-          {
-            "label": "722 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "8d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 27,
-        "name": "builderio/skills",
-        "url": "https://github.com/BuilderIO/skills",
-        "meta": "Skills for coding agents",
-        "receipts": [
-          {
-            "label": "+87/day",
-            "kind": "stars"
-          },
-          {
-            "label": "3.8k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "43d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 28,
-        "name": "kappaemme-git/codex-first-customer-finder-skill",
-        "url": "https://github.com/Kappaemme-git/codex-first-customer-finder-skill",
-        "meta": "A Codex skill that finds evidence-backed potential first customers from recent p",
-        "receipts": [
-          {
-            "label": "+83/day",
-            "kind": "stars"
-          },
-          {
-            "label": "909 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "11d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 29,
-        "name": "huangchihhungleo/claude-real-video",
-        "url": "https://github.com/HUANGCHIHHUNGLeo/claude-real-video",
-        "meta": "Let Claude (or any LLM) actually watch a video \u2014 scene-aware, deduplicated frame",
-        "receipts": [
-          {
-            "label": "+80/day",
-            "kind": "stars"
-          },
-          {
-            "label": "1.8k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "23d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 30,
-        "name": "jamesob/local-llm",
-        "url": "https://github.com/jamesob/local-llm",
-        "meta": "Everything I know about running LLMs locally",
-        "receipts": [
-          {
-            "label": "+79/day",
-            "kind": "stars"
-          },
-          {
-            "label": "1.6k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "20d old",
             "kind": "age"
           }
         ],
@@ -2131,11 +2131,11 @@
         "meta": "Dotted thought-orb loading indicators for AI & agent UIs \u2014 six tuned states, two",
         "receipts": [
           {
-            "label": "+415/day",
+            "label": "+416/day",
             "kind": "stars"
           },
           {
-            "label": "830 stars",
+            "label": "831 stars",
             "kind": "stars"
           },
           {
@@ -2157,11 +2157,11 @@
         "meta": "Agent skill: convert Chinese story copy or ordered images into a hand-drawn diar",
         "receipts": [
           {
-            "label": "+281/day",
+            "label": "+282/day",
             "kind": "stars"
           },
           {
-            "label": "562 stars",
+            "label": "563 stars",
             "kind": "stars"
           },
           {
@@ -2209,11 +2209,11 @@
         "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
         "receipts": [
           {
-            "label": "+238/day",
+            "label": "+239/day",
             "kind": "stars"
           },
           {
-            "label": "951 stars",
+            "label": "955 stars",
             "kind": "stars"
           },
           {
@@ -2421,7 +2421,7 @@
             "kind": "stars"
           },
           {
-            "label": "167 stars",
+            "label": "168 stars",
             "kind": "stars"
           },
           {
@@ -2655,7 +2655,7 @@
             "kind": "stars"
           },
           {
-            "label": "115 stars",
+            "label": "116 stars",
             "kind": "stars"
           },
           {
@@ -2677,11 +2677,11 @@
         "meta": "Evidence-based Codex skill for five Ark-adjacent UI families and four applicatio",
         "receipts": [
           {
-            "label": "+52/day",
+            "label": "+53/day",
             "kind": "stars"
           },
           {
-            "label": "157 stars",
+            "label": "158 stars",
             "kind": "stars"
           },
           {
@@ -2733,7 +2733,7 @@
             "kind": "stars"
           },
           {
-            "label": "254 stars",
+            "label": "256 stars",
             "kind": "stars"
           },
           {
@@ -4091,7 +4091,7 @@
             "kind": "npm"
           },
           {
-            "label": "516 likes",
+            "label": "518 likes",
             "kind": "stars"
           }
         ],
@@ -4108,7 +4108,7 @@
             "kind": "npm"
           },
           {
-            "label": "451 likes",
+            "label": "454 likes",
             "kind": "stars"
           }
         ],
@@ -4125,7 +4125,7 @@
             "kind": "npm"
           },
           {
-            "label": "397 likes",
+            "label": "399 likes",
             "kind": "stars"
           }
         ],
@@ -4457,7 +4457,7 @@
             "kind": "npm"
           },
           {
-            "label": "100 likes",
+            "label": "101 likes",
             "kind": "stars"
           }
         ],
@@ -4567,6 +4567,23 @@
       },
       {
         "rank": 32,
+        "name": "baseten/GLM-5.2-Vision-NVFP4",
+        "url": "https://huggingface.co/baseten/GLM-5.2-Vision-NVFP4",
+        "meta": "image-text-to-text \u00b7 sglang \u00b7 mit",
+        "receipts": [
+          {
+            "label": "73 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "75 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 33,
         "name": "LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
         "url": "https://huggingface.co/LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
         "meta": "image-text-to-text",
@@ -4577,23 +4594,6 @@
           },
           {
             "label": "100 likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 33,
-        "name": "baseten/GLM-5.2-Vision-NVFP4",
-        "url": "https://huggingface.co/baseten/GLM-5.2-Vision-NVFP4",
-        "meta": "image-text-to-text \u00b7 sglang \u00b7 mit",
-        "receipts": [
-          {
-            "label": "73 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "74 likes",
             "kind": "stars"
           }
         ],
@@ -4925,6 +4925,23 @@
       },
       {
         "rank": 54,
+        "name": "badtheorylabs/BTL-3",
+        "url": "https://huggingface.co/badtheorylabs/BTL-3",
+        "meta": "text-generation \u00b7 peft \u00b7 apache-2.0",
+        "receipts": [
+          {
+            "label": "77 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "51 likes",
+            "kind": "stars"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 55,
         "name": "Lightricks/LTX-2.3",
         "url": "https://huggingface.co/Lightricks/LTX-2.3",
         "meta": "image-to-video \u00b7 diffusers \u00b7 other",
@@ -4935,23 +4952,6 @@
           },
           {
             "label": "1.7k likes",
-            "kind": "stars"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 55,
-        "name": "badtheorylabs/BTL-3",
-        "url": "https://huggingface.co/badtheorylabs/BTL-3",
-        "meta": "text-generation \u00b7 peft \u00b7 apache-2.0",
-        "receipts": [
-          {
-            "label": "77 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "50 likes",
             "kind": "stars"
           }
         ],
