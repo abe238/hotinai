@@ -107,7 +107,9 @@ _CODE_LINE_RE = re.compile(r"^(from |import |def |class )|[=;]\s*\S+\(|\)\s*$")
 # Doc-section openers are setup text, not a description of the model itself.
 _DOC_OPENER_RE = re.compile(
     r"^(inference|installation|install|usage|quick\s*start|requirements|setup|set up|"
-    r"getting started|download|how to|please|refer|see)\b", re.I)
+    r"getting started|download|how to|please|refer|see|"
+    r"we would like to thank|thanks to|acknowledg|citation|if you (use|find)|"
+    r"copyright|licensed under)\b", re.I)
 
 
 _SKIP_LINE_PREFIXES = ("#", "!", "<", "|", "---", "=", ">", "- ", "* ", "+ ")
@@ -135,9 +137,9 @@ def card_first_paragraph(text: Any) -> Optional[str]:
             continue
         if not in_fence:
             kept.append(line)
-    # only the top of the card: real descriptions lead; anything qualifying
-    # deeper (deployment notes, acknowledgments) is not a description.
-    for block in re.split(r"\n\s*\n", "\n".join(kept))[:8]:
+    # upper half of the card: descriptions lead, bottom-matter (citations,
+    # acknowledgments, licenses) is screened by the opener list as well.
+    for block in re.split(r"\n\s*\n", "\n".join(kept))[:20]:
         lines = [ln.strip() for ln in block.splitlines() if ln.strip()]
         if not lines:
             continue
