@@ -142,6 +142,7 @@ def parse_repos(html: Any) -> List[Dict[str, Any]]:
                 "name": canonical,
                 "source": SOURCE,
                 "signal": {"insider_stars": insider_stars,
+                           "stars": finite_int(obj.get("stargazers_count"), 0),
                            "most_recent_star_at": obj.get("most_recent_star_at")
                            if isinstance(obj.get("most_recent_star_at"), str) else None},
                 "meta": {"insiders": usernames, "top_insider": top_insider,
@@ -192,7 +193,7 @@ def selftest() -> None:
             {"full_name": "Owner/Repo", "distinct_starrers": 3,
              "starrers": [{"username": "karpathy", "rank": 5}, {"username": "ilya", "rank": 1}]},
             {"full_name": "owner/repo", "distinct_starrers": 9,  # dup canonical, higher stars
-             "description": "an agent harness",
+             "stargazers_count": 311, "description": "an agent harness",
              "starrers": [{"username": "greg", "rank": 4}, {"username": "sama", "rank": 2}]},
             {"full_name": "not a repo", "distinct_starrers": 1e309},  # invalid + overflow, skipped
         ],
@@ -206,6 +207,7 @@ def selftest() -> None:
     # starrers arrive page-ordered greg(4), sama(2); output is AI-1000 rank order
     assert top["meta"]["top_insider"] == "sama" and top["meta"]["insiders"] == ["sama", "greg"]
     assert top["meta"]["description"] == "an agent harness"
+    assert top["signal"]["stars"] == 311
     assert parse_repos("garbage") == [] and parse_repos(None) == []
     print("insiders selftest: ok")
 

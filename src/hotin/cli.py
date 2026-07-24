@@ -737,6 +737,20 @@ def _export(arguments: argparse.Namespace) -> int:
                                       _ENTITY_COMMANDS["papers"][2], limit=limit)
     ins_res = insiders.fetch(limit=limit, config=config)
     ins = [r for r in (ins_res.get("records") or []) if isinstance(r, dict)] if isinstance(ins_res, dict) else []
+    # Borrow board facts (age, velocity, HN points) from the fused repo map when
+    # an insiders repo is also tracked there; the Digg page alone doesn't carry them.
+    for rec in ins:
+        known = merged.get(rec.get("canonical_repo"))
+        if not isinstance(known, dict):
+            continue
+        ksig = known.get("signal") if isinstance(known.get("signal"), dict) else {}
+        sig = rec.setdefault("signal", {})
+        for key in ("created_at", "hn_points"):
+            if ksig.get(key) is not None and sig.get(key) is None:
+                sig[key] = ksig[key]
+        kmeta = known.get("meta") if isinstance(known.get("meta"), dict) else {}
+        if kmeta.get("velocity_per_day") is not None:
+            rec.setdefault("meta", {}).setdefault("velocity_per_day", kmeta["velocity_per_day"])
     news_text = smolai._request()
     news = smolai.parse_news(news_text)[:limit] if news_text else []
     rising = _rising_ranked(config, 30)

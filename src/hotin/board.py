@@ -191,6 +191,18 @@ def insider_rows(records: List[dict]) -> List[dict]:
             insider = _insider_receipt(rec)
             if insider:
                 receipts.append(insider)
+        # the same board facts repos/rising carry, whenever the data exists
+        s = _sig(rec)
+        if finite_int(s.get("stars"), 0):
+            receipts.append({"label": "{} stars".format(_num(finite_int(s.get("stars")))), "kind": "stars"})
+        vel = finite_float(_meta(rec).get("velocity_per_day"), 0.0)
+        if vel:
+            receipts.append({"label": "+{}/day".format(_num(vel)), "kind": "stars"})
+        if finite_int(s.get("hn_points"), 0):
+            receipts.append({"label": "{} pts".format(_num(finite_int(s.get("hn_points")))), "kind": "hn"})
+        age = _age_days(s.get("created_at"))
+        if age:
+            receipts.append({"label": "{}d old".format(age), "kind": "age"})
         rows.append({
             "rank": i, "name": rec.get("canonical_repo") or rec.get("name") or "?",
             "url": rec.get("url"), "meta": _clip(_meta(rec).get("description")),
@@ -229,9 +241,15 @@ def paper_rows(ranked: List[dict]) -> List[dict]:
     rows: List[dict] = []
     for i, p in enumerate(ranked, 1):
         up = finite_int(_sig(p).get("paper_upvotes"), 0)
+        receipts: List[Dict[str, str]] = []
+        if up:
+            receipts.append({"label": "{} upvotes".format(_num(up)), "kind": "paper"})
+        published = _date_label(_sig(p).get("created_at"))
+        if published:
+            receipts.append({"label": "published {}".format(published), "kind": "age"})
         rows.append({"rank": i, "name": p.get("name") or p.get("entity_id") or "?",
                      "url": p.get("url"), "meta": _clip(_meta(p).get("paper_summary"), 140),
-                     "receipts": ([{"label": "{} upvotes".format(_num(up)), "kind": "paper"}] if up else []),
+                     "receipts": receipts,
                      "badges": [{"label": "paper-backed", "hot": False}] if _meta(p).get("linked_repo") else []})
     return rows
 
@@ -298,12 +316,15 @@ def demo() -> None:
     assert any(x == "5d old" for x in labels), labels
     badges = {(b["label"], b["hot"]) for b in r["badges"]}
     assert ("trending", True) in badges and ("fresh", False) in badges and ("smart-money", False) in badges
-    ins = insider_rows([{"canonical_repo": "x/y", "url": "u", "signal": {"insider_stars": 5},
+    ins = insider_rows([{"canonical_repo": "x/y", "url": "u",
+                         "signal": {"insider_stars": 5, "stars": 18400, "hn_points": 937},
                          "meta": {"insiders": ["simonw", "deepfates"], "top_insider": "simonw",
+                                  "velocity_per_day": 432.0,
                                   "description": "a local whisper wrapper"}}])
     ins_labels = [x["label"] for x in ins[0]["receipts"]]
-    # every known name in rank order, then the honest remainder
-    assert ins_labels == ["★ simonw", "deepfates", "+3 more"], ins_labels
+    # names in rank order + honest remainder, then the shared board facts
+    assert ins_labels == ["★ simonw", "deepfates", "+3 more",
+                          "18.4k stars", "+432/day", "937 pts"], ins_labels
     assert ins[0]["meta"] == "a local whisper wrapper"
     mod = model_rows([{"entity_id": "org/m", "url": "u",
                        "signal": {"model_downloads": 10, "model_likes": 2},
@@ -319,9 +340,11 @@ def demo() -> None:
     gated = model_rows([{"entity_id": "g/m", "url": "u", "signal": {},
                          "meta": {"model_gated": True, "model_description": ""}}])
     assert gated[0]["meta"] == "gated · access request required"
-    pap = paper_rows([{"entity_id": "1", "url": "u", "signal": {"paper_upvotes": 3},
+    pap = paper_rows([{"entity_id": "1", "url": "u",
+                       "signal": {"paper_upvotes": 3, "created_at": "2026-07-13T00:00:00.000Z"},
                        "meta": {"paper_summary": "  A short abstract. ", "linked_repo": "a/b"}}])
     assert pap[0]["meta"] == "A short abstract."
+    assert any(r["label"].startswith("published Jul") for r in pap[0]["receipts"])
     assert news_rows([{"name": "hi", "meta": {"date": "Fri, 18 Jul 2026"}}])[0]["rank"] == "·"
     print("board demo: ok")
 
