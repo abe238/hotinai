@@ -106,48 +106,58 @@ def fetch(
 _CODE_LINE_RE = re.compile(r"^(from |import |def |class )|[=;]\s*\S+\(|\)\s*$")
 # Doc-section openers are setup text, not a description of the model itself.
 _DOC_OPENER_RE = re.compile(
-    r"^(inference|installation|install|usage|quick\s*start|requirements|setup|how to)\b", re.I)
+    r"^(inference|installation|install|usage|quick\s*start|requirements|setup|set up|"
+    r"getting started|download|how to|please|refer|see)\b", re.I)
+
+
+_SKIP_LINE_PREFIXES = ("#", "!", "<", "|", "---", "=", ">", "- ", "* ", "+ ")
 
 
 def card_first_paragraph(text: Any) -> Optional[str]:
-    """First prose paragraph of a model-card README: skips YAML frontmatter,
-    fenced code, headings, badges, tables, and code-shaped lines. Pure."""
+    """First prose paragraph of a model-card README.
+
+    Skips YAML frontmatter and fenced code, then judges each blank-line
+    paragraph on its own: one heading/badge/table/bullet/code line disqualifies
+    that paragraph only (a stray badge must not nuke the good prose after it).
+    Accepted prose reads like a sentence: >=40 chars with a real full stop
+    (version numbers like "13.0" do not count). Pure."""
     if not isinstance(text, str) or not text.strip():
         return None
     if text.startswith("---"):
         end = text.find("\n---", 3)
         if end > 0:
             text = text[end + 4:]
-    prose: List[str] = []
+    kept: List[str] = []
     in_fence = False
     for line in text.splitlines():
-        stripped = line.strip()
-        if stripped.startswith("```"):
+        if line.strip().startswith("```"):
             in_fence = not in_fence
             continue
-        if in_fence:
+        if not in_fence:
+            kept.append(line)
+    # only the top of the card: real descriptions lead; anything qualifying
+    # deeper (deployment notes, acknowledgments) is not a description.
+    for block in re.split(r"\n\s*\n", "\n".join(kept))[:8]:
+        lines = [ln.strip() for ln in block.splitlines() if ln.strip()]
+        if not lines:
             continue
-        if not stripped:
-            if prose:
-                break  # paragraph ended
+        if any(ln.startswith(_SKIP_LINE_PREFIXES) or re.match(r"^\d+[.)] ", ln)
+               or _CODE_LINE_RE.search(ln) for ln in lines):
             continue
-        if stripped.startswith(("#", "!", "<", "|", "[", "---", "=", ">",
-                                "- ", "* ", "+ ")) or re.match(r"^\d+[.)] ", stripped):
-            prose = []
+        # markdown links are fine ("[GLM](...) is our..."), link-ONLY lines are not
+        if any(re.fullmatch(r"\[[^\]]*\]\([^)]*\)[.:]?", ln) for ln in lines):
             continue
-        if _CODE_LINE_RE.search(stripped):
-            prose = []
+        para = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", " ".join(lines))  # unlink
+        para = re.sub(r"[*_`]", "", para)
+        para = para.replace(" — ", ", ").replace("—", "-")  # house style: no em dashes
+        para = re.sub(r"\s+", " ", para).strip()
+        if _DOC_OPENER_RE.match(para):
             continue
-        if not prose and _DOC_OPENER_RE.match(stripped):
-            continue
-        prose.append(stripped)
-    if not prose:
-        return None
-    para = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", " ".join(prose))  # unlink
-    para = re.sub(r"[*_`]", "", para)
-    para = para.replace(" — ", ", ").replace("—", "-")  # house style: no em dashes
-    para = re.sub(r"\s+", " ", para).strip()
-    return para if len(para) >= 40 else None
+        if para.endswith(":") and len(para) < 80:
+            continue  # a short lead-in to code/docs
+        if len(para) >= 40 and re.search(r"(?<!\d)\.(?:\s|$)", para):
+            return para
+    return None
 
 
 def fetch_description(model_id: str) -> Optional[str]:
