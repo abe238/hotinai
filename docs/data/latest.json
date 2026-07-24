@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-23",
-  "generated_pt": "Jul 23, 2026 \u00b7 10:59 PM PT",
+  "generated_pt": "Jul 23, 2026 \u00b7 11:09 PM PT",
   "entities": {
     "repos": [
       {
@@ -609,7 +609,7 @@
         "meta": "Makes your AI agent think like the laziest senior dev in the room. The best code is the code you nev\u2026",
         "receipts": [
           {
-            "label": "88.5k stars",
+            "label": "88.6k stars",
             "kind": "stars"
           }
         ],
@@ -1137,7 +1137,7 @@
         "meta": "AOS Community Edition: the open agent operating system.",
         "receipts": [
           {
-            "label": "6.9k stars",
+            "label": "7k stars",
             "kind": "stars"
           }
         ],
@@ -1345,7 +1345,7 @@
             "kind": "stars"
           },
           {
-            "label": "88.5k stars",
+            "label": "88.6k stars",
             "kind": "stars"
           },
           {
@@ -1393,11 +1393,11 @@
         "meta": "AOS Community Edition: the open agent operating system.",
         "receipts": [
           {
-            "label": "+631/day",
+            "label": "+632/day",
             "kind": "stars"
           },
           {
-            "label": "6.9k stars",
+            "label": "7k stars",
             "kind": "stars"
           },
           {
@@ -1523,7 +1523,7 @@
         "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
         "receipts": [
           {
-            "label": "+266/day",
+            "label": "+267/day",
             "kind": "stars"
           },
           {
@@ -1835,7 +1835,7 @@
         "meta": "Removes 20+ patterns of AI slop from any piece of writing.",
         "receipts": [
           {
-            "label": "+127/day",
+            "label": "+128/day",
             "kind": "stars"
           },
           {
@@ -2073,7 +2073,7 @@
             "kind": "stars"
           },
           {
-            "label": "729 stars",
+            "label": "730 stars",
             "kind": "stars"
           },
           {
@@ -2149,11 +2149,11 @@
         "meta": "Agent skill: convert Chinese story copy or ordered images into a hand-drawn diar",
         "receipts": [
           {
-            "label": "+291/day",
+            "label": "+292/day",
             "kind": "stars"
           },
           {
-            "label": "582 stars",
+            "label": "583 stars",
             "kind": "stars"
           },
           {
@@ -2175,7 +2175,7 @@
         "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
         "receipts": [
           {
-            "label": "+266/day",
+            "label": "+267/day",
             "kind": "stars"
           },
           {
@@ -2560,6 +2560,32 @@
       },
       {
         "rank": 19,
+        "name": "krakonjac300-pixel/podcast-shorts-factory",
+        "url": "https://github.com/krakonjac300-pixel/podcast-shorts-factory",
+        "meta": "Ten cooperating AI agents that turn long podcasts into short-form videos, automa",
+        "receipts": [
+          {
+            "label": "+54/day",
+            "kind": "stars"
+          },
+          {
+            "label": "54 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "1d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 20,
         "name": "brandon030722/ark-ui-skill",
         "url": "https://github.com/Brandon030722/ark-ui-skill",
         "meta": "Evidence-based Codex skill for five Ark-adjacent UI families and four applicatio",
@@ -2574,32 +2600,6 @@
           },
           {
             "label": "3d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 20,
-        "name": "krakonjac300-pixel/podcast-shorts-factory",
-        "url": "https://github.com/krakonjac300-pixel/podcast-shorts-factory",
-        "meta": "Ten cooperating AI agents that turn long podcasts into short-form videos, automa",
-        "receipts": [
-          {
-            "label": "+53/day",
-            "kind": "stars"
-          },
-          {
-            "label": "53 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "1d old",
             "kind": "age"
           }
         ],
@@ -4178,7 +4178,7 @@
         "rank": 9,
         "name": "reteetzad/Kimi-K3",
         "url": "https://huggingface.co/reteetzad/Kimi-K3",
-        "meta": null,
+        "meta": "gated \u00b7 access request required",
         "receipts": [
           {
             "label": "308 likes",
