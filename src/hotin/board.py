@@ -167,10 +167,13 @@ def model_rows(ranked: List[dict]) -> List[dict]:
             receipts.append({"label": "{} downloads".format(_num(finite_int(s.get("model_downloads")))), "kind": "npm"})
         if finite_int(s.get("model_likes"), 0):
             receipts.append({"label": "{} likes".format(_num(finite_int(s.get("model_likes")))), "kind": "stars"})
-        # prefer the card's own intro sentence; fall back to task · library · license
+        # prefer the card's own intro sentence; fall back to task · library · license;
+        # a gated model with neither still gets the honest note
         bits = [_meta(m).get(k) for k in ("model_task", "model_library", "model_license")]
         tags = " · ".join(b for b in bits if isinstance(b, str) and b.strip())
-        desc = _clip(_meta(m).get("model_description"), 140) or tags
+        gated = "gated · access request required" if _meta(m).get("model_gated") else ""
+        desc = _clip(_meta(m).get("model_description"), 140) or " · ".join(
+            x for x in (tags, gated) if x)
         rows.append({"rank": i, "name": m.get("entity_id") or m.get("name") or "?",
                      "url": m.get("url"), "meta": desc or None,
                      "receipts": receipts, "badges": _badges(m)})
@@ -256,6 +259,9 @@ def demo() -> None:
                        "meta": {"model_task": "text-generation",
                                 "model_library": "transformers", "model_license": "mit"}}])
     assert mod[0]["meta"] == "text-generation · transformers · mit"
+    gated = model_rows([{"entity_id": "g/m", "url": "u", "signal": {},
+                         "meta": {"model_gated": True, "model_description": ""}}])
+    assert gated[0]["meta"] == "gated · access request required"
     pap = paper_rows([{"entity_id": "1", "url": "u", "signal": {"paper_upvotes": 3},
                        "meta": {"paper_summary": "  A short abstract. ", "linked_repo": "a/b"}}])
     assert pap[0]["meta"] == "A short abstract."

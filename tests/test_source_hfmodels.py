@@ -56,6 +56,17 @@ def test_card_first_paragraph_hostile_inputs():
     assert hfmodels.card_first_paragraph("too short") is None
 
 
+def test_parse_models_captures_gated_flag():
+    payload = [
+        {"id": "a/open", "downloads": 1, "likes": 1, "gated": False},
+        {"id": "b/gated", "downloads": 1, "likes": 1, "gated": "manual"},
+    ]
+    records = hfmodels.parse_models(payload)
+    metas = {r["entity_id"]: r["meta"] for r in records}
+    assert "model_gated" not in metas["a/open"]
+    assert metas["b/gated"]["model_gated"] is True
+
+
 class FakeCache:
     def __init__(self, rows):
         self.rows = rows

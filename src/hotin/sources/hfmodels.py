@@ -58,6 +58,8 @@ def parse_models(payload: Any) -> List[Dict[str, Any]]:
                 if isinstance(tag, str) and tag.startswith("license:"):
                     meta["model_license"] = tag[len("license:"):]
                     break
+            if item.get("gated"):  # "auto" / "manual" / True
+                meta["model_gated"] = True
             created = item.get("createdAt")
             if isinstance(created, str) and created.strip():
                 signal["created_at"] = created.strip()

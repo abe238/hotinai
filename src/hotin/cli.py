@@ -1020,6 +1020,19 @@ def _refresh(arguments: argparse.Namespace) -> int:
     cache = open_cache()
     statuses: List[health.SourceStatus] = []
     persisted = False
+    # healed meta (card descriptions, paper summaries, gated flags) must survive
+    # the re-upsert of a fresh fetch, or every refresh wipes what backfill built
+    # and the bounded heal can never catch up.
+    _PRESERVED_META = ("model_description", "model_gated", "paper_summary")
+    preserved: Dict[tuple, Dict[str, Any]] = {}
+    for _raw in cache.get_all():
+        _rec = engine._decoded_record(_raw)
+        if _rec is None or _rec.get("entity_type") not in ("model", "paper"):
+            continue
+        _meta = _rec.get("meta") or {}
+        _keep = {k: _meta[k] for k in _PRESERVED_META if k in _meta}
+        if _keep:
+            preserved[(_rec.get("entity_type"), _rec.get("entity_id"), _rec.get("source"))] = _keep
     try:
         statuses = list(engine.fetch_all(config, limit=_INGEST_DEPTH, cache=cache, ttl=0))
         for adapter, _entity_type, _weights in _ENTITY_COMMANDS.values():
@@ -1035,6 +1048,11 @@ def _refresh(arguments: argparse.Namespace) -> int:
                 ))
                 for record in result.get("records") if isinstance(result.get("records"), list) else []:
                     if isinstance(record, dict):
+                        keep = preserved.get((record.get("entity_type"),
+                                              record.get("entity_id"), record.get("source")))
+                        if keep:
+                            meta = record.get("meta") if isinstance(record.get("meta"), dict) else {}
+                            record["meta"] = {**keep, **meta}
                         cache.upsert(engine._cache_record(record))
         healed = hfpapers.backfill_summaries(cache)
         healed_models = hfmodels.backfill_descriptions(cache)
