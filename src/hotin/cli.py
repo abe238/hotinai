@@ -95,6 +95,9 @@ def build_parser() -> argparse.ArgumentParser:
                                    help="only repos active within a window (e.g. 30d, 2w, 12h)")
             subparser.add_argument("--min-stars", type=int, default=None, metavar="N",
                                    help="only repos with at least N stars")
+        elif command in ("rising", "models", "papers", "news"):
+            subparser.add_argument("--since", default=None, metavar="Nd",
+                                   help="only items from within a window (e.g. 7d, 2w)")
         elif command == "setup":
             subparser.add_argument("--check", action="store_true", help="check local configuration")
             subparser.add_argument("--schedule", choices=("daily", "twice", "off"), default=None,
@@ -116,6 +119,45 @@ def _since_days(value: Any) -> Optional[float]:
         raise ValueError("--since must look like 30d, 2w, or 12h")
     n = int(match.group(1))
     return {"d": n, "w": n * 7, "h": n / 24.0}[match.group(2)]
+
+
+def _parse_date(value: Any):
+    """Parse an ISO ('2026-06-19T…') or RFC-ish ('Wed, 22 Jul 2026 …') date -> date | None."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    import datetime
+    text = value.strip()
+    try:
+        return datetime.date.fromisoformat(text[:10])
+    except ValueError:
+        pass
+    try:
+        return datetime.datetime.strptime(text[:16], "%a, %d %b %Y").date()
+    except (ValueError, TypeError):
+        return None
+
+
+def _dated_within(value: Any, cutoff) -> bool:
+    """True if `value` parses to a date on/after `cutoff`; undated -> False (dropped)."""
+    parsed = _parse_date(value)
+    return parsed is not None and parsed >= cutoff
+
+
+def _since_cutoff(arguments: argparse.Namespace):
+    """Resolve --since to a cutoff date. Returns (cutoff|None, exit_code|None):
+    cutoff is None when --since is unset; exit_code is 2 when it is malformed."""
+    since = getattr(arguments, "since", None)
+    if since is None:
+        return None, None
+    try:
+        days = _since_days(since)
+    except ValueError as exc:
+        print(_safe(str(exc)), file=sys.stderr)
+        return None, 2
+    if days is None:
+        return None, None
+    import datetime
+    return datetime.date.today() - datetime.timedelta(days=int(days)), None
 
 
 def _setup_check() -> int:
@@ -566,13 +608,16 @@ def _rising_velocity(record: dict) -> float:
     return stars / _age_days((signal or {}).get("created_at"))
 
 
-def _rising_ranked(config: Optional[dict], limit: int) -> List[dict]:
+def _rising_ranked(config: Optional[dict], limit: int, max_age: int = _RISING_MAX_AGE) -> List[dict]:
     """Freshest fast-climbing AI repos: union of domain-scoped GitHub searches,
     ranked by star velocity (stars/day since creation). GitHub's own board ranks
-    by absolute stars, which buries young rockets under established mega-repos."""
+    by absolute stars, which buries young rockets under established mega-repos.
+    `max_age` caps repo age in days; a tight window also narrows the fetch so a
+    small-but-fast young repo isn't buried under bigger ones in the star sort."""
+    fetch_days = min(max_age, _RISING_WINDOW_DAYS) if max_age else _RISING_WINDOW_DAYS
     pool: Dict[str, dict] = {}
     for query in _RISING_QUERIES:
-        result = github.fetch(query, limit=50, config=config, days=_RISING_WINDOW_DAYS)
+        result = github.fetch(query, limit=50, config=config, days=fetch_days)
         for record in (result.get("records") if isinstance(result, dict) else None) or []:
             if not isinstance(record, dict):
                 continue
@@ -581,7 +626,7 @@ def _rising_ranked(config: Optional[dict], limit: int) -> List[dict]:
             if key and key not in pool and not meta.get("archived"):
                 pool[key] = record
     fresh = [r for r in pool.values()
-             if _age_days((r.get("signal") or {}).get("created_at")) <= _RISING_MAX_AGE]
+             if _age_days((r.get("signal") or {}).get("created_at")) <= max_age]
     fresh.sort(key=_rising_velocity, reverse=True)
     ranked = fresh[: max(limit, 0)]
     for record in ranked:
@@ -596,7 +641,17 @@ def _rising(arguments: argparse.Namespace) -> int:
     limit = _normal_limit(arguments)
     if limit is None:
         return 2
-    ranked = _rising_ranked(load_config(), limit or 20)
+    max_age = _RISING_MAX_AGE
+    since = getattr(arguments, "since", None)
+    if since is not None:
+        try:
+            days = _since_days(since)
+        except ValueError as exc:
+            print(_safe(str(exc)), file=sys.stderr)
+            return 2
+        if days is not None:
+            max_age = max(int(days), 1)
+    ranked = _rising_ranked(load_config(), limit or 20, max_age)
     if getattr(arguments, "json", False):
         _dump_json({"rising": [{"rank": i + 1, "repo": r.get("canonical_repo"),
                                 "url": r.get("url"),
@@ -696,6 +751,9 @@ def _models(arguments: argparse.Namespace) -> int:
     limit = _normal_limit(arguments)
     if limit is None:
         return 2
+    cutoff, code = _since_cutoff(arguments)
+    if code:
+        return code
     releases, _detail = _frontier_releases(min(limit, 6))
     adapter, entity_type, metric_weights = _ENTITY_COMMANDS["models"]
     with _cache_session() as cache:
@@ -709,6 +767,9 @@ def _models(arguments: argparse.Namespace) -> int:
             if isinstance(record, dict):
                 cache.upsert(engine._cache_record(record))
         merged = engine.merge_by_entity(cache.get_all(), entity_type, max_age_days=engine.EVIDENCE_WINDOW_DAYS)
+        if cutoff is not None:
+            merged = {k: v for k, v in merged.items()
+                      if _dated_within((v.get("signal") or {}).get("created_at"), cutoff)}
         ranked = engine.rank_entities(merged, metric_weights, limit=limit)
         if arguments.json:
             _dump_json({"releases": [{"lab": r["meta"].get("lab"), "title": r.get("name"),
@@ -733,6 +794,9 @@ def _entity_command(command: str, arguments: argparse.Namespace) -> int:
     limit = _normal_limit(arguments)
     if limit is None:
         return 2
+    cutoff, code = _since_cutoff(arguments)
+    if code:
+        return code
     adapter, entity_type, metric_weights = _ENTITY_COMMANDS[command]
     with _cache_session() as cache:
         try:
@@ -747,6 +811,9 @@ def _entity_command(command: str, arguments: argparse.Namespace) -> int:
             if isinstance(record, dict):
                 cache.upsert(engine._cache_record(record))
         merged = engine.merge_by_entity(cache.get_all(), entity_type, max_age_days=engine.EVIDENCE_WINDOW_DAYS)
+        if cutoff is not None:
+            merged = {k: v for k, v in merged.items()
+                      if _dated_within((v.get("signal") or {}).get("created_at"), cutoff)}
         ranked = engine.rank_entities(merged, metric_weights, limit=limit)
         if arguments.json:
             _dump_json({"entities": ranked, "status": status, "detail": detail})
@@ -799,11 +866,17 @@ def _news(arguments: argparse.Namespace) -> int:
     limit = _normal_limit(arguments)
     if limit is None:
         return 2
+    cutoff, code = _since_cutoff(arguments)
+    if code:
+        return code
     try:
         text = smolai._request()
     except Exception:
         text = None
-    items = smolai.parse_news(text)[:limit] if text is not None else []
+    parsed = smolai.parse_news(text) if text is not None else []
+    if cutoff is not None:
+        parsed = [it for it in parsed if _dated_within((it.get("meta") or {}).get("date"), cutoff)]
+    items = parsed[:limit]
     if arguments.json:
         _dump_json({"news": [{"title": item["name"], "url": item["url"], "date": item["meta"].get("date")} for item in items],
                     "status": "ok" if text is not None else "error"})

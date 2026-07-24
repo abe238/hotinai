@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 
 from hotin import board
-from hotin.cli import _age_days, _rising_velocity
+from hotin.cli import _age_days, _dated_within, _parse_date, _rising_velocity
 
 
 def _iso(days_ago):
@@ -42,3 +42,17 @@ def test_rising_rows_total_on_junk():
     assert board.rising_rows([]) == []
     out = board.rising_rows([None, {}, {"name": "x/y"}])
     assert isinstance(out, list) and all("name" in row for row in out)
+
+
+def test_parse_date_iso_and_rfc():
+    assert _parse_date("2026-06-19T09:40:33.000Z").isoformat() == "2026-06-19"
+    assert _parse_date("Wed, 22 Jul 2026 05:44:39 GMT").isoformat() == "2026-07-22"
+    assert _parse_date("nonsense") is None
+    assert _parse_date(None) is None
+
+
+def test_dated_within_drops_old_and_undated():
+    cutoff = date.today() - timedelta(days=7)
+    assert _dated_within(_iso(2), cutoff) is True
+    assert _dated_within(_iso(30), cutoff) is False
+    assert _dated_within(None, cutoff) is False
