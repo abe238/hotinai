@@ -269,8 +269,10 @@ def news_rows(items: List[dict], note: Optional[str] = None) -> List[dict]:
         pts = finite_int(_sig(item).get("hn_points"), 0)
         if pts:
             receipts.append({"label": "{} pts".format(_num(pts)), "kind": "hn"})
-        kind = _meta(item).get("kind")
-        badges = [{"label": kind, "hot": False}] if kind in ("primary", "analysis") else []
+        # stored kind -> visitor-facing label: "official" (the lab's own post)
+        # or "opinion" (a named expert's take)
+        kind = {"primary": "official", "analysis": "opinion"}.get(_meta(item).get("kind"))
+        badges = [{"label": kind, "hot": False}] if kind else []
         rows.append({"rank": i, "name": item.get("name") or "?",
                      "url": item.get("url"), "meta": _clip(_meta(item).get("publisher"), 40),
                      "receipts": receipts, "badges": badges})
@@ -365,7 +367,7 @@ def demo() -> None:
     assert nws[0]["rank"] == 1 and nws[0]["name"] == "GPT-6 ships" and nws[0]["meta"] == "OpenAI"
     nws_labels = [x["label"] for x in nws[0]["receipts"]]
     assert any("pts" in x for x in nws_labels) and any("Jul" in x for x in nws_labels), nws_labels
-    assert nws[0]["badges"] == [{"label": "primary", "hot": False}]
+    assert nws[0]["badges"] == [{"label": "official", "hot": False}]
     assert nws[-1] == {"rank": "·", "name": "swept 12/12 feeds", "url": None,
                        "meta": None, "receipts": [], "badges": []}
     assert news_rows([]) == []  # empty window: no orphan provenance row
