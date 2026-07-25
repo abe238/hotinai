@@ -1,0 +1,27 @@
+# hotin
+
+> A free, open-source CLI that ranks what's hot in AI right now — trending GitHub repos, the repos AI insiders are backing, new models and papers, and AI news — by cross-source consensus and freshness. Live board updated daily at https://hotin.ai.
+
+## What it is
+hotin is a zero-dependency Python command-line tool. It fuses independent signals (GitHub trending/search, Hacker News, npm, Reddit, an AI-insider star graph, Hugging Face models and papers, and AI news) and ranks projects by how many sources agree plus how fresh they are.
+
+## Install
+- pip install hotin
+- uvx hotin
+- pipx install hotin
+- Zero-install single file: python hotin.pyz (from GitHub Releases)
+
+## Key facts
+- Free and open-source, Apache-2.0.
+- Author: Abe Diaz (https://github.com/abe238).
+- Source: https://github.com/abe238/hotinai
+- Package: https://pypi.org/project/hotin/
+
+## Commands
+- hotin repos — trending AI repos, fused across sources
+- hotin rising — brand-new repos climbing fastest (star velocity)
+- hotin insiders — repos AI insiders are backing (smart-money)
+- hotin models — frontier-lab releases + trending model weights
+- hotin papers — trending AI papers
+- hotin news — recent AI news
+- Add --since 7d to see only the last 7 days.
