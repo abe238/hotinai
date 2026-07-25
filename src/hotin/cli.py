@@ -708,6 +708,26 @@ def _pacific_stamp() -> str:
         now.strftime("%b"), now.day, now.year, hour12, now.minute, ampm)
 
 
+
+def _insiders_from_cache(cached_rows: List[dict], limit: int, *, now: Optional[float] = None) -> List[dict]:
+    """Rebuild the insiders tab from cached rows when the live Digg fetch flakes.
+
+    A baker must never publish an empty tab while the cache holds a recent
+    picture (refresh persists insiders rows). Bounded staleness: only rows
+    fetched in the last 3 days qualify — beyond that an empty tab is more
+    honest than week-old "smart money" presented as current."""
+    recent = (time.time() if now is None else now) - 3 * 86400.0
+    rows = [r for r in cached_rows if isinstance(r, dict)
+            and finite_float(r.get("fetched_at"), 0.0) >= recent]
+    rows.sort(key=lambda r: -finite_int((r.get("signal") or {}).get("insider_stars"), 0))
+    return [{"entity_type": "repo", "entity_id": r.get("entity_id"),
+             "canonical_repo": r.get("canonical_repo") or r.get("entity_id"),
+             "url": r.get("url") or "https://github.com/{}".format(r.get("entity_id")),
+             "name": r.get("name") or r.get("entity_id"), "source": insiders.SOURCE,
+             "signal": r.get("signal") or {}, "meta": r.get("meta") or {}}
+            for r in rows[:max(0, limit)]]
+
+
 def _export(arguments: argparse.Namespace) -> int:
     """Bake the 5-tab board into docs/index.html + write docs/data/latest.json.
 
@@ -757,19 +777,8 @@ def _export(arguments: argparse.Namespace) -> int:
                 _hn = {k: v for k, v in (_r.get("signal") or {}).items() if k.startswith("hn_")}
                 if _hn:
                     _news_pts[_r.get("entity_id")] = _hn
-    if not ins and _cached_ins:
-        # The Digg fetch flaked; a baker must never publish an empty tab while
-        # the cache holds a recent picture (refresh persists insiders rows).
-        # Bounded staleness: only rows fetched in the last 3 days qualify.
-        _recent = time.time() - 3 * 86400.0
-        _cached_ins = [r for r in _cached_ins if finite_float(r.get("fetched_at"), 0.0) >= _recent]
-        _cached_ins.sort(key=lambda r: -finite_int((r.get("signal") or {}).get("insider_stars"), 0))
-        ins = [{"entity_type": "repo", "entity_id": r.get("entity_id"),
-                "canonical_repo": r.get("canonical_repo") or r.get("entity_id"),
-                "url": r.get("url") or "https://github.com/{}".format(r.get("entity_id")),
-                "name": r.get("name") or r.get("entity_id"), "source": insiders.SOURCE,
-                "signal": r.get("signal") or {}, "meta": r.get("meta") or {}}
-               for r in _cached_ins[:limit]]
+    if not ins:
+        ins = _insiders_from_cache(_cached_ins, limit)
     for rec in ins:
         if rec.setdefault("signal", {}).get("created_at") is None:
             known_date = _dates.get(rec.get("canonical_repo"))

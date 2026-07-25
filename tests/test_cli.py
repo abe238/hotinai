@@ -481,3 +481,24 @@ def test_news_command_shows_curated_headlines(monkeypatch, capsys):
                         lambda **kwargs: {"records": [], "status": "error", "detail": "0/12 feeds"})
     assert main(["news"]) == 1  # every feed down
     assert "unavailable" in capsys.readouterr().err
+
+
+def test_insiders_from_cache_fallback_recent_sorted_and_bounded():
+    now = 1_785_000_000.0
+    day = 86400.0
+    rows = [
+        {"entity_id": "a/small", "fetched_at": now - day,
+         "signal": {"insider_stars": 2}, "meta": {"insiders": ["x"]}},
+        {"entity_id": "b/big", "canonical_repo": "b/big", "url": "u", "name": "b/big",
+         "fetched_at": now - day, "signal": {"insider_stars": 9}, "meta": {}},
+        {"entity_id": "c/stale", "fetched_at": now - 4 * day,   # too old: dropped
+         "signal": {"insider_stars": 99}, "meta": {}},
+        "junk",
+    ]
+    out = cli._insiders_from_cache(rows, 10, now=now)
+    assert [r["entity_id"] for r in out] == ["b/big", "a/small"]  # stars desc, stale gone
+    assert out[1]["canonical_repo"] == "a/small"                  # rebuilt fields
+    assert out[1]["url"] == "https://github.com/a/small"
+    assert out[0]["source"] == "insiders"
+    assert cli._insiders_from_cache(rows, 1, now=now)[0]["entity_id"] == "b/big"  # bounded
+    assert cli._insiders_from_cache([], 10, now=now) == []
