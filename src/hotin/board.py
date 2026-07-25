@@ -254,16 +254,29 @@ def paper_rows(ranked: List[dict]) -> List[dict]:
     return rows
 
 
-def news_rows(items: List[dict]) -> List[dict]:
+def news_rows(items: List[dict], note: Optional[str] = None) -> List[dict]:
+    """Curated headlines with receipts: date + HN points; badges say whether
+    the link IS the announcement ("primary") or expert commentary ("analysis").
+    ``note`` appends one unranked provenance row (the sweep, stated)."""
     rows: List[dict] = []
-    for item in items:
+    for i, item in enumerate(items, 1):
         if not isinstance(item, dict):
             continue
-        # AINews titles are mostly the "not much happened today" filler, so the
-        # date is the useful, clickable handle; fall back to the title if dateless.
-        date = (_meta(item).get("date") or "")[:16]
-        rows.append({"rank": "·", "name": date or item.get("name") or "?",
-                     "url": item.get("url"), "meta": None, "receipts": [], "badges": []})
+        receipts: List[Dict[str, str]] = []
+        date = _date_label(_meta(item).get("date"))
+        if date:
+            receipts.append({"label": date, "kind": "age"})
+        pts = finite_int(_sig(item).get("hn_points"), 0)
+        if pts:
+            receipts.append({"label": "{} pts".format(_num(pts)), "kind": "hn"})
+        kind = _meta(item).get("kind")
+        badges = [{"label": kind, "hot": False}] if kind in ("primary", "analysis") else []
+        rows.append({"rank": i, "name": item.get("name") or "?",
+                     "url": item.get("url"), "meta": _clip(_meta(item).get("publisher"), 40),
+                     "receipts": receipts, "badges": badges})
+    if rows and isinstance(note, str) and note.strip():
+        rows.append({"rank": "·", "name": note.strip(), "url": None,
+                     "meta": None, "receipts": [], "badges": []})
     return rows
 
 
@@ -345,7 +358,17 @@ def demo() -> None:
                        "meta": {"paper_summary": "  A short abstract. ", "linked_repo": "a/b"}}])
     assert pap[0]["meta"] == "A short abstract."
     assert any(r["label"].startswith("published Jul") for r in pap[0]["receipts"])
-    assert news_rows([{"name": "hi", "meta": {"date": "Fri, 18 Jul 2026"}}])[0]["rank"] == "·"
+    nws = news_rows([{"name": "GPT-6 ships", "url": "u",
+                      "signal": {"hn_points": 1195},
+                      "meta": {"date": "2026-07-22T13:00:00Z", "publisher": "OpenAI",
+                               "kind": "primary"}}], note="swept 12/12 feeds")
+    assert nws[0]["rank"] == 1 and nws[0]["name"] == "GPT-6 ships" and nws[0]["meta"] == "OpenAI"
+    nws_labels = [x["label"] for x in nws[0]["receipts"]]
+    assert any("pts" in x for x in nws_labels) and any("Jul" in x for x in nws_labels), nws_labels
+    assert nws[0]["badges"] == [{"label": "primary", "hot": False}]
+    assert nws[-1] == {"rank": "·", "name": "swept 12/12 feeds", "url": None,
+                       "meta": None, "receipts": [], "badges": []}
+    assert news_rows([]) == []  # empty window: no orphan provenance row
     print("board demo: ok")
 
 

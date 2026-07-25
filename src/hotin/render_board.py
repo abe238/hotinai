@@ -51,6 +51,8 @@ _BADGE_ANSI = {
     "smart-money": "220",
     "paper-backed": "45",
     "trending": "99",
+    "primary": "220",   # the lab's own post — gold, like smart money
+    "analysis": "45",   # named-expert commentary — ink blue, like papers
 }
 
 # badge label -> badge CSS class on the web board.
@@ -59,6 +61,8 @@ _BADGE_CLASS = {
     "smart-money": "smart",
     "paper-backed": "paper",
     "trending": "trend",
+    "primary": "smart",
+    "analysis": "paper",
 }
 
 _RANK_ANSI = "38;5;208"  # heat/orange

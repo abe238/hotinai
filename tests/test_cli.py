@@ -231,9 +231,11 @@ def test_refresh_sets_zero_ttl_and_reports_health(monkeypatch, capsys):
     monkeypatch.setattr(cli.hfmodels, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
     monkeypatch.setattr(cli.hfpapers, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
     monkeypatch.setattr(cli.insiders, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
+    monkeypatch.setattr(cli.rssnews, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
     monkeypatch.setattr(cli.hfpapers, "backfill_summaries", lambda cache, **kw: 0)
     monkeypatch.setattr(cli.hfmodels, "backfill_descriptions", lambda cache, **kw: 0)
     monkeypatch.setattr(cli.insiders, "backfill_created_at", lambda cache, *a, **kw: 0)
+    monkeypatch.setattr(cli.rssnews, "backfill_hn_points", lambda cache, **kw: 0)
 
     # refresh records a snapshot + is strict about persistence: MemoryCache -> exit 1.
     assert main(["refresh"]) == 1
@@ -375,10 +377,12 @@ def test_ingest_records_observations_and_is_strict_about_persistence(monkeypatch
          "signal": {"model_downloads": 5, "model_likes": 2}, "meta": {}}], "status": "ok", "detail": None})
     monkeypatch.setattr(cli.hfpapers, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
     monkeypatch.setattr(cli.insiders, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
+    monkeypatch.setattr(cli.rssnews, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
     # keep the self-heal passes off the network in unit tests
     monkeypatch.setattr(cli.hfpapers, "backfill_summaries", lambda cache, **kw: 0)
     monkeypatch.setattr(cli.hfmodels, "backfill_descriptions", lambda cache, **kw: 0)
     monkeypatch.setattr(cli.insiders, "backfill_created_at", lambda cache, *a, **kw: 0)
+    monkeypatch.setattr(cli.rssnews, "backfill_hn_points", lambda cache, **kw: 0)
 
     # MemoryCache cannot persist a scheduled run -> exit 1 (strict).
     assert main(["refresh", "--json"]) == 1
@@ -401,10 +405,11 @@ def test_brief_json_summarizes_repos_models_papers(monkeypatch, capsys):
     cache.upsert({"entity_type": "paper", "entity_id": "2601.1", "url": "u", "name": "A Paper", "source": "hfpapers",
                   "signal_json": {"signal": {"paper_upvotes": 42}, "meta": {}}, "fetched_at": now})
     monkeypatch.setattr(cli, "open_cache", lambda: cache)
-    feed = ('<rss><channel><item><title>Kimi K3 release</title>'
-            '<link>https://news.smol.ai/issues/1</link>'
-            '<pubDate>Fri, 17 Jul 2026 00:00:00 GMT</pubDate></item></channel></rss>')
-    monkeypatch.setattr(cli.smolai, "_request", lambda: feed)
+    monkeypatch.setattr(cli.rssnews, "fetch", lambda **kwargs: {"records": [
+        {"entity_type": "news", "entity_id": "https://openai.com/news/1",
+         "url": "https://openai.com/news/1", "name": "Kimi K3 release", "source": "rssnews",
+         "signal": {}, "meta": {"date": "2026-07-17T00:00:00Z", "publisher": "OpenAI",
+                                "kind": "primary"}}], "status": "ok", "detail": "1/12 feeds"})
 
     assert main(["brief", "--json"]) == 0
     out = json.loads(capsys.readouterr().out)
@@ -450,22 +455,27 @@ def test_setup_schedule_failure_is_reported_not_raised(monkeypatch, capsys):
 
 def test_brief_empty_store_is_friendly(monkeypatch, capsys):
     monkeypatch.setattr(cli, "open_cache", MemoryCache)
-    monkeypatch.setattr(cli.smolai, "_request", lambda: None)  # offline: no news section
+    monkeypatch.setattr(cli.rssnews, "fetch",  # offline: no news section
+                        lambda **kwargs: {"records": [], "status": "error", "detail": "0/12 feeds"})
     monkeypatch.setattr(cli.frontier, "fetch", lambda **kwargs: {"records": [], "status": "empty", "detail": None})
     assert main(["brief"]) == 0
     assert "Run `hotin refresh`" in capsys.readouterr().out
 
 
-def test_news_command_shows_smol_headlines(monkeypatch, capsys):
-    feed = ('<rss><channel><item><title>Kimi K3 release</title>'
-            '<link>https://news.smol.ai/issues/1</link>'
-            '<pubDate>Fri, 17 Jul 2026 00:00:00 GMT</pubDate></item></channel></rss>')
-    monkeypatch.setattr(cli.smolai, "_request", lambda: feed)
+def test_news_command_shows_curated_headlines(monkeypatch, capsys):
+    monkeypatch.setattr(cli.rssnews, "fetch", lambda **kwargs: {"records": [
+        {"entity_type": "news", "entity_id": "https://openai.com/news/k3",
+         "url": "https://openai.com/news/k3", "name": "Kimi K3 release", "source": "rssnews",
+         "signal": {}, "meta": {"date": "2026-07-17T00:00:00Z", "publisher": "OpenAI",
+                                "kind": "primary"}}], "status": "ok", "detail": "12/12 feeds"})
     assert main(["news", "--json", "--limit", "5"]) == 0
     out = json.loads(capsys.readouterr().out)
     assert out["news"][0]["title"] == "Kimi K3 release"
-    assert out["news"][0]["url"] == "https://news.smol.ai/issues/1"
+    assert out["news"][0]["url"] == "https://openai.com/news/k3"
+    assert out["news"][0]["publisher"] == "OpenAI"
+    assert out["news"][0]["kind"] == "primary"
 
-    monkeypatch.setattr(cli.smolai, "_request", lambda: None)
-    assert main(["news"]) == 1  # source unavailable
+    monkeypatch.setattr(cli.rssnews, "fetch",
+                        lambda **kwargs: {"records": [], "status": "error", "detail": "0/12 feeds"})
+    assert main(["news"]) == 1  # every feed down
     assert "unavailable" in capsys.readouterr().err

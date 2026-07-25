@@ -18,7 +18,8 @@ from .coerce import finite_float, finite_int
 from .config import config_dir, env_path, load_config
 from .render import color, hyperlink, sanitize
 from .sources import (frontier, github, hfmodels, hfpapers, hn,
-                      insiders, npm, trends, collections, reddit, smolai, youtube)
+                      insiders, npm, trends, collections, reddit, rssnews,
+                      smolai, youtube)
 
 
 # Entities (the nouns, each self-ranked) + MANAGE verbs. The raw single-source
@@ -742,12 +743,18 @@ def _export(arguments: argparse.Namespace) -> int:
     # so the live fetch gets dated (the 7d/60d windows key on this).
     with _cache_session() as _c:
         _dates = {}
+        _news_pts = {}
         for _raw in _c.get_all():
             _r = engine._decoded_record(_raw)
             if _r and _r.get("source") == insiders.SOURCE:
                 _created = (_r.get("signal") or {}).get("created_at")
                 if _created:
                     _dates[_r.get("entity_id")] = _created
+            # news rows: the healed HN points (the crowd receipt on a headline)
+            if _r and _r.get("source") == rssnews.SOURCE:
+                _pts = (_r.get("signal") or {}).get("hn_points")
+                if _pts is not None:
+                    _news_pts[_r.get("entity_id")] = _pts
     for rec in ins:
         if rec.setdefault("signal", {}).get("created_at") is None:
             known_date = _dates.get(rec.get("canonical_repo"))
@@ -767,8 +774,21 @@ def _export(arguments: argparse.Namespace) -> int:
         kmeta = known.get("meta") if isinstance(known.get("meta"), dict) else {}
         if kmeta.get("velocity_per_day") is not None:
             rec.setdefault("meta", {}).setdefault("velocity_per_day", kmeta["velocity_per_day"])
-    news_text = smolai._request()
-    news = smolai.parse_news(news_text)[:limit] if news_text else []
+    # News: curated primary + expert feeds, ranked by evidence — same-day items
+    # order by HN points (the crowd receipt, healed into the cache by refresh),
+    # with the lab's own post ("primary") ahead of commentary on ties.
+    news_result = rssnews.fetch(limit=limit)
+    news = news_result.get("records") if isinstance(news_result.get("records"), list) else []
+    for rec in news:
+        pts = _news_pts.get(rec.get("entity_id"))
+        if pts:
+            rec.setdefault("signal", {})["hn_points"] = pts
+    news.sort(key=lambda r: (
+        -int(rssnews._epoch((r.get("meta") or {}).get("date")) // 86400),
+        -finite_int((r.get("signal") or {}).get("hn_points"), 0),
+        (r.get("meta") or {}).get("kind") != "primary"))
+    news_note = "swept {} · lab blogs + named experts · pts = HN".format(
+        news_result.get("detail") or "curated feeds")
     rising = _rising_ranked(config, 30)
     rising7 = _rising_ranked(config, 30, max_age=7)
 
@@ -802,7 +822,8 @@ def _export(arguments: argparse.Namespace) -> int:
         "insiders": board.insider_rows(ins60), "insiders7": board.insider_rows(ins7),
         "models": board.model_rows(models60), "models7": board.model_rows(models7),
         "papers": board.paper_rows(papers60), "papers7": board.paper_rows(papers7),
-        "news": board.news_rows(news60), "news7": board.news_rows(news7),
+        "news": board.news_rows(news60, note=news_note),
+        "news7": board.news_rows(news7, note=news_note),
     }
     stamp = datetime.date.today().isoformat()
     stamp_pt = _pacific_stamp()
@@ -939,10 +960,10 @@ def _show_repo(repo: dict, arguments: argparse.Namespace) -> None:
 
 
 def _news(arguments: argparse.Namespace) -> int:
-    """Recent AI news headlines from smol.ai/AINews, most recent first.
+    """AI news headlines from curated primary + expert feeds, most recent first.
 
-    Surfaces titles + links (attribution to AINews / Latent Space); it never
-    re-serves their editorial prose.
+    Surfaces titles + links straight to the primary artifact (a lab's own post,
+    a named expert's write-up); it never re-serves anyone's editorial prose.
     """
     limit = _normal_limit(arguments)
     if limit is None:
@@ -950,21 +971,22 @@ def _news(arguments: argparse.Namespace) -> int:
     cutoff, code = _since_cutoff(arguments)
     if code:
         return code
-    try:
-        text = smolai._request()
-    except Exception:
-        text = None
-    parsed = smolai.parse_news(text) if text is not None else []
+    result = rssnews.fetch(limit=200)
+    ok = result.get("status") == "ok"
+    parsed = result.get("records") if isinstance(result.get("records"), list) else []
     if cutoff is not None:
         parsed = [it for it in parsed if _dated_within((it.get("meta") or {}).get("date"), cutoff)]
     items = parsed[:limit]
     if arguments.json:
-        _dump_json({"news": [{"title": item["name"], "url": item["url"], "date": item["meta"].get("date")} for item in items],
-                    "status": "ok" if text is not None else "error"})
+        _dump_json({"news": [{"title": item["name"], "url": item["url"],
+                              "date": item["meta"].get("date"),
+                              "publisher": item["meta"].get("publisher"),
+                              "kind": item["meta"].get("kind")} for item in items],
+                    "status": result.get("status"), "detail": result.get("detail")})
         _attribution(arguments)
-        return 0 if text is not None else 1
-    if text is None:
-        print("news source (smol.ai) unavailable", file=sys.stderr)
+        return 0 if ok else 1
+    if not ok and not items:
+        print("news feeds unavailable ({})".format(_safe(str(result.get("detail") or "no feeds"))), file=sys.stderr)
         _attribution(arguments)
         return 1
     enabled = _color_enabled(arguments)
@@ -972,10 +994,11 @@ def _news(arguments: argparse.Namespace) -> int:
         print("No AI news headlines right now.")
     else:
         for item in items:
-            date = _safe(item["meta"].get("date", ""))[:16]
+            date = _safe(item["meta"].get("date") or "")[:10]
+            publisher = _safe(item["meta"].get("publisher") or "?")
             title = hyperlink(color(_safe(item["name"]), "1", enabled), item["url"] if isinstance(item.get("url"), str) else "", enabled)
-            print("{}  {}".format(color(date, "2", enabled), title))
-        print(color("via AINews (smol.ai / Latent Space) — news.smol.ai", "2", enabled))
+            print("{}  {}  {}".format(color(date, "2", enabled), color(publisher, "38;5;208", enabled), title))
+        print(color("via {} — lab blogs + named experts".format(_safe(str(result.get("detail") or "curated feeds"))), "2", enabled))
     _attribution(arguments)
     return 0
 
@@ -1003,13 +1026,11 @@ def _brief(arguments: argparse.Namespace) -> int:
             (repo for repo in repos if repo.get("meta", {}).get("rising")),
             key=lambda repo: -_finite(repo.get("meta", {}).get("velocity_per_day")),
         )[:5]
-        # News is a best-effort live augmentation (smol.ai / AINews) — the one
-        # section not sourced from the local store. A failed fetch just omits it.
-        try:
-            news_text = smolai._request()
-        except Exception:
-            news_text = None
-        news = smolai.parse_news(news_text)[:6] if news_text else []
+        # News is a best-effort live augmentation (curated primary + expert
+        # feeds) — the one section not sourced from the local store. A failed
+        # sweep just omits it.
+        news_result = rssnews.fetch(limit=6)
+        news = news_result.get("records") if isinstance(news_result.get("records"), list) else []
         releases, _rel_detail = _frontier_releases(5)
 
         if arguments.json:
@@ -1075,9 +1096,9 @@ def _brief(arguments: argparse.Namespace) -> int:
                 if isinstance(repo, str) and repo:
                     print("        {}".format(hyperlink(color(repo, "2", enabled), "https://github.com/{}".format(repo), enabled)))
         if news:
-            header("AI news (smol.ai / AINews)")
+            header("AI news (lab blogs + named experts)")
             for item in news:
-                date = _safe(item["meta"].get("date", ""))[:16]
+                date = _safe(item["meta"].get("date") or "")[:10]
                 title = hyperlink(color(_safe(item["name"])[:70], "1", enabled),
                                   item["url"] if isinstance(item.get("url"), str) else "", enabled)
                 print("  {}  {}".format(color(date, "2", enabled), title))
@@ -1118,11 +1139,14 @@ def _refresh(arguments: argparse.Namespace) -> int:
         # insiders rows: the healed repo creation date (Digg never sends one)
         if _rec.get("source") == insiders.SOURCE and (_rec.get("signal") or {}).get("created_at") is not None:
             preserved_sig[_key] = {"created_at": (_rec.get("signal") or {})["created_at"]}
+        # news rows: the healed HN points (presence of the key = already checked)
+        if _rec.get("source") == rssnews.SOURCE and "hn_points" in (_rec.get("signal") or {}):
+            preserved_sig[_key] = {"hn_points": (_rec.get("signal") or {})["hn_points"]}
     try:
         statuses = list(engine.fetch_all(config, limit=_INGEST_DEPTH, cache=cache, ttl=0))
-        # insiders joins the persisted sources so its rows can be healed
-        # (repo creation dates) and windowed like everything else.
-        extra_adapters = [insiders]
+        # insiders and rssnews join the persisted sources so their rows can be
+        # healed (repo creation dates / HN points) and windowed like the rest.
+        extra_adapters = [insiders, rssnews]
         for adapter, _entity_type, _weights in (
                 list(_ENTITY_COMMANDS.values()) + [(a, None, None) for a in extra_adapters]):
             try:
@@ -1155,9 +1179,10 @@ def _refresh(arguments: argparse.Namespace) -> int:
         gh_token = _config_get(config, "GITHUB_TOKEN")
         healed_dates = insiders.backfill_created_at(
             cache, gh_token if isinstance(gh_token, str) and gh_token.strip() else None)
-        if (healed or healed_models or healed_dates) and not arguments.quiet and not arguments.json:
-            print("healed {} paper summaries, {} model descriptions, {} insider repo dates".format(
-                healed, healed_models, healed_dates))
+        healed_hn = rssnews.backfill_hn_points(cache)
+        if (healed or healed_models or healed_dates or healed_hn) and not arguments.quiet and not arguments.json:
+            print("healed {} paper summaries, {} model descriptions, {} insider repo dates, {} news HN checks".format(
+                healed, healed_models, healed_dates, healed_hn))
         cache.record_observations(engine.observations_from_cache(cache.get_all(), run_id, now))
         cache.prune_observations(now - _RETENTION_DAYS * 86400.0)
         persisted = not isinstance(cache, MemoryCache) and getattr(cache, "_fallback", None) is None
