@@ -118,3 +118,66 @@ def test_fetch_sweeps_feeds_and_reports_provenance(monkeypatch):
     monkeypatch.setattr(rssnews, "_request_feed", lambda url: None)
     dead = rssnews.fetch(limit=10)
     assert dead["status"] == "error" and dead["records"] == []
+
+
+def test_recheck_rescores_only_due_rows_and_flags_rising(monkeypatch):
+    now = rssnews._epoch("2026-07-25T12:00:00Z")
+    day = 86400.0
+    cache = FakeCache([
+        # 3d old, checked 24h ago, climbing hard -> rising
+        _news_row("https://a.test/hot", {"hn_points": 31, "hn_checked_at": now - day},
+                  "2026-07-22T12:00:00Z"),
+        # 3d old, checked 24h ago, +3 pts = drift, not rising
+        _news_row("https://a.test/flat", {"hn_points": 50, "hn_checked_at": now - day},
+                  "2026-07-22T12:00:00Z"),
+        # checked 1h ago -> cooldown, skipped
+        _news_row("https://a.test/cool", {"hn_points": 5, "hn_checked_at": now - 3600},
+                  "2026-07-22T12:00:00Z"),
+        # 20d old -> out of the re-check window
+        _news_row("https://a.test/old", {"hn_points": 900, "hn_checked_at": now - day},
+                  "2026-07-05T12:00:00Z"),
+        # 1h old -> too young, the first news cycle is still running
+        _news_row("https://a.test/new", {"hn_points": 2, "hn_checked_at": now - day},
+                  "2026-07-25T11:00:00Z"),
+        # never first-checked -> backfill's job, not recheck's
+        _news_row("https://a.test/unchecked", {}, "2026-07-22T12:00:00Z"),
+    ])
+    monkeypatch.setattr(rssnews, "fetch_hn_points",
+                        lambda url, **kw: {"https://a.test/hot": 412, "https://a.test/flat": 53}.get(url, 0))
+    assert rssnews.recheck_hn_points(cache, now=now) == 2
+    by_id = {u["entity_id"]: u["signal_json"]["signal"] for u in cache.upserts}
+    assert set(by_id) == {"https://a.test/hot", "https://a.test/flat"}
+    assert by_id["https://a.test/hot"] == {"hn_points": 412, "hn_points_delta": 381,
+                                           "hn_rising": True, "hn_checked_at": now}
+    assert by_id["https://a.test/flat"]["hn_rising"] is False
+    assert by_id["https://a.test/flat"]["hn_points"] == 53
+
+
+def test_recheck_treats_pre_stamp_rows_as_stale_and_never_loses_points(monkeypatch):
+    now = rssnews._epoch("2026-07-25T12:00:00Z")
+    cache = FakeCache([
+        _news_row("https://a.test/legacy", {"hn_points": 100}, "2026-07-22T12:00:00Z"),
+    ])
+    monkeypatch.setattr(rssnews, "fetch_hn_points", lambda url, **kw: 40)  # algolia hiccup low-ball
+    assert rssnews.recheck_hn_points(cache, now=now) == 1
+    sig = cache.upserts[0]["signal_json"]["signal"]
+    assert sig["hn_points"] == 100 and sig["hn_points_delta"] == 0 and sig["hn_rising"] is False
+
+
+def test_cluster_stories_conservative_matching():
+    def item(title, publisher, date):
+        return {"name": title, "meta": {"publisher": publisher, "date": date, "kind": "primary"}}
+    same_a = item("FLUX 3 multimodal flow models announced", "Latent Space", "2026-07-24T00:00:00Z")
+    same_b = item("Black Forest Labs ships FLUX 3 multimodal weights", "Hugging Face", "2026-07-23T00:00:00Z")
+    lone = item("Aurora 1.5 weather foundation models", "Microsoft Research", "2026-07-23T00:00:00Z")
+    generic = item("Weekly open models roundup", "Interconnects", "2026-07-23T00:00:00Z")
+    same_pub = item("FLUX 3 multimodal flow models, part two", "Latent Space", "2026-07-24T00:00:00Z")
+    far_away = item("FLUX 3 multimodal flow models retrospective", "Import AI", "2026-06-20T00:00:00Z")
+    records = [same_a, same_b, lone, generic, same_pub, far_away]
+    rssnews.cluster_stories(records)
+    assert same_a["meta"]["sources_count"] >= 2
+    assert same_b["meta"]["sources_count"] == same_a["meta"]["sources_count"]
+    assert "sources_count" not in lone["meta"]
+    assert "sources_count" not in generic["meta"]
+    assert "sources_count" not in far_away["meta"]  # outside the day gap
+    rssnews.cluster_stories("garbage")  # never raises

@@ -744,17 +744,32 @@ def _export(arguments: argparse.Namespace) -> int:
     with _cache_session() as _c:
         _dates = {}
         _news_pts = {}
+        _cached_ins = []
         for _raw in _c.get_all():
             _r = engine._decoded_record(_raw)
             if _r and _r.get("source") == insiders.SOURCE:
                 _created = (_r.get("signal") or {}).get("created_at")
                 if _created:
                     _dates[_r.get("entity_id")] = _created
+                _cached_ins.append(_r)
             # news rows: the healed HN points (the crowd receipt on a headline)
             if _r and _r.get("source") == rssnews.SOURCE:
-                _pts = (_r.get("signal") or {}).get("hn_points")
-                if _pts is not None:
-                    _news_pts[_r.get("entity_id")] = _pts
+                _hn = {k: v for k, v in (_r.get("signal") or {}).items() if k.startswith("hn_")}
+                if _hn:
+                    _news_pts[_r.get("entity_id")] = _hn
+    if not ins and _cached_ins:
+        # The Digg fetch flaked; a baker must never publish an empty tab while
+        # the cache holds a recent picture (refresh persists insiders rows).
+        # Bounded staleness: only rows fetched in the last 3 days qualify.
+        _recent = time.time() - 3 * 86400.0
+        _cached_ins = [r for r in _cached_ins if finite_float(r.get("fetched_at"), 0.0) >= _recent]
+        _cached_ins.sort(key=lambda r: -finite_int((r.get("signal") or {}).get("insider_stars"), 0))
+        ins = [{"entity_type": "repo", "entity_id": r.get("entity_id"),
+                "canonical_repo": r.get("canonical_repo") or r.get("entity_id"),
+                "url": r.get("url") or "https://github.com/{}".format(r.get("entity_id")),
+                "name": r.get("name") or r.get("entity_id"), "source": insiders.SOURCE,
+                "signal": r.get("signal") or {}, "meta": r.get("meta") or {}}
+               for r in _cached_ins[:limit]]
     for rec in ins:
         if rec.setdefault("signal", {}).get("created_at") is None:
             known_date = _dates.get(rec.get("canonical_repo"))
@@ -780,14 +795,23 @@ def _export(arguments: argparse.Namespace) -> int:
     news_result = rssnews.fetch(limit=limit)
     news = news_result.get("records") if isinstance(news_result.get("records"), list) else []
     for rec in news:
-        pts = _news_pts.get(rec.get("entity_id"))
-        if pts:
-            rec.setdefault("signal", {})["hn_points"] = pts
-    news.sort(key=lambda r: (
-        -int(rssnews._epoch((r.get("meta") or {}).get("date")) // 86400),
-        -finite_int((r.get("signal") or {}).get("hn_points"), 0),
-        (r.get("meta") or {}).get("kind") != "primary"))
-    news_note = "swept {} · lab blogs + named experts · pts = HN".format(
+        hn = _news_pts.get(rec.get("entity_id"))
+        if hn:
+            rec.setdefault("signal", {}).update(hn)
+    rssnews.cluster_stories(news)
+
+    def _news_rank(r):
+        sig = r.get("signal") if isinstance(r.get("signal"), dict) else {}
+        day = int(rssnews._epoch((r.get("meta") or {}).get("date")) // 86400)
+        # a rising story ranks as if two days younger: the crowd's verdict
+        # outweighs pure recency (the mock's "2d-old rocket beats 2h-old quote")
+        if sig.get("hn_rising"):
+            day += 2
+        return (-day, -finite_int(sig.get("hn_points"), 0),
+                (r.get("meta") or {}).get("kind") != "primary")
+
+    news.sort(key=_news_rank)
+    news_note = "swept {} · lab blogs + named experts · pts = HN · rising = still climbing days later".format(
         news_result.get("detail") or "curated feeds")
     rising = _rising_ranked(config, 30)
     rising7 = _rising_ranked(config, 30, max_age=7)
@@ -1139,9 +1163,11 @@ def _refresh(arguments: argparse.Namespace) -> int:
         # insiders rows: the healed repo creation date (Digg never sends one)
         if _rec.get("source") == insiders.SOURCE and (_rec.get("signal") or {}).get("created_at") is not None:
             preserved_sig[_key] = {"created_at": (_rec.get("signal") or {})["created_at"]}
-        # news rows: the healed HN points (presence of the key = already checked)
-        if _rec.get("source") == rssnews.SOURCE and "hn_points" in (_rec.get("signal") or {}):
-            preserved_sig[_key] = {"hn_points": (_rec.get("signal") or {})["hn_points"]}
+        # news rows: the healed HN receipt set (points, stamp, delta, rising)
+        if _rec.get("source") == rssnews.SOURCE:
+            _hn = {k: v for k, v in (_rec.get("signal") or {}).items() if k.startswith("hn_")}
+            if _hn:
+                preserved_sig[_key] = _hn
     try:
         statuses = list(engine.fetch_all(config, limit=_INGEST_DEPTH, cache=cache, ttl=0))
         # insiders and rssnews join the persisted sources so their rows can be
@@ -1180,9 +1206,10 @@ def _refresh(arguments: argparse.Namespace) -> int:
         healed_dates = insiders.backfill_created_at(
             cache, gh_token if isinstance(gh_token, str) and gh_token.strip() else None)
         healed_hn = rssnews.backfill_hn_points(cache)
-        if (healed or healed_models or healed_dates or healed_hn) and not arguments.quiet and not arguments.json:
-            print("healed {} paper summaries, {} model descriptions, {} insider repo dates, {} news HN checks".format(
-                healed, healed_models, healed_dates, healed_hn))
+        rechecked = rssnews.recheck_hn_points(cache)
+        if (healed or healed_models or healed_dates or healed_hn or rechecked) and not arguments.quiet and not arguments.json:
+            print("healed {} paper summaries, {} model descriptions, {} insider repo dates, {} news HN checks (+{} rechecks)".format(
+                healed, healed_models, healed_dates, healed_hn, rechecked))
         cache.record_observations(engine.observations_from_cache(cache.get_all(), run_id, now))
         cache.prune_observations(now - _RETENTION_DAYS * 86400.0)
         persisted = not isinstance(cache, MemoryCache) and getattr(cache, "_fallback", None) is None

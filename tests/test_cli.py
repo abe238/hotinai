@@ -236,6 +236,7 @@ def test_refresh_sets_zero_ttl_and_reports_health(monkeypatch, capsys):
     monkeypatch.setattr(cli.hfmodels, "backfill_descriptions", lambda cache, **kw: 0)
     monkeypatch.setattr(cli.insiders, "backfill_created_at", lambda cache, *a, **kw: 0)
     monkeypatch.setattr(cli.rssnews, "backfill_hn_points", lambda cache, **kw: 0)
+    monkeypatch.setattr(cli.rssnews, "recheck_hn_points", lambda cache, **kw: 0)
 
     # refresh records a snapshot + is strict about persistence: MemoryCache -> exit 1.
     assert main(["refresh"]) == 1
@@ -383,6 +384,7 @@ def test_ingest_records_observations_and_is_strict_about_persistence(monkeypatch
     monkeypatch.setattr(cli.hfmodels, "backfill_descriptions", lambda cache, **kw: 0)
     monkeypatch.setattr(cli.insiders, "backfill_created_at", lambda cache, *a, **kw: 0)
     monkeypatch.setattr(cli.rssnews, "backfill_hn_points", lambda cache, **kw: 0)
+    monkeypatch.setattr(cli.rssnews, "recheck_hn_points", lambda cache, **kw: 0)
 
     # MemoryCache cannot persist a scheduled run -> exit 1 (strict).
     assert main(["refresh", "--json"]) == 1

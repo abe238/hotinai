@@ -53,6 +53,7 @@ _BADGE_ANSI = {
     "trending": "99",
     "official": "220",  # the lab's own post — gold, like smart money
     "opinion": "45",    # named-expert commentary — ink blue, like papers
+    "rising": "208",    # still climbing days later — heat orange
 }
 
 # badge label -> badge CSS class on the web board.
@@ -63,6 +64,7 @@ _BADGE_CLASS = {
     "trending": "trend",
     "official": "smart",
     "opinion": "paper",
+    "rising": "rise",
 }
 
 _RANK_ANSI = "38;5;208"  # heat/orange

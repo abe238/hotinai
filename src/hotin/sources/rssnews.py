@@ -18,6 +18,7 @@ import gzip
 import html
 import json
 import re
+import time
 import urllib.parse
 import urllib.request
 from typing import Any, Dict, List, Optional
@@ -241,10 +242,9 @@ def backfill_hn_points(cache: Any, *, max_calls: int = 25) -> int:
     """Heal cached news rows with the crowd receipt (HN points), newest first.
 
     Presence of the ``hn_points`` key marks a row as checked (0 = HN never saw
-    it), so each story costs one Algolia call ever. Transport failures leave the
-    key absent and retry next run. Bounded; never raises; returns rows healed.
-    ponytail: points freeze at first check — re-scoring stories as they climb HN
-    would need a staleness stamp; add one if frozen counts start to mislead."""
+    it); ``hn_checked_at`` stamps when, so ``recheck_hn_points`` can re-score
+    stories still climbing days later. Transport failures leave the key absent
+    and retry next run. Bounded; never raises; returns rows healed."""
     healed = 0
     try:
         pending = []
@@ -269,6 +269,7 @@ def backfill_hn_points(cache: Any, *, max_calls: int = 25) -> int:
             if points is None:
                 continue
             signal["hn_points"] = points
+            signal["hn_checked_at"] = time.time()
             payload["signal"] = signal
             updated = dict(raw)
             updated["signal_json"] = payload
@@ -278,6 +279,137 @@ def backfill_hn_points(cache: Any, *, max_calls: int = 25) -> int:
     except Exception:
         return healed
     return healed
+
+
+RECHECK_MIN_AGE_D = 2.0     # a story must survive its news cycle first
+RECHECK_MAX_AGE_D = 14.0    # after two weeks the verdict is in
+RECHECK_COOLDOWN_H = 20.0   # at most one re-score per story per day
+# ponytail: +10 pts filters random drift on old stories; tune if it misses
+# slow burners or badges noise.
+RISING_MIN_DELTA = 10
+
+
+def recheck_hn_points(cache: Any, *, max_calls: int = 15, now: Optional[float] = None) -> int:
+    """Re-score checked stories 2-14 days old: the crowd receipt, over time.
+
+    A story whose points are still climbing days after it shipped gets
+    ``hn_rising`` (the news tab's "rising" badge) and ``hn_points_delta``
+    (the visible climb since last check); one that flatlines loses the badge.
+    Rows checked before the stamp existed count as stale. Bounded; never
+    raises; returns rows re-scored."""
+    healed = 0
+    clock = time.time() if now is None else now
+    try:
+        due = []
+        for raw in cache.get_all():
+            if not isinstance(raw, dict) or raw.get("entity_type") != "news":
+                continue
+            if raw.get("source") != SOURCE:
+                continue
+            payload = raw.get("signal_json")
+            try:
+                payload = json.loads(payload) if isinstance(payload, str) else (payload or {})
+            except (TypeError, ValueError):
+                continue
+            signal = payload.get("signal") if isinstance(payload.get("signal"), dict) else {}
+            if "hn_points" not in signal:
+                continue  # first check pending; backfill owns it
+            published = _epoch((payload.get("meta") or {}).get("date"))
+            if not published:
+                continue
+            age_days = (clock - published) / 86400.0
+            if not (RECHECK_MIN_AGE_D <= age_days <= RECHECK_MAX_AGE_D):
+                continue
+            checked_at = signal.get("hn_checked_at")
+            if isinstance(checked_at, (int, float)) and (clock - checked_at) < RECHECK_COOLDOWN_H * 3600.0:
+                continue
+            due.append((-_epoch((payload.get("meta") or {}).get("date")), raw, payload, signal))
+        due.sort(key=lambda item: item[0])
+        for _, raw, payload, signal in due[:max_calls]:
+            points = fetch_hn_points(raw.get("entity_id"))
+            if points is None:
+                continue
+            previous = finite_int(signal.get("hn_points"), 0) or 0
+            delta = max(0, points - previous)
+            signal["hn_points"] = max(points, previous)
+            signal["hn_points_delta"] = delta
+            signal["hn_rising"] = delta >= RISING_MIN_DELTA
+            signal["hn_checked_at"] = clock
+            payload["signal"] = signal
+            updated = dict(raw)
+            updated["signal_json"] = payload
+            updated["fetched_at"] = raw.get("fetched_at")  # heal, keep age
+            cache.upsert(updated)
+            healed += 1
+    except Exception:
+        return healed
+    return healed
+
+
+# words too generic to anchor a story match across publishers
+_STORY_STOPWORDS = frozenset(
+    "introducing announcing launching launch release released releases update updates "
+    "official model models open source with from this that what your into using "
+    "https quoting notes weekly daily ainews".split())
+_TOKEN_RE = re.compile(r"[a-z0-9][a-z0-9.-]{3,}")
+
+
+def _anchor_tokens(title: Any) -> frozenset:
+    """The distinctive words of a headline (>=4 chars, minus news boilerplate)."""
+    if not isinstance(title, str):
+        return frozenset()
+    return frozenset(t for t in _TOKEN_RE.findall(title.lower()) if t not in _STORY_STOPWORDS)
+
+
+def cluster_stories(records: Any, *, max_gap_days: float = 4.0) -> None:
+    """Mark stories independently covered by 2+ publishers (in place).
+
+    Conservative on purpose: two items match only when they come from
+    DIFFERENT publishers, sit within ``max_gap_days`` of each other, and share
+    at least two anchor tokens covering half the smaller title. The honest
+    failure mode is a missed cluster, never an invented one. Sets
+    ``meta.sources_count`` on every member of a matched cluster. Never raises.
+    """
+    try:
+        items = []
+        for record in records if isinstance(records, list) else []:
+            if not isinstance(record, dict):
+                continue
+            meta = record.get("meta") if isinstance(record.get("meta"), dict) else {}
+            anchors = _anchor_tokens(record.get("name"))
+            if anchors:
+                items.append((record, meta.get("publisher"), _epoch(meta.get("date")), anchors))
+        parent = list(range(len(items)))
+
+        def find(i):
+            while parent[i] != i:
+                parent[i] = parent[parent[i]]
+                i = parent[i]
+            return i
+
+        for i in range(len(items)):
+            for j in range(i + 1, len(items)):
+                _, pub_i, when_i, anchors_i = items[i]
+                _, pub_j, when_j, anchors_j = items[j]
+                if pub_i == pub_j:
+                    continue
+                if when_i and when_j and abs(when_i - when_j) > max_gap_days * 86400.0:
+                    continue
+                shared = anchors_i & anchors_j
+                if len(shared) >= 2 and len(shared) * 2 >= min(len(anchors_i), len(anchors_j)):
+                    parent[find(i)] = find(j)
+        groups: Dict[int, List[int]] = {}
+        for i in range(len(items)):
+            groups.setdefault(find(i), []).append(i)
+        for members in groups.values():
+            publishers = {items[i][1] for i in members}
+            if len(publishers) < 2:
+                continue
+            for i in members:
+                record = items[i][0]
+                record.setdefault("meta", {})["sources_count"] = len(publishers)
+    except Exception:
+        return
 
 
 def selftest() -> None:

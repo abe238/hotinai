@@ -268,11 +268,19 @@ def news_rows(items: List[dict], note: Optional[str] = None) -> List[dict]:
             receipts.append({"label": date, "kind": "age"})
         pts = finite_int(_sig(item).get("hn_points"), 0)
         if pts:
-            receipts.append({"label": "{} pts".format(_num(pts)), "kind": "hn"})
+            delta = finite_int(_sig(item).get("hn_points_delta"), 0)
+            label = "{} pts ↑{}".format(_num(pts), _num(delta)) if delta else "{} pts".format(_num(pts))
+            receipts.append({"label": label, "kind": "hn"})
+        sources = finite_int(_meta(item).get("sources_count"), 0)
+        if sources and sources >= 2:
+            receipts.append({"label": "{} sources".format(sources), "kind": "x"})
         # stored kind -> visitor-facing label: "official" (the lab's own post)
         # or "opinion" (a named expert's take)
         kind = {"primary": "official", "analysis": "opinion"}.get(_meta(item).get("kind"))
         badges = [{"label": kind, "hot": False}] if kind else []
+        if _sig(item).get("hn_rising"):
+            # the crowd is still upvoting this days later — hotin's own verdict
+            badges.append({"label": "rising", "hot": False})
         rows.append({"rank": i, "name": item.get("name") or "?",
                      "url": item.get("url"), "meta": _clip(_meta(item).get("publisher"), 40),
                      "receipts": receipts, "badges": badges})
@@ -371,6 +379,13 @@ def demo() -> None:
     assert nws[-1] == {"rank": "·", "name": "swept 12/12 feeds", "url": None,
                        "meta": None, "receipts": [], "badges": []}
     assert news_rows([]) == []  # empty window: no orphan provenance row
+    ris = news_rows([{"name": "Health in ChatGPT", "url": "u",
+                      "signal": {"hn_points": 412, "hn_points_delta": 381, "hn_rising": True},
+                      "meta": {"date": "2026-07-23T00:00:00Z", "publisher": "OpenAI",
+                               "kind": "primary", "sources_count": 3}}])
+    ris_labels = [x["label"] for x in ris[0]["receipts"]]
+    assert "412 pts ↑381" in ris_labels and "3 sources" in ris_labels, ris_labels
+    assert [b["label"] for b in ris[0]["badges"]] == ["official", "rising"]
     print("board demo: ok")
 
 
