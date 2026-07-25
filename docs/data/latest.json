@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-25",
-  "generated_pt": "Jul 24, 2026 \u00b7 5:21 PM PT",
+  "generated_pt": "Jul 24, 2026 \u00b7 9:01 PM PT",
   "entities": {
     "repos": [
       {
@@ -52,11 +52,11 @@
             "kind": "insiders"
           },
           {
-            "label": "22.3k stars",
+            "label": "22.4k stars",
             "kind": "stars"
           },
           {
-            "label": "+396/day",
+            "label": "+391/day",
             "kind": "stars"
           },
           {
@@ -94,7 +94,7 @@
             "kind": "stars"
           },
           {
-            "label": "+443/day",
+            "label": "+436/day",
             "kind": "stars"
           },
           {
@@ -119,6 +119,40 @@
       },
       {
         "rank": 4,
+        "name": "hoainho/img2threejs",
+        "url": "https://github.com/hoainho/img2threejs",
+        "meta": "Rebuild the object in a reference image as a code-only, procedural, quality-gated, animation-ready T\u2026",
+        "receipts": [
+          {
+            "label": "\u2605 andrew_n_carr \u00b7 insider",
+            "kind": "insiders"
+          },
+          {
+            "label": "4.1k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "+926/day",
+            "kind": "stars"
+          },
+          {
+            "label": "10d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 5,
         "name": "microsoft/skillopt",
         "url": "https://github.com/microsoft/skillopt",
         "meta": "Optimizes natural-language skills for frozen LLM agents via trajectory-driven edits, validation-gate\u2026",
@@ -132,7 +166,7 @@
             "kind": "stars"
           },
           {
-            "label": "+380/day",
+            "label": "+371/day",
             "kind": "stars"
           },
           {
@@ -152,7 +186,7 @@
         ]
       },
       {
-        "rank": 5,
+        "rank": 6,
         "name": "fei-away/codex-dream-skin",
         "url": "https://github.com/fei-away/codex-dream-skin",
         "meta": "Codex Dream Skin",
@@ -162,7 +196,7 @@
             "kind": "stars"
           },
           {
-            "label": "+280/day",
+            "label": "+275/day",
             "kind": "stars"
           },
           {
@@ -182,7 +216,7 @@
         ]
       },
       {
-        "rank": 6,
+        "rank": 7,
         "name": "dietrichgebert/ponytail",
         "url": "https://github.com/dietrichgebert/ponytail",
         "meta": "Makes your AI agent think like the laziest senior dev in the room. The best code is the code you nev\u2026",
@@ -196,7 +230,7 @@
             "kind": "stars"
           },
           {
-            "label": "+576/day",
+            "label": "+570/day",
             "kind": "stars"
           },
           {
@@ -216,7 +250,7 @@
         ]
       },
       {
-        "rank": 7,
+        "rank": 8,
         "name": "bigpizzav3/codexplusplus",
         "url": "https://github.com/bigpizzav3/codexplusplus",
         "meta": "An enhanced tool for CodexApp, striving to make Codex better to use and more comfortable \u4e00\u4e2aCodexApp\u7684\u2026",
@@ -226,7 +260,7 @@
             "kind": "stars"
           },
           {
-            "label": "+129/day",
+            "label": "+130/day",
             "kind": "stars"
           },
           {
@@ -246,7 +280,7 @@
         ]
       },
       {
-        "rank": 8,
+        "rank": 9,
         "name": "langchain-ai/openwiki",
         "url": "https://github.com/langchain-ai/openwiki",
         "meta": "OpenWiki is a CLI that writes and maintains agent documentation for your codebase.",
@@ -256,41 +290,11 @@
             "kind": "stars"
           },
           {
-            "label": "+134/day",
+            "label": "+132/day",
             "kind": "stars"
           },
           {
             "label": "33d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 9,
-        "name": "hoainho/img2threejs",
-        "url": "https://github.com/hoainho/img2threejs",
-        "meta": "Rebuild the object in a reference image as a code-only, procedural, quality-gated, animation-ready T\u2026",
-        "receipts": [
-          {
-            "label": "4k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "+960/day",
-            "kind": "stars"
-          },
-          {
-            "label": "10d old",
             "kind": "age"
           }
         ],
@@ -346,7 +350,7 @@
             "kind": "stars"
           },
           {
-            "label": "+130/day",
+            "label": "+129/day",
             "kind": "stars"
           },
           {
@@ -376,7 +380,7 @@
             "kind": "stars"
           },
           {
-            "label": "+214/day",
+            "label": "+211/day",
             "kind": "stars"
           },
           {
@@ -406,7 +410,7 @@
             "kind": "stars"
           },
           {
-            "label": "+847/day",
+            "label": "+830/day",
             "kind": "stars"
           },
           {
@@ -436,7 +440,7 @@
             "kind": "stars"
           },
           {
-            "label": "+43/day",
+            "label": "+42/day",
             "kind": "stars"
           },
           {
@@ -462,11 +466,11 @@
         "meta": "Kimi Code CLI  \u2014  The Starting Point for Next-Gen Agents",
         "receipts": [
           {
-            "label": "4.9k stars",
+            "label": "5k stars",
             "kind": "stars"
           },
           {
-            "label": "+198/day",
+            "label": "+195/day",
             "kind": "stars"
           },
           {
@@ -530,7 +534,7 @@
             "kind": "stars"
           },
           {
-            "label": "+108/day",
+            "label": "+107/day",
             "kind": "stars"
           },
           {
@@ -560,7 +564,7 @@
             "kind": "stars"
           },
           {
-            "label": "+150/day",
+            "label": "+145/day",
             "kind": "stars"
           },
           {
@@ -590,7 +594,7 @@
             "kind": "stars"
           },
           {
-            "label": "+169/day",
+            "label": "+163/day",
             "kind": "stars"
           },
           {
@@ -650,7 +654,7 @@
             "kind": "stars"
           },
           {
-            "label": "+45/day",
+            "label": "+44/day",
             "kind": "stars"
           },
           {
@@ -671,6 +675,36 @@
       },
       {
         "rank": 22,
+        "name": "oomol-lab/open-connector",
+        "url": "https://github.com/oomol-lab/open-connector",
+        "meta": "Open-source auth gateway connecting 1000+ SaaS providers to AI agents through SDK, CLI, MCP, HTTP, a\u2026",
+        "receipts": [
+          {
+            "label": "3.2k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "+92/day",
+            "kind": "stars"
+          },
+          {
+            "label": "26d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 23,
         "name": "blaizzy/nativ",
         "url": "https://github.com/blaizzy/nativ",
         "meta": "Local AI, native to your Mac. Chat, serve, monitor, and connect MLX models from one macOS app.",
@@ -696,17 +730,17 @@
         ]
       },
       {
-        "rank": 23,
+        "rank": 24,
         "name": "lidge-jun/opencodex",
         "url": "https://github.com/lidge-jun/opencodex",
         "meta": "Universal provider proxy for OpenAI Codex & Claude Code \u2014 use any LLM (Claude, Gemini, Grok, DeepSee\u2026",
         "receipts": [
           {
-            "label": "4.5k stars",
+            "label": "4.6k stars",
             "kind": "stars"
           },
           {
-            "label": "+410/day",
+            "label": "+403/day",
             "kind": "stars"
           },
           {
@@ -726,28 +760,6 @@
         ]
       },
       {
-        "rank": 24,
-        "name": "oomol-lab/open-connector",
-        "url": "https://github.com/oomol-lab/open-connector",
-        "meta": "Open-source auth gateway connecting 1000+ SaaS providers to AI agents through SDK, CLI, MCP, HTTP, a\u2026",
-        "receipts": [
-          {
-            "label": "3.2k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "26d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
         "rank": 25,
         "name": "googlecloudplatform/knowledge-catalog",
         "url": "https://github.com/GoogleCloudPlatform/knowledge-catalog",
@@ -758,7 +770,7 @@
             "kind": "stars"
           },
           {
-            "label": "+47/day",
+            "label": "+46/day",
             "kind": "stars"
           },
           {
@@ -788,7 +800,7 @@
             "kind": "stars"
           },
           {
-            "label": "+165/day",
+            "label": "+173/day",
             "kind": "stars"
           },
           {
@@ -822,7 +834,7 @@
             "kind": "stars"
           },
           {
-            "label": "+115/day",
+            "label": "+82/day",
             "kind": "stars"
           },
           {
@@ -860,7 +872,7 @@
             "kind": "stars"
           },
           {
-            "label": "+266/day",
+            "label": "+190/day",
             "kind": "stars"
           },
           {
@@ -894,7 +906,7 @@
             "kind": "stars"
           },
           {
-            "label": "+129/day",
+            "label": "+126/day",
             "kind": "stars"
           },
           {
@@ -954,7 +966,7 @@
             "kind": "stars"
           },
           {
-            "label": "+54/day",
+            "label": "+53/day",
             "kind": "stars"
           },
           {
@@ -980,11 +992,11 @@
         "meta": "\ud83c\udfa8 The open-source Claude Design alternative. \ud83d\udda5\ufe0f Local-first desktop app. \ud83d\uddbc\ufe0f Your coding agent become\u2026",
         "receipts": [
           {
-            "label": "81.3k stars",
+            "label": "81.4k stars",
             "kind": "stars"
           },
           {
-            "label": "+323/day",
+            "label": "+318/day",
             "kind": "stars"
           },
           {
@@ -1014,7 +1026,7 @@
             "kind": "stars"
           },
           {
-            "label": "+219/day",
+            "label": "+223/day",
             "kind": "stars"
           },
           {
@@ -1200,7 +1212,7 @@
             "kind": "stars"
           },
           {
-            "label": "+64/day",
+            "label": "+62/day",
             "kind": "stars"
           },
           {
@@ -1230,7 +1242,7 @@
             "kind": "stars"
           },
           {
-            "label": "+714/day",
+            "label": "+706/day",
             "kind": "stars"
           },
           {
@@ -1281,20 +1293,20 @@
       },
       {
         "rank": 43,
-        "name": "xiaomimimo/mimo-code",
-        "url": "https://github.com/XiaomiMiMo/MiMo-Code",
-        "meta": "MiMo Code: Where Models and Agents Co-Evolve",
+        "name": "alibaba/open-code-review",
+        "url": "https://github.com/alibaba/open-code-review",
+        "meta": "Open-source & free \u2014 Battle-tested at Alibaba's scale. Hybrid architecture code review tool: determi\u2026",
         "receipts": [
           {
             "label": "12.4k stars",
             "kind": "stars"
           },
           {
-            "label": "+36/day",
+            "label": "+372/day",
             "kind": "stars"
           },
           {
-            "label": "45d old",
+            "label": "68d old",
             "kind": "age"
           }
         ],
@@ -1311,20 +1323,20 @@
       },
       {
         "rank": 44,
-        "name": "alibaba/open-code-review",
-        "url": "https://github.com/alibaba/open-code-review",
-        "meta": "Open-source & free \u2014 Battle-tested at Alibaba's scale. Hybrid architecture code review tool: determi\u2026",
+        "name": "xiaomimimo/mimo-code",
+        "url": "https://github.com/XiaomiMiMo/MiMo-Code",
+        "meta": "MiMo Code: Where Models and Agents Co-Evolve",
         "receipts": [
           {
             "label": "12.4k stars",
             "kind": "stars"
           },
           {
-            "label": "+371/day",
+            "label": "+37/day",
             "kind": "stars"
           },
           {
-            "label": "68d old",
+            "label": "45d old",
             "kind": "age"
           }
         ],
@@ -1390,11 +1402,11 @@
             "kind": "insiders"
           },
           {
-            "label": "22.3k stars",
+            "label": "22.4k stars",
             "kind": "stars"
           },
           {
-            "label": "+396/day",
+            "label": "+391/day",
             "kind": "stars"
           },
           {
@@ -1432,7 +1444,7 @@
             "kind": "stars"
           },
           {
-            "label": "+443/day",
+            "label": "+436/day",
             "kind": "stars"
           },
           {
@@ -1457,6 +1469,40 @@
       },
       {
         "rank": 4,
+        "name": "hoainho/img2threejs",
+        "url": "https://github.com/hoainho/img2threejs",
+        "meta": "Rebuild the object in a reference image as a code-only, procedural, quality-gated, animation-ready T\u2026",
+        "receipts": [
+          {
+            "label": "\u2605 andrew_n_carr \u00b7 insider",
+            "kind": "insiders"
+          },
+          {
+            "label": "4.1k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "+926/day",
+            "kind": "stars"
+          },
+          {
+            "label": "10d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 5,
         "name": "microsoft/skillopt",
         "url": "https://github.com/microsoft/skillopt",
         "meta": "Optimizes natural-language skills for frozen LLM agents via trajectory-driven edits, validation-gate\u2026",
@@ -1470,7 +1516,7 @@
             "kind": "stars"
           },
           {
-            "label": "+380/day",
+            "label": "+371/day",
             "kind": "stars"
           },
           {
@@ -1490,7 +1536,7 @@
         ]
       },
       {
-        "rank": 5,
+        "rank": 6,
         "name": "fei-away/codex-dream-skin",
         "url": "https://github.com/fei-away/codex-dream-skin",
         "meta": "Codex Dream Skin",
@@ -1500,7 +1546,7 @@
             "kind": "stars"
           },
           {
-            "label": "+280/day",
+            "label": "+275/day",
             "kind": "stars"
           },
           {
@@ -1520,7 +1566,7 @@
         ]
       },
       {
-        "rank": 6,
+        "rank": 7,
         "name": "bigpizzav3/codexplusplus",
         "url": "https://github.com/bigpizzav3/codexplusplus",
         "meta": "An enhanced tool for CodexApp, striving to make Codex better to use and more comfortable \u4e00\u4e2aCodexApp\u7684\u2026",
@@ -1530,7 +1576,7 @@
             "kind": "stars"
           },
           {
-            "label": "+129/day",
+            "label": "+130/day",
             "kind": "stars"
           },
           {
@@ -1550,7 +1596,7 @@
         ]
       },
       {
-        "rank": 7,
+        "rank": 8,
         "name": "langchain-ai/openwiki",
         "url": "https://github.com/langchain-ai/openwiki",
         "meta": "OpenWiki is a CLI that writes and maintains agent documentation for your codebase.",
@@ -1560,41 +1606,11 @@
             "kind": "stars"
           },
           {
-            "label": "+134/day",
+            "label": "+132/day",
             "kind": "stars"
           },
           {
             "label": "33d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          },
-          {
-            "label": "trending",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 8,
-        "name": "hoainho/img2threejs",
-        "url": "https://github.com/hoainho/img2threejs",
-        "meta": "Rebuild the object in a reference image as a code-only, procedural, quality-gated, animation-ready T\u2026",
-        "receipts": [
-          {
-            "label": "4k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "+960/day",
-            "kind": "stars"
-          },
-          {
-            "label": "10d old",
             "kind": "age"
           }
         ],
@@ -1650,7 +1666,7 @@
             "kind": "stars"
           },
           {
-            "label": "+130/day",
+            "label": "+129/day",
             "kind": "stars"
           },
           {
@@ -1680,7 +1696,7 @@
             "kind": "stars"
           },
           {
-            "label": "+847/day",
+            "label": "+830/day",
             "kind": "stars"
           },
           {
@@ -1710,7 +1726,7 @@
             "kind": "stars"
           },
           {
-            "label": "+43/day",
+            "label": "+42/day",
             "kind": "stars"
           },
           {
@@ -1736,11 +1752,11 @@
         "meta": "Kimi Code CLI  \u2014  The Starting Point for Next-Gen Agents",
         "receipts": [
           {
-            "label": "4.9k stars",
+            "label": "5k stars",
             "kind": "stars"
           },
           {
-            "label": "+198/day",
+            "label": "+195/day",
             "kind": "stars"
           },
           {
@@ -1804,7 +1820,7 @@
             "kind": "stars"
           },
           {
-            "label": "+150/day",
+            "label": "+145/day",
             "kind": "stars"
           },
           {
@@ -1825,6 +1841,36 @@
       },
       {
         "rank": 16,
+        "name": "oomol-lab/open-connector",
+        "url": "https://github.com/oomol-lab/open-connector",
+        "meta": "Open-source auth gateway connecting 1000+ SaaS providers to AI agents through SDK, CLI, MCP, HTTP, a\u2026",
+        "receipts": [
+          {
+            "label": "3.2k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "+92/day",
+            "kind": "stars"
+          },
+          {
+            "label": "26d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          },
+          {
+            "label": "trending",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 17,
         "name": "blaizzy/nativ",
         "url": "https://github.com/blaizzy/nativ",
         "meta": "Local AI, native to your Mac. Chat, serve, monitor, and connect MLX models from one macOS app.",
@@ -1850,17 +1896,17 @@
         ]
       },
       {
-        "rank": 17,
+        "rank": 18,
         "name": "lidge-jun/opencodex",
         "url": "https://github.com/lidge-jun/opencodex",
         "meta": "Universal provider proxy for OpenAI Codex & Claude Code \u2014 use any LLM (Claude, Gemini, Grok, DeepSee\u2026",
         "receipts": [
           {
-            "label": "4.5k stars",
+            "label": "4.6k stars",
             "kind": "stars"
           },
           {
-            "label": "+410/day",
+            "label": "+403/day",
             "kind": "stars"
           },
           {
@@ -1880,28 +1926,6 @@
         ]
       },
       {
-        "rank": 18,
-        "name": "oomol-lab/open-connector",
-        "url": "https://github.com/oomol-lab/open-connector",
-        "meta": "Open-source auth gateway connecting 1000+ SaaS providers to AI agents through SDK, CLI, MCP, HTTP, a\u2026",
-        "receipts": [
-          {
-            "label": "3.2k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "26d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
         "rank": 19,
         "name": "googlecloudplatform/knowledge-catalog",
         "url": "https://github.com/GoogleCloudPlatform/knowledge-catalog",
@@ -1912,7 +1936,7 @@
             "kind": "stars"
           },
           {
-            "label": "+47/day",
+            "label": "+46/day",
             "kind": "stars"
           },
           {
@@ -1942,7 +1966,7 @@
             "kind": "stars"
           },
           {
-            "label": "+165/day",
+            "label": "+173/day",
             "kind": "stars"
           },
           {
@@ -1972,7 +1996,7 @@
             "kind": "stars"
           },
           {
-            "label": "+129/day",
+            "label": "+126/day",
             "kind": "stars"
           },
           {
@@ -2002,7 +2026,7 @@
             "kind": "stars"
           },
           {
-            "label": "+54/day",
+            "label": "+53/day",
             "kind": "stars"
           },
           {
@@ -2028,11 +2052,11 @@
         "meta": "\ud83c\udfa8 The open-source Claude Design alternative. \ud83d\udda5\ufe0f Local-first desktop app. \ud83d\uddbc\ufe0f Your coding agent become\u2026",
         "receipts": [
           {
-            "label": "81.3k stars",
+            "label": "81.4k stars",
             "kind": "stars"
           },
           {
-            "label": "+323/day",
+            "label": "+318/day",
             "kind": "stars"
           },
           {
@@ -2084,7 +2108,7 @@
             "kind": "stars"
           },
           {
-            "label": "+64/day",
+            "label": "+62/day",
             "kind": "stars"
           },
           {
@@ -2105,20 +2129,20 @@
       },
       {
         "rank": 26,
-        "name": "xiaomimimo/mimo-code",
-        "url": "https://github.com/XiaomiMiMo/MiMo-Code",
-        "meta": "MiMo Code: Where Models and Agents Co-Evolve",
+        "name": "alibaba/open-code-review",
+        "url": "https://github.com/alibaba/open-code-review",
+        "meta": "Open-source & free \u2014 Battle-tested at Alibaba's scale. Hybrid architecture code review tool: determi\u2026",
         "receipts": [
           {
             "label": "12.4k stars",
             "kind": "stars"
           },
           {
-            "label": "+36/day",
+            "label": "+372/day",
             "kind": "stars"
           },
           {
-            "label": "45d old",
+            "label": "68d old",
             "kind": "age"
           }
         ],
@@ -2135,20 +2159,20 @@
       },
       {
         "rank": 27,
-        "name": "alibaba/open-code-review",
-        "url": "https://github.com/alibaba/open-code-review",
-        "meta": "Open-source & free \u2014 Battle-tested at Alibaba's scale. Hybrid architecture code review tool: determi\u2026",
+        "name": "xiaomimimo/mimo-code",
+        "url": "https://github.com/XiaomiMiMo/MiMo-Code",
+        "meta": "MiMo Code: Where Models and Agents Co-Evolve",
         "receipts": [
           {
             "label": "12.4k stars",
             "kind": "stars"
           },
           {
-            "label": "+371/day",
+            "label": "+37/day",
             "kind": "stars"
           },
           {
-            "label": "68d old",
+            "label": "45d old",
             "kind": "age"
           }
         ],
@@ -2202,7 +2226,7 @@
             "kind": "stars"
           },
           {
-            "label": "22.3k stars",
+            "label": "22.4k stars",
             "kind": "stars"
           },
           {
@@ -2250,11 +2274,11 @@
         "meta": "AOS Community Edition: the open agent operating system.",
         "receipts": [
           {
-            "label": "+548/day",
+            "label": "+550/day",
             "kind": "stars"
           },
           {
-            "label": "7.1k stars",
+            "label": "7.2k stars",
             "kind": "stars"
           },
           {
@@ -2302,7 +2326,7 @@
         "meta": "\ud83d\udc0e Ryan Lopopolo\u2019s anthology, field guide, and agent context bundle for harness e",
         "receipts": [
           {
-            "label": "+332/day",
+            "label": "+333/day",
             "kind": "stars"
           },
           {
@@ -2354,7 +2378,7 @@
         "meta": "A skill that turn any brand into a scrollable 3D world",
         "receipts": [
           {
-            "label": "+269/day",
+            "label": "+270/day",
             "kind": "stars"
           },
           {
@@ -2380,11 +2404,11 @@
         "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
         "receipts": [
           {
-            "label": "+236/day",
+            "label": "+249/day",
             "kind": "stars"
           },
           {
-            "label": "1.4k stars",
+            "label": "1.5k stars",
             "kind": "stars"
           },
           {
@@ -2406,7 +2430,7 @@
         "meta": "autonomous red teaming platform; multi-agent offensive-security meta-harness",
         "receipts": [
           {
-            "label": "+224/day",
+            "label": "+225/day",
             "kind": "stars"
           },
           {
@@ -2484,7 +2508,7 @@
         "meta": "Omnigent is an open-source AI agent framework and meta-harness: orchestrate Clau",
         "receipts": [
           {
-            "label": "+175/day",
+            "label": "+176/day",
             "kind": "stars"
           },
           {
@@ -2536,11 +2560,11 @@
         "meta": "Open-source, backend-free AI video editor for talking-head video \u2014 storyboarding",
         "receipts": [
           {
-            "label": "+142/day",
+            "label": "+143/day",
             "kind": "stars"
           },
           {
-            "label": "709 stars",
+            "label": "716 stars",
             "kind": "stars"
           },
           {
@@ -2588,7 +2612,7 @@
         "meta": "Think with AI beyond the chat box. A shared canvas for handwriting, equations, d",
         "receipts": [
           {
-            "label": "+135/day",
+            "label": "+136/day",
             "kind": "stars"
           },
           {
@@ -2614,11 +2638,11 @@
         "meta": "Removes 20+ patterns of AI slop from any piece of writing.",
         "receipts": [
           {
-            "label": "+130/day",
+            "label": "+132/day",
             "kind": "stars"
           },
           {
-            "label": "2.3k stars",
+            "label": "2.4k stars",
             "kind": "stars"
           },
           {
@@ -2661,32 +2685,6 @@
       },
       {
         "rank": 20,
-        "name": "synthetic-sciences/openscience",
-        "url": "https://github.com/synthetic-sciences/openscience",
-        "meta": "The open-source AI workbench for scientific research",
-        "receipts": [
-          {
-            "label": "+124/day",
-            "kind": "stars"
-          },
-          {
-            "label": "2.7k stars",
-            "kind": "stars"
-          },
-          {
-            "label": "22d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 21,
         "name": "oomol-lab/open-connector",
         "url": "https://github.com/oomol-lab/open-connector",
         "meta": "Open-source auth gateway connecting 1000+ SaaS providers to AI agents through SD",
@@ -2712,17 +2710,43 @@
         ]
       },
       {
+        "rank": 21,
+        "name": "synthetic-sciences/openscience",
+        "url": "https://github.com/synthetic-sciences/openscience",
+        "meta": "The open-source AI workbench for scientific research",
+        "receipts": [
+          {
+            "label": "+124/day",
+            "kind": "stars"
+          },
+          {
+            "label": "2.7k stars",
+            "kind": "stars"
+          },
+          {
+            "label": "22d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
         "rank": 22,
         "name": "lidge-jun/opencodex",
         "url": "https://github.com/lidge-jun/opencodex",
         "meta": "Universal provider proxy for OpenAI Codex & Claude Code \u2014 use any LLM (Claude, G",
         "receipts": [
           {
-            "label": "+122/day",
+            "label": "+124/day",
             "kind": "stars"
           },
           {
-            "label": "4.5k stars",
+            "label": "4.6k stars",
             "kind": "stars"
           },
           {
@@ -2744,11 +2768,11 @@
         "meta": "V- Modal AI: Search anything anywhere SDK Flutter",
         "receipts": [
           {
-            "label": "+109/day",
+            "label": "+110/day",
             "kind": "stars"
           },
           {
-            "label": "984 stars",
+            "label": "989 stars",
             "kind": "stars"
           },
           {
@@ -2770,7 +2794,7 @@
         "meta": "\u628a Markdown \u4e00\u952e\u6392\u6210\u53ef\u76f4\u63a5\u7c98\u8fdb\u516c\u4f17\u53f7\u7f16\u8f91\u5668\u7684\u7cbe\u81f4 HTML \u2014\u2014 6 \u5957\u7cbe\u9009\u4e3b\u9898 + \u4e3b\u9898\u751f\u6210\u5668 + \u53cc\u5173\u5361\u6821\u9a8c\u3002An AI-agent skill ",
         "receipts": [
           {
-            "label": "+103/day",
+            "label": "+104/day",
             "kind": "stars"
           },
           {
@@ -2954,11 +2978,11 @@
         "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
         "receipts": [
           {
-            "label": "+236/day",
+            "label": "+249/day",
             "kind": "stars"
           },
           {
-            "label": "1.4k stars",
+            "label": "1.5k stars",
             "kind": "stars"
           },
           {
@@ -2980,11 +3004,11 @@
         "meta": "Dotted thought-orb loading indicators for AI & agent UIs \u2014 six tuned states, two",
         "receipts": [
           {
-            "label": "+233/day",
+            "label": "+234/day",
             "kind": "stars"
           },
           {
-            "label": "931 stars",
+            "label": "936 stars",
             "kind": "stars"
           },
           {
@@ -3006,11 +3030,11 @@
         "meta": null,
         "receipts": [
           {
-            "label": "+196/day",
+            "label": "+230/day",
             "kind": "stars"
           },
           {
-            "label": "392 stars",
+            "label": "460 stars",
             "kind": "stars"
           },
           {
@@ -3027,16 +3051,42 @@
       },
       {
         "rank": 4,
+        "name": "mikehasa/agentacct",
+        "url": "https://github.com/mikehasa/agentacct",
+        "meta": "Local-first Agent Work Intelligence for coding agents: usage truth, recorded wor",
+        "receipts": [
+          {
+            "label": "+194/day",
+            "kind": "stars"
+          },
+          {
+            "label": "194 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "1d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 5,
         "name": "blaizzy/nativ",
         "url": "https://github.com/Blaizzy/nativ",
         "meta": "Local AI, native to your Mac. Chat, serve, monitor, and connect MLX models from ",
         "receipts": [
           {
-            "label": "+172/day",
+            "label": "+173/day",
             "kind": "stars"
           },
           {
-            "label": "860 stars",
+            "label": "863 stars",
             "kind": "stars"
           },
           {
@@ -3052,7 +3102,7 @@
         ]
       },
       {
-        "rank": 5,
+        "rank": 6,
         "name": "gnipbao/story-to-handdrawn-video",
         "url": "https://github.com/gnipbao/story-to-handdrawn-video",
         "meta": "Agent skill: convert Chinese story copy or ordered images into a hand-drawn diar",
@@ -3062,7 +3112,7 @@
             "kind": "stars"
           },
           {
-            "label": "607 stars",
+            "label": "610 stars",
             "kind": "stars"
           },
           {
@@ -3078,17 +3128,17 @@
         ]
       },
       {
-        "rank": 6,
+        "rank": 7,
         "name": "pireel/pireel",
         "url": "https://github.com/pireel/pireel",
         "meta": "Open-source, backend-free AI video editor for talking-head video \u2014 storyboarding",
         "receipts": [
           {
-            "label": "+142/day",
+            "label": "+143/day",
             "kind": "stars"
           },
           {
-            "label": "709 stars",
+            "label": "716 stars",
             "kind": "stars"
           },
           {
@@ -3104,7 +3154,7 @@
         ]
       },
       {
-        "rank": 7,
+        "rank": 8,
         "name": "kritt-ai/open-kritt",
         "url": "https://github.com/Kritt-ai/open-kritt",
         "meta": "Orchestrate AI agents to find real vulnerabilities in code.",
@@ -3130,7 +3180,7 @@
         ]
       },
       {
-        "rank": 8,
+        "rank": 9,
         "name": "kinetinode/claude-fable-5-system-prompt-clean",
         "url": "https://github.com/KinetiNode/claude-fable-5-system-prompt-clean",
         "meta": "the optimized, token-efficient version of the leaked Claude Fable 5 / Mythos 5 s",
@@ -3140,7 +3190,7 @@
             "kind": "stars"
           },
           {
-            "label": "406 stars",
+            "label": "409 stars",
             "kind": "stars"
           },
           {
@@ -3156,7 +3206,7 @@
         ]
       },
       {
-        "rank": 9,
+        "rank": 10,
         "name": "realfishsam/agent-notch",
         "url": "https://github.com/realfishsam/agent-notch",
         "meta": "The open-source alternative to vibe-island",
@@ -3182,7 +3232,7 @@
         ]
       },
       {
-        "rank": 10,
+        "rank": 11,
         "name": "finna/finn-loop",
         "url": "https://github.com/finna/Finn-loop",
         "meta": "The Finn-loop: a 3-skill AI software factory for Claude Code \u2014 spec, build, revi",
@@ -3192,7 +3242,7 @@
             "kind": "stars"
           },
           {
-            "label": "182 stars",
+            "label": "184 stars",
             "kind": "stars"
           },
           {
@@ -3208,7 +3258,7 @@
         ]
       },
       {
-        "rank": 11,
+        "rank": 12,
         "name": "giovannibrees/travel-roamradar",
         "url": "https://github.com/giovannibrees/travel-roamradar",
         "meta": "Open-source, self-hosted personal travel app by Giovanni Brees - keep every flig",
@@ -3234,17 +3284,17 @@
         ]
       },
       {
-        "rank": 12,
+        "rank": 13,
         "name": "rockthemike712/mission-control-board",
         "url": "https://github.com/rockthemike712/mission-control-board",
         "meta": "Single-file, zero-dependency task board: owner-vs-agent plates, a dependency map",
         "receipts": [
           {
-            "label": "+54/day",
+            "label": "+58/day",
             "kind": "stars"
           },
           {
-            "label": "54 stars",
+            "label": "58 stars",
             "kind": "stars"
           },
           {
@@ -3260,7 +3310,7 @@
         ]
       },
       {
-        "rank": 13,
+        "rank": 14,
         "name": "nextweb4/official-document-ai-assistant",
         "url": "https://github.com/NextWeb4/official-document-ai-assistant",
         "meta": "Local official-document review, formatting repair, and compliant export desktop ",
@@ -3286,17 +3336,17 @@
         ]
       },
       {
-        "rank": 14,
+        "rank": 15,
         "name": "danilo-znamerovszkij/draw-your-font",
         "url": "https://github.com/danilo-znamerovszkij/draw-your-font",
         "meta": "Turn a photo of your handwriting into a real font (TTF/WOFF/WOFF2) - free, open ",
         "receipts": [
           {
-            "label": "+44/day",
+            "label": "+48/day",
             "kind": "stars"
           },
           {
-            "label": "133 stars",
+            "label": "145 stars",
             "kind": "stars"
           },
           {
@@ -3312,17 +3362,17 @@
         ]
       },
       {
-        "rank": 15,
+        "rank": 16,
         "name": "role1776/netmon",
         "url": "https://github.com/Role1776/netmon",
         "meta": "Self-hosted network monitor \u2014 hourly speed tests, LAN device counts via ARP scan",
         "receipts": [
           {
-            "label": "+44/day",
+            "label": "+45/day",
             "kind": "stars"
           },
           {
-            "label": "177 stars",
+            "label": "179 stars",
             "kind": "stars"
           },
           {
@@ -3338,7 +3388,33 @@
         ]
       },
       {
-        "rank": 16,
+        "rank": 17,
+        "name": "trycaspian/caspian-sdk",
+        "url": "https://github.com/TryCaspian/caspian-sdk",
+        "meta": "One identity for your AI agent across Slack, Discord, Telegram, WhatsApp, Instag",
+        "receipts": [
+          {
+            "label": "+44/day",
+            "kind": "stars"
+          },
+          {
+            "label": "220 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "5d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 18,
         "name": "risa-labs-inc/bossconsole",
         "url": "https://github.com/risa-labs-inc/BossConsole",
         "meta": "Open-source, multi-platform harness for AI agents \u2014 a native, multi-threaded ope",
@@ -3364,33 +3440,7 @@
         ]
       },
       {
-        "rank": 17,
-        "name": "trycaspian/caspian-sdk",
-        "url": "https://github.com/TryCaspian/caspian-sdk",
-        "meta": "One identity for your AI agent across Slack, Discord, Telegram, WhatsApp, Instag",
-        "receipts": [
-          {
-            "label": "+43/day",
-            "kind": "stars"
-          },
-          {
-            "label": "216 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "5d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 18,
+        "rank": 19,
         "name": "paxlabs-inc/machine-genome",
         "url": "https://github.com/paxlabs-inc/machine-genome",
         "meta": "Machine Genome is an open identity and provenance protocol for models, agents, h",
@@ -3416,7 +3466,33 @@
         ]
       },
       {
-        "rank": 19,
+        "rank": 20,
+        "name": "hahhforest/pi-textbook",
+        "url": "https://github.com/hahhforest/pi-textbook",
+        "meta": "\u300a\u52a8\u624b\u5b66 Pi\u300b\uff1a\u6cbf 15 \u4e2a\u771f\u5b9e checkpoint \u4ece\u96f6\u6784\u5efa Pi-style Agent",
+        "receipts": [
+          {
+            "label": "+42/day",
+            "kind": "stars"
+          },
+          {
+            "label": "169 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "4d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 21,
         "name": "0xwilliamortiz/andrej-karpathy-skills",
         "url": "https://github.com/0xwilliamortiz/andrej-karpathy-skills",
         "meta": "Behavioral guardrails for Claude Code, distilled from Andrej Karpathy's field no",
@@ -3442,21 +3518,21 @@
         ]
       },
       {
-        "rank": 20,
-        "name": "hahhforest/pi-textbook",
-        "url": "https://github.com/hahhforest/pi-textbook",
-        "meta": "\u300a\u52a8\u624b\u5b66 Pi\u300b\uff1a\u6cbf 15 \u4e2a\u771f\u5b9e checkpoint \u4ece\u96f6\u6784\u5efa Pi-style Agent",
+        "rank": 22,
+        "name": "codejunkie99/graph-engineering",
+        "url": "https://github.com/codejunkie99/graph-engineering",
+        "meta": "Graph engineering for AI agents: the 9-stage knowledge-graph pipeline (translate",
         "receipts": [
           {
-            "label": "+42/day",
+            "label": "+40/day",
             "kind": "stars"
           },
           {
-            "label": "168 stars",
+            "label": "80 stars",
             "kind": "stars"
           },
           {
-            "label": "4d old",
+            "label": "2d old",
             "kind": "age"
           }
         ],
@@ -3468,7 +3544,7 @@
         ]
       },
       {
-        "rank": 21,
+        "rank": 23,
         "name": "eli-labz/agent-execution-partnership",
         "url": "https://github.com/eli-labz/Agent-Execution-Partnership",
         "meta": "Agent Execution Partnership AEE is an open-source control plane that ensures eve",
@@ -3494,7 +3570,7 @@
         ]
       },
       {
-        "rank": 22,
+        "rank": 24,
         "name": "ddcat-ai/open-ai-canvas",
         "url": "https://github.com/ddcat-ai/open-ai-canvas",
         "meta": "\u9762\u5411 AI \u5f71\u89c6\u521b\u4f5c\u7684\u5f00\u6e90\u65e0\u9650\u753b\u5e03\u5de5\u4f5c\u53f0\uff0c\u96c6\u6210\u591a\u6a21\u6001\u751f\u6210\u3001\u5206\u955c\u7f16\u6392\u3001\u7d20\u6750\u7ba1\u7406\u4e0e Agent \u5de5\u4f5c\u6d41\u3002",
@@ -3504,7 +3580,7 @@
             "kind": "stars"
           },
           {
-            "label": "107 stars",
+            "label": "108 stars",
             "kind": "stars"
           },
           {
@@ -3520,33 +3596,7 @@
         ]
       },
       {
-        "rank": 23,
-        "name": "codejunkie99/graph-engineering",
-        "url": "https://github.com/codejunkie99/graph-engineering",
-        "meta": "Graph engineering for AI agents: the 9-stage knowledge-graph pipeline (translate",
-        "receipts": [
-          {
-            "label": "+36/day",
-            "kind": "stars"
-          },
-          {
-            "label": "71 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "2d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 24,
+        "rank": 25,
         "name": "rainppr/china-llms-anecdote-0721",
         "url": "https://github.com/RainPPR/china-llms-anecdote-0721",
         "meta": null,
@@ -3572,7 +3622,7 @@
         ]
       },
       {
-        "rank": 25,
+        "rank": 26,
         "name": "brandon030722/ark-ui-skill",
         "url": "https://github.com/Brandon030722/ark-ui-skill",
         "meta": "Evidence-based Codex skill for five Ark-adjacent UI families and four applicatio",
@@ -3598,17 +3648,17 @@
         ]
       },
       {
-        "rank": 26,
+        "rank": 27,
         "name": "invaro/opentax-engine",
         "url": "https://github.com/Invaro/opentax-engine",
         "meta": "The deterministic tax engine for AI agents. Highest score ever recorded on TaxCa",
         "receipts": [
           {
-            "label": "+30/day",
+            "label": "+32/day",
             "kind": "stars"
           },
           {
-            "label": "89 stars",
+            "label": "96 stars",
             "kind": "stars"
           },
           {
@@ -3624,43 +3674,17 @@
         ]
       },
       {
-        "rank": 27,
-        "name": "evokoa/pgcontext",
-        "url": "https://github.com/Evokoa/pgContext",
-        "meta": "A full AI search engine, built into Postgres.",
-        "receipts": [
-          {
-            "label": "+27/day",
-            "kind": "stars"
-          },
-          {
-            "label": "107 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "4d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
         "rank": 28,
-        "name": "nulightjens/humanizer-stack",
-        "url": "https://github.com/NulightJens/humanizer-stack",
-        "meta": "Two-pass pipeline for removing AI writing tells from outward-facing text: a surf",
+        "name": "0xtresser/transcript-of-liang-wenfengs-deepseek-founder-4-hour-investor-meeting",
+        "url": "https://github.com/0xtresser/Transcript-of-Liang-Wenfengs-DeepSeek-Founder-4-Hour-Investor-Meeting",
+        "meta": "\u6881\u6587\u950b\u56db\u5c0f\u65f6\u6295\u8d44\u4eba\u4f1a\u8bae\u5b9e\u5f55\uff0c\u56e0\u539f\u6587\u5728\u5fae\u4fe1\u4e0a\u65e0\u6cd5\u67e5\u770b\uff0c\u7279\u4f20\u4e00\u4efdgithub",
         "receipts": [
           {
-            "label": "+26/day",
+            "label": "+29/day",
             "kind": "stars"
           },
           {
-            "label": "53 stars",
+            "label": "58 stars",
             "kind": "stars"
           },
           {
@@ -3682,11 +3706,11 @@
         "meta": "A collection of Agent Skills by Cali Castle.",
         "receipts": [
           {
-            "label": "+26/day",
+            "label": "+28/day",
             "kind": "stars"
           },
           {
-            "label": "52 stars",
+            "label": "57 stars",
             "kind": "stars"
           },
           {
@@ -3703,16 +3727,16 @@
       },
       {
         "rank": 30,
-        "name": "0xtresser/transcript-of-liang-wenfengs-deepseek-founder-4-hour-investor-meeting",
-        "url": "https://github.com/0xtresser/Transcript-of-Liang-Wenfengs-DeepSeek-Founder-4-Hour-Investor-Meeting",
-        "meta": "\u6881\u6587\u950b\u56db\u5c0f\u65f6\u6295\u8d44\u4eba\u4f1a\u8bae\u5b9e\u5f55\uff0c\u56e0\u539f\u6587\u5728\u5fae\u4fe1\u4e0a\u65e0\u6cd5\u67e5\u770b\uff0c\u7279\u4f20\u4e00\u4efdgithub",
+        "name": "nulightjens/humanizer-stack",
+        "url": "https://github.com/NulightJens/humanizer-stack",
+        "meta": "Two-pass pipeline for removing AI writing tells from outward-facing text: a surf",
         "receipts": [
           {
-            "label": "+26/day",
+            "label": "+27/day",
             "kind": "stars"
           },
           {
-            "label": "51 stars",
+            "label": "54 stars",
             "kind": "stars"
           },
           {
@@ -3748,7 +3772,7 @@
             "kind": "stars"
           },
           {
-            "label": "+115/day",
+            "label": "+82/day",
             "kind": "stars"
           },
           {
@@ -3782,7 +3806,7 @@
             "kind": "stars"
           },
           {
-            "label": "+3/day",
+            "label": "+2/day",
             "kind": "stars"
           },
           {
@@ -3936,7 +3960,7 @@
             "kind": "stars"
           },
           {
-            "label": "+266/day",
+            "label": "+190/day",
             "kind": "stars"
           },
           {
@@ -4096,7 +4120,7 @@
             "kind": "stars"
           },
           {
-            "label": "+576/day",
+            "label": "+570/day",
             "kind": "stars"
           },
           {
@@ -4113,20 +4137,24 @@
       },
       {
         "rank": 14,
-        "name": "gregwar/microban",
-        "url": "https://github.com/gregwar/microban",
-        "meta": "Supplies CAD files, 3D-printable parts, assembly docs, and Python control software for a compact Ras\u2026",
+        "name": "hoainho/img2threejs",
+        "url": "https://github.com/hoainho/img2threejs",
+        "meta": "Rebuilds a reference image into a procedural Three.js model factory from primitives with staged qual\u2026",
         "receipts": [
           {
-            "label": "\u2605 kevin_zakka",
+            "label": "\u2605 andrew_n_carr",
             "kind": "insiders"
           },
           {
-            "label": "4 stars",
+            "label": "4.1k stars",
             "kind": "stars"
           },
           {
-            "label": "8d old",
+            "label": "+926/day",
+            "kind": "stars"
+          },
+          {
+            "label": "10d old",
             "kind": "age"
           }
         ],
@@ -4158,7 +4186,7 @@
             "kind": "stars"
           },
           {
-            "label": "+3/day",
+            "label": "+2/day",
             "kind": "stars"
           },
           {
@@ -4233,7 +4261,7 @@
             "kind": "npm"
           },
           {
-            "label": "605 likes",
+            "label": "613 likes",
             "kind": "stars"
           },
           {
@@ -4275,7 +4303,7 @@
             "kind": "npm"
           },
           {
-            "label": "541 likes",
+            "label": "543 likes",
             "kind": "stars"
           },
           {
@@ -4296,7 +4324,7 @@
             "kind": "npm"
           },
           {
-            "label": "484 likes",
+            "label": "489 likes",
             "kind": "stars"
           },
           {
@@ -4317,7 +4345,7 @@
             "kind": "npm"
           },
           {
-            "label": "371 likes",
+            "label": "373 likes",
             "kind": "stars"
           },
           {
@@ -4380,7 +4408,7 @@
             "kind": "npm"
           },
           {
-            "label": "230 likes",
+            "label": "238 likes",
             "kind": "stars"
           },
           {
@@ -4413,23 +4441,6 @@
       },
       {
         "rank": 11,
-        "name": "conradlocke/krea2-identity-edit",
-        "url": "https://huggingface.co/conradlocke/krea2-identity-edit",
-        "meta": "\u2615 Support on Ko-fi, all tips go straight to GPU compute for future versions.",
-        "receipts": [
-          {
-            "label": "530 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 7",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 12,
         "name": "Motif-Technologies/Motif-3-Beta",
         "url": "https://huggingface.co/Motif-Technologies/Motif-3-Beta",
         "meta": "Motif-3 is a large-scale Mixture-of-Experts (MoE) language model built from the ground up by Motif Technologies following a fully in-house,\u2026",
@@ -4439,11 +4450,28 @@
             "kind": "npm"
           },
           {
-            "label": "184 likes",
+            "label": "185 likes",
             "kind": "stars"
           },
           {
             "label": "released Jul 20",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 12,
+        "name": "conradlocke/krea2-identity-edit",
+        "url": "https://huggingface.co/conradlocke/krea2-identity-edit",
+        "meta": "\u2615 Support on Ko-fi, all tips go straight to GPU compute for future versions.",
+        "receipts": [
+          {
+            "label": "532 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 7",
             "kind": "age"
           }
         ],
@@ -4460,7 +4488,7 @@
             "kind": "npm"
           },
           {
-            "label": "169 likes",
+            "label": "171 likes",
             "kind": "stars"
           },
           {
@@ -4481,7 +4509,7 @@
             "kind": "npm"
           },
           {
-            "label": "172 likes",
+            "label": "173 likes",
             "kind": "stars"
           },
           {
@@ -4523,7 +4551,7 @@
             "kind": "npm"
           },
           {
-            "label": "147 likes",
+            "label": "150 likes",
             "kind": "stars"
           },
           {
@@ -4565,7 +4593,7 @@
             "kind": "npm"
           },
           {
-            "label": "129 likes",
+            "label": "130 likes",
             "kind": "stars"
           },
           {
@@ -4577,27 +4605,6 @@
       },
       {
         "rank": 19,
-        "name": "bottlecapai/ThinkingCap-Qwen3.6-27B",
-        "url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B",
-        "meta": "Capability of Qwen3.6-27B with 50% less thinking tokens on average, and over 90% less in best cases. Achieved via finetuning Qwen3.6-27B (Qw\u2026",
-        "receipts": [
-          {
-            "label": "26.1k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "541 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 6",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 20,
         "name": "Kwaipilot/KAT-Coder-V2.5-Dev",
         "url": "https://huggingface.co/Kwaipilot/KAT-Coder-V2.5-Dev",
         "meta": "Following the release of KAT-Coder-V2.5 in July, we are pleased to release the open-weight version KAT-Coder-V2.5-Dev, an MOE model with a t\u2026",
@@ -4607,7 +4614,7 @@
             "kind": "npm"
           },
           {
-            "label": "121 likes",
+            "label": "126 likes",
             "kind": "stars"
           },
           {
@@ -4618,7 +4625,49 @@
         "badges": []
       },
       {
+        "rank": 20,
+        "name": "bottlecapai/ThinkingCap-Qwen3.6-27B",
+        "url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B",
+        "meta": "Capability of Qwen3.6-27B with 50% less thinking tokens on average, and over 90% less in best cases. Achieved via finetuning Qwen3.6-27B (Qw\u2026",
+        "receipts": [
+          {
+            "label": "26.1k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "542 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 6",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
         "rank": 21,
+        "name": "ATH-MaaS/OvisOCR2",
+        "url": "https://huggingface.co/ATH-MaaS/OvisOCR2",
+        "meta": "We are pleased to announce the release of OvisOCR2, a compact 0.8B end-to-end model for page-level document parsing. Given a document page i\u2026",
+        "receipts": [
+          {
+            "label": "30.3k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "277 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 13",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 22,
         "name": "moonshotai/Kimi-K2.7-Code",
         "url": "https://huggingface.co/moonshotai/Kimi-K2.7-Code",
         "meta": "Kimi-K2.7-Code has the same architecture as Kimi-K2.5/Kimi-K2.6, and the deployment method can be directly reused.",
@@ -4639,49 +4688,7 @@
         "badges": []
       },
       {
-        "rank": 22,
-        "name": "ATH-MaaS/OvisOCR2",
-        "url": "https://huggingface.co/ATH-MaaS/OvisOCR2",
-        "meta": "We are pleased to announce the release of OvisOCR2, a compact 0.8B end-to-end model for page-level document parsing. Given a document page i\u2026",
-        "receipts": [
-          {
-            "label": "30.3k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "275 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 13",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 23,
-        "name": "nvidia/Cosmos3-Edge",
-        "url": "https://huggingface.co/nvidia/Cosmos3-Edge",
-        "meta": "NVIDIA Cosmos\u2122 is a world foundation model platform designed to accelerate the development of Physical AI by enabling machines to understand\u2026",
-        "receipts": [
-          {
-            "label": "30.3k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "112 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 1",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 24,
         "name": "openbmb/MiniCPM-RobotTrack",
         "url": "https://huggingface.co/openbmb/MiniCPM-RobotTrack",
         "meta": "robotics \u00b7 transformers \u00b7 apache-2.0",
@@ -4691,11 +4698,32 @@
             "kind": "npm"
           },
           {
-            "label": "123 likes",
+            "label": "125 likes",
             "kind": "stars"
           },
           {
             "label": "released Jul 18",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 24,
+        "name": "nvidia/Cosmos3-Edge",
+        "url": "https://huggingface.co/nvidia/Cosmos3-Edge",
+        "meta": "NVIDIA Cosmos\u2122 is a world foundation model platform designed to accelerate the development of Physical AI by enabling machines to understand\u2026",
+        "receipts": [
+          {
+            "label": "30.3k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "113 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 1",
             "kind": "age"
           }
         ],
@@ -4712,7 +4740,7 @@
             "kind": "npm"
           },
           {
-            "label": "133 likes",
+            "label": "136 likes",
             "kind": "stars"
           },
           {
@@ -4733,7 +4761,7 @@
             "kind": "npm"
           },
           {
-            "label": "89 likes",
+            "label": "91 likes",
             "kind": "stars"
           },
           {
@@ -4766,27 +4794,6 @@
       },
       {
         "rank": 28,
-        "name": "unsloth/Ornith-1.0-35B-GGUF",
-        "url": "https://huggingface.co/unsloth/Ornith-1.0-35B-GGUF",
-        "meta": "Aloha! \ud83c\udf3a Today, we are releasing Ornith-1.0, a self-improving family of open-source models for agentic coding.",
-        "receipts": [
-          {
-            "label": "84.2k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "88 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 17",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 29,
         "name": "LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
         "url": "https://huggingface.co/LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF",
         "meta": "Model is based on HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive base.",
@@ -4801,6 +4808,27 @@
           },
           {
             "label": "released Jul 13",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 29,
+        "name": "unsloth/Ornith-1.0-35B-GGUF",
+        "url": "https://huggingface.co/unsloth/Ornith-1.0-35B-GGUF",
+        "meta": "Aloha! \ud83c\udf3a Today, we are releasing Ornith-1.0, a self-improving family of open-source models for agentic coding.",
+        "receipts": [
+          {
+            "label": "84.2k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "88 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 17",
             "kind": "age"
           }
         ],
@@ -4825,6 +4853,27 @@
       },
       {
         "rank": 31,
+        "name": "microsoft/Mage-Flow-Edit-Turbo",
+        "url": "https://huggingface.co/microsoft/Mage-Flow-Edit-Turbo",
+        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
+        "receipts": [
+          {
+            "label": "695 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "72 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 32,
         "name": "Alissonerdx/LTX-Best-Face-ID",
         "url": "https://huggingface.co/Alissonerdx/LTX-Best-Face-ID",
         "meta": "An identity-preserving reference-to-video LoRA for LTX-2.3 (22B). Give it a reference photo of a person + a text prompt, and it generates a\u2026",
@@ -4841,27 +4890,6 @@
         "badges": []
       },
       {
-        "rank": 32,
-        "name": "microsoft/Mage-Flow-Edit-Turbo",
-        "url": "https://huggingface.co/microsoft/Mage-Flow-Edit-Turbo",
-        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
-        "receipts": [
-          {
-            "label": "695 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "69 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 21",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 33,
         "name": "krea/Krea-2-Turbo",
         "url": "https://huggingface.co/krea/Krea-2-Turbo",
@@ -4872,7 +4900,7 @@
             "kind": "npm"
           },
           {
-            "label": "709 likes",
+            "label": "710 likes",
             "kind": "stars"
           },
           {
@@ -4905,6 +4933,27 @@
       },
       {
         "rank": 35,
+        "name": "microsoft/Fara1.5-27B",
+        "url": "https://huggingface.co/microsoft/Fara1.5-27B",
+        "meta": "Fara1.5-27B is a multimodal computer use agent (CUA) for web browsers, from Microsoft Research AI Frontiers. It observes the browser through\u2026",
+        "receipts": [
+          {
+            "label": "990 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "62 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 17",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 36,
         "name": "ai-sage/GigaAM-Multilingual",
         "url": "https://huggingface.co/ai-sage/GigaAM-Multilingual",
         "meta": "GigaAM Multilingual is a family of Conformer-based foundation models (220M / 600M parameters) pre-trained with a HuBERT-style objective on 2\u2026",
@@ -4925,7 +4974,7 @@
         "badges": []
       },
       {
-        "rank": 36,
+        "rank": 37,
         "name": "prism-ml/Bonsai-27B-mlx-1bit",
         "url": "https://huggingface.co/prism-ml/Bonsai-27B-mlx-1bit",
         "meta": "Each weight is a single sign bit: 0 maps to \u2212scale, 1 maps to +scale. Every group of 128 weights shares one FP16 scale factor.",
@@ -4935,7 +4984,7 @@
             "kind": "npm"
           },
           {
-            "label": "174 likes",
+            "label": "176 likes",
             "kind": "stars"
           },
           {
@@ -4946,7 +4995,7 @@
         "badges": []
       },
       {
-        "rank": 37,
+        "rank": 38,
         "name": "badtheorylabs/BTL-3",
         "url": "https://huggingface.co/badtheorylabs/BTL-3",
         "meta": "BTL-3 is a 27B open-weight agent model built for agentic coding, structural tool use, repository work, failure recovery, and long multi-turn\u2026",
@@ -4956,7 +5005,7 @@
             "kind": "npm"
           },
           {
-            "label": "56 likes",
+            "label": "57 likes",
             "kind": "stars"
           },
           {
@@ -4967,49 +5016,7 @@
         "badges": []
       },
       {
-        "rank": 38,
-        "name": "GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-GGUF",
-        "url": "https://huggingface.co/GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-GGUF",
-        "meta": "GGUF quantizations of MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking for llama.cpp, Ollama, LM Studio, jan, KoboldCpp, and other GGUF runtimes.",
-        "receipts": [
-          {
-            "label": "140k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "161 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 13",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
         "rank": 39,
-        "name": "empero-ai/Qwythos-9B-v2-GGUF",
-        "url": "https://huggingface.co/empero-ai/Qwythos-9B-v2-GGUF",
-        "meta": "GGUF quantizations of empero-ai/Qwythos-9B-v2 for llama.cpp, Ollama, LM Studio, jan, KoboldCpp, and other GGUF runtimes.",
-        "receipts": [
-          {
-            "label": "295k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "213 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 9",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 40,
         "name": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
         "url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
         "meta": "v2 is built for coding + agentic work, writing code, running commands, using tools, debugging, multi-step technical tasks. The clearest sign\u2026",
@@ -5030,28 +5037,7 @@
         "badges": []
       },
       {
-        "rank": 41,
-        "name": "bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF",
-        "url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF",
-        "meta": "GGUF / llama.cpp quantizations of bottlecapai/ThinkingCap-Qwen3.6-27B, capability of Qwen3.6-27B with 50% less thinking tokens on average, a\u2026",
-        "receipts": [
-          {
-            "label": "363k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "189 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 1",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 42,
+        "rank": 40,
         "name": "DavidAU/Qwen3.5-9B-The-Defiant-Fable-Uncensored-Heretic-NEO-IMATRIX-MAX-MTP-GGUF",
         "url": "https://huggingface.co/DavidAU/Qwen3.5-9B-The-Defiant-Fable-Uncensored-Heretic-NEO-IMATRIX-MAX-MTP-GGUF",
         "meta": "Extreme intelligence in a small package. Jaw dropping performance. Superior instruction following.",
@@ -5061,7 +5047,7 @@
             "kind": "npm"
           },
           {
-            "label": "58 likes",
+            "label": "60 likes",
             "kind": "stars"
           },
           {
@@ -5072,13 +5058,34 @@
         "badges": []
       },
       {
-        "rank": 43,
+        "rank": 41,
+        "name": "GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-GGUF",
+        "url": "https://huggingface.co/GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-GGUF",
+        "meta": "GGUF quantizations of MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking for llama.cpp, Ollama, LM Studio, jan, KoboldCpp, and other GGUF runtimes.",
+        "receipts": [
+          {
+            "label": "140k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "161 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 13",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 42,
         "name": "audnai/penclaw-Kimi-K3.0-abliterated-GGUF",
         "url": "https://huggingface.co/audnai/penclaw-Kimi-K3.0-abliterated-GGUF",
         "meta": null,
         "receipts": [
           {
-            "label": "63 likes",
+            "label": "64 likes",
             "kind": "stars"
           },
           {
@@ -5089,7 +5096,112 @@
         "badges": []
       },
       {
+        "rank": 43,
+        "name": "empero-ai/Qwythos-9B-v2-GGUF",
+        "url": "https://huggingface.co/empero-ai/Qwythos-9B-v2-GGUF",
+        "meta": "GGUF quantizations of empero-ai/Qwythos-9B-v2 for llama.cpp, Ollama, LM Studio, jan, KoboldCpp, and other GGUF runtimes.",
+        "receipts": [
+          {
+            "label": "295k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "214 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 9",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
         "rank": 44,
+        "name": "microsoft/Mage-Flow-Turbo",
+        "url": "https://huggingface.co/microsoft/Mage-Flow-Turbo",
+        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
+        "receipts": [
+          {
+            "label": "701 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "51 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 45,
+        "name": "PaddlePaddle/HPD-Parsing",
+        "url": "https://huggingface.co/PaddlePaddle/HPD-Parsing",
+        "meta": "We introduce HPD-Parsing, a lightweight (1B) and high-throughput document parsing model built on a Hierarchical Parallel Decoding paradigm.\u2026",
+        "receipts": [
+          {
+            "label": "514 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "52 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 46,
+        "name": "ProCreations/grug-27b",
+        "url": "https://huggingface.co/ProCreations/grug-27b",
+        "meta": "grug get big brain now. 27B brain. biggest grug yet that actually work.",
+        "receipts": [
+          {
+            "label": "777 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "51 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 23",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 47,
+        "name": "bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF",
+        "url": "https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF",
+        "meta": "GGUF / llama.cpp quantizations of bottlecapai/ThinkingCap-Qwen3.6-27B, capability of Qwen3.6-27B with 50% less thinking tokens on average, a\u2026",
+        "receipts": [
+          {
+            "label": "363k downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "190 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 1",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 48,
         "name": "Wan-AI/Wan-Dancer-14B",
         "url": "https://huggingface.co/Wan-AI/Wan-Dancer-14B",
         "meta": "image-to-video \u00b7 diffusers \u00b7 apache-2.0",
@@ -5110,70 +5222,7 @@
         "badges": []
       },
       {
-        "rank": 45,
-        "name": "mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
-        "url": "https://huggingface.co/mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
-        "meta": "This is the EXACT SAME THING as https://huggingface.co/jlnsrk/GLM-5.2-colibri-int4, BUT with int8 MTP heads, which are needed for speculativ\u2026",
-        "receipts": [
-          {
-            "label": "10.3k downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "117 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 10",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 46,
-        "name": "microsoft/Fara1.5-27B",
-        "url": "https://huggingface.co/microsoft/Fara1.5-27B",
-        "meta": "Fara1.5-27B is a multimodal computer use agent (CUA) for web browsers, from Microsoft Research AI Frontiers. It observes the browser through\u2026",
-        "receipts": [
-          {
-            "label": "990 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "51 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 17",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 47,
-        "name": "ProCreations/grug-27b",
-        "url": "https://huggingface.co/ProCreations/grug-27b",
-        "meta": "grug get big brain now. 27B brain. biggest grug yet that actually work.",
-        "receipts": [
-          {
-            "label": "777 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "50 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 23",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 48,
+        "rank": 49,
         "name": "deepreinforce-ai/Ornith-1.0-35B-GGUF",
         "url": "https://huggingface.co/deepreinforce-ai/Ornith-1.0-35B-GGUF",
         "meta": "Aloha! \ud83c\udf3a Today, we are releasing Ornith-1.0, a self-improving family of open-source models for agentic coding.",
@@ -5194,21 +5243,21 @@
         "badges": []
       },
       {
-        "rank": 49,
-        "name": "PaddlePaddle/HPD-Parsing",
-        "url": "https://huggingface.co/PaddlePaddle/HPD-Parsing",
-        "meta": "We introduce HPD-Parsing, a lightweight (1B) and high-throughput document parsing model built on a Hierarchical Parallel Decoding paradigm.\u2026",
+        "rank": 50,
+        "name": "mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
+        "url": "https://huggingface.co/mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp",
+        "meta": "This is the EXACT SAME THING as https://huggingface.co/jlnsrk/GLM-5.2-colibri-int4, BUT with int8 MTP heads, which are needed for speculativ\u2026",
         "receipts": [
           {
-            "label": "514 downloads",
+            "label": "10.3k downloads",
             "kind": "npm"
           },
           {
-            "label": "50 likes",
+            "label": "117 likes",
             "kind": "stars"
           },
           {
-            "label": "released Jul 21",
+            "label": "released Jul 10",
             "kind": "age"
           }
         ],
@@ -5227,7 +5276,7 @@
             "kind": "npm"
           },
           {
-            "label": "541 likes",
+            "label": "543 likes",
             "kind": "stars"
           },
           {
@@ -5248,7 +5297,7 @@
             "kind": "npm"
           },
           {
-            "label": "371 likes",
+            "label": "373 likes",
             "kind": "stars"
           },
           {
@@ -5269,7 +5318,7 @@
             "kind": "npm"
           },
           {
-            "label": "230 likes",
+            "label": "238 likes",
             "kind": "stars"
           },
           {
@@ -5290,7 +5339,7 @@
             "kind": "npm"
           },
           {
-            "label": "184 likes",
+            "label": "185 likes",
             "kind": "stars"
           },
           {
@@ -5311,7 +5360,7 @@
             "kind": "npm"
           },
           {
-            "label": "169 likes",
+            "label": "171 likes",
             "kind": "stars"
           },
           {
@@ -5332,7 +5381,7 @@
             "kind": "npm"
           },
           {
-            "label": "172 likes",
+            "label": "173 likes",
             "kind": "stars"
           },
           {
@@ -5353,7 +5402,7 @@
             "kind": "npm"
           },
           {
-            "label": "147 likes",
+            "label": "150 likes",
             "kind": "stars"
           },
           {
@@ -5374,7 +5423,7 @@
             "kind": "npm"
           },
           {
-            "label": "121 likes",
+            "label": "126 likes",
             "kind": "stars"
           },
           {
@@ -5395,7 +5444,7 @@
             "kind": "npm"
           },
           {
-            "label": "123 likes",
+            "label": "125 likes",
             "kind": "stars"
           },
           {
@@ -5416,7 +5465,7 @@
             "kind": "npm"
           },
           {
-            "label": "89 likes",
+            "label": "91 likes",
             "kind": "stars"
           },
           {
@@ -5454,7 +5503,7 @@
             "kind": "npm"
           },
           {
-            "label": "69 likes",
+            "label": "72 likes",
             "kind": "stars"
           },
           {
@@ -5475,7 +5524,7 @@
             "kind": "npm"
           },
           {
-            "label": "56 likes",
+            "label": "57 likes",
             "kind": "stars"
           },
           {
@@ -5496,7 +5545,7 @@
             "kind": "npm"
           },
           {
-            "label": "58 likes",
+            "label": "60 likes",
             "kind": "stars"
           },
           {
@@ -5513,7 +5562,7 @@
         "meta": null,
         "receipts": [
           {
-            "label": "63 likes",
+            "label": "64 likes",
             "kind": "stars"
           },
           {
@@ -5525,20 +5574,20 @@
       },
       {
         "rank": 16,
-        "name": "ProCreations/grug-27b",
-        "url": "https://huggingface.co/ProCreations/grug-27b",
-        "meta": "grug get big brain now. 27B brain. biggest grug yet that actually work.",
+        "name": "microsoft/Mage-Flow-Turbo",
+        "url": "https://huggingface.co/microsoft/Mage-Flow-Turbo",
+        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
         "receipts": [
           {
-            "label": "777 downloads",
+            "label": "701 downloads",
             "kind": "npm"
           },
           {
-            "label": "50 likes",
+            "label": "51 likes",
             "kind": "stars"
           },
           {
-            "label": "released Jul 23",
+            "label": "released Jul 21",
             "kind": "age"
           }
         ],
@@ -5555,11 +5604,32 @@
             "kind": "npm"
           },
           {
-            "label": "50 likes",
+            "label": "52 likes",
             "kind": "stars"
           },
           {
             "label": "released Jul 21",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 18,
+        "name": "ProCreations/grug-27b",
+        "url": "https://huggingface.co/ProCreations/grug-27b",
+        "meta": "grug get big brain now. 27B brain. biggest grug yet that actually work.",
+        "receipts": [
+          {
+            "label": "777 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "51 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 23",
             "kind": "age"
           }
         ],
@@ -5574,7 +5644,7 @@
         "meta": "Deep research requires agents to find answers that jointly satisfy multiple constraints. Discovering such answers is costly, whereas verifyi\u2026",
         "receipts": [
           {
-            "label": "117 upvotes",
+            "label": "118 upvotes",
             "kind": "paper"
           },
           {
@@ -5696,9 +5766,9 @@
       },
       {
         "rank": 7,
-        "name": "SLAI T-Rex: Full-Parameter Post-training of the DeepSeek-V4 Family on Ascend SuperPOD",
-        "url": "https://huggingface.co/papers/2607.20145",
-        "meta": "Full-parameter post-training of trillion-parameter-scale MoE models introduces substantial system-level challenges for large-scale distribut\u2026",
+        "name": "ReferTrack: Referring Then Tracking for Embodied Visual Tracking",
+        "url": "https://huggingface.co/papers/2607.20061",
+        "meta": "Embodied visual tracking (EVT) requires a mobile agent to continuously follow a specific target described in natural language using only onb\u2026",
         "receipts": [
           {
             "label": "45 upvotes",
@@ -5718,12 +5788,12 @@
       },
       {
         "rank": 8,
-        "name": "ReferTrack: Referring Then Tracking for Embodied Visual Tracking",
-        "url": "https://huggingface.co/papers/2607.20061",
-        "meta": "Embodied visual tracking (EVT) requires a mobile agent to continuously follow a specific target described in natural language using only onb\u2026",
+        "name": "SLAI T-Rex: Full-Parameter Post-training of the DeepSeek-V4 Family on Ascend SuperPOD",
+        "url": "https://huggingface.co/papers/2607.20145",
+        "meta": "Full-parameter post-training of trillion-parameter-scale MoE models introduces substantial system-level challenges for large-scale distribut\u2026",
         "receipts": [
           {
-            "label": "44 upvotes",
+            "label": "45 upvotes",
             "kind": "paper"
           },
           {
@@ -5767,7 +5837,7 @@
         "meta": "Large language models are increasingly used in K-12 education, but existing benchmarks mainly test exam question answering rather than under\u2026",
         "receipts": [
           {
-            "label": "40 upvotes",
+            "label": "42 upvotes",
             "kind": "paper"
           },
           {
@@ -5789,7 +5859,7 @@
         "meta": "On-policy self-distillation (OPSD) is promising as it removes the external teacher required by on-policy distillation (OPD), yet it still ne\u2026",
         "receipts": [
           {
-            "label": "40 upvotes",
+            "label": "41 upvotes",
             "kind": "paper"
           },
           {
@@ -6194,7 +6264,7 @@
         "meta": "As LLMs become more capable, they are increasingly deployed as collaborative agents, taking on user-delegated tasks through iterative intera\u2026",
         "receipts": [
           {
-            "label": "15 upvotes",
+            "label": "16 upvotes",
             "kind": "paper"
           },
           {
@@ -6216,7 +6286,7 @@
         "meta": "We introduce SANA-Video 2.0, a hybrid video diffusion transformer instantiated at 5B and 14B scales under a unified architecture. Designed t\u2026",
         "receipts": [
           {
-            "label": "15 upvotes",
+            "label": "16 upvotes",
             "kind": "paper"
           },
           {
@@ -6367,6 +6437,23 @@
       },
       {
         "rank": 40,
+        "name": "Streaming Multi-Agent Autoregressive Diffusion Model with World State Registers",
+        "url": "https://huggingface.co/papers/2607.21594",
+        "meta": "Multi-agent interactive world models should not only generate consistent observations, but also maintain world states that persist across ag\u2026",
+        "receipts": [
+          {
+            "label": "10 upvotes",
+            "kind": "paper"
+          },
+          {
+            "label": "published Jul 23",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 41,
         "name": "Beyond Entropy: Correctness-Aware Advantage Shaping via Contrastive Policy Optimization",
         "url": "https://huggingface.co/papers/2607.14614",
         "meta": "Reinforcement learning with verifiable rewards (RLVR) commonly uses entropy for advantage shaping. However, entropy cannot distinguish usefu\u2026",
@@ -6383,7 +6470,7 @@
         "badges": []
       },
       {
-        "rank": 41,
+        "rank": 42,
         "name": "Beyond Euclidean Clipping: Overcoming Exploration Collapse in LLM RL via Riemannian Isometric Policy Optimization",
         "url": "https://huggingface.co/papers/2607.10169",
         "meta": "Reinforcement learning (RL) has become a dominant paradigm for enhancing LLMs' reasoning capabilities. However, RL algorithms with PPO-Clip\u2026",
@@ -6405,7 +6492,7 @@
         ]
       },
       {
-        "rank": 42,
+        "rank": 43,
         "name": "Environment-free Synthetic Data Generation for API-Calling Agents",
         "url": "https://huggingface.co/papers/2607.16900",
         "meta": "Training API-calling large language model (LLM) agents demands massive amounts of high-quality trajectories. However, collecting such data a\u2026",
@@ -6416,23 +6503,6 @@
           },
           {
             "label": "published Jul 18",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 43,
-        "name": "Streaming Multi-Agent Autoregressive Diffusion Model with World State Registers",
-        "url": "https://huggingface.co/papers/2607.21594",
-        "meta": "Multi-agent interactive world models should not only generate consistent observations, but also maintain world states that persist across ag\u2026",
-        "receipts": [
-          {
-            "label": "9 upvotes",
-            "kind": "paper"
-          },
-          {
-            "label": "published Jul 23",
             "kind": "age"
           }
         ],
@@ -6647,6 +6717,45 @@
       },
       {
         "rank": 55,
+        "name": "FinanceComplexQA: Benchmarking Agentic Reasoning on Industrial-grade Financial Documents",
+        "url": "https://huggingface.co/papers/2607.19238",
+        "meta": "Agentic Reasoning has become a transformative force in financial analysis due to its ability to integrate large-scale information and genera\u2026",
+        "receipts": [
+          {
+            "label": "5 upvotes",
+            "kind": "paper"
+          },
+          {
+            "label": "published Jul 21",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 56,
+        "name": "OpenForgeRL: Train Harness-native Agents in Any Environment",
+        "url": "https://huggingface.co/papers/2607.21557",
+        "meta": "Modern AI agents rely on elaborate inference harnesses such as Claude Code, Codex, and OpenClaw to drive multi-turn reasoning, tool use, and\u2026",
+        "receipts": [
+          {
+            "label": "5 upvotes",
+            "kind": "paper"
+          },
+          {
+            "label": "published Jul 23",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 57,
         "name": "TableVerse: A Large-scale Tabletop Dataset with Real-world Grounded Layouts for Generalizable Manipulation",
         "url": "https://huggingface.co/papers/2607.21017",
         "meta": "The development of generalizable robotic manipulation policies is inherently bounded by the availability of large-scale, high-fidelity scene\u2026",
@@ -6663,7 +6772,7 @@
         "badges": []
       },
       {
-        "rank": 56,
+        "rank": 58,
         "name": "Agon: Competitive Cross-Model RL with Implicit Rival Grading of Reasoning",
         "url": "https://huggingface.co/papers/2607.07690",
         "meta": "Reinforcement learning from verifiable rewards (e.g. GRPO) is the engine behind today's reasoning models, yet it grades only the final answe\u2026",
@@ -6680,7 +6789,7 @@
         "badges": []
       },
       {
-        "rank": 57,
+        "rank": 59,
         "name": "Behavioral Privacy Leakage in Agentic Negotiation: Formalizing and Mitigating Inference Attacks via Randomized Policies",
         "url": "https://huggingface.co/papers/2607.06815",
         "meta": "Autonomous negotiation agents are increasingly deployed in high-stakes settings such as insurance and procurement. While cryptographic techn\u2026",
@@ -6697,7 +6806,7 @@
         "badges": []
       },
       {
-        "rank": 58,
+        "rank": 60,
         "name": "Distilled Reinforcement Learning for LLM Post-training",
         "url": "https://huggingface.co/papers/2607.17247",
         "meta": "Large language model (LLM) post-training is essential for improving reasoning, adaptation, and alignment. Existing methods mainly follow two\u2026",
@@ -6717,50 +6826,6 @@
             "hot": false
           }
         ]
-      },
-      {
-        "rank": 59,
-        "name": "DocOps: A Verifiable Benchmark for Autonomous Agents in Complex Document Operations",
-        "url": "https://huggingface.co/papers/2607.19865",
-        "meta": "As autonomous agents rapidly evolve, their ability to reliably manipulate ubiquitous digital documents has become critical for enabling gene\u2026",
-        "receipts": [
-          {
-            "label": "4 upvotes",
-            "kind": "paper"
-          },
-          {
-            "label": "published Jul 22",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 60,
-        "name": "FinanceComplexQA: Benchmarking Agentic Reasoning on Industrial-grade Financial Documents",
-        "url": "https://huggingface.co/papers/2607.19238",
-        "meta": "Agentic Reasoning has become a transformative force in financial analysis due to its ability to integrate large-scale information and genera\u2026",
-        "receipts": [
-          {
-            "label": "4 upvotes",
-            "kind": "paper"
-          },
-          {
-            "label": "published Jul 21",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
       }
     ],
     "papers7": [
@@ -6771,7 +6836,7 @@
         "meta": "Deep research requires agents to find answers that jointly satisfy multiple constraints. Discovering such answers is costly, whereas verifyi\u2026",
         "receipts": [
           {
-            "label": "117 upvotes",
+            "label": "118 upvotes",
             "kind": "paper"
           },
           {
@@ -6788,6 +6853,28 @@
       },
       {
         "rank": 2,
+        "name": "ReferTrack: Referring Then Tracking for Embodied Visual Tracking",
+        "url": "https://huggingface.co/papers/2607.20061",
+        "meta": "Embodied visual tracking (EVT) requires a mobile agent to continuously follow a specific target described in natural language using only onb\u2026",
+        "receipts": [
+          {
+            "label": "45 upvotes",
+            "kind": "paper"
+          },
+          {
+            "label": "published Jul 22",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 3,
         "name": "SLAI T-Rex: Full-Parameter Post-training of the DeepSeek-V4 Family on Ascend SuperPOD",
         "url": "https://huggingface.co/papers/2607.20145",
         "meta": "Full-parameter post-training of trillion-parameter-scale MoE models introduces substantial system-level challenges for large-scale distribut\u2026",
@@ -6809,35 +6896,13 @@
         ]
       },
       {
-        "rank": 3,
-        "name": "ReferTrack: Referring Then Tracking for Embodied Visual Tracking",
-        "url": "https://huggingface.co/papers/2607.20061",
-        "meta": "Embodied visual tracking (EVT) requires a mobile agent to continuously follow a specific target described in natural language using only onb\u2026",
-        "receipts": [
-          {
-            "label": "44 upvotes",
-            "kind": "paper"
-          },
-          {
-            "label": "published Jul 22",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
         "rank": 4,
         "name": "K12-KGraph: A Curriculum-Aligned Knowledge Graph for Benchmarking and Training Educational LLMs",
         "url": "https://huggingface.co/papers/2605.09635",
         "meta": "Large language models are increasingly used in K-12 education, but existing benchmarks mainly test exam question answering rather than under\u2026",
         "receipts": [
           {
-            "label": "40 upvotes",
+            "label": "42 upvotes",
             "kind": "paper"
           },
           {
@@ -6859,7 +6924,7 @@
         "meta": "On-policy self-distillation (OPSD) is promising as it removes the external teacher required by on-policy distillation (OPD), yet it still ne\u2026",
         "receipts": [
           {
-            "label": "40 upvotes",
+            "label": "41 upvotes",
             "kind": "paper"
           },
           {
@@ -7081,7 +7146,7 @@
         "meta": "As LLMs become more capable, they are increasingly deployed as collaborative agents, taking on user-delegated tasks through iterative intera\u2026",
         "receipts": [
           {
-            "label": "15 upvotes",
+            "label": "16 upvotes",
             "kind": "paper"
           },
           {
@@ -7103,7 +7168,7 @@
         "meta": "We introduce SANA-Video 2.0, a hybrid video diffusion transformer instantiated at 5B and 14B scales under a unified architecture. Designed t\u2026",
         "receipts": [
           {
-            "label": "15 upvotes",
+            "label": "16 upvotes",
             "kind": "paper"
           },
           {
@@ -7176,6 +7241,23 @@
       },
       {
         "rank": 21,
+        "name": "Streaming Multi-Agent Autoregressive Diffusion Model with World State Registers",
+        "url": "https://huggingface.co/papers/2607.21594",
+        "meta": "Multi-agent interactive world models should not only generate consistent observations, but also maintain world states that persist across ag\u2026",
+        "receipts": [
+          {
+            "label": "10 upvotes",
+            "kind": "paper"
+          },
+          {
+            "label": "published Jul 23",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 22,
         "name": "Environment-free Synthetic Data Generation for API-Calling Agents",
         "url": "https://huggingface.co/papers/2607.16900",
         "meta": "Training API-calling large language model (LLM) agents demands massive amounts of high-quality trajectories. However, collecting such data a\u2026",
@@ -7186,23 +7268,6 @@
           },
           {
             "label": "published Jul 18",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 22,
-        "name": "Streaming Multi-Agent Autoregressive Diffusion Model with World State Registers",
-        "url": "https://huggingface.co/papers/2607.21594",
-        "meta": "Multi-agent interactive world models should not only generate consistent observations, but also maintain world states that persist across ag\u2026",
-        "receipts": [
-          {
-            "label": "9 upvotes",
-            "kind": "paper"
-          },
-          {
-            "label": "published Jul 23",
             "kind": "age"
           }
         ],
@@ -7283,6 +7348,45 @@
       },
       {
         "rank": 27,
+        "name": "FinanceComplexQA: Benchmarking Agentic Reasoning on Industrial-grade Financial Documents",
+        "url": "https://huggingface.co/papers/2607.19238",
+        "meta": "Agentic Reasoning has become a transformative force in financial analysis due to its ability to integrate large-scale information and genera\u2026",
+        "receipts": [
+          {
+            "label": "5 upvotes",
+            "kind": "paper"
+          },
+          {
+            "label": "published Jul 21",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "paper-backed",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 28,
+        "name": "OpenForgeRL: Train Harness-native Agents in Any Environment",
+        "url": "https://huggingface.co/papers/2607.21557",
+        "meta": "Modern AI agents rely on elaborate inference harnesses such as Claude Code, Codex, and OpenClaw to drive multi-turn reasoning, tool use, and\u2026",
+        "receipts": [
+          {
+            "label": "5 upvotes",
+            "kind": "paper"
+          },
+          {
+            "label": "published Jul 23",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 29,
         "name": "TableVerse: A Large-scale Tabletop Dataset with Real-world Grounded Layouts for Generalizable Manipulation",
         "url": "https://huggingface.co/papers/2607.21017",
         "meta": "The development of generalizable robotic manipulation policies is inherently bounded by the availability of large-scale, high-fidelity scene\u2026",
@@ -7299,7 +7403,7 @@
         "badges": []
       },
       {
-        "rank": 28,
+        "rank": 30,
         "name": "Distilled Reinforcement Learning for LLM Post-training",
         "url": "https://huggingface.co/papers/2607.17247",
         "meta": "Large language model (LLM) post-training is essential for improving reasoning, adaptation, and alignment. Existing methods mainly follow two\u2026",
@@ -7310,50 +7414,6 @@
           },
           {
             "label": "published Jul 19",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 29,
-        "name": "DocOps: A Verifiable Benchmark for Autonomous Agents in Complex Document Operations",
-        "url": "https://huggingface.co/papers/2607.19865",
-        "meta": "As autonomous agents rapidly evolve, their ability to reliably manipulate ubiquitous digital documents has become critical for enabling gene\u2026",
-        "receipts": [
-          {
-            "label": "4 upvotes",
-            "kind": "paper"
-          },
-          {
-            "label": "published Jul 22",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "paper-backed",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 30,
-        "name": "FinanceComplexQA: Benchmarking Agentic Reasoning on Industrial-grade Financial Documents",
-        "url": "https://huggingface.co/papers/2607.19238",
-        "meta": "Agentic Reasoning has become a transformative force in financial analysis due to its ability to integrate large-scale information and genera\u2026",
-        "receipts": [
-          {
-            "label": "4 upvotes",
-            "kind": "paper"
-          },
-          {
-            "label": "published Jul 21",
             "kind": "age"
           }
         ],
