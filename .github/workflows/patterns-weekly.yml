@@ -1,0 +1,52 @@
+name: Patterns weekly
+
+# L4 of chain/LOOP_CHAIN_2026-07-26.md: the statistical floor. Reads
+# docs/data/{clicks,tags}.json (already committed by refresh.yml), writes
+# docs/data/patterns.json. Weekly, not 3h -- this is a trust gate over
+# accumulated history, not a board bake, and doesn't need refresh.yml's
+# cadence. Own concurrency group: read-only over the ledgers refresh.yml
+# writes, so it never needs to serialize with the board refresh itself.
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"   # Monday 9am UTC (1am PT / 2am PDT)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hotin-patterns-weekly
+  cancel-in-progress: false
+
+jobs:
+  patterns:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compute the statistical floor
+        run: python3 scripts/statistical_floor.py
+      - name: Commit patterns.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/patterns.json
+          if git diff --cached --quiet; then
+            echo "no pattern changes"
+          else
+            git commit -m "patterns: weekly statistical floor $(date -u +%Y-%m-%dT%H:%MZ)"
+            pushed=0
+            for i in 1 2 3; do
+              git push && { pushed=1; break; }
+              echo "push rejected; rebasing (attempt $i)"
+              # -X theirs keeps OUR replayed commit's side (rebase inverts ours/theirs)
+              git pull --rebase -X theirs origin main || true
+            done
+            if [ "$pushed" != "1" ]; then
+              echo "::error::patterns.json commit never pushed after 3 attempts"
+              exit 1
+            fi
+          fi
