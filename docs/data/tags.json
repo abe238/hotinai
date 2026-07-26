@@ -1,4 +1,1679 @@
 {
-    "_schema_version": 1,
-    "items": {}
+  "_schema_version": 1,
+  "items": {
+    "vercel-labs/deepsec": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "justvugg/colibri": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "xai-org/grok-build": {
+      "tag": "dev-tools",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "hoainho/img2threejs": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "microsoft/skillopt": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "dietrichgebert/ponytail": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "fei-away/codex-dream-skin": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "bigpizzav3/codexplusplus": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "langchain-ai/openwiki": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "nyblnet/bento": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "lopopolo/harness-engineering": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "baidu/unlimited-ocr": {
+      "tag": "app-building",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "oso95/scroll-world": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "laoma2053/awesome-zhuiju-free": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "x4gking/x4g": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "darrylmorley/whatcable": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "moonshotai/kimi-code": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "yu9191/wloc": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "oomol-lab/open-connector": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "ayghri/i-have-adhd": {
+      "tag": "dev-tools",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "withmarbleapp/os-taxonomy": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "img2threejs/img2threejs": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "lidge-jun/opencodex": {
+      "tag": "dev-tools",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "alibaba/open-code-review": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "blaizzy/nativ": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "makerspet/oomwoo": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "xiaomimimo/mimo-code": {
+      "tag": "dev-tools",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "googlecloudplatform/knowledge-catalog": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "corebunch/instatic": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "alayalab/alayaworld": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "basketikun/infinite-canvas": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "sunblaze-ucb/exploitgym": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "davidhdev/canvas-ui": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "cobusgreyling/loop-engineering": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "plasma-ai/fractal": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "xxhuberrr/mineradio": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "nexu-io/open-design": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "zhishile/codex-auth-helper": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "sirallap/agentglass": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "pixel-point/aval": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "michaelliv/pi-dynamic-workflows": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "boogu-project/boogu-image": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "odysseus-dev/odysseus": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "antirez/ds4": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "unicity-aos/aos-ce": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "vincentwei1021/video-shotcraft": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "elder-plinius/t3mp3st": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "jakubantalik/thinking-orbs": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "omnigent-ai/omnigent": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "mighty-alien/mev-arbitrage-bot": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "petergyang/no-ai-slop": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "penecho/penecho": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "pireel/pireel": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "startrail-org/pixelrag": {
+      "tag": "app-building",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "nethical6/conversation-steganography": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "synthetic-sciences/openscience": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "v-modal/vmodal_sdk_flutter": {
+      "tag": "dev-tools",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "vercel/eve": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "isjiamu/gzh-design-skill": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "sahir619/fable-method": {
+      "tag": "dev-tools",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "chuspeeism/dashi-ppt-skill": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "davidondrej/skills": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "builderio/skills": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "alephaitech/workbuddyguide": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "mikiarlo3/ai-copywriter": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "slvdev/esp32-ai": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "mikehasa/agentacct": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "gnipbao/story-to-handdrawn-video": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "kritt-ai/open-kritt": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "danilo-znamerovszkij/draw-your-font": {
+      "tag": "dev-tools",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "realchendahuang/pi-config": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "realfishsam/agent-notch": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "finna/finn-loop": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "hahhforest/pi-textbook": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "role1776/netmon": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "nextweb4/official-document-ai-assistant": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "rockthemike712/mission-control-board": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "trycaspian/caspian-sdk": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "risa-labs-inc/bossconsole": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "codejunkie99/graph-engineering": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "paxlabs-inc/machine-genome": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "nvidia-nemo/labs-oo-agents": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "0xwilliamortiz/andrej-karpathy-skills": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "eli-labz/agent-execution-partnership": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "giovannibrees/travel-roamradar": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "xyz-ai-lab/axrl": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "ddcat-ai/open-ai-canvas": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "brandon030722/ark-ui-skill": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "nulightjens/humanizer-stack": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "0xtresser/transcript-of-liang-wenfengs-deepseek-founder-4-hour-investor-meeting": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "rainppr/china-llms-anecdote-0721": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "recursive-knowledge/ksi": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "minghinmatthewlam/openbench": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "auto-index/autoindex": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "doordash-oss/doordash-cli": {
+      "tag": "dev-tools",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "xcc3641/blinkface": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "transluceai/weirdchat": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "teorth/tao-web": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "susie-lu/driftworld": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "sumbledata/sumble-skills-public": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "statico/llmac": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "pc-style/skill-view": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "miaai-lab/laguna-s-2.1-dgx-spark-rtx-6000-pro": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "mayfer/soldat-web": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "mainframecomputer/skills": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "lvsean/reviv4d": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "kyunghyuncho/nyu-guest-registration": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "baidu/Unlimited-OCR": {
+      "tag": "app-building",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "poolside/Laguna-S-2.1": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "upstage/Solar-Open2-250B": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "thinkingmachines/Inkling": {
+      "tag": "app-building",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "Nanbeige/Nanbeige4.2-3B": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "microsoft/Mage-Flow": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "prism-ml/Ternary-Bonsai-27B-gguf": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "zai-org/GLM-5.2": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "Motif-Technologies/Motif-3-Beta": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "unsloth/Laguna-S-2.1-GGUF": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "prism-ml/Bonsai-27B-gguf": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "Kwaipilot/KAT-Coder-V2.5-Dev": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "openbmb/MiniCPM-RobotManip": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "fdtn-ai/antares-1b": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "poolside/Laguna-S-2.1-GGUF": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "conradlocke/krea2-identity-edit": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "poolside/Laguna-S-2.1-NVFP4": {
+      "tag": "dev-tools",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "nvidia/Cosmos3-Edge": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "moonshotai/Kimi-K2.7-Code": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "bottlecapai/ThinkingCap-Qwen3.6-27B": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "openbmb/MiniCPM-RobotTrack": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "ATH-MaaS/OvisOCR2": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "baseten/GLM-5.2-Vision-NVFP4": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V5-GGUF": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "microsoft/Fara1.5-27B": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "OpenMOSS-Team/MOSS-VL-Realtime": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "owensong/Inflect-Micro-v2": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "microsoft/Mage-Flow-Edit-Turbo": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "Lightricks/LTX-2.3-22b-IC-LoRA-Clean-Plate": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "LuffyTheFox/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-V3-GGUF": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "unsloth/Ornith-1.0-35B-GGUF": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "poolside/Laguna-XS-2.1": {
+      "tag": "dev-tools",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "krea/Krea-2-Turbo": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "Alissonerdx/LTX-Best-Face-ID": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "DavidAU/Qwen3.5-9B-The-Defiant-Fable-Uncensored-Heretic-NEO-IMATRIX-MAX-MTP-GGUF": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "badtheorylabs/BTL-3": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "ai-sage/GigaAM-Multilingual": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "microsoft/Mage-Flow-Turbo": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "PaddlePaddle/HPD-Parsing": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "ProCreations/grug-27b": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "audnai/penclaw-Kimi-K3.0-abliterated-GGUF": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "owensong/Inflect-Nano-v2": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "prism-ml/Bonsai-27B-mlx-1bit": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "nvidia/Nemotron-3-Embed-1B-BF16": {
+      "tag": "app-building",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "deepreinforce-ai/Ornith-1.0-35B-GGUF": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-GGUF": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "mateogrgic/GLM-5.2-colibri-int4-with-int8-mtp": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "empero-ai/Qwythos-9B-v2-GGUF": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.21461": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2606.29538": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.11683": {
+      "tag": "app-building",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2605.09635": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.16051": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.15330": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.20061": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.14530": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.20145": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.15314": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.21556": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.21072": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.20368": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.17250": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.15161": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.15591": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.19747": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.13196": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.18217": {
+      "tag": "app-building",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.20709": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.21553": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.18213": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.20911": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.17423": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.16401": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.09759": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.16097": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.16165": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.12746": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.20734": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.11699": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.21576": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.16850": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.15524": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.17977": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.16169": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.19604": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.21594": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.13429": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.15686": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.21051": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.14614": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.10169": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.16900": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.04763": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.10848": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.20785": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.14088": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.16107": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.15901": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.18110": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.09082": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.21485": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.13365": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.19238": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.21557": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.21017": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.07690": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.06815": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "2607.17247": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://simonwillison.net/2026/Jul/25/ruff/#atom-everything": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.latent.space/p/ainews-claude-opus-5-fable-level": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://simonwillison.net/2026/Jul/25/boris-cherny/#atom-everything": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://simonwillison.net/2026/Jul/24/introducing-claude-opus-5/#atom-everything": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.latent.space/p/ainews-black-forest-labs-flux-3-multimodal": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://openai.com/index/health-in-chatgpt": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://huggingface.co/blog/nunchaku-diffusers": {
+      "tag": "creative-media",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://simonwillison.net/2026/Jul/23/the-first-known-runaway-ai-agent/#atom-everything": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.latent.space/p/ainews-laguna-s-21-released-cheaper": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.latent.space/p/poolside": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://simonwillison.net/2026/Jul/23/seth-larson/#atom-everything": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://openai.com/index/introducing-openai-presence": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://deepmind.google/blog/accelerating-the-frontiers-of-scientific-discovery-googles-40m-commitment-to-the-genesis-mission/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://blog.google/products-and-platforms/platforms/android/galaxy-unpacked-2026/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://openai.com/index/building-ai-infrastructure-with-the-effingham-county-community": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://openai.com/index/how-news-organizations-are-using-ai": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://openai.com/index/advancing-the-next-era-of-national-science": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://openai.com/index/ntt-data": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://simonwillison.net/2026/Jul/22/thomas-ptacek/#atom-everything": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://simonwillison.net/2026/Jul/22/openai-cyberattack/#atom-everything": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://simonwillison.net/2026/Jul/22/are-ai-labs-pelicanmaxxing/#atom-everything": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.interconnects.ai/p/open-models-recap-more-on-kimi-k3": {
+      "tag": "training",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.latent.space/p/ainews-ai-cybersecurity-becomes-top": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://openai.com/index/hugging-face-model-evaluation-security-incident": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://openai.com/index/introducing-chatgpt-small-business-program": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://huggingface.co/blog/nvidia/state-of-simulation-for-physical-ai": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://deepmind.google/blog/introducing-gemini-36-flash-35-flash-lite-and-35-flash-cyber/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://huggingface.co/blog/grabette": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.latent.space/p/xaira": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.latent.space/p/ainews-not-much-happened-today-173": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.interconnects.ai/p/kimi-k3-the-open-weights-escalation": {
+      "tag": "inference",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.latent.space/p/ainews-not-much-happened-today-830": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://deepmind.google/blog/introducing-gemini-3-5-flash-cyber/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://deepmind.google/blog/our-approach-to-bioresilience/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://huggingface.co/blog/security-incident-july-2026": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://blog.google/products-and-platforms/products/search/connected-apps/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://blog.google/products-and-platforms/products/workspace/gemini-omni-personal-avatars/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://huggingface.co/blog/Dharma-AI/newer-models-same-advantages": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://huggingface.co/blog/ibm-research/model-routing-is-simple-until-it-isnt": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://huggingface.co/blog/allenai/shippy-tech-blog": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://huggingface.co/blog/thinkingmachines-inkling": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://blog.google/products-and-platforms/products/search/google-images-25th-anniversary/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.microsoft.com/en-us/research/blog/verifying-rust-cryptography-in-symcrypt-from-standards-to-code/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://deepmind.google/blog/empowering-indias-next-generation-of-innovators-with-atl-saathi/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.interconnects.ai/p/6-months-to-live-for-open-models": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://mistral.ai/news/manage-prompts-and-skills-in-studio/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.microsoft.com/en-us/research/blog/aurora-1-5-extending-open-foundation-models-for-weather-and-earth-system-applications/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://mistral.ai/news/robostral-navigate/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.microsoft.com/en-us/research/blog/flint-a-visualization-language-for-the-ai-era/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://blog.google/innovation-and-ai/technology/developers-tools/expanding-managed-agents-gemini-api/": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://deepmind.google/blog/google-deepmind-and-a24-announce-first-of-its-kind-research-partnership/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://mistral.ai/news/leanstral-1-5/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-june-2026/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://blog.google/products-and-platforms/products/education/nyc-ai-summit/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.microsoft.com/en-us/research/blog/skillopt-agent-skills-as-trainable-parameters/": {
+      "tag": "agents",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://deepmind.google/blog/start-building-with-nano-banana-2-lite-and-gemini-omni-flash/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://blog.google/company-news/inside-google/around-the-globe/google-europe/united-kingdom/unlocking-britains-next-era-of-productivity-building-a-nation-of-ai-trailblazers/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.microsoft.com/en-us/research/blog/memora-a-harmonic-memory-representation-balancing-abstraction-and-specificity/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.interconnects.ai/p/artifacts-22-zyphra-cohere-and-poolside": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    },
+    "https://www.microsoft.com/en-us/research/blog/understanding-the-brain-with-ai-driven-explanations-and-experiments/": {
+      "tag": "uncategorized",
+      "source": "keyword",
+      "confidence": 1.0,
+      "updated_at": "Jul 25, 2026 \u00b7 8:11 PM PT"
+    }
+  }
 }
