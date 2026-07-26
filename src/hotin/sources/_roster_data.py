@@ -1,171 +1,176 @@
-"""Insider roster data — who counts as an "AI insider", and where each name came from.
+"""Insider roster — who counts as an "AI insider", and where each name came from.
 
-Three provenance tiers, kept separate so the methodology is auditable (L6):
+AI_1000
+    The AI-1000 cohort from digg.com/tech/x/rankings, ranked by "tech ranked
+    followers" (how many already-ranked tech accounts follow you). Captured from
+    a copy of the page saved locally, then parsed; the live source later went
+    behind a bot wall. 759 of the 1000 list a GitHub account, deduped by handle
+    (one person held two X accounts pointing at one repo account) and kept in
+    rank order, so roster position mirrors the cohort's own ranking.
 
-RECOVERED_FROM_DIGG_TRACE
-    Mined from our own observation store (~/.local/share/hotin/cache.db, 274 cached
-    insiders/smartmoney rows) — the surviving trace of digg.com's AI-1000 cohort
-    before that source died behind a bot wall. 63 distinct handles were captured
-    across every repo we ever tracked; these are the ones that resolve as real
-    GitHub accounts. The other 28 were X/Twitter handles (digg's list was
-    social-graph based). We never held the full 1000: their page exposed only the
-    top ~12 starrers per repo, never the underlying cohort.
+    NOTE: 64% of these people use a different handle on GitHub than on X
+    (DavidDuvenaud -> duvenaud, chrmanning -> manning, goodfellow_ian ->
+    goodfeli). The two are stored separately in the source data and must never
+    be assumed equal — assuming it would corrupt ~488 of these entries.
 
-HAND_CURATED
-    Well-known AI-community accounts added by hand to broaden coverage.
+    This replaced an earlier attempt to synthesise an equivalent list from
+    GitHub contributor data (top committers to 50 major AI repos). Measured
+    against this list, that approach found only 4% of it and missed ylecun,
+    andrewyng, cbfinn, manning, srush, percyliang and most of the top 50.
+    Commit volume measures who BUILDS; this list measures whose judgment the
+    field FOLLOWS. For a "what are notable people starring" signal the second is
+    what matters. Recorded as a negative result so nobody re-derives it.
 
-TOP_CONTRIBUTORS
-    Derived from GitHub's own API: the contributors to 50 major AI repositories
-    (inference, training, agents, tooling, vector stores, eval, ML infra, speech,
-    vision), filtered to humans with >=100 total commits across that set. 4,305
-    unique humans were found; the >=100-commit depth filter yields this tier.
+OURS_EXTRA
+    Accounts from our own observation store and hand-curation that are not in
+    the AI-1000 (ggerganov, HuggingFace maintainers, and similar). Real signal,
+    just outside that cohort.
 
-    Why depth, not breadth: ranking by "appears in the most repos" surfaces
-    prolific drive-by contributors (one account had 20 repos at 8 commits each)
-    over people who actually build a project (another had 4 repos at 375 each).
-    Breadth was also biased by repo selection — 7 of the 50 repos are
-    HuggingFace's, so "in 2+ repos" partly just measured "works at HuggingFace".
+Roster size is bounded by the GitHub API budget: ~1 call per member per poll,
+two polls per 3h cycle, against a shared 5000/hr limit.
 
-    Roster size is bounded by the GitHub API budget, not by taste: each member
-    costs ~1 call per poll and the board polls twice per 3h cycle, against a
-    shared 5000/hr limit. >=100 commits keeps this comfortably inside it.
-
-Regenerate with scratchpad/build_roster.py. This file is data, not logic.
+Source data: ~/Downloads/AI-1000/ai-1000.json
 """
 
-RECOVERED_FROM_DIGG_TRACE = (
-    "ChowdhuryNeil", "DynamicWebPaige", "MilesCranmer", "PMinervini", "VictorTaelin",
-    "altryne", "antgoldbloom", "antimatter15", "backpropper", "davemorin", "deepfates",
-    "ggerganov", "hmason", "jmtomczak", "jsngr", "kepano", "leloykun", "lintool",
-    "marksaroufim", "mayfer", "mckaywrigley", "mrdrozdov", "peterjliu", "quasimondo",
-    "samsja19", "simonw", "skirano", "smolix", "steipete", "syhw", "theo",
-    "thesephist", "wongmjane", "yisongyue", "yuntiandeng",
+AI_1000 = (
+    "karpathy", "ylecun", "goodfeli", "andrewyng", "oriolvinyals", "sarahooker",
+    "cbfinn", "kyunghyuncho", "manning", "colah", "srush", "pabbeel", "larocheh",
+    "nandodf", "percyliang", "lilianweng", "thomwolf", "svlevine", "sleepinyourhat",
+    "zackchase", "demishassabis", "akhaliq", "gdb", "jacobandreas", "joschu",
+    "janleike", "duvenaud", "noambrown", "dpkingma", "jackclarksf", "droy",
+    "jasonwei20", "rockt", "yejinc", "benjamin-recht", "sebastianruder", "hardmaru",
+    "soumith", "hal3", "tdietterich", "dwarkeshsp", "timdettmers", "huggingface",
+    "nat", "tengyuma", "ericjang", "DrJimFan", "BeenKim", "shakirm", "alexandr",
+    "egrefen", "AranKomat", "lucasb-eyer", "natolambert", "dustinvtran", "ofirpress",
+    "zkolter", "suchenzang", "fchollet", "poolio", "neubig", "rgrosse",
+    "natashamjaques", "wojzaremba", "benanne", "profsanjeevarora", "yoavg", "ywteh",
+    "Newmu", "jph00", "DavidSHolz", "liamb315", "rohan-anil", "aravindsrinivas",
+    "barretzoph", "rpadams", "logankilpatrick", "sholtodouglas", "egcap", "delip",
+    "tridao", "yisongyue", "jasondlee88", "casutton", "aleksmadry", "jfrankle",
+    "bneyshabur", "diyiy", "mattjj", "garrytan", "jakobnicolaus", "danqi", "yaringal",
+    "achowdhery", "murphyk", "randomwalker", "saranormous", "ibab", "tkipf",
+    "millionintegrals", "fhuszar", "mmitchellai", "jekbradbury", "tscohen",
+    "Eric-Wallace", "sriramk", "gwern", "jeffclune", "hendrycks", "bamos",
+    "jaseweston", "sohl-dickstein", "andrewgordonwilson", "DaniloRezende",
+    "ethanjperez", "tgebru", "hannawallach", "shmsw25", "satyanadella", "aaskell",
+    "boazbk", "lexfridman", "lukemetz", "mimosavvy", "lawrennd", "vanzytay",
+    "phillipi", "shamulent", "s9xie", "catherio", "yoavartzi", "deviparikh",
+    "markriedl", "jachiam", "emostaque", "rasbt", "dpfau", "stanislavfort", "balajis",
+    "goodside", "aconneau", "bmcgrew", "yuandong-tian", "rowanz", "emollick",
+    "erichorvitz", "dennyzhou", "chillee", "okhat", "hoonose", "tomgoldstein",
+    "leopoldaschenbrenner", "capybaralet", "thashim", "simonw", "lmthang",
+    "danielgross", "janexwang", "noamshazeer", "collision", "fh295", "cgpotts",
+    "anadim", "agarwl", "riedelcastro", "scychan", "gregdurrett", "kevinweil",
+    "beirami", "albertfgu", "TalLinzen", "tobi", "chiphuyen", "amasad", "swyxio",
+    "rishibommasani", "dfield", "thegregyang", "yang-song", "adamdangelo", "nsaphra",
+    "redpony", "neelnanda-io", "PalmerLuckey", "mathemajician", "ezelikman",
+    "jxmorris12", "monkbent", "arthurmensch", "glample", "profjure", "jasonbaldridge",
+    "douwekiela", "emilymbender", "animesh-garg", "mnielsen", "merettm", "eunsol",
+    "doomie", "smerity", "dmrd", "zhuzeyuan", "BlackHC", "deedy", "raiah",
+    "karinanguyen", "avdnoord", "Nearcyan", "vbuterin", "jeisner", "joannejang",
+    "lampinen", "hhexiy", "eshear", "jacobeisenstein", "fbach2000", "dhruvbatra",
+    "stellaathena", "mireshghallah", "smolix", "typedfemale", "racheltho", "pathak22",
+    "mrkulk", "rajiinio", "Cogitans", "welinder", "jaderberg", "MelMitchell1",
+    "akariasai", "adityaramesh", "dhadfieldmenell", "sameersingh", "aidangomez",
+    "finiteloop", "michaeljblack", "ShengjiaZhao", "jonbarron", "soldni",
+    "suryaganguli", "shivonz", "kohpangwei", "eugenevinitsky", "cmaddis", "IrwanBello",
+    "61cygni", "douglaseck", "prafullasd", "mgbellemare", "miyyer", "jbhuang0604",
+    "JustinLin610", "da03", "jiajunwu", "truell20", "KaiWeiChang", "alextamkin",
+    "sustcsonglin", "julien-c", "dennybritz", "ysymyth", "teknium1", "cdixon",
+    "DoctorTeeth", "sivareddyg", "maithraraghu", "balajiln", "omerlevy", "KhoomeiK",
+    "echoyuzhou", "nathanbenaich", "owainevans", "dpfried", "yoshua", "vered1986",
+    "aidanmclaughlin", "wenhuchen", "jluan", "yanndubs", "cocoxu", "0hq", "swj0419",
+    "ezubaric", "MostafaDehghani", "JohnLangford", "mdenil", "suhail", "danijar",
+    "arimorcos", "BorisPower", "robinjia", "bcherny", "matt-gardner", "dsontag",
+    "yuchenlin", "girving", "steipete", "iosband", "nelson-liu", "maartensap", "Szepi",
+    "rauchg", "jessedodge", "Feryal", "nottombrown", "dynamicwebpaige", "irapha",
+    "eric-xw", "ybisk", "swabhs", "ysu1989", "dsadigh", "brendenlake", "preetum",
+    "izmailovpavel", "arthurgretton", "yacineMTB", "orph", "korymath",
+    "meredith-signal", "mcaleste", "kamalikach", "yukezhu", "kayoyin", "ludwigschmidt",
+    "mbavar", "kawine", "sea-snell", "yimaeecs", "johncoogan", "barmstrong", "mateiz",
+    "theoweber", "KarolHausman", "FurongHuang", "sebastianGehrmann", "ajayjain",
+    "rajammanabrolu", "jcjohnson", "pulkitag", "jayelm", "anjneymidha", "haniesedghi",
+    "koraykv", "hwchung27", "wpeebles", "kipply", "LachyGroom", "VioletPeng", "geohot",
+    "iamtrask", "patio11", "ncammarata", "yuhuaiwu", "eric-mitchell", "NoviScl",
+    "rraileanu", "n-mca", "akanazawa", "tqchen", "boknilev", "Sanger2000",
+    "mishalaskin", "sarahwie", "john-hewitt", "aditya-grover", "mlittmancs",
+    "drewhouston", "ari-holtzman", "AnanyaKumar", "leogao2", "ngoodman", "andrewnc",
+    "rylanschaeffer", "machelreid", "stephenroller", "alexalbertt", "davidbau",
+    "shreyashankar", "reedscot", "ruiqi-zhong", "syhw", "allenbai01", "jam3scampbell",
+    "tibo-openai", "naveengrao", "Edward-Sun", "lvhimabindu", "yilundu", "edchi",
+    "psc-g", "hyren", "annargrs", "gillverd", "vzhong", "andrewchen", "rizar",
+    "cohere-ai", "andrewmccallum", "scott-gray", "Will-Manidis-Cascade", "erikto",
+    "sashavor", "abhishekunique", "chenhaot", "lucy3", "maxlevchin", "jimmylba", "yk",
+    "willccbb", "eringrant", "isabelleaugenstein", "laurent-dinh", "atcbosselut",
+    "tongshuangwu", "rmrafailov", "wellecks", "isafulf", "victorsanh",
+    "thestephencasper", "sangmichaelxie", "csvoss", "yonatansito", "ryan-lowe",
+    "xiaolonw", "catherinewu", "siddk", "mikeyk", "jbigham", "todpole3", "vkrakovna",
+    "lennysan", "mononofu", "searchivarius", "cranmer", "minilek", "jiamings",
+    "abisee", "ctlllll", "francoisfleuret", "samin100", "jmhessel", "evhub",
+    "leecjohnny", "timvieira", "cchan", "kyleclo", "npapernot", "yobibyte",
+    "sherjilozair", "franxyao", "YuchenJin", "nikiparmar", "yizhongw", "AlexiaJM",
+    "thomason-jesse", "david-abel", "misovalko", "epierson9", "hlml", "tunguz",
+    "martinshkreli", "sschoenholz", "alexisjihyeross", "irenetrampoline", "infoxiao",
+    "breakend", "pliang279", "zhijing-jin", "gabrielpetersson", "ArmenAg", "sebkrier",
+    "amarasovic", "amyzhang", "andyljones", "aw31", "imurray", "tmabraham",
+    "angelikilazaridou", "atcold", "annagoldie", "andipeng", "TimSalimans",
+    "gabrielilharco", "honglaklee", "daniellevy", "gd-zhang", "mbchang", "mordatch",
+    "asaprahul", "gaotianyu1350", "levelsio", "wyshi", "SebastianThrun", "keroro824",
+    "JiahuiYu", "aritter", "bryancatanzaro", "shayne-longpre", "vsitzmann", "junyanz",
+    "qkaren", "petarv-", "swarooprm", "finbarrtimbers", "yuqirose", "mtegmark", "my89",
+    "romainhuet", "shanzhenren", "XiangLi1999", "ravidziv", "gjtucker", "karthikncode",
+    "viking-sudo-rm", "gkioxari", "yoshavit", "omarsar", "clementfarabet", "beerys",
+    "socketteer", "osanseviero", "abebabirhane", "dmoskov", "JasperSnoek",
+    "cvalenzuela", "ofirnachum", "sherwu", "belindal", "zebulgar", "kelvinguu",
+    "moxie0", "ztangent", "erikbern", "mshumer", "adinawilliams", "kaixhin",
+    "arvind-neural", "kellerjordan", "shurans", "Mascobot", "multipath", "heiner",
+    "MaxASchwarzer", "timothybrooks", "theTejMahal", "hwchase17", "kanjun", "gabgoh",
+    "yanaiela", "yixuanli", "ruiqigao", "dguo98", "jxnl", "ivzhao", "unixpickle",
+    "pminervini", "jlin816", "rtqichen", "neilhoulsby", "dblalock", "aryamanarora",
+    "DanielleFong", "vicenteor", "wenting-zhao", "austenallred", "lukaszkaiser",
+    "cvondrick", "emtiyaz", "patrick-s-h-lewis", "davidad", "yaroslavvb",
+    "christinakim", "joschabach", "limanling", "lerrel", "emorikawa", "flaque",
+    "donglixp", "fxia22", "aviralkumar2907", "tonyzhaozh", "boztank", "arnauddoucet",
+    "mimno", "nickfrosst", "devonzuegel", "jacobaustin123", "rohinmshah",
+    "rememberlenny", "norouzi", "muennighoff", "AbhilashaRavichander", "xiamengzhou",
+    "qipeng", "jparkerholder", "TrentBrick", "yasamanb", "ksayash", "mpshanahan",
+    "paulbuchheit", "explorerfreda", "dileeplearning", "atroyn", "katja-hofmann",
+    "alisawuffles", "elder-plinius", "nouhadziri", "mcleavey", "thariqs", "scottyih",
+    "HanGuo97", "sjmielke", "jbohg", "jmoore994", "midjourney", "togelius", "bscholl",
+    "tommmitchell", "taoyds", "liuzhuang13", "Jungyhuk", "devendrachaplot", "dellaert",
+    "haileyschoelkopf", "bodono", "apaszke", "josh-tobin", "zphang", "blader",
+    "RJT1990", "riannevdberg", "dlwh", "mfaruqui", "yosinski", "zhaoranwang",
+    "robertnishihara", "bplank", "ggerganov", "mdredze", "nschneid", "peterbhase",
+    "Ying1123", "xjdr-alt", "zhoubolei", "wwcohen", "CHandmer", "caglar", "geomblog",
+    "lishali", "danfeiX", "coreylynch", "cpaxton", "ajbrock", "julianmichael",
+    "lintool", "rromb", "danfu09", "cathykc", "chuangg", "stevesi", "natschluter",
+    "ikostrikov", "tedsanders", "jxbz", "merveenoyan", "kuleshov", "altimor",
+    "leighmarie", "rao2z", "goldblum", "kzl", "hyhieu", "akosiorek", "quantombone",
+    "jmcohen", "robodhruv", "mikeknoop", "techcrunch", "danyaljj", "Moustapha6C",
+    "mickypaganini", "aminkarbasi", "timoreilly", "vincentweisser", "canondetortugas",
+    "negar-rostamzadeh", "sharonzhou", "mbernst", "krandiash", "andrejristeski",
+    "jalammar", "alexander-kirillov", "brendano", "alexpolozov", "ethancaballero",
+    "mblondel", "kevinzakka", "heyyjudes", "lauraruis", "paraga", "CSProfKGD",
+    "AdrienLE", "sherryy", "jerryjliu", "logangraham", "renmengye", "AdamGleave",
+    "shuyanzhou", "tommccoy1", "azizishekoofeh", "snavely", "cloneofsimo",
+    "wgrathwohl", "xinw1012", "zlite", "sergebelongie", "kvogt", "urvashik",
+    "ranjaykrishna", "micahcarroll", "ksaenko", "idavidrein", "jiayi-pan", "kswersky",
+    "danintheory", "amueller", "andreykurenkov", "jazcollins", "mckinziebrandon",
+    "lvdmaaten", "sniekum", "vveitch", "langchain-ai", "pratyushasharma",
+    "ekinakyurek", "jasoncrawford", "fehrsam", "smilli", "artetxem", "tuhinjubcse",
+    "nazneenrajani", "ogrisel", "lattner", "mcmachado", "dribnet", "reinerp", "znado",
+    "borgr", "matthen", "aliceoh9", "dshipper", "summer-yue", "milesgrimshaw",
+    "mitchellnw", "adityakusupati", "ruchowdh", "Besiroglu", "dyogatama",
 )
 
-HAND_CURATED = (
-    "karpathy", "jeremyphoward", "rasbt", "clefourrier", "Tostino", "abetlen",
-    "tomaarsen", "vikhyat", "huybery", "winglian", "teknium1", "Vaibhavs10",
-    "philschmid", "osanseviero", "julien-c", "thomwolf", "lvwerra", "natolambert",
-    "soumith", "lhoestq",
+OURS_EXTRA = (
+    "ChowdhuryNeil", "MilesCranmer", "VictorTaelin", "altryne", "antgoldbloom",
+    "antimatter15", "backpropper", "davemorin", "deepfates", "hmason", "jmtomczak",
+    "jsngr", "kepano", "leloykun", "marksaroufim", "mayfer", "mckaywrigley",
+    "mrdrozdov", "peterjliu", "quasimondo", "samsja19", "skirano", "theo",
+    "thesephist", "wongmjane", "yuntiandeng", "jeremyphoward", "clefourrier",
+    "Tostino", "abetlen", "tomaarsen", "vikhyat", "huybery", "winglian", "Vaibhavs10",
+    "philschmid", "lvwerra", "lhoestq",
 )
 
-TOP_CONTRIBUTORS = (
-    "tjbck", "psychedelicious", "charris", "antas-marcin", "pytorchmergebot",
-    "oobabooga", "penguine-ip", "etiennedi", "dirkkul", "danielhanchen", "mikeldking",
-    "AUTOMATIC1111", "ezyang", "malfet", "comfyanonymous", "mattip", "seberg",
-    "harupy", "nfcampos", "ogrisel", "hiyouga", "amueller", "teoliphant", "lstein",
-    "patrickvonplaten", "zou3519", "ko3n1g", "glenn-jocher", "congqixia", "sgugger",
-    "cournape", "cyyever", "blessedcoolant", "moogacs", "ydshieh", "merrymercy",
-    "rgommers", "baskaryan", "RogerHYang", "abidlabs", "asdine", "A-Vamshi",
-    "hwchase17", "pearu", "ericl", "larsmans", "mxyng", "logan-markewich",
-    "bobvanluijt", "vanpelt", "eric-wieser", "jerryzh168", "raubitsj", "edoakes",
-    "sven1977", "ccurme", "eyurtsev", "LysandreJik", "hinthornw", "JinHai-CN",
-    "generall", "agramfort", "gchanan", "anijain2305", "jorenham", "axiomofjoy",
-    "RyanJDick", "n1t0", "bigsheeper", "jansel", "jaredcasper", "sayakpaul",
-    "timoffex", "aslonnie", "jwongster2", "mdrxy", "glouppe", "dmitryduev", "aliszka",
-    "majdyz", "robertnishihara", "jerryjliu", "thomasjpfan", "Pwuts", "dhiltgen",
-    "kritinv", "jmorganca", "lintangsutawika", "DarkLight1337", "peterbell10",
-    "hnyls2002", "geekan", "apaszke", "Narsil", "can-anyscale", "krfricke", "rkooo567",
-    "pprett", "fzyzcjy", "huydhn", "zhuwenxing", "agourlay", "WoosukKwon", "zhyncs",
-    "B-Step62", "ngoldbaum", "pv", "vbarda", "xiaocai2333", "bveeramani", "suo",
-    "mblondel", "vene", "jnothman", "garylin2099", "XuanYang-cn", "janeyx99", "albanD",
-    "mwiebe", "Chillee", "juliantaylor", "zdevito", "spike-spiegel-21", "cydrain",
-    "desertfire", "freddyaboulton", "serena-ruan", "yhmo", "jeffoverflow", "XuPeng-SH",
-    "pngwn", "simon-mo", "stas00", "muellerzr", "timvisee", "albertvillanova",
-    "tsmith023", "kptkin", "rolandtannous", "rohan-varma", "swolchok", "longjiquan",
-    "rescrv", "glemaitre", "colesbury", "sunby", "aliabd", "parkerduckworth",
-    "lesteve", "mlazos", "pcmoritz", "eellison", "jeroiraz", "joaomdmoura",
-    "NanoCode012", "richardliaw", "fishpenguin", "amourao", "angelayi", "gante",
-    "ArthurZucker", "BenjaminBossan", "dawoodkhan82", "bobrenjc93", "jjyao",
-    "williamwen42", "arjoly", "HammadB", "mgoin", "hmellor", "weiliu1031",
-    "shawnlewis", "sre-ci-robot", "Classic298", "stevhliu", "r-barnes", "patil-suraj",
-    "smessmer", "pytorchupdatebot", "better629", "dqbd", "drisspg", "haileyschoelkopf",
-    "robbespo00", "younesbelkada", "stefanv", "abdelr", "eqy", "Swiftyos",
-    "greysonlalonde", "ngxson", "bdhirsh", "dbczumar", "kshitij12345", "pacman100",
-    "jeremiedbb", "sydney-runkle", "atalman", "guilhermeleobas", "vkuzo", "leogao2",
-    "Torantulino", "kavirajk", "wconstab", "stephanie-wang", "mickqian", "seemethere",
-    "ekzhu", "Yangqing", "youkaichao", "wanchaol", "Rocketknight1", "codetheweb",
-    "chyezh", "xige-16", "Isotr0py", "Skylion007", "TomeHirata", "jackgerrits",
-    "zucchini-nlp", "waynehamadi", "BenWilson2", "slin1237", "yanliang567", "ssnl",
-    "anticorrelator", "czs007", "amogkam", "yah01", "tugsbayasgalan", "jeffra",
-    "njhill", "BowenBao", "BBuf", "zasdfgbnm", "jeffchuber", "RizwanMunawar",
-    "XuehaiPan", "ThreadDao", "cbornet", "architkulkarni", "fishbone", "WeichenXu123",
-    "houseroad", "cxie", "jeffdaily", "soulitzer", "laithsakka", "mrshenli",
-    "lmcafee-nvidia", "xiaofan-luan", "binbinlv", "shanmugamr1992", "ntindle",
-    "daniellok-db", "Cyrilvallez", "Y-T-G", "JohannesGaessler", "pietern",
-    "BloggerBust", "lvhan028", "ydwu4", "aliabid94", "SunMarc", "sonichi", "aorenste",
-    "leo-gan", "Laughing-q", "coszio", "justinvyu", "bwasti", "guangyey", "wasimysaid",
-    "yewentao256", "kwen2501", "reyreaud-l", "IvanKobzarev", "lezcano", "baberabb",
-    "cephalization", "bddppq", "oulgen", "BruceMacD", "Fridge003", "Yard1", "mhvk",
-    "slaren", "OlivierDehaene", "youny626", "davidberard98", "DN6", "khluu",
-    "bigcat88", "mdouze", "jakevdp", "zcin", "njsmith", "shoeybi", "jbschlosser",
-    "deepakn94", "grimoire", "hannahblair", "mauwii", "zhxchen17", "yanboliang",
-    "DimitriPapadopoulos", "LoveEachDay", "r-devulap", "HaoZeke", "mikaylagawarecki",
-    "peterjc123", "redouan-rhazouani", "ArturNiederfahrenhorst", "jeejeelee",
-    "shimmyshimmer", "Sicheng-Pan", "mariosasko", "w-e-w", "wangting0128", "MechCoder",
-    "CISC", "goldsborough", "godchen0212", "xuhdev", "seiko2plus", "ijrsvt", "rickyyx",
-    "yushangdi", "adrinjalali", "0ubbe", "anton-l", "hipsterusername", "ispobock",
-    "jeffbolznv", "pianpwk", "silentoplayz", "lw", "stellaHSR", "IvanPleshkov",
-    "brandonrising", "kouroshHakha", "aoiasd", "onnxbot", "fegin", "seehi",
-    "NielsRogge", "dentiny", "justinchuby", "scv119", "donomii", "raulchen",
-    "hunteraraujo", "Millu", "WarrenWeckesser", "ericharper", "sshleifer",
-    "kurtamohler", "dayshah", "smurching", "NicoYuan1986", "alisonshao", "moretea",
-    "matthewdeng", "xzfc", "ffuugoo", "AndreasKaratzas", "ch-wan", "jaime0815",
-    "loadams", "yiyixuxu", "Krovatkin", "sanketkedia", "ahaldane", "qinhanmin2014",
-    "elliot-barn", "Abhi1992002", "danbev", "mlflow-automation", "jaimefrio",
-    "clarkzinzow", "bertmaher", "jessegross", "lorentzenchr", "H-Huang", "lucyleeow",
-    "bashtage", "kevin85421", "shunting314", "NicolasHug", "asmeurer", "mehrdadn",
-    "eric-jones", "tinkerlin", "StAlKeR7779", "xmfan", "lorenzejay", "richbeales",
-    "rkern", "s-yeddula", "maryhipp", "mikolajblaz", "supriyar", "Bentlybro",
-    "pritamdamania", "zhagnlu", "NelleV", "SimFG", "adrianbg", "masnesral",
-    "IvanYashchuk", "KyleGoyette", "amyeroberts", "etaf", "suquark", "XiaobingSuper",
-    "mtsokol", "robertlayton", "pythongosssss", "leslie-fang-intel", "fffrog",
-    "frgossen", "shrekris-anyscale", "orange-crow", "itaismith", "omerXfaruq",
-    "jeroenstraverskpn", "lukas", "Kangyan-Zhou", "rlancemartin", "anjali411", "ebr",
-    "akx", "jspark1105", "LucasWilkinson", "kimishpatel", "cheahjs", "pdevine",
-    "sywangyi", "trengrj", "VictorSanh", "tonyyli-wandb", "CatherineSue", "ywang96",
-    "Disiok", "Ying1123", "tanujnay112", "NickLucche", "jovany-wang", "fduwjj",
-    "wz337", "SherlockNoMad", "xwjiang2010", "killeent", "d4l3k", "a-r-r-o-w",
-    "raimbekovm", "ParthSareen", "StellaAthena", "pierregm", "shoyer",
-    "DmitriGekhtman", "JustinTong0323", "MrPresent-Han", "AllentDan", "jacoblee93",
-    "simonsays1980", "Pfannkuchensack", "abrarsheikh", "shenchucheng", "tylerjereddy",
-    "wxywb", "RobertCraigie", "scottjlee", "rossbar", "ruisearch42", "smellthemoon",
-    "russellb", "tjruwase", "ShangmingCai", "lysnikolaou", "melissawm", "whitphx",
-    "lakshanthad", "ffbin", "jon-tow", "pcuenca", "irexyc", "mfuntowicz",
-    "robertgshaw2-redhat", "yfrigui2", "mwtian", "yao-matrix", "GeneDer", "aarushik93",
-    "alexeykudinkin", "zhengbuqian", "b8zhong", "cyzus", "moredatarequired", "nerdai",
-    "dfaker", "jacobromero", "mrwyattii", "avnishn", "danieldk", "eicherseiji", "kcze",
-    "tohtana", "chaunceyjiang", "goutamvenkat-anyscale", "levand", "isahers1",
-    "yonigozlan", "sanchit-gandhi", "c21", "lucasgomide", "rynewang", "czgdp1807",
-    "faaany", "eltociear", "Imagineer99", "RunningLeon", "jairad26", "masci",
-    "del-zhenwu", "comfyui-wiki", "reidliu41", "BillSchumacher", "Qiaolin-Yu",
-    "g-despot", "smoorjani", "chainchompa", "eendebakpt", "vasqu", "mrm8488", "noooop",
-    "angt", "kvareddy", "Harvester62", "JojiiOfficial", "ShirasawaSama", "haorenfsa",
-    "SilenNaihin", "tlrmchlsmth", "ganesh-k13", "jarrodmillman", "mannaandpoem",
-    "Pierrci", "vowelparrot", "ByronHsu", "bhancockio", "didiforgithub",
-    "peytondmurray", "GreggHelt2", "JPPhoto", "SpadeA-Tang", "kriscon-db",
-    "KohakuBlueleaf", "catboxanon", "drbh", "am17an", "jiqing-feng", "raghavrv",
-    "MekkCyber", "jiaoew1991", "kaixuanliu", "sihanwang41", "keturn", "ahojnnes",
-    "rattus128", "star1327p", "angelinalg", "rth", "salvatore-campagna-weaviate",
-    "shanghaikid", "hatianzhang", "andrewnguonly", "kfstorm", "mmangkad",
-    "sunishsheth2009", "yellow-shine", "jplu", "MatthewBonanni", "jjerphan",
-    "yuan-luo", "maanug-nv", "aarondav", "bigPYJ1151", "dunkeroni", "jannikstdl",
-    "missionfloyd", "weblate", "zhuohan123", "jayvius", "tazarov", "technovangelist",
-    "tomasonjo", "yctseng0211", "andrew-anyscale", "skzhang1", "tdene", "dev2049",
-    "SongGuyang", "WangTaoTheTonic", "williamberman", "StefanieSenger", "rysweet",
-    "BUAADreamer", "afourney", "bcsherma", "jielinxu", "jon-barker", "kashif",
-    "qingyun-wu", "ServeurpersoCom", "hlky", "0cc4m", "Qiyu8", "vinibrsl", "yhyang201",
-    "betatim", "wayblink", "Justin-ZL", "Sai-Suraj-27", "jingkl", "jikunshang",
-    "rueian", "huchenlei", "TomDLT", "maxpumperla", "FluorineDog", "MortalHappiness",
-    "seldo", "woshiyyya", "Charlie-XIAO", "Wauplin", "LittleLittleCloud", "algoriddle",
-    "jianoaix", "jllllll", "lzhangzz", "michaelpoluektov", "victordibia", "weilinear",
-    "Phlip79", "shaoting-huang", "tssweeney", "chtruong814", "prithvikannan",
-    "remi-or", "santhnm2", "cebtenzzre", "chenmoneygithub", "drifkin", "iamjustinhsu",
-    "matthew-brett", "adrnswanberg", "alibeklfc", "beauby", "beggers", "cmarmo",
-    "tolgacangoz", "AstraBert", "allozaur", "jlopatec", "ravi03071991", "clayw",
-    "hzh0425", "jeffreywang88", "jiaodong", "varun-sundar-rabindranath", "heheda12345",
-    "onuralpszr", "space-nuko", "ikaharudin", "lnhsingh", "wuisawesome", "ikawrakow",
-    "keenborder786", "kemaleren", "yeahdongcn",
-)
-
-ROSTER = RECOVERED_FROM_DIGG_TRACE + HAND_CURATED + TOP_CONTRIBUTORS
+ROSTER = AI_1000 + OURS_EXTRA
