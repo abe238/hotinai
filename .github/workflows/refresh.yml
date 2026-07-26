@@ -61,11 +61,23 @@ jobs:
           else
             python3 scripts/pull_clicks.py || echo "click pull failed (non-fatal)"
           fi
+      - name: Restore embedding model cache (avoid re-downloading every 3h)
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hotin-embed-model-all-MiniLM-L6-v2-v1
+          restore-keys: hotin-embed-model-all-MiniLM-L6-v2-
+      - name: Tag via exemplar propagation (best-effort; never blocks the board)
+        run: |
+          pip install -q -r scripts/requirements-embeddings.txt || echo "embedding deps install failed (non-fatal)"
+          python3 scripts/compute_embeddings.py || echo "embedding compute failed (non-fatal)"
+          python3 scripts/surface_exemplar_candidates.py || echo "exemplar surfacing failed (non-fatal)"
+          python3 scripts/propagate_tags.py || echo "tag propagation failed (non-fatal)"
       - name: Commit the snapshot
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/index.html docs/data/latest.json docs/data/tags.json docs/data/clicks.json
+          git add docs/index.html docs/data/*.json
           if git diff --cached --quiet; then
             echo "no board changes"
           else
