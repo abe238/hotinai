@@ -419,12 +419,13 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     # Rising = climbing fast; Viral is the rare extreme (accelerating + corroborated).
     if rising:
         badges.append("viral" if (meta.get("accelerating") and source_count >= 2) else "rising")
-    # Smart-money badge RETIRED (2026-07-26): the digg AI-1000 cohort was large
-    # enough that >=2 co-occurring starrers was routine; a curated roster of a
-    # few dozen accounts almost never produces two starrers on the same repo, so
-    # the badge would be silently near-invisible. The signal still lives in the
-    # credibility term (log1p smartmoney_starrers) and the dedicated `hotin
-    # insiders` tab; it is no longer a headline badge on the repos board.
+    # Smart Money = the premium credibility rubric: the insider crowd is on it AND
+    # it is showing up across several independent sources. Retiring this was
+    # considered when the roster looked tiny, then rejected on evidence: with the
+    # 55-account roster recovered from our own observation store, 7 of 12
+    # roster-starred repos cleared the >=2 bar in a single 7-day window.
+    if finite_float(signal.get("smartmoney_starrers"), 0.0) >= 2 and source_count >= 2:
+        badges.append("smart-money")
     if paper_backed:
         badges.append("paper-backed")
     result.update({"momentum": momentum, "credibility": credibility, "signal_score": signal_score,

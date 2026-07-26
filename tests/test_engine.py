@@ -394,15 +394,20 @@ def test_badge_vocabulary_is_tight_and_word_of_mouth():
     ], now=now)["acme/tool"]
     tb = engine.score_repo(three, now=now)["badges"]
     assert "corroborated" not in tb and "hn" not in tb and "reddit" not in tb
-    # Smart-money BADGE retired 2026-07-26 (roster too small to reliably hit the
-    # old >=2-starrer gate). The signal still feeds credibility (log1p term) and
-    # the dedicated `hotin insiders` tab, but is no longer a headline badge on
-    # the repos board — assert it never appears, even when strongly backed.
+    # Smart Money = >=2 insiders AND >=2 INDEPENDENT sources. smartmoney is a flag
+    # source, so it no longer counts toward source_count itself (that was double-
+    # counting the same evidence the starrer condition already checks), so the
+    # badge needs two genuinely independent sources alongside the insider signal.
+    sm_alone = engine.merge_by_repo(
+        [record("smartmoney", signal={"smartmoney_starrers": 50, "pushed_at": now})],
+        now=now)["acme/tool"]
+    assert "smart-money" not in engine.score_repo(sm_alone, now=now)["badges"]
     sm_backed = engine.merge_by_repo([
         record("smartmoney", signal={"smartmoney_starrers": 50, "pushed_at": now}),
         record("github", signal={"stars": 10, "pushed_at": now}),
+        record("hn", signal={"hn_points": 200, "pushed_at": now}),
     ], now=now)["acme/tool"]
-    assert "smart-money" not in engine.score_repo(sm_backed, now=now)["badges"]
+    assert "smart-money" in engine.score_repo(sm_backed, now=now)["badges"]
 
 
 def test_smartmoney_is_a_flag_source_not_independent_corroboration():
