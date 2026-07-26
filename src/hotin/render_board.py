@@ -8,12 +8,17 @@ A ROW is a dict::
 
     {
       "rank": int | str,
+      "id": str | None,
       "name": str,
       "url": str | None,
       "meta": str | None,
       "receipts": [{"label": str, "kind": str}],
       "badges": [{"label": str, "hot": bool}],
     }
+
+``id`` is the stable entity_id/canonical_repo join key, emitted as the row's
+``data-id`` attribute on the web board so client-side click tracking can send
+a stable identifier instead of the free-text display name.
 """
 
 import html
@@ -188,11 +193,14 @@ def render_html(rows, *, entity="repos"):
             inner = '<a href="{}" target="_blank" rel="noopener">{}</a>'.format(
                 html.escape(str(url), quote=True), inner)
 
+        row_id = row.get("id")
+        id_attr = ' data-id="{}"'.format(html.escape(str(row_id), quote=True)) if row_id else ""
         out.append(
-            '<div class="row"><div class="rank">{rank}</div>'
+            '<div class="row"{id_attr}><div class="rank">{rank}</div>'
             '<div class="item"><div class="name">{inner}</div>'
             '<div class="receipts">{chips}</div></div>'
             '<div class="badges">{badges}</div></div>'.format(
+                id_attr=id_attr,
                 rank=rank,
                 inner=inner,
                 chips="".join(chips),

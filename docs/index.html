@@ -424,7 +424,8 @@
     var rank=rankEl?rankEl.textContent.trim():'';
     var firstNode=a.childNodes[0];
     var item=(firstNode&&firstNode.nodeType===3)?firstNode.textContent.trim():a.textContent.trim();
-    ga('select_result',{tab:entity,rank:rank,item:item});
+    var id=row?row.dataset.id:'';
+    ga('select_result',{tab:entity,rank:rank,item:item,id:id});
   });
 
   var seenSections={};

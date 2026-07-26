@@ -11,7 +11,7 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
-from . import __version__, board, engine, health, render_board, schedule
+from . import __version__, board, categories, engine, health, render_board, schedule
 from .cache import MemoryCache, open_cache
 from .canonical import canonicalize
 from .coerce import finite_float, finite_int
@@ -728,6 +728,71 @@ def _insiders_from_cache(cached_rows: List[dict], limit: int, *, now: Optional[f
             for r in rows[:max(0, limit)]]
 
 
+def _classify_entities(repo_lists, models, papers, news) -> dict:
+    """Tag every board entity (repo/model/paper/news alike) with one shared,
+    deterministic category — the join key `patterns.json` will eventually read
+    tags by. Repo-type records already carry `category` from score_repo
+    (engine.py); this only recomputes it as a fallback when absent, and is the
+    sole place papers/models/news get classified at all today.
+    """
+    items: dict = {}
+    for records in repo_lists:
+        for rec in records:
+            if not isinstance(rec, dict):
+                continue
+            entity_id = rec.get("entity_id") or rec.get("canonical_repo")
+            if not entity_id:
+                continue
+            meta = rec.get("meta") if isinstance(rec.get("meta"), dict) else {}
+            tag = rec.get("category") or categories.classify(
+                rec.get("name", ""), meta.get("description"), meta.get("topics"))
+            items[entity_id] = tag
+    for rec in models:
+        if not isinstance(rec, dict) or not rec.get("entity_id"):
+            continue
+        meta = rec.get("meta") if isinstance(rec.get("meta"), dict) else {}
+        # model_task is an HF pipeline tag ("text-to-speech" etc) — already a
+        # vocabulary term, so it's worth 2x as a topic when the prose is thin
+        # or missing (refresh only backfills a bounded slice of descriptions).
+        task = meta.get("model_task")
+        items[rec["entity_id"]] = categories.classify(
+            rec.get("entity_id") or rec.get("name") or "", meta.get("model_description"),
+            [task] if isinstance(task, str) else None)
+    for rec in papers:
+        if not isinstance(rec, dict) or not rec.get("entity_id"):
+            continue
+        meta = rec.get("meta") if isinstance(rec.get("meta"), dict) else {}
+        items[rec["entity_id"]] = categories.classify(
+            rec.get("name") or rec.get("entity_id") or "", meta.get("paper_summary"), None)
+    for rec in news:
+        if not isinstance(rec, dict) or not rec.get("entity_id"):
+            continue
+        # headlines carry no body text — classification runs on the title
+        # alone, a known, thinner signal than repos/papers/models get.
+        items[rec["entity_id"]] = categories.classify(rec.get("name") or "", None, None)
+    return items
+
+
+def _write_tags_json(docs: Path, items: dict, stamp_pt: str) -> None:
+    """Merge ``items`` into docs/data/tags.json — never a replace. An entity
+    absent from this run's window keeps its prior tag; never raises (a
+    malformed/foreign tags.json degrades to an empty ledger, same "total
+    function" contract the rest of this codebase holds itself to)."""
+    path = docs / "data" / "tags.json"
+    existing = {"_schema_version": 1, "items": {}}
+    if path.exists():
+        try:
+            existing = json.loads(path.read_text())
+        except (ValueError, OSError):  # ValueError covers JSONDecodeError + str/bytes decode errors
+            existing = {}
+    if not isinstance(existing, dict):
+        existing = {}
+    tagged = existing.get("items") if isinstance(existing.get("items"), dict) else {}
+    for entity_id, tag in items.items():
+        tagged[entity_id] = {"tag": tag, "source": "keyword", "confidence": 1.0, "updated_at": stamp_pt}
+    path.write_text(json.dumps({"_schema_version": 1, "items": tagged}, indent=2, allow_nan=False))
+
+
 def _export(arguments: argparse.Namespace) -> int:
     """Bake the 5-tab board into docs/index.html + write docs/data/latest.json.
 
@@ -876,6 +941,14 @@ def _export(arguments: argparse.Namespace) -> int:
     (docs / "data" / "latest.json").write_text(json.dumps(
         {"generated": stamp, "generated_pt": stamp_pt, "entities": rows},
         indent=2, allow_nan=False))
+    # Tagging runs LAST and never raises past this point — a broken tags.json
+    # ledger must never cost the board its daily refresh (same principle as
+    # every source adapter's own fail-soft contract).
+    try:
+        tag_items = _classify_entities([repos60, rising, rising7, ins60], models60, papers60, news60)
+        _write_tags_json(docs, tag_items, stamp_pt)
+    except Exception as exc:  # noqa: BLE001 - deliberate: tagging is best-effort
+        print("tags.json update skipped: {}".format(exc))
     counts = ", ".join("{} {}".format(len(v), k) for k, v in rows.items())
     print("exported {} · baked {} + docs/data/latest.json".format(counts, index.name))
     return 0

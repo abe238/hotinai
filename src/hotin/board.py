@@ -1,10 +1,11 @@
 """Map ranked entity records to the shared board Row view-model.
 
 Pure functions (no I/O, never raise) that turn each entity's records into the
-Row shape `render_board` consumes: {rank, name, url, meta, receipts, badges}.
-Receipts are numbers (who points at it), badges are verdicts. This is the one
-place record-shape knowledge meets the renderer, so the console/markdown/html
-surfaces stay identical.
+Row shape `render_board` consumes: {rank, id, name, url, meta, receipts, badges}.
+`id` is the stable entity_id/canonical_repo join key (never the display
+`name`, which is free text). Receipts are numbers (who points at it), badges
+are verdicts. This is the one place record-shape knowledge meets the
+renderer, so the console/markdown/html surfaces stay identical.
 """
 
 from __future__ import annotations
@@ -163,7 +164,8 @@ def repo_rows(ranked: List[dict]) -> List[dict]:
         title = raw_name if raw_name and raw_name.casefold() != str(slug).casefold() else None
         meta = _clip(title or _meta(repo).get("description"))
         rows.append({
-            "rank": i, "name": slug, "url": repo.get("url"), "meta": meta,
+            "rank": i, "id": repo.get("entity_id") or slug,
+            "name": slug, "url": repo.get("url"), "meta": meta,
             "receipts": receipts, "badges": _badges(repo),
         })
     return rows
@@ -204,7 +206,8 @@ def insider_rows(records: List[dict]) -> List[dict]:
         if age:
             receipts.append({"label": "{}d old".format(age), "kind": "age"})
         rows.append({
-            "rank": i, "name": rec.get("canonical_repo") or rec.get("name") or "?",
+            "rank": i, "id": rec.get("entity_id") or rec.get("canonical_repo") or rec.get("name") or "?",
+            "name": rec.get("canonical_repo") or rec.get("name") or "?",
             "url": rec.get("url"), "meta": _clip(_meta(rec).get("description")),
             "receipts": receipts,
             "badges": [{"label": "smart-money", "hot": False}],
@@ -231,7 +234,8 @@ def model_rows(ranked: List[dict]) -> List[dict]:
         gated = "gated · access request required" if _meta(m).get("model_gated") else ""
         desc = _clip(_meta(m).get("model_description"), 140) or " · ".join(
             x for x in (tags, gated) if x)
-        rows.append({"rank": i, "name": m.get("entity_id") or m.get("name") or "?",
+        rows.append({"rank": i, "id": m.get("entity_id") or m.get("name") or "?",
+                     "name": m.get("entity_id") or m.get("name") or "?",
                      "url": m.get("url"), "meta": desc or None,
                      "receipts": receipts, "badges": _badges(m)})
     return rows
@@ -247,7 +251,8 @@ def paper_rows(ranked: List[dict]) -> List[dict]:
         published = _date_label(_sig(p).get("created_at"))
         if published:
             receipts.append({"label": "published {}".format(published), "kind": "age"})
-        rows.append({"rank": i, "name": p.get("name") or p.get("entity_id") or "?",
+        rows.append({"rank": i, "id": p.get("entity_id") or p.get("name") or "?",
+                     "name": p.get("name") or p.get("entity_id") or "?",
                      "url": p.get("url"), "meta": _clip(_meta(p).get("paper_summary"), 140),
                      "receipts": receipts,
                      "badges": [{"label": "paper-backed", "hot": False}] if _meta(p).get("linked_repo") else []})
@@ -281,11 +286,12 @@ def news_rows(items: List[dict], note: Optional[str] = None) -> List[dict]:
         if _sig(item).get("hn_rising"):
             # the crowd is still upvoting this days later — hotin's own verdict
             badges.append({"label": "rising", "hot": False})
-        rows.append({"rank": i, "name": item.get("name") or "?",
+        rows.append({"rank": i, "id": item.get("entity_id") or item.get("name") or "?",
+                     "name": item.get("name") or "?",
                      "url": item.get("url"), "meta": _clip(_meta(item).get("publisher"), 40),
                      "receipts": receipts, "badges": badges})
     if rows and isinstance(note, str) and note.strip():
-        rows.append({"rank": "·", "name": note.strip(), "url": None,
+        rows.append({"rank": "·", "id": None, "name": note.strip(), "url": None,
                      "meta": None, "receipts": [], "badges": []})
     return rows
 
@@ -314,7 +320,8 @@ def rising_rows(ranked: List[dict]) -> List[dict]:
         desc = _meta(r).get("description")
         meta = desc.strip()[:80] if isinstance(desc, str) and desc.strip() else None
         rows.append({
-            "rank": i, "name": r.get("canonical_repo") or r.get("name") or "?",
+            "rank": i, "id": r.get("entity_id") or r.get("canonical_repo") or r.get("name") or "?",
+            "name": r.get("canonical_repo") or r.get("name") or "?",
             "url": r.get("url"), "meta": meta,
             "receipts": receipts, "badges": [{"label": "fresh", "hot": False}],
         })
@@ -331,7 +338,7 @@ def demo() -> None:
             "badges": ["fresh", "viral", "smart-money"]}
     rows = repo_rows([repo])
     r = rows[0]
-    assert r["rank"] == 1 and r["name"] == "a/b" and r["meta"] == "A cool thing"
+    assert r["rank"] == 1 and r["id"] == "a/b" and r["name"] == "a/b" and r["meta"] == "A cool thing"
     labels = [x["label"] for x in r["receipts"]]
     assert any("karpathy +2 insiders" in x for x in labels), labels
     assert any("+2.1k stars" in x for x in labels) and any("936 pts" in x for x in labels)
@@ -348,12 +355,12 @@ def demo() -> None:
     # names in rank order + honest remainder, then the shared board facts
     assert ins_labels == ["★ simonw", "deepfates", "+3 more",
                           "18.4k stars", "+432/day", "937 pts"], ins_labels
-    assert ins[0]["meta"] == "a local whisper wrapper"
+    assert ins[0]["meta"] == "a local whisper wrapper" and ins[0]["id"] == "x/y"
     mod = model_rows([{"entity_id": "org/m", "url": "u",
                        "signal": {"model_downloads": 10, "model_likes": 2},
                        "meta": {"model_task": "text-generation",
                                 "model_library": "transformers", "model_license": "mit"}}])
-    assert mod[0]["meta"] == "text-generation · transformers · mit"
+    assert mod[0]["meta"] == "text-generation · transformers · mit" and mod[0]["id"] == "org/m"
     dated = model_rows([{"entity_id": "o/d", "url": "u",
                          "signal": {"model_likes": 1, "created_at": "2024-10-03T00:00:00Z"},
                          "meta": {}}])
@@ -366,17 +373,17 @@ def demo() -> None:
     pap = paper_rows([{"entity_id": "1", "url": "u",
                        "signal": {"paper_upvotes": 3, "created_at": "2026-07-13T00:00:00.000Z"},
                        "meta": {"paper_summary": "  A short abstract. ", "linked_repo": "a/b"}}])
-    assert pap[0]["meta"] == "A short abstract."
+    assert pap[0]["meta"] == "A short abstract." and pap[0]["id"] == "1"
     assert any(r["label"].startswith("published Jul") for r in pap[0]["receipts"])
     nws = news_rows([{"name": "GPT-6 ships", "url": "u",
                       "signal": {"hn_points": 1195},
                       "meta": {"date": "2026-07-22T13:00:00Z", "publisher": "OpenAI",
                                "kind": "primary"}}], note="swept 12/12 feeds")
-    assert nws[0]["rank"] == 1 and nws[0]["name"] == "GPT-6 ships" and nws[0]["meta"] == "OpenAI"
+    assert nws[0]["rank"] == 1 and nws[0]["id"] == "GPT-6 ships" and nws[0]["name"] == "GPT-6 ships" and nws[0]["meta"] == "OpenAI"
     nws_labels = [x["label"] for x in nws[0]["receipts"]]
     assert any("pts" in x for x in nws_labels) and any("Jul" in x for x in nws_labels), nws_labels
     assert nws[0]["badges"] == [{"label": "official", "hot": False}]
-    assert nws[-1] == {"rank": "·", "name": "swept 12/12 feeds", "url": None,
+    assert nws[-1] == {"rank": "·", "id": None, "name": "swept 12/12 feeds", "url": None,
                        "meta": None, "receipts": [], "badges": []}
     assert news_rows([]) == []  # empty window: no orphan provenance row
     ris = news_rows([{"name": "Health in ChatGPT", "url": "u",

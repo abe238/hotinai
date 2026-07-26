@@ -93,6 +93,21 @@ def test_render_html_escapes_hostile_name():
     assert "&lt;script&gt;" in out
 
 
+def test_render_html_emits_data_id_join_key():
+    # fake-success mode this guards: board.py computes "id" but render_board
+    # silently drops it, leaving the click handler with no stable join key.
+    rows = [{"rank": 1, "id": "vercel-labs/deepsec", "name": "deepsec",
+             "receipts": [], "badges": []}]
+    out = render_html(rows)
+    assert 'data-id="vercel-labs/deepsec"' in out
+
+
+def test_render_html_omits_data_id_when_absent():
+    rows = [{"rank": 1, "id": None, "name": "note-row", "receipts": [], "badges": []}]
+    out = render_html(rows)
+    assert "data-id" not in out
+
+
 def test_missing_keys_never_raise():
     sparse = [{"rank": 7, "name": "bare/row"}]  # no receipts/badges/meta/url keys
     assert "bare/row" in render_text(sparse)
