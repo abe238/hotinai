@@ -36,6 +36,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from hotin.canonical import canonicalize
 from hotin.coerce import finite_int
+from hotin.sources import _roster_data
 from hotin.throttle import Throttle
 
 # The seed roster: known AI-community GitHub accounts. Hand-curated; L2's
@@ -46,29 +47,10 @@ from hotin.throttle import Throttle
 # ABSENT from the PyPI wheel — the exact works-editable-breaks-installed failure
 # the export path bug already cost us once. Override at runtime with the config
 # key HOTIN_INSIDER_ROSTER_PATH (a newline- or comma-separated list of handles).
-SEED_ROSTER: Tuple[str, ...] = (
-    # --- Recovered from our own observation store (~/.local/share/hotin/cache.db,
-    # 274 cached insiders/smartmoney rows). This is the real surviving trace of
-    # digg's AI-1000 cohort: 63 distinct handles were captured across all the
-    # repos we ever tracked, of which these 35 resolve as genuine GitHub
-    # accounts. The other 28 are X/Twitter handles -- digg's list was
-    # social-graph based, so a chunk of it never had a GitHub identity attached
-    # in the data we saw. We never held the full 1000: their page only exposed
-    # the top ~12 starrers per repo, never the underlying roster.
-    "ChowdhuryNeil", "DynamicWebPaige", "MilesCranmer", "PMinervini",
-    "VictorTaelin", "altryne", "antgoldbloom", "antimatter15", "backpropper",
-    "davemorin", "deepfates", "ggerganov", "hmason", "jmtomczak", "jsngr",
-    "kepano", "leloykun", "lintool", "marksaroufim", "mayfer", "mckaywrigley",
-    "mrdrozdov", "peterjliu", "quasimondo", "samsja19", "simonw", "skirano",
-    "smolix", "steipete", "syhw", "theo", "thesephist", "wongmjane",
-    "yisongyue", "yuntiandeng",
-    # --- Hand-added known AI-community accounts, to broaden coverage beyond
-    # whatever digg happened to surface on our board.
-    "karpathy", "jeremyphoward", "rasbt", "clefourrier", "Tostino", "abetlen",
-    "tomaarsen", "vikhyat", "huybery", "winglian", "teknium1", "Vaibhavs10",
-    "philschmid", "osanseviero", "julien-c", "thomwolf", "lvwerra",
-    "natolambert", "soumith", "lhoestq",
-)
+# The roster and its provenance live in _roster_data.py (data, not logic) so the
+# methodology stays auditable and regenerable. See that module's docstring for
+# how each tier was derived and why the size is what it is.
+SEED_ROSTER: Tuple[str, ...] = _roster_data.ROSTER
 
 # GitHub with a token sustains 5000/hr — nothing like the politeness pacing the
 # digg scrapers needed. A light interval keeps roster growth from feeling broken
