@@ -81,6 +81,25 @@ def _clip(desc: Any, limit: int = 100) -> Optional[str]:
     return (clean[:limit].rstrip() + "…") if len(clean) > limit else clean
 
 
+def join_id(raw_id: Optional[str]) -> Optional[str]:
+    """The click-tracking join key for a row: the raw entity_id when it's
+    short enough, else a short stable hash. GA4 caps event-parameter values
+    at 100 characters on Standard properties (hotin.ai's tier) and silently
+    TRUNCATES anything longer — a news entity_id is a full article URL and
+    routinely exceeds that (verified live: up to 174 chars, 8/60 items over
+    100 in one bake). A truncated raw id would mismatch the untruncated key
+    stored in tags.json, silently breaking the join for exactly those rows.
+    cli.py's tags.json writer must key on this SAME function's output, not
+    the raw entity_id, or the two sides diverge for anything long enough to
+    need it."""
+    if not raw_id:
+        return None
+    if len(raw_id) <= 80:  # margin under GA4's 100-char cap
+        return raw_id
+    import hashlib
+    return "h:" + hashlib.sha256(raw_id.encode()).hexdigest()[:16]
+
+
 def _insider_receipt(record: dict) -> Optional[Dict[str, str]]:
     """`★ karpathy +38 insiders` when the AI Insiders are on a repo."""
     n = finite_int(_sig(record).get("smartmoney_starrers") or _sig(record).get("insider_stars"), 0)
@@ -164,7 +183,7 @@ def repo_rows(ranked: List[dict]) -> List[dict]:
         title = raw_name if raw_name and raw_name.casefold() != str(slug).casefold() else None
         meta = _clip(title or _meta(repo).get("description"))
         rows.append({
-            "rank": i, "id": repo.get("entity_id") or slug,
+            "rank": i, "id": join_id(repo.get("entity_id") or slug),
             "name": slug, "url": repo.get("url"), "meta": meta,
             "receipts": receipts, "badges": _badges(repo),
         })
@@ -206,7 +225,7 @@ def insider_rows(records: List[dict]) -> List[dict]:
         if age:
             receipts.append({"label": "{}d old".format(age), "kind": "age"})
         rows.append({
-            "rank": i, "id": rec.get("entity_id") or rec.get("canonical_repo") or rec.get("name") or "?",
+            "rank": i, "id": join_id(rec.get("entity_id") or rec.get("canonical_repo") or rec.get("name")),
             "name": rec.get("canonical_repo") or rec.get("name") or "?",
             "url": rec.get("url"), "meta": _clip(_meta(rec).get("description")),
             "receipts": receipts,
@@ -234,7 +253,7 @@ def model_rows(ranked: List[dict]) -> List[dict]:
         gated = "gated · access request required" if _meta(m).get("model_gated") else ""
         desc = _clip(_meta(m).get("model_description"), 140) or " · ".join(
             x for x in (tags, gated) if x)
-        rows.append({"rank": i, "id": m.get("entity_id") or m.get("name") or "?",
+        rows.append({"rank": i, "id": join_id(m.get("entity_id") or m.get("name")),
                      "name": m.get("entity_id") or m.get("name") or "?",
                      "url": m.get("url"), "meta": desc or None,
                      "receipts": receipts, "badges": _badges(m)})
@@ -251,7 +270,7 @@ def paper_rows(ranked: List[dict]) -> List[dict]:
         published = _date_label(_sig(p).get("created_at"))
         if published:
             receipts.append({"label": "published {}".format(published), "kind": "age"})
-        rows.append({"rank": i, "id": p.get("entity_id") or p.get("name") or "?",
+        rows.append({"rank": i, "id": join_id(p.get("entity_id") or p.get("name")),
                      "name": p.get("name") or p.get("entity_id") or "?",
                      "url": p.get("url"), "meta": _clip(_meta(p).get("paper_summary"), 140),
                      "receipts": receipts,
@@ -286,7 +305,7 @@ def news_rows(items: List[dict], note: Optional[str] = None) -> List[dict]:
         if _sig(item).get("hn_rising"):
             # the crowd is still upvoting this days later — hotin's own verdict
             badges.append({"label": "rising", "hot": False})
-        rows.append({"rank": i, "id": item.get("entity_id") or item.get("name") or "?",
+        rows.append({"rank": i, "id": join_id(item.get("entity_id") or item.get("name")),
                      "name": item.get("name") or "?",
                      "url": item.get("url"), "meta": _clip(_meta(item).get("publisher"), 40),
                      "receipts": receipts, "badges": badges})
@@ -320,7 +339,7 @@ def rising_rows(ranked: List[dict]) -> List[dict]:
         desc = _meta(r).get("description")
         meta = desc.strip()[:80] if isinstance(desc, str) and desc.strip() else None
         rows.append({
-            "rank": i, "id": r.get("entity_id") or r.get("canonical_repo") or r.get("name") or "?",
+            "rank": i, "id": join_id(r.get("entity_id") or r.get("canonical_repo") or r.get("name")),
             "name": r.get("canonical_repo") or r.get("name") or "?",
             "url": r.get("url"), "meta": meta,
             "receipts": receipts, "badges": [{"label": "fresh", "hot": False}],

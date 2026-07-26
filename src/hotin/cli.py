@@ -734,13 +734,19 @@ def _classify_entities(repo_lists, models, papers, news) -> dict:
     tags by. Repo-type records already carry `category` from score_repo
     (engine.py); this only recomputes it as a fallback when absent, and is the
     sole place papers/models/news get classified at all today.
+
+    Keys are run through board.join_id(), the SAME function that produces the
+    row's data-id/click-event id — a news entity_id is a full article URL and
+    can exceed GA4's 100-char event-parameter cap, so the two sides of the
+    join must derive the key identically or long-url rows silently stop
+    matching.
     """
     items: dict = {}
     for records in repo_lists:
         for rec in records:
             if not isinstance(rec, dict):
                 continue
-            entity_id = rec.get("entity_id") or rec.get("canonical_repo")
+            entity_id = board.join_id(rec.get("entity_id") or rec.get("canonical_repo"))
             if not entity_id:
                 continue
             meta = rec.get("meta") if isinstance(rec.get("meta"), dict) else {}
@@ -748,28 +754,31 @@ def _classify_entities(repo_lists, models, papers, news) -> dict:
                 rec.get("name", ""), meta.get("description"), meta.get("topics"))
             items[entity_id] = tag
     for rec in models:
-        if not isinstance(rec, dict) or not rec.get("entity_id"):
+        entity_id = board.join_id(rec.get("entity_id")) if isinstance(rec, dict) else None
+        if not entity_id:
             continue
         meta = rec.get("meta") if isinstance(rec.get("meta"), dict) else {}
         # model_task is an HF pipeline tag ("text-to-speech" etc) — already a
         # vocabulary term, so it's worth 2x as a topic when the prose is thin
         # or missing (refresh only backfills a bounded slice of descriptions).
         task = meta.get("model_task")
-        items[rec["entity_id"]] = categories.classify(
+        items[entity_id] = categories.classify(
             rec.get("entity_id") or rec.get("name") or "", meta.get("model_description"),
             [task] if isinstance(task, str) else None)
     for rec in papers:
-        if not isinstance(rec, dict) or not rec.get("entity_id"):
+        entity_id = board.join_id(rec.get("entity_id")) if isinstance(rec, dict) else None
+        if not entity_id:
             continue
         meta = rec.get("meta") if isinstance(rec.get("meta"), dict) else {}
-        items[rec["entity_id"]] = categories.classify(
+        items[entity_id] = categories.classify(
             rec.get("name") or rec.get("entity_id") or "", meta.get("paper_summary"), None)
     for rec in news:
-        if not isinstance(rec, dict) or not rec.get("entity_id"):
+        entity_id = board.join_id(rec.get("entity_id")) if isinstance(rec, dict) else None
+        if not entity_id:
             continue
         # headlines carry no body text — classification runs on the title
         # alone, a known, thinner signal than repos/papers/models get.
-        items[rec["entity_id"]] = categories.classify(rec.get("name") or "", None, None)
+        items[entity_id] = categories.classify(rec.get("name") or "", None, None)
     return items
 
 
