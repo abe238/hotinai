@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-26",
-  "generated_pt": "Jul 25, 2026 \u00b7 8:37 PM PT",
+  "generated_pt": "Jul 25, 2026 \u00b7 9:11 PM PT",
   "entities": {
     "repos": [
       {
@@ -19,7 +19,7 @@
             "kind": "stars"
           },
           {
-            "label": "+60/day",
+            "label": "+61/day",
             "kind": "stars"
           },
           {
@@ -89,11 +89,11 @@
             "kind": "insiders"
           },
           {
-            "label": "22.5k stars",
+            "label": "22.6k stars",
             "kind": "stars"
           },
           {
-            "label": "+351/day",
+            "label": "+352/day",
             "kind": "stars"
           },
           {
@@ -136,7 +136,7 @@
             "kind": "stars"
           },
           {
-            "label": "+509/day",
+            "label": "+503/day",
             "kind": "stars"
           },
           {
@@ -171,7 +171,7 @@
             "kind": "stars"
           },
           {
-            "label": "+325/day",
+            "label": "+324/day",
             "kind": "stars"
           },
           {
@@ -186,7 +186,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -206,7 +206,7 @@
             "kind": "stars"
           },
           {
-            "label": "+534/day",
+            "label": "+533/day",
             "kind": "stars"
           },
           {
@@ -221,7 +221,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -237,7 +237,7 @@
             "kind": "stars"
           },
           {
-            "label": "+238/day",
+            "label": "+237/day",
             "kind": "stars"
           },
           {
@@ -299,7 +299,7 @@
             "kind": "stars"
           },
           {
-            "label": "+121/day",
+            "label": "+120/day",
             "kind": "stars"
           },
           {
@@ -334,7 +334,7 @@
             "kind": "stars"
           },
           {
-            "label": "+182/day",
+            "label": "+179/day",
             "kind": "stars"
           },
           {
@@ -396,7 +396,7 @@
             "kind": "stars"
           },
           {
-            "label": "+734/day",
+            "label": "+732/day",
             "kind": "stars"
           },
           {
@@ -427,7 +427,7 @@
             "kind": "stars"
           },
           {
-            "label": "+193/day",
+            "label": "+192/day",
             "kind": "stars"
           },
           {
@@ -489,7 +489,7 @@
             "kind": "stars"
           },
           {
-            "label": "+136/day",
+            "label": "+135/day",
             "kind": "stars"
           },
           {
@@ -613,7 +613,7 @@
             "kind": "stars"
           },
           {
-            "label": "+83/day",
+            "label": "+84/day",
             "kind": "stars"
           },
           {
@@ -663,7 +663,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -698,7 +698,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -714,7 +714,7 @@
             "kind": "stars"
           },
           {
-            "label": "+716/day",
+            "label": "+711/day",
             "kind": "stars"
           },
           {
@@ -745,7 +745,7 @@
             "kind": "stars"
           },
           {
-            "label": "+346/day",
+            "label": "+347/day",
             "kind": "stars"
           },
           {
@@ -834,7 +834,7 @@
             "kind": "stars"
           },
           {
-            "label": "+265/day",
+            "label": "+264/day",
             "kind": "stars"
           },
           {
@@ -923,11 +923,11 @@
         "meta": "The open-source alternative to Webflow, Framer and WordPress. Agentic self-hosted visual CMS outputt\u2026",
         "receipts": [
           {
-            "label": "5.1k stars",
+            "label": "5.2k stars",
             "kind": "stars"
           },
           {
-            "label": "+285/day",
+            "label": "+287/day",
             "kind": "stars"
           },
           {
@@ -997,7 +997,7 @@
             "kind": "stars"
           },
           {
-            "label": "+55/day",
+            "label": "+54/day",
             "kind": "stars"
           },
           {
@@ -1032,7 +1032,7 @@
             "kind": "stars"
           },
           {
-            "label": "+67/day",
+            "label": "+66/day",
             "kind": "stars"
           },
           {
@@ -1071,7 +1071,7 @@
             "kind": "stars"
           },
           {
-            "label": "+383/day",
+            "label": "+377/day",
             "kind": "stars"
           },
           {
@@ -1195,7 +1195,7 @@
             "kind": "stars"
           },
           {
-            "label": "+297/day",
+            "label": "+296/day",
             "kind": "stars"
           },
           {
@@ -1429,7 +1429,7 @@
             "kind": "stars"
           },
           {
-            "label": "+60/day",
+            "label": "+61/day",
             "kind": "stars"
           },
           {
@@ -1499,11 +1499,11 @@
             "kind": "insiders"
           },
           {
-            "label": "22.5k stars",
+            "label": "22.6k stars",
             "kind": "stars"
           },
           {
-            "label": "+351/day",
+            "label": "+352/day",
             "kind": "stars"
           },
           {
@@ -1546,7 +1546,7 @@
             "kind": "stars"
           },
           {
-            "label": "+509/day",
+            "label": "+503/day",
             "kind": "stars"
           },
           {
@@ -1581,7 +1581,7 @@
             "kind": "stars"
           },
           {
-            "label": "+325/day",
+            "label": "+324/day",
             "kind": "stars"
           },
           {
@@ -1596,7 +1596,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -1612,7 +1612,7 @@
             "kind": "stars"
           },
           {
-            "label": "+238/day",
+            "label": "+237/day",
             "kind": "stars"
           },
           {
@@ -1674,7 +1674,7 @@
             "kind": "stars"
           },
           {
-            "label": "+121/day",
+            "label": "+120/day",
             "kind": "stars"
           },
           {
@@ -1705,7 +1705,7 @@
             "kind": "stars"
           },
           {
-            "label": "+734/day",
+            "label": "+732/day",
             "kind": "stars"
           },
           {
@@ -1767,7 +1767,7 @@
             "kind": "stars"
           },
           {
-            "label": "+136/day",
+            "label": "+135/day",
             "kind": "stars"
           },
           {
@@ -1860,7 +1860,7 @@
             "kind": "stars"
           },
           {
-            "label": "+83/day",
+            "label": "+84/day",
             "kind": "stars"
           },
           {
@@ -1910,7 +1910,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -1926,7 +1926,7 @@
             "kind": "stars"
           },
           {
-            "label": "+716/day",
+            "label": "+711/day",
             "kind": "stars"
           },
           {
@@ -1957,7 +1957,7 @@
             "kind": "stars"
           },
           {
-            "label": "+346/day",
+            "label": "+347/day",
             "kind": "stars"
           },
           {
@@ -2046,7 +2046,7 @@
             "kind": "stars"
           },
           {
-            "label": "+265/day",
+            "label": "+264/day",
             "kind": "stars"
           },
           {
@@ -2135,11 +2135,11 @@
         "meta": "The open-source alternative to Webflow, Framer and WordPress. Agentic self-hosted visual CMS outputt\u2026",
         "receipts": [
           {
-            "label": "5.1k stars",
+            "label": "5.2k stars",
             "kind": "stars"
           },
           {
-            "label": "+285/day",
+            "label": "+287/day",
             "kind": "stars"
           },
           {
@@ -2170,7 +2170,7 @@
             "kind": "stars"
           },
           {
-            "label": "+55/day",
+            "label": "+54/day",
             "kind": "stars"
           },
           {
@@ -2263,7 +2263,7 @@
             "kind": "stars"
           },
           {
-            "label": "+297/day",
+            "label": "+296/day",
             "kind": "stars"
           },
           {
@@ -2377,7 +2377,7 @@
             "kind": "stars"
           },
           {
-            "label": "22.5k stars",
+            "label": "22.6k stars",
             "kind": "stars"
           },
           {
@@ -2562,7 +2562,7 @@
         "meta": "AI video skill for Claude Code & Codex \u2014 cinematic product videos with Remotion:",
         "receipts": [
           {
-            "label": "+251/day",
+            "label": "+252/day",
             "kind": "stars"
           },
           {
@@ -2778,7 +2778,7 @@
         "meta": "Universal provider proxy for OpenAI Codex & Claude Code \u2014 use any LLM (Claude, G",
         "receipts": [
           {
-            "label": "+126/day",
+            "label": "+127/day",
             "kind": "stars"
           },
           {
@@ -3158,11 +3158,11 @@
         "meta": "An AI copywriter that uses real copywriting skills + real marketing knowledge wi",
         "receipts": [
           {
-            "label": "+304/day",
+            "label": "+308/day",
             "kind": "stars"
           },
           {
-            "label": "607 stars",
+            "label": "616 stars",
             "kind": "stars"
           },
           {
@@ -3185,11 +3185,11 @@
         "meta": null,
         "receipts": [
           {
-            "label": "+287/day",
+            "label": "+290/day",
             "kind": "stars"
           },
           {
-            "label": "862 stars",
+            "label": "869 stars",
             "kind": "stars"
           },
           {
@@ -3270,7 +3270,7 @@
             "kind": "stars"
           },
           {
-            "label": "885 stars",
+            "label": "886 stars",
             "kind": "stars"
           },
           {
@@ -3287,6 +3287,33 @@
       },
       {
         "rank": 6,
+        "id": "gnipbao/story-to-handdrawn-video",
+        "name": "gnipbao/story-to-handdrawn-video",
+        "url": "https://github.com/gnipbao/story-to-handdrawn-video",
+        "meta": "Agent skill: convert Chinese story copy or ordered images into a hand-drawn diar",
+        "receipts": [
+          {
+            "label": "+126/day",
+            "kind": "stars"
+          },
+          {
+            "label": "631 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "5d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 7,
         "id": "pireel/pireel",
         "name": "pireel/pireel",
         "url": "https://github.com/pireel/pireel",
@@ -3313,49 +3340,22 @@
         ]
       },
       {
-        "rank": 7,
-        "id": "gnipbao/story-to-handdrawn-video",
-        "name": "gnipbao/story-to-handdrawn-video",
-        "url": "https://github.com/gnipbao/story-to-handdrawn-video",
-        "meta": "Agent skill: convert Chinese story copy or ordered images into a hand-drawn diar",
-        "receipts": [
-          {
-            "label": "+125/day",
-            "kind": "stars"
-          },
-          {
-            "label": "627 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "5d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
         "rank": 8,
-        "id": "kritt-ai/open-kritt",
-        "name": "kritt-ai/open-kritt",
-        "url": "https://github.com/Kritt-ai/open-kritt",
-        "meta": "Orchestrate AI agents to find real vulnerabilities in code.",
+        "id": "realchendahuang/pi-config",
+        "name": "realchendahuang/pi-config",
+        "url": "https://github.com/realchendahuang/pi-config",
+        "meta": "My Pi coding agent setup: 17 plugins + 18 global skills + 2 MCP servers, with a ",
         "receipts": [
           {
-            "label": "+65/day",
+            "label": "+67/day",
             "kind": "stars"
           },
           {
-            "label": "391 stars",
+            "label": "67 stars",
             "kind": "stars"
           },
           {
-            "label": "6d old",
+            "label": "1d old",
             "kind": "age"
           }
         ],
@@ -3368,21 +3368,21 @@
       },
       {
         "rank": 9,
-        "id": "realchendahuang/pi-config",
-        "name": "realchendahuang/pi-config",
-        "url": "https://github.com/realchendahuang/pi-config",
-        "meta": "My Pi coding agent setup: 17 plugins + 18 global skills + 2 MCP servers, with a ",
+        "id": "kritt-ai/open-kritt",
+        "name": "kritt-ai/open-kritt",
+        "url": "https://github.com/Kritt-ai/open-kritt",
+        "meta": "Orchestrate AI agents to find real vulnerabilities in code.",
         "receipts": [
           {
             "label": "+65/day",
             "kind": "stars"
           },
           {
-            "label": "65 stars",
+            "label": "392 stars",
             "kind": "stars"
           },
           {
-            "label": "1d old",
+            "label": "6d old",
             "kind": "age"
           }
         ],
@@ -3486,7 +3486,7 @@
             "kind": "stars"
           },
           {
-            "label": "219 stars",
+            "label": "221 stars",
             "kind": "stars"
           },
           {
@@ -3513,7 +3513,7 @@
             "kind": "stars"
           },
           {
-            "label": "208 stars",
+            "label": "209 stars",
             "kind": "stars"
           },
           {
@@ -3590,11 +3590,11 @@
         "meta": "One identity for your AI agent across Slack, Discord, Telegram, WhatsApp, Instag",
         "receipts": [
           {
-            "label": "+39/day",
+            "label": "+40/day",
             "kind": "stars"
           },
           {
-            "label": "236 stars",
+            "label": "237 stars",
             "kind": "stars"
           },
           {
@@ -3675,7 +3675,7 @@
             "kind": "stars"
           },
           {
-            "label": "213 stars",
+            "label": "217 stars",
             "kind": "stars"
           },
           {
@@ -3773,6 +3773,33 @@
       },
       {
         "rank": 24,
+        "id": "eversmile12/leaked-llm-prompts",
+        "name": "eversmile12/leaked-llm-prompts",
+        "url": "https://github.com/Eversmile12/leaked-llm-prompts",
+        "meta": "collections-of-leaked-prompts",
+        "receipts": [
+          {
+            "label": "+34/day",
+            "kind": "stars"
+          },
+          {
+            "label": "67 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "2d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 25,
         "id": "eli-labz/agent-execution-partnership",
         "name": "eli-labz/agent-execution-partnership",
         "url": "https://github.com/eli-labz/Agent-Execution-Partnership",
@@ -3788,33 +3815,6 @@
           },
           {
             "label": "6d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 25,
-        "id": "eversmile12/leaked-llm-prompts",
-        "name": "eversmile12/leaked-llm-prompts",
-        "url": "https://github.com/Eversmile12/leaked-llm-prompts",
-        "meta": "collections-of-leaked-prompts",
-        "receipts": [
-          {
-            "label": "+32/day",
-            "kind": "stars"
-          },
-          {
-            "label": "63 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "2d old",
             "kind": "age"
           }
         ],
@@ -3918,7 +3918,7 @@
             "kind": "stars"
           },
           {
-            "label": "168 stars",
+            "label": "169 stars",
             "kind": "stars"
           },
           {
@@ -3935,17 +3935,17 @@
       },
       {
         "rank": 30,
-        "id": "0xtresser/transcript-of-liang-wenfengs-deepseek-founder-4-hour-investor-meeting",
-        "name": "0xtresser/transcript-of-liang-wenfengs-deepseek-founder-4-hour-investor-meeting",
-        "url": "https://github.com/0xtresser/Transcript-of-Liang-Wenfengs-DeepSeek-Founder-4-Hour-Investor-Meeting",
-        "meta": "\u6881\u6587\u950b\u56db\u5c0f\u65f6\u6295\u8d44\u4eba\u4f1a\u8bae\u5b9e\u5f55\uff0c\u56e0\u539f\u6587\u5728\u5fae\u4fe1\u4e0a\u65e0\u6cd5\u67e5\u770b\uff0c\u7279\u4f20\u4e00\u4efdgithub",
+        "id": "xyz-ai-lab/axisagentic",
+        "name": "xyz-ai-lab/axisagentic",
+        "url": "https://github.com/XYZ-AI-Lab/AxisAgentic",
+        "meta": "AxisAgentic: An Extensible Runtime and Trajectory-Collection Framework for Long-",
         "receipts": [
           {
             "label": "+28/day",
             "kind": "stars"
           },
           {
-            "label": "83 stars",
+            "label": "84 stars",
             "kind": "stars"
           },
           {
@@ -3982,7 +3982,7 @@
             "kind": "stars"
           },
           {
-            "label": "+67/day",
+            "label": "+66/day",
             "kind": "stars"
           },
           {
@@ -4458,7 +4458,7 @@
             "kind": "stars"
           },
           {
-            "label": "+182/day",
+            "label": "+179/day",
             "kind": "stars"
           },
           {
@@ -4682,7 +4682,7 @@
             "kind": "stars"
           },
           {
-            "label": "+509/day",
+            "label": "+503/day",
             "kind": "stars"
           },
           {
@@ -4713,7 +4713,7 @@
             "kind": "stars"
           },
           {
-            "label": "+534/day",
+            "label": "+533/day",
             "kind": "stars"
           },
           {
@@ -5021,7 +5021,7 @@
             "kind": "npm"
           },
           {
-            "label": "665 likes",
+            "label": "667 likes",
             "kind": "stars"
           },
           {
@@ -5043,7 +5043,7 @@
             "kind": "npm"
           },
           {
-            "label": "567 likes",
+            "label": "568 likes",
             "kind": "stars"
           },
           {
@@ -5065,7 +5065,7 @@
             "kind": "npm"
           },
           {
-            "label": "548 likes",
+            "label": "550 likes",
             "kind": "stars"
           },
           {
@@ -5109,7 +5109,7 @@
             "kind": "npm"
           },
           {
-            "label": "406 likes",
+            "label": "407 likes",
             "kind": "stars"
           },
           {
@@ -5131,7 +5131,7 @@
             "kind": "npm"
           },
           {
-            "label": "277 likes",
+            "label": "280 likes",
             "kind": "stars"
           },
           {
@@ -5197,7 +5197,7 @@
             "kind": "npm"
           },
           {
-            "label": "191 likes",
+            "label": "192 likes",
             "kind": "stars"
           },
           {
@@ -5263,7 +5263,7 @@
             "kind": "npm"
           },
           {
-            "label": "168 likes",
+            "label": "169 likes",
             "kind": "stars"
           },
           {
@@ -5307,7 +5307,7 @@
             "kind": "npm"
           },
           {
-            "label": "166 likes",
+            "label": "168 likes",
             "kind": "stars"
           },
           {
@@ -5545,7 +5545,7 @@
             "kind": "npm"
           },
           {
-            "label": "153 likes",
+            "label": "155 likes",
             "kind": "stars"
           },
           {
@@ -5579,6 +5579,28 @@
       },
       {
         "rank": 28,
+        "id": "owensong/Inflect-Micro-v2",
+        "name": "owensong/Inflect-Micro-v2",
+        "url": "https://huggingface.co/owensong/Inflect-Micro-v2",
+        "meta": "Inflect v2 uses one public API across two sizes: Micro prioritizes quality below 10M parameters; Nano prioritizes footprint below 4M.",
+        "receipts": [
+          {
+            "label": "47 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "94 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jun 25",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 29,
         "id": "OpenMOSS-Team/MOSS-VL-Realtime",
         "name": "OpenMOSS-Team/MOSS-VL-Realtime",
         "url": "https://huggingface.co/OpenMOSS-Team/MOSS-VL-Realtime",
@@ -5594,28 +5616,6 @@
           },
           {
             "label": "released Jul 14",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 29,
-        "id": "owensong/Inflect-Micro-v2",
-        "name": "owensong/Inflect-Micro-v2",
-        "url": "https://huggingface.co/owensong/Inflect-Micro-v2",
-        "meta": "Inflect v2 uses one public API across two sizes: Micro prioritizes quality below 10M parameters; Nano prioritizes footprint below 4M.",
-        "receipts": [
-          {
-            "label": "47 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "88 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jun 25",
             "kind": "age"
           }
         ],
@@ -5695,7 +5695,7 @@
             "kind": "npm"
           },
           {
-            "label": "96 likes",
+            "label": "98 likes",
             "kind": "stars"
           },
           {
@@ -5857,50 +5857,6 @@
       },
       {
         "rank": 41,
-        "id": "microsoft/Mage-Flow-Turbo",
-        "name": "microsoft/Mage-Flow-Turbo",
-        "url": "https://huggingface.co/microsoft/Mage-Flow-Turbo",
-        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
-        "receipts": [
-          {
-            "label": "933 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "57 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 21",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 42,
-        "id": "ProCreations/grug-27b",
-        "name": "ProCreations/grug-27b",
-        "url": "https://huggingface.co/ProCreations/grug-27b",
-        "meta": "grug get big brain now. 27B brain. biggest grug yet that actually work.",
-        "receipts": [
-          {
-            "label": "881 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "57 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jul 23",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 43,
         "id": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
         "name": "yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
         "url": "https://huggingface.co/yuxinlu1/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-GGUF",
@@ -5922,7 +5878,73 @@
         "badges": []
       },
       {
+        "rank": 42,
+        "id": "microsoft/Mage-Flow-Turbo",
+        "name": "microsoft/Mage-Flow-Turbo",
+        "url": "https://huggingface.co/microsoft/Mage-Flow-Turbo",
+        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
+        "receipts": [
+          {
+            "label": "933 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "57 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 21",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 43,
+        "id": "ProCreations/grug-27b",
+        "name": "ProCreations/grug-27b",
+        "url": "https://huggingface.co/ProCreations/grug-27b",
+        "meta": "grug get big brain now. 27B brain. biggest grug yet that actually work.",
+        "receipts": [
+          {
+            "label": "881 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "57 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jul 23",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
         "rank": 44,
+        "id": "owensong/Inflect-Nano-v2",
+        "name": "owensong/Inflect-Nano-v2",
+        "url": "https://huggingface.co/owensong/Inflect-Nano-v2",
+        "meta": "Inflect v2 uses one public API across two sizes: Micro prioritizes quality below 10M parameters; Nano prioritizes footprint below 4M.",
+        "receipts": [
+          {
+            "label": "42 downloads",
+            "kind": "npm"
+          },
+          {
+            "label": "52 likes",
+            "kind": "stars"
+          },
+          {
+            "label": "released Jun 25",
+            "kind": "age"
+          }
+        ],
+        "badges": []
+      },
+      {
+        "rank": 45,
         "id": "audnai/penclaw-Kimi-K3.0-abliterated-GGUF",
         "name": "audnai/penclaw-Kimi-K3.0-abliterated-GGUF",
         "url": "https://huggingface.co/audnai/penclaw-Kimi-K3.0-abliterated-GGUF",
@@ -5934,28 +5956,6 @@
           },
           {
             "label": "released Jul 18",
-            "kind": "age"
-          }
-        ],
-        "badges": []
-      },
-      {
-        "rank": 45,
-        "id": "owensong/Inflect-Nano-v2",
-        "name": "owensong/Inflect-Nano-v2",
-        "url": "https://huggingface.co/owensong/Inflect-Nano-v2",
-        "meta": "Inflect v2 uses one public API across two sizes: Micro prioritizes quality below 10M parameters; Nano prioritizes footprint below 4M.",
-        "receipts": [
-          {
-            "label": "42 downloads",
-            "kind": "npm"
-          },
-          {
-            "label": "51 likes",
-            "kind": "stars"
-          },
-          {
-            "label": "released Jun 25",
             "kind": "age"
           }
         ],
@@ -6129,7 +6129,7 @@
             "kind": "npm"
           },
           {
-            "label": "567 likes",
+            "label": "568 likes",
             "kind": "stars"
           },
           {
@@ -6151,7 +6151,7 @@
             "kind": "npm"
           },
           {
-            "label": "406 likes",
+            "label": "407 likes",
             "kind": "stars"
           },
           {
@@ -6173,7 +6173,7 @@
             "kind": "npm"
           },
           {
-            "label": "277 likes",
+            "label": "280 likes",
             "kind": "stars"
           },
           {
@@ -6195,7 +6195,7 @@
             "kind": "npm"
           },
           {
-            "label": "191 likes",
+            "label": "192 likes",
             "kind": "stars"
           },
           {
@@ -6239,7 +6239,7 @@
             "kind": "npm"
           },
           {
-            "label": "168 likes",
+            "label": "169 likes",
             "kind": "stars"
           },
           {
@@ -6261,7 +6261,7 @@
             "kind": "npm"
           },
           {
-            "label": "166 likes",
+            "label": "168 likes",
             "kind": "stars"
           },
           {
@@ -6875,7 +6875,7 @@
         "meta": "Traditional agent development is split across prompt templates, tool schemas, callback code, and workflow graphs. We present NVIDIA Object-O\u2026",
         "receipts": [
           {
-            "label": "22 upvotes",
+            "label": "23 upvotes",
             "kind": "paper"
           },
           {
@@ -7935,7 +7935,7 @@
         "meta": "Traditional agent development is split across prompt templates, tool schemas, callback code, and workflow graphs. We present NVIDIA Object-O\u2026",
         "receipts": [
           {
-            "label": "22 upvotes",
+            "label": "23 upvotes",
             "kind": "paper"
           },
           {
