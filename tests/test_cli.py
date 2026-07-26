@@ -483,6 +483,15 @@ def test_news_command_shows_curated_headlines(monkeypatch, capsys):
     assert "unavailable" in capsys.readouterr().err
 
 
+def test_docs_root_follows_the_working_directory_not_the_installed_package(tmp_path, monkeypatch):
+    # Regression: resolving from __file__ pointed at wherever the hotin *package*
+    # is installed (e.g. site-packages under `pip install hotin`), not at the
+    # site repo actually checked out in CWD -- exports silently landed outside
+    # the real repo the moment hotin stopped being installed editable from it.
+    monkeypatch.chdir(tmp_path)
+    assert cli._docs_root() == tmp_path / "docs"
+
+
 def test_insiders_from_cache_fallback_recent_sorted_and_bounded():
     now = 1_785_000_000.0
     day = 86400.0

@@ -802,6 +802,17 @@ def _write_tags_json(docs: Path, items: dict, stamp_pt: str) -> None:
     path.write_text(json.dumps({"_schema_version": 1, "items": tagged}, indent=2, allow_nan=False))
 
 
+def _docs_root() -> Path:
+    """Where ``hotin export`` bakes docs/ — the current working directory's own
+    docs/, never the installed package's location. A ``pip install``-from-PyPI
+    copy of hotin lives under site-packages, unrelated to whatever site repo
+    the user (or CI) actually has checked out in the CWD; resolving from
+    ``__file__`` silently baked into that installed-package tree instead of
+    the checkout, so exports never reached the real repo once hotin stopped
+    being installed editable from inside it."""
+    return Path.cwd() / "docs"
+
+
 def _export(arguments: argparse.Namespace) -> int:
     """Bake the 5-tab board into docs/index.html + write docs/data/latest.json.
 
@@ -810,8 +821,7 @@ def _export(arguments: argparse.Namespace) -> int:
     to HTML rows and injected between its <!-- BOARD:<id> --> markers.
     """
     import datetime
-    repo_root = Path(__file__).resolve().parents[2]
-    docs = repo_root / "docs"
+    docs = _docs_root()
     index = docs / "index.html"
     limit = _normal_limit(arguments) or 60
     config = load_config()
@@ -934,7 +944,8 @@ def _export(arguments: argparse.Namespace) -> int:
     }
     stamp = datetime.date.today().isoformat()
     stamp_pt = _pacific_stamp()
-    if index.exists():
+    html_baked = index.exists()
+    if html_baked:
         html = index.read_text()
         for eid, entity_rows in rows.items():
             rendered = "\n" + (render_board.render_html(entity_rows) or "") + "\n"
@@ -959,7 +970,11 @@ def _export(arguments: argparse.Namespace) -> int:
     except Exception as exc:  # noqa: BLE001 - deliberate: tagging is best-effort
         print("tags.json update skipped: {}".format(exc))
     counts = ", ".join("{} {}".format(len(v), k) for k, v in rows.items())
-    print("exported {} · baked {} + docs/data/latest.json".format(counts, index.name))
+    if html_baked:
+        print("exported {} · baked {} + docs/data/latest.json in {}".format(counts, index.name, docs))
+    else:
+        print("exported {} · WARNING: no {} found in {} — index.html NOT baked, only latest.json written"
+              .format(counts, index.name, docs))
     return 0
 
 
