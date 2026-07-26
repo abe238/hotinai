@@ -1,5 +1,13 @@
 {
-    "_schema_version": 1,
-    "confirmed": [],
-    "watchlist": []
+  "_schema_version": 1,
+  "_caveats": [
+    "near-duplicate entity_ids across different tags/sources (e.g. a base model vs its own quantized release) are not detected and could each count as an independent corroborator"
+  ],
+  "_untrusted_fields": [
+    "tag",
+    "entity_id",
+    "referrer_domains"
+  ],
+  "confirmed": [],
+  "watchlist": []
 }
