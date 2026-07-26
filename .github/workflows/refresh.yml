@@ -50,11 +50,22 @@ jobs:
         run: |
           hotin refresh || echo "refresh reported issues (non-fatal)"
           hotin export --limit 60
+      - name: Pull GA4 click data (best-effort; never blocks the board)
+        env:
+          GA_REFRESH_TOKEN: ${{ secrets.GA_REFRESH_TOKEN }}
+          GA_CLIENT_ID: ${{ secrets.GA_CLIENT_ID }}
+          GA_CLIENT_SECRET: ${{ secrets.GA_CLIENT_SECRET }}
+        run: |
+          if [ -z "$GA_REFRESH_TOKEN" ]; then
+            echo "no GA_REFRESH_TOKEN secret set; skipping click pull"
+          else
+            python3 scripts/pull_clicks.py || echo "click pull failed (non-fatal)"
+          fi
       - name: Commit the snapshot
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/index.html docs/data/latest.json docs/data/tags.json
+          git add docs/index.html docs/data/latest.json docs/data/tags.json docs/data/clicks.json
           if git diff --cached --quiet; then
             echo "no board changes"
           else
