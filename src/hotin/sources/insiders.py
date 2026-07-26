@@ -33,10 +33,16 @@ USER_AGENT = _insider_roster._USER_AGENT
 def _to_records(config: Optional[dict]) -> List[Dict[str, Any]]:
     """Poll the roster (shared, memoized) and map to insiders record shape."""
     events = _insider_roster.poll_roster(config)
+    weights, default_weight = _insider_roster.load_weights(config)
+    aggs = _insider_roster.aggregate_by_repo(events, weights, default_weight)
     records: List[Dict[str, Any]] = []
-    for agg in _insider_roster.aggregate_by_repo(events):
+    for agg in aggs:
         canonical = agg["canonical_repo"]
-        usernames = agg["starrers"]
+        # Show the heaviest starrer first: with no weights this is unchanged
+        # (all equal, original order preserved by the stable sort).
+        usernames = sorted(
+            agg["starrers"],
+            key=lambda u: -weights.get(u.lower(), default_weight))
         records.append({
             "entity_type": "repo",
             "entity_id": canonical,
@@ -46,6 +52,9 @@ def _to_records(config: Optional[dict]) -> List[Dict[str, Any]]:
             "source": SOURCE,
             "signal": {
                 "insider_stars": len(usernames),
+                # Weighted score. Equals insider_stars when no weights are
+                # configured, so nothing downstream has to special-case it.
+                "insider_weight": agg.get("weight", float(len(usernames))),
                 "stars": finite_int(agg.get("stargazers_count"), 0),
                 "most_recent_star_at": agg.get("most_recent_star_at"),
             },

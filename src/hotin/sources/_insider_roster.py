@@ -265,13 +265,62 @@ def poll_roster(
     return events
 
 
-def aggregate_by_repo(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def load_weights(config: Optional[dict] = None) -> Tuple[Dict[str, float], float]:
+    """Per-account weights, if any: ``({handle_lower: weight}, default)``.
+
+    Not every roster member is equally informative, and treating them as equal
+    is its own editorial choice. Point HOTIN_INSIDER_WEIGHTS_PATH at a JSON file
+    to say so explicitly::
+
+        {"default": 1.0, "weights": {"someone": 3.5, "someone-else": 0.5}}
+
+    or just ``{"someone": 3.5}`` with the default left at 1.0. Unlisted members
+    get the default, so a partial file is fine. Absent entirely, every member
+    weighs 1.0 and the behaviour is exactly as before.
+    """
+    raw = (config or {}).get("HOTIN_INSIDER_WEIGHTS_PATH")
+    if not isinstance(raw, str) or not raw.strip():
+        return {}, 1.0
+    try:
+        with open(raw.strip(), "r", encoding="utf-8") as handle:
+            data = json.load(handle)
+    except (OSError, ValueError):
+        return {}, 1.0
+    if not isinstance(data, dict):
+        return {}, 1.0
+    table = data.get("weights") if isinstance(data.get("weights"), dict) else data
+    default = data.get("default", 1.0)
+    try:
+        default = float(default)
+    except (TypeError, ValueError):
+        default = 1.0
+    out: Dict[str, float] = {}
+    for name, value in table.items():
+        if name in ("default", "weights") or not isinstance(name, str):
+            continue
+        try:
+            out[name.lower()] = float(value)
+        except (TypeError, ValueError):
+            continue
+    return out, default
+
+
+def aggregate_by_repo(
+    events: List[Dict[str, Any]],
+    weights: Optional[Dict[str, float]] = None,
+    default_weight: float = 1.0,
+) -> List[Dict[str, Any]]:
     """Fold flat star events into per-repo records the adapters both build on.
 
     One repo may be starred by several roster members; we keep the distinct
     starrer count, the union of their usernames, and the most-recent star time.
-    Ordered by distinct-starrer count desc, then repo id, for stable output.
+
+    ``weight`` is the sum of each distinct starrer's weight (all 1.0 unless a
+    weights table is supplied), so with no weights it equals the starrer count.
+    Ordering is by weight desc, then starrer count, then repo id -- stable, and
+    identical to the old count-ordering when weights are absent.
     """
+    weights = weights or {}
     by_repo: Dict[str, Dict[str, Any]] = {}
     for event in events:
         repo = event.get("canonical_repo")
@@ -297,9 +346,12 @@ def aggregate_by_repo(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         )
         if rec["description"] is None and event.get("description"):
             rec["description"] = event["description"]
+    for rec in by_repo.values():
+        rec["weight"] = round(
+            sum(weights.get(u.lower(), default_weight) for u in rec["starrers"]), 3)
     return sorted(
         by_repo.values(),
-        key=lambda r: (-len(r["starrers"]), r["canonical_repo"]),
+        key=lambda r: (-r["weight"], -len(r["starrers"]), r["canonical_repo"]),
     )
 
 

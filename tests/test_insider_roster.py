@@ -213,6 +213,56 @@ def test_seed_roster_is_used_when_no_override():
     assert len(core.SEED_ROSTER) >= 20  # a real starting set, not a 5-name stub
 
 
+def test_no_weights_means_weight_equals_starrer_count():
+    # Back-compat pin: absent a weights table, nothing changes -- weight is the
+    # plain count and ordering is the old count-ordering.
+    events = [
+        {"username": "a", "canonical_repo": "two/starrers", "starred_at": "2026-07-25T00:00:00Z"},
+        {"username": "b", "canonical_repo": "two/starrers", "starred_at": "2026-07-25T00:00:00Z"},
+        {"username": "a", "canonical_repo": "one/starrer", "starred_at": "2026-07-25T00:00:00Z"},
+    ]
+    aggs = core.aggregate_by_repo(events)
+    assert [a["canonical_repo"] for a in aggs] == ["two/starrers", "one/starrer"]
+    assert aggs[0]["weight"] == 2.0 and aggs[1]["weight"] == 1.0
+
+
+def test_weights_can_outrank_raw_starrer_count():
+    # The point of weighting: one heavily-weighted account should be able to beat
+    # two lightly-weighted ones, otherwise the table is decorative.
+    events = [
+        {"username": "nobody1", "canonical_repo": "many/light", "starred_at": "2026-07-25T00:00:00Z"},
+        {"username": "nobody2", "canonical_repo": "many/light", "starred_at": "2026-07-25T00:00:00Z"},
+        {"username": "heavyweight", "canonical_repo": "one/heavy", "starred_at": "2026-07-25T00:00:00Z"},
+    ]
+    weights = {"heavyweight": 8.0, "nobody1": 1.0, "nobody2": 1.0}
+    aggs = core.aggregate_by_repo(events, weights, 1.0)
+    assert aggs[0]["canonical_repo"] == "one/heavy", [a["canonical_repo"] for a in aggs]
+    assert aggs[0]["weight"] == 8.0 and aggs[1]["weight"] == 2.0
+
+
+def test_unlisted_members_get_the_default_weight():
+    events = [{"username": "unlisted", "canonical_repo": "x/y", "starred_at": "2026-07-25T00:00:00Z"}]
+    assert core.aggregate_by_repo(events, {"someone": 5.0}, 2.5)[0]["weight"] == 2.5
+
+
+def test_load_weights_accepts_both_shapes_and_survives_junk(tmp_path):
+    nested = tmp_path / "n.json"
+    nested.write_text('{"default": 3.0, "weights": {"Alice": 7.5}}')
+    w, d = core.load_weights({"HOTIN_INSIDER_WEIGHTS_PATH": str(nested)})
+    assert w == {"alice": 7.5} and d == 3.0          # handles are case-folded
+
+    flat = tmp_path / "f.json"
+    flat.write_text('{"bob": 2}')
+    w, d = core.load_weights({"HOTIN_INSIDER_WEIGHTS_PATH": str(flat)})
+    assert w == {"bob": 2.0} and d == 1.0
+
+    bad = tmp_path / "bad.json"
+    bad.write_text("not json at all")
+    assert core.load_weights({"HOTIN_INSIDER_WEIGHTS_PATH": str(bad)}) == ({}, 1.0)
+    assert core.load_weights({}) == ({}, 1.0)
+    assert core.load_weights({"HOTIN_INSIDER_WEIGHTS_PATH": "/no/such/file"}) == ({}, 1.0)
+
+
 def test_aggregate_dedupes_and_ranks():
     events = [
         {"username": "a", "canonical_repo": "shared/repo",
