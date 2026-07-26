@@ -1,6 +1,6 @@
 {
   "generated": "2026-07-26",
-  "generated_pt": "Jul 25, 2026 \u00b7 8:11 PM PT",
+  "generated_pt": "Jul 25, 2026 \u00b7 8:17 PM PT",
   "entities": {
     "repos": [
       {
@@ -38,7 +38,7 @@
           },
           {
             "label": "trending",
-            "hot": false
+            "hot": true
           }
         ]
       },
@@ -136,7 +136,7 @@
             "kind": "stars"
           },
           {
-            "label": "+514/day",
+            "label": "+512/day",
             "kind": "stars"
           },
           {
@@ -186,7 +186,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -663,7 +663,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -698,7 +698,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -714,7 +714,7 @@
             "kind": "stars"
           },
           {
-            "label": "+718/day",
+            "label": "+717/day",
             "kind": "stars"
           },
           {
@@ -745,7 +745,7 @@
             "kind": "stars"
           },
           {
-            "label": "+347/day",
+            "label": "+346/day",
             "kind": "stars"
           },
           {
@@ -1012,7 +1012,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -1071,7 +1071,7 @@
             "kind": "stars"
           },
           {
-            "label": "+388/day",
+            "label": "+386/day",
             "kind": "stars"
           },
           {
@@ -1102,7 +1102,7 @@
             "kind": "stars"
           },
           {
-            "label": "+114/day",
+            "label": "+113/day",
             "kind": "stars"
           },
           {
@@ -1195,7 +1195,7 @@
             "kind": "stars"
           },
           {
-            "label": "+297/day",
+            "label": "+296/day",
             "kind": "stars"
           },
           {
@@ -1448,7 +1448,7 @@
           },
           {
             "label": "trending",
-            "hot": false
+            "hot": true
           }
         ]
       },
@@ -1546,7 +1546,7 @@
             "kind": "stars"
           },
           {
-            "label": "+514/day",
+            "label": "+512/day",
             "kind": "stars"
           },
           {
@@ -1596,7 +1596,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -1910,7 +1910,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -1926,7 +1926,7 @@
             "kind": "stars"
           },
           {
-            "label": "+718/day",
+            "label": "+717/day",
             "kind": "stars"
           },
           {
@@ -1957,7 +1957,7 @@
             "kind": "stars"
           },
           {
-            "label": "+347/day",
+            "label": "+346/day",
             "kind": "stars"
           },
           {
@@ -2185,7 +2185,7 @@
           },
           {
             "label": "trending",
-            "hot": true
+            "hot": false
           }
         ]
       },
@@ -2201,7 +2201,7 @@
             "kind": "stars"
           },
           {
-            "label": "+114/day",
+            "label": "+113/day",
             "kind": "stars"
           },
           {
@@ -2263,7 +2263,7 @@
             "kind": "stars"
           },
           {
-            "label": "+297/day",
+            "label": "+296/day",
             "kind": "stars"
           },
           {
@@ -2616,7 +2616,7 @@
         "meta": "Dotted thought-orb loading indicators for AI & agent UIs \u2014 six tuned states, two",
         "receipts": [
           {
-            "label": "+203/day",
+            "label": "+204/day",
             "kind": "stars"
           },
           {
@@ -3158,11 +3158,11 @@
         "meta": "An AI copywriter that uses real copywriting skills + real marketing knowledge wi",
         "receipts": [
           {
-            "label": "+300/day",
+            "label": "+301/day",
             "kind": "stars"
           },
           {
-            "label": "600 stars",
+            "label": "602 stars",
             "kind": "stars"
           },
           {
@@ -3185,11 +3185,11 @@
         "meta": null,
         "receipts": [
           {
-            "label": "+284/day",
+            "label": "+285/day",
             "kind": "stars"
           },
           {
-            "label": "853 stars",
+            "label": "855 stars",
             "kind": "stars"
           },
           {
@@ -3212,7 +3212,7 @@
         "meta": "Dotted thought-orb loading indicators for AI & agent UIs \u2014 six tuned states, two",
         "receipts": [
           {
-            "label": "+203/day",
+            "label": "+204/day",
             "kind": "stars"
           },
           {
@@ -3459,7 +3459,7 @@
             "kind": "stars"
           },
           {
-            "label": "203 stars",
+            "label": "204 stars",
             "kind": "stars"
           },
           {
@@ -3621,7 +3621,7 @@
             "kind": "stars"
           },
           {
-            "label": "190 stars",
+            "label": "191 stars",
             "kind": "stars"
           },
           {
@@ -3665,10 +3665,10 @@
       },
       {
         "rank": 20,
-        "id": "paxlabs-inc/machine-genome",
-        "name": "paxlabs-inc/machine-genome",
-        "url": "https://github.com/paxlabs-inc/machine-genome",
-        "meta": "Machine Genome is an open identity and provenance protocol for models, agents, h",
+        "id": "nvidia-nemo/labs-oo-agents",
+        "name": "nvidia-nemo/labs-oo-agents",
+        "url": "https://github.com/NVIDIA-NeMo/labs-OO-Agents",
+        "meta": "labs-OO-agents",
         "receipts": [
           {
             "label": "+36/day",
@@ -3692,17 +3692,17 @@
       },
       {
         "rank": 21,
-        "id": "nvidia-nemo/labs-oo-agents",
-        "name": "nvidia-nemo/labs-oo-agents",
-        "url": "https://github.com/NVIDIA-NeMo/labs-OO-Agents",
-        "meta": "labs-OO-agents",
+        "id": "paxlabs-inc/machine-genome",
+        "name": "paxlabs-inc/machine-genome",
+        "url": "https://github.com/paxlabs-inc/machine-genome",
+        "meta": "Machine Genome is an open identity and provenance protocol for models, agents, h",
         "receipts": [
           {
-            "label": "+35/day",
+            "label": "+36/day",
             "kind": "stars"
           },
           {
-            "label": "212 stars",
+            "label": "213 stars",
             "kind": "stars"
           },
           {
@@ -3854,6 +3854,33 @@
       },
       {
         "rank": 27,
+        "id": "eversmile12/leaked-llm-prompts",
+        "name": "eversmile12/leaked-llm-prompts",
+        "url": "https://github.com/Eversmile12/leaked-llm-prompts",
+        "meta": "collections-of-leaked-prompts",
+        "receipts": [
+          {
+            "label": "+28/day",
+            "kind": "stars"
+          },
+          {
+            "label": "56 stars",
+            "kind": "stars"
+          },
+          {
+            "label": "2d old",
+            "kind": "age"
+          }
+        ],
+        "badges": [
+          {
+            "label": "fresh",
+            "hot": false
+          }
+        ]
+      },
+      {
+        "rank": 28,
         "id": "brandon030722/ark-ui-skill",
         "name": "brandon030722/ark-ui-skill",
         "url": "https://github.com/Brandon030722/ark-ui-skill",
@@ -3880,7 +3907,7 @@
         ]
       },
       {
-        "rank": 28,
+        "rank": 29,
         "id": "nulightjens/humanizer-stack",
         "name": "nulightjens/humanizer-stack",
         "url": "https://github.com/NulightJens/humanizer-stack",
@@ -3907,7 +3934,7 @@
         ]
       },
       {
-        "rank": 29,
+        "rank": 30,
         "id": "0xtresser/transcript-of-liang-wenfengs-deepseek-founder-4-hour-investor-meeting",
         "name": "0xtresser/transcript-of-liang-wenfengs-deepseek-founder-4-hour-investor-meeting",
         "url": "https://github.com/0xtresser/Transcript-of-Liang-Wenfengs-DeepSeek-Founder-4-Hour-Investor-Meeting",
@@ -3923,33 +3950,6 @@
           },
           {
             "label": "3d old",
-            "kind": "age"
-          }
-        ],
-        "badges": [
-          {
-            "label": "fresh",
-            "hot": false
-          }
-        ]
-      },
-      {
-        "rank": 30,
-        "id": "rainppr/china-llms-anecdote-0721",
-        "name": "rainppr/china-llms-anecdote-0721",
-        "url": "https://github.com/RainPPR/china-llms-anecdote-0721",
-        "meta": null,
-        "receipts": [
-          {
-            "label": "+27/day",
-            "kind": "stars"
-          },
-          {
-            "label": "134 stars",
-            "kind": "stars"
-          },
-          {
-            "label": "5d old",
             "kind": "age"
           }
         ],
@@ -4682,7 +4682,7 @@
             "kind": "stars"
           },
           {
-            "label": "+514/day",
+            "label": "+512/day",
             "kind": "stars"
           },
           {
@@ -5835,17 +5835,17 @@
       },
       {
         "rank": 40,
-        "id": "microsoft/Mage-Flow-Turbo",
-        "name": "microsoft/Mage-Flow-Turbo",
-        "url": "https://huggingface.co/microsoft/Mage-Flow-Turbo",
-        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
+        "id": "PaddlePaddle/HPD-Parsing",
+        "name": "PaddlePaddle/HPD-Parsing",
+        "url": "https://huggingface.co/PaddlePaddle/HPD-Parsing",
+        "meta": "We introduce HPD-Parsing, a lightweight (1B) and high-throughput document parsing model built on a Hierarchical Parallel Decoding paradigm.\u2026",
         "receipts": [
           {
-            "label": "933 downloads",
+            "label": "767 downloads",
             "kind": "npm"
           },
           {
-            "label": "57 likes",
+            "label": "59 likes",
             "kind": "stars"
           },
           {
@@ -5857,17 +5857,17 @@
       },
       {
         "rank": 41,
-        "id": "PaddlePaddle/HPD-Parsing",
-        "name": "PaddlePaddle/HPD-Parsing",
-        "url": "https://huggingface.co/PaddlePaddle/HPD-Parsing",
-        "meta": "We introduce HPD-Parsing, a lightweight (1B) and high-throughput document parsing model built on a Hierarchical Parallel Decoding paradigm.\u2026",
+        "id": "microsoft/Mage-Flow-Turbo",
+        "name": "microsoft/Mage-Flow-Turbo",
+        "url": "https://huggingface.co/microsoft/Mage-Flow-Turbo",
+        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
         "receipts": [
           {
-            "label": "767 downloads",
+            "label": "933 downloads",
             "kind": "npm"
           },
           {
-            "label": "58 likes",
+            "label": "57 likes",
             "kind": "stars"
           },
           {
@@ -6379,17 +6379,17 @@
       },
       {
         "rank": 13,
-        "id": "microsoft/Mage-Flow-Turbo",
-        "name": "microsoft/Mage-Flow-Turbo",
-        "url": "https://huggingface.co/microsoft/Mage-Flow-Turbo",
-        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
+        "id": "PaddlePaddle/HPD-Parsing",
+        "name": "PaddlePaddle/HPD-Parsing",
+        "url": "https://huggingface.co/PaddlePaddle/HPD-Parsing",
+        "meta": "We introduce HPD-Parsing, a lightweight (1B) and high-throughput document parsing model built on a Hierarchical Parallel Decoding paradigm.\u2026",
         "receipts": [
           {
-            "label": "933 downloads",
+            "label": "767 downloads",
             "kind": "npm"
           },
           {
-            "label": "57 likes",
+            "label": "59 likes",
             "kind": "stars"
           },
           {
@@ -6401,17 +6401,17 @@
       },
       {
         "rank": 14,
-        "id": "PaddlePaddle/HPD-Parsing",
-        "name": "PaddlePaddle/HPD-Parsing",
-        "url": "https://huggingface.co/PaddlePaddle/HPD-Parsing",
-        "meta": "We introduce HPD-Parsing, a lightweight (1B) and high-throughput document parsing model built on a Hierarchical Parallel Decoding paradigm.\u2026",
+        "id": "microsoft/Mage-Flow-Turbo",
+        "name": "microsoft/Mage-Flow-Turbo",
+        "url": "https://huggingface.co/microsoft/Mage-Flow-Turbo",
+        "meta": "Mage-Flow is a compact 4B-scale generative stack for efficient text-to-image generation and instruction-based image editing. Instead of scal\u2026",
         "receipts": [
           {
-            "label": "767 downloads",
+            "label": "933 downloads",
             "kind": "npm"
           },
           {
-            "label": "58 likes",
+            "label": "57 likes",
             "kind": "stars"
           },
           {
@@ -8435,7 +8435,7 @@
       },
       {
         "rank": 8,
-        "id": "https://simonwillison.net/2026/Jul/23/the-first-known-runaway-ai-agent/#atom-everything",
+        "id": "h:5fd66fe78995adc9",
         "name": "The first known runaway AI agent - or a very bad marketing stunt?",
         "url": "https://simonwillison.net/2026/Jul/23/the-first-known-runaway-ai-agent/#atom-everything",
         "meta": "Simon Willison",
@@ -8534,7 +8534,7 @@
       },
       {
         "rank": 13,
-        "id": "https://deepmind.google/blog/accelerating-the-frontiers-of-scientific-discovery-googles-40m-commitment-to-the-genesis-mission/",
+        "id": "h:a821810ee2b72f16",
         "name": "Accelerating the frontiers of scientific discovery: Google\u2019s $40M commitment to the Genesis Mission",
         "url": "https://deepmind.google/blog/accelerating-the-frontiers-of-scientific-discovery-googles-40m-commitment-to-the-genesis-mission/",
         "meta": "Google DeepMind",
@@ -8553,7 +8553,7 @@
       },
       {
         "rank": 14,
-        "id": "https://blog.google/products-and-platforms/platforms/android/galaxy-unpacked-2026/",
+        "id": "h:a9dfe60b87c54070",
         "name": "3 Google updates from Galaxy Unpacked 2026",
         "url": "https://blog.google/products-and-platforms/platforms/android/galaxy-unpacked-2026/",
         "meta": "Google AI",
@@ -8572,7 +8572,7 @@
       },
       {
         "rank": 15,
-        "id": "https://openai.com/index/building-ai-infrastructure-with-the-effingham-county-community",
+        "id": "h:082c4173c70b0451",
         "name": "Building AI infrastructure with the Effingham County community",
         "url": "https://openai.com/index/building-ai-infrastructure-with-the-effingham-county-community",
         "meta": "OpenAI",
@@ -8686,7 +8686,7 @@
       },
       {
         "rank": 21,
-        "id": "https://simonwillison.net/2026/Jul/22/are-ai-labs-pelicanmaxxing/#atom-everything",
+        "id": "h:f2224010f961f035",
         "name": "Are AI labs pelicanmaxxing?",
         "url": "https://simonwillison.net/2026/Jul/22/are-ai-labs-pelicanmaxxing/#atom-everything",
         "meta": "Simon Willison",
@@ -8808,7 +8808,7 @@
       },
       {
         "rank": 27,
-        "id": "https://deepmind.google/blog/introducing-gemini-36-flash-35-flash-lite-and-35-flash-cyber/",
+        "id": "h:a9044d63de90cb98",
         "name": "Introducing Gemini 3.6 Flash, 3.5 Flash-Lite, and 3.5 Flash Cyber",
         "url": "https://deepmind.google/blog/introducing-gemini-36-flash-35-flash-lite-and-35-flash-cyber/",
         "meta": "Google DeepMind",
@@ -9018,7 +9018,7 @@
       },
       {
         "rank": 37,
-        "id": "https://blog.google/products-and-platforms/products/workspace/gemini-omni-personal-avatars/",
+        "id": "h:6a0f44aaf2f61b4c",
         "name": "Create, edit and star in videos with two Google Vids updates",
         "url": "https://blog.google/products-and-platforms/products/workspace/gemini-omni-personal-avatars/",
         "meta": "Google AI",
@@ -9117,7 +9117,7 @@
       },
       {
         "rank": 42,
-        "id": "https://blog.google/products-and-platforms/products/search/google-images-25th-anniversary/",
+        "id": "h:d836dcfc4e0bbcdc",
         "name": "Celebrating 25 years of visual search innovation",
         "url": "https://blog.google/products-and-platforms/products/search/google-images-25th-anniversary/",
         "meta": "Google AI",
@@ -9140,7 +9140,7 @@
       },
       {
         "rank": 43,
-        "id": "https://www.microsoft.com/en-us/research/blog/verifying-rust-cryptography-in-symcrypt-from-standards-to-code/",
+        "id": "h:b45a9ea535cabcd9",
         "name": "Verifying Rust cryptography in SymCrypt, from standards to code",
         "url": "https://www.microsoft.com/en-us/research/blog/verifying-rust-cryptography-in-symcrypt-from-standards-to-code/",
         "meta": "Microsoft Research",
@@ -9159,7 +9159,7 @@
       },
       {
         "rank": 44,
-        "id": "https://deepmind.google/blog/empowering-indias-next-generation-of-innovators-with-atl-saathi/",
+        "id": "h:13f77bbb5cb94408",
         "name": "Empowering India\u2019s next generation of innovators with ATL Saathi",
         "url": "https://deepmind.google/blog/empowering-indias-next-generation-of-innovators-with-atl-saathi/",
         "meta": "Google DeepMind",
@@ -9224,7 +9224,7 @@
       },
       {
         "rank": 47,
-        "id": "https://www.microsoft.com/en-us/research/blog/aurora-1-5-extending-open-foundation-models-for-weather-and-earth-system-applications/",
+        "id": "h:df26bd70c115554a",
         "name": "Aurora 1.5: Extending open foundation models for weather and Earth-system applications",
         "url": "https://www.microsoft.com/en-us/research/blog/aurora-1-5-extending-open-foundation-models-for-weather-and-earth-system-applications/",
         "meta": "Microsoft Research",
@@ -9266,7 +9266,7 @@
       },
       {
         "rank": 49,
-        "id": "https://www.microsoft.com/en-us/research/blog/flint-a-visualization-language-for-the-ai-era/",
+        "id": "h:84fb3d732a5c116d",
         "name": "Flint: A visualization language for the AI era",
         "url": "https://www.microsoft.com/en-us/research/blog/flint-a-visualization-language-for-the-ai-era/",
         "meta": "Microsoft Research",
@@ -9285,7 +9285,7 @@
       },
       {
         "rank": 50,
-        "id": "https://blog.google/innovation-and-ai/technology/developers-tools/expanding-managed-agents-gemini-api/",
+        "id": "h:2a44ce948b87c338",
         "name": "Expanding Managed Agents in Gemini API:  background tasks, remote MCP and more",
         "url": "https://blog.google/innovation-and-ai/technology/developers-tools/expanding-managed-agents-gemini-api/",
         "meta": "Google AI",
@@ -9304,7 +9304,7 @@
       },
       {
         "rank": 51,
-        "id": "https://deepmind.google/blog/google-deepmind-and-a24-announce-first-of-its-kind-research-partnership/",
+        "id": "h:f6b3f809726c47bb",
         "name": "Google DeepMind and A24 announce first-of-its-kind research partnership",
         "url": "https://deepmind.google/blog/google-deepmind-and-a24-announce-first-of-its-kind-research-partnership/",
         "meta": "Google DeepMind",
@@ -9384,7 +9384,7 @@
       },
       {
         "rank": 55,
-        "id": "https://www.microsoft.com/en-us/research/blog/skillopt-agent-skills-as-trainable-parameters/",
+        "id": "h:446ed339b8f753d9",
         "name": "SkillOpt: Agent skills as trainable parameters",
         "url": "https://www.microsoft.com/en-us/research/blog/skillopt-agent-skills-as-trainable-parameters/",
         "meta": "Microsoft Research",
@@ -9403,7 +9403,7 @@
       },
       {
         "rank": 56,
-        "id": "https://deepmind.google/blog/start-building-with-nano-banana-2-lite-and-gemini-omni-flash/",
+        "id": "h:270bf5aff18a95d1",
         "name": "Start building with Nano Banana 2 Lite and Gemini Omni Flash",
         "url": "https://deepmind.google/blog/start-building-with-nano-banana-2-lite-and-gemini-omni-flash/",
         "meta": "Google DeepMind",
@@ -9422,7 +9422,7 @@
       },
       {
         "rank": 57,
-        "id": "https://blog.google/company-news/inside-google/around-the-globe/google-europe/united-kingdom/unlocking-britains-next-era-of-productivity-building-a-nation-of-ai-trailblazers/",
+        "id": "h:2987e3b3c79a3a0a",
         "name": "Unlocking Britain\u2019s next era of productivity: Building a nation of AI trailblazers",
         "url": "https://blog.google/company-news/inside-google/around-the-globe/google-europe/united-kingdom/unlocking-britains-next-era-of-productivity-building-a-nation-of-ai-trailblazers/",
         "meta": "Google AI",
@@ -9441,7 +9441,7 @@
       },
       {
         "rank": 58,
-        "id": "https://www.microsoft.com/en-us/research/blog/memora-a-harmonic-memory-representation-balancing-abstraction-and-specificity/",
+        "id": "h:9f650cfc114d055b",
         "name": "Memora:\u00a0A Harmonic Memory Representation Balancing Abstraction and Specificity",
         "url": "https://www.microsoft.com/en-us/research/blog/memora-a-harmonic-memory-representation-balancing-abstraction-and-specificity/",
         "meta": "Microsoft Research",
@@ -9483,7 +9483,7 @@
       },
       {
         "rank": 60,
-        "id": "https://www.microsoft.com/en-us/research/blog/understanding-the-brain-with-ai-driven-explanations-and-experiments/",
+        "id": "h:2a4d45eceb809760",
         "name": "Understanding the brain with AI-driven explanations and experiments",
         "url": "https://www.microsoft.com/en-us/research/blog/understanding-the-brain-with-ai-driven-explanations-and-experiments/",
         "meta": "Microsoft Research",
@@ -9662,7 +9662,7 @@
       },
       {
         "rank": 8,
-        "id": "https://simonwillison.net/2026/Jul/23/the-first-known-runaway-ai-agent/#atom-everything",
+        "id": "h:5fd66fe78995adc9",
         "name": "The first known runaway AI agent - or a very bad marketing stunt?",
         "url": "https://simonwillison.net/2026/Jul/23/the-first-known-runaway-ai-agent/#atom-everything",
         "meta": "Simon Willison",
@@ -9761,7 +9761,7 @@
       },
       {
         "rank": 13,
-        "id": "https://deepmind.google/blog/accelerating-the-frontiers-of-scientific-discovery-googles-40m-commitment-to-the-genesis-mission/",
+        "id": "h:a821810ee2b72f16",
         "name": "Accelerating the frontiers of scientific discovery: Google\u2019s $40M commitment to the Genesis Mission",
         "url": "https://deepmind.google/blog/accelerating-the-frontiers-of-scientific-discovery-googles-40m-commitment-to-the-genesis-mission/",
         "meta": "Google DeepMind",
@@ -9780,7 +9780,7 @@
       },
       {
         "rank": 14,
-        "id": "https://blog.google/products-and-platforms/platforms/android/galaxy-unpacked-2026/",
+        "id": "h:a9dfe60b87c54070",
         "name": "3 Google updates from Galaxy Unpacked 2026",
         "url": "https://blog.google/products-and-platforms/platforms/android/galaxy-unpacked-2026/",
         "meta": "Google AI",
@@ -9799,7 +9799,7 @@
       },
       {
         "rank": 15,
-        "id": "https://openai.com/index/building-ai-infrastructure-with-the-effingham-county-community",
+        "id": "h:082c4173c70b0451",
         "name": "Building AI infrastructure with the Effingham County community",
         "url": "https://openai.com/index/building-ai-infrastructure-with-the-effingham-county-community",
         "meta": "OpenAI",
@@ -9913,7 +9913,7 @@
       },
       {
         "rank": 21,
-        "id": "https://simonwillison.net/2026/Jul/22/are-ai-labs-pelicanmaxxing/#atom-everything",
+        "id": "h:f2224010f961f035",
         "name": "Are AI labs pelicanmaxxing?",
         "url": "https://simonwillison.net/2026/Jul/22/are-ai-labs-pelicanmaxxing/#atom-everything",
         "meta": "Simon Willison",
@@ -10035,7 +10035,7 @@
       },
       {
         "rank": 27,
-        "id": "https://deepmind.google/blog/introducing-gemini-36-flash-35-flash-lite-and-35-flash-cyber/",
+        "id": "h:a9044d63de90cb98",
         "name": "Introducing Gemini 3.6 Flash, 3.5 Flash-Lite, and 3.5 Flash Cyber",
         "url": "https://deepmind.google/blog/introducing-gemini-36-flash-35-flash-lite-and-35-flash-cyber/",
         "meta": "Google DeepMind",
