@@ -1,0 +1,5 @@
+# Only needed by scripts/compute_embeddings.py — NOT a dependency of the
+# `hotin` package itself (pyproject.toml's dependencies stay empty, per the
+# project's zero-dependency CLI principle). Install with:
+#   pip install -r scripts/requirements-embeddings.txt
+sentence-transformers
