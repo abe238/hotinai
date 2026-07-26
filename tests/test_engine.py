@@ -394,11 +394,52 @@ def test_badge_vocabulary_is_tight_and_word_of_mouth():
     ], now=now)["acme/tool"]
     tb = engine.score_repo(three, now=now)["badges"]
     assert "corroborated" not in tb and "hn" not in tb and "reddit" not in tb
-    # Smart Money = AI1000 stars AND corroboration (>=2 sources); alone is not enough
-    sm_alone = engine.merge_by_repo([record("smartmoney", signal={"smartmoney_starrers": 50, "pushed_at": now})], now=now)["acme/tool"]
-    assert "smart-money" not in engine.score_repo(sm_alone, now=now)["badges"]
+    # Smart-money BADGE retired 2026-07-26 (roster too small to reliably hit the
+    # old >=2-starrer gate). The signal still feeds credibility (log1p term) and
+    # the dedicated `hotin insiders` tab, but is no longer a headline badge on
+    # the repos board — assert it never appears, even when strongly backed.
     sm_backed = engine.merge_by_repo([
         record("smartmoney", signal={"smartmoney_starrers": 50, "pushed_at": now}),
         record("github", signal={"stars": 10, "pushed_at": now}),
     ], now=now)["acme/tool"]
-    assert "smart-money" in engine.score_repo(sm_backed, now=now)["badges"]
+    assert "smart-money" not in engine.score_repo(sm_backed, now=now)["badges"]
+
+
+def test_smartmoney_is_a_flag_source_not_independent_corroboration():
+    # Regression pin: smartmoney moved from an aggregate feed to per-roster-member
+    # polling, so a hit is "one curated account starred this" -- it must feed
+    # credibility but must NOT buy the 1.25x corroboration multiplier an
+    # independent OSS source does. github alone and github+smartmoney must have
+    # identical corroboration (1.0); only a genuinely independent second source
+    # (hn) lifts it to 1.25.
+    now = time.time()
+    github_only = engine.merge_by_repo(
+        [record("github", signal={"stars": 100, "pushed_at": now})], now=now)["acme/tool"]
+    github_plus_sm = engine.merge_by_repo([
+        record("github", signal={"stars": 100, "pushed_at": now}),
+        record("smartmoney", signal={"smartmoney_starrers": 50, "pushed_at": now}),
+    ], now=now)["acme/tool"]
+    github_plus_hn = engine.merge_by_repo([
+        record("github", signal={"stars": 100, "pushed_at": now}),
+        record("hn", signal={"hn_points": 200, "pushed_at": now}),
+    ], now=now)["acme/tool"]
+    corr = lambda m: engine.score_repo(m, now=now)["corroboration"]
+    assert corr(github_only) == 1.0
+    assert corr(github_plus_sm) == 1.0, "smartmoney must not add corroboration"
+    assert corr(github_plus_hn) == 1.25, "a real independent source still does"
+
+
+def test_roster_starrers_earn_no_rank_bonus():
+    # Regression pin: the roster is unranked, so smartmoney's top_starrers carry
+    # NO `rank` field. The engine's rank_bonus term must therefore default to its
+    # neutral 1000 (bonus 0) -- a stray 0-based index would read as top-influential
+    # and inflate every roster-starred repo's credibility.
+    now = time.time()
+    unranked = engine.merge_by_repo([record("smartmoney", signal={"smartmoney_starrers": 3},
+        meta={"top_starrers": [{"username": "a"}, {"username": "b"}, {"username": "c"}]})],
+        now=now)["acme/tool"]
+    ranked_top = engine.merge_by_repo([record("smartmoney", signal={"smartmoney_starrers": 3},
+        meta={"top_starrers": [{"username": "a", "rank": 0}]})], now=now)["acme/tool"]
+    # a spurious rank:0 would add a large bonus; no-rank must score strictly lower credibility
+    assert engine.score_repo(unranked, now=now)["credibility"] < \
+        engine.score_repo(ranked_top, now=now)["credibility"]

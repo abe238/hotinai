@@ -1,83 +1,75 @@
-import json
-
-from hotin.sources import insiders
+from hotin.sources import _insider_roster, insiders
 
 
-def _page(*texts):
-    # Real page ships each flight chunk as a JSON *string* value; escape it the
-    # same way so the sibling decoders round-trip it back to the raw blob text.
-    chunks = "".join(
-        'self.__next_f.push([1, "{}"])</script>'.format(json.dumps(t)[1:-1]) for t in texts
+def _events(*triples):
+    """(username, repo, starred_at) -> shared-core event dicts."""
+    return [
+        {"username": u, "canonical_repo": r, "starred_at": s,
+         "stargazers_count": 10, "description": None}
+        for (u, r, s) in triples
+    ]
+
+
+def test_maps_roster_events_to_insider_records_deduped_across_members(monkeypatch):
+    # Two roster members star the same repo -> one record, insider_stars == 2.
+    _insider_roster._reset_memo()
+    events = _events(
+        ("karpathy", "owner/repo", "2026-07-24T00:00:00Z"),
+        ("simonw", "owner/repo", "2026-07-25T00:00:00Z"),  # 2nd starrer, more recent
+        ("simonw", "solo/pick", "2026-07-20T00:00:00Z"),
     )
-    return "<html><body>" + chunks + "</body></html>"
+    monkeypatch.setattr(_insider_roster, "poll_roster", lambda config=None, **kw: events)
+    result = insiders.fetch(config={"GITHUB_TOKEN": "x"})
+    assert result["status"] == "ok"
+    recs = {r["entity_id"]: r for r in result["records"]}
 
-
-def _repos(objs):
-    return _page(json.dumps(objs, separators=(",", ":")))
-
-
-def test_parses_repos_dedupes_and_picks_top_insider():
-    html = _repos([
-        {"full_name": "Owner/Repo", "distinct_starrers": 3,
-         "starrers": [{"username": "karpathy", "rank": 5}, {"username": "ilya", "rank": 1}]},
-        {"full_name": "owner/repo", "distinct_starrers": 9,  # dup canonical, higher stars
-         "starrers": [{"username": "sama", "rank": 2}, {"username": "greg", "rank": 4}]},
-        {"full_name": "second/proj", "distinct_starrers": 4,
-         "starrers": [{"username": "a", "rank": 10}, {"username": "b", "rank": 2},
-                      {"username": "c", "rank": 8}, {"username": "d", "rank": 1},
-                      {"username": "e", "rank": 7}, {"username": "f", "rank": 6}]},
-    ])
-    records = insiders.parse_repos(html)
-    assert [r["entity_id"] for r in records] == ["owner/repo", "second/proj"]  # sorted by stars desc
-
-    top = records[0]
-    assert top["entity_type"] == "repo" and top["canonical_repo"] == "owner/repo"
-    assert top["url"] == "https://github.com/owner/repo" and top["name"] == "owner/repo"
+    top = recs["owner/repo"]
     assert top["source"] == "insiders"
-    assert top["signal"]["insider_stars"] == 9  # dedupe kept the higher count
-    assert top["meta"]["top_insider"] == "sama" and top["meta"]["insiders"] == ["sama", "greg"]
+    assert top["url"] == "https://github.com/owner/repo"
+    assert top["signal"]["insider_stars"] == 2          # both members counted once
+    assert top["signal"]["most_recent_star_at"] == "2026-07-25T00:00:00Z"  # most recent wins
+    assert top["meta"]["insiders"] == ["karpathy", "simonw"]
+    assert top["meta"]["top_insider"] == "karpathy"
 
-    second = records[1]
-    assert second["signal"]["insider_stars"] == 4
-    assert second["meta"]["top_insider"] == "d"  # lowest rank wins, not first listed
-    # names come back in AI-1000 rank order (most influential first)
-    assert second["meta"]["insiders"] == ["d", "b", "f", "e", "c", "a"]
-
-
-def test_hostile_and_empty_inputs_are_safe():
-    assert insiders.parse_repos(None) == []
-    assert insiders.parse_repos("garbage") == []
-    assert insiders.parse_repos("<html>self.__next_f.push([1,\"broken)</html>") == []
-    messy = _repos([
-        None,
-        {"full_name": "bad repo"},                      # not a valid GitHub ref
-        {"full_name": "ok/repo", "distinct_starrers": 1e309, "starrers": ["nope"]},
-        {"full_name": "keys/missing"},                  # no starrers, no star count
-    ])
-    records = insiders.parse_repos(messy)
-    by_id = {r["entity_id"]: r for r in records}
-    assert by_id["ok/repo"]["signal"]["insider_stars"] == 0  # overflow coerced to default
-    assert by_id["ok/repo"]["meta"] == {"insiders": [], "top_insider": None,
-                                        "description": None}
-    assert by_id["keys/missing"]["signal"]["insider_stars"] == 0
+    assert recs["solo/pick"]["signal"]["insider_stars"] == 1
 
 
-def test_fetch_error_when_request_fails(monkeypatch):
-    monkeypatch.setattr(insiders, "_request", lambda: None)
-    assert insiders.fetch(limit=5) == {
-        "records": [], "status": "error", "detail": "insiders request failed"
-    }
+def test_records_sorted_by_distinct_starrers_desc(monkeypatch):
+    _insider_roster._reset_memo()
+    events = _events(
+        ("a", "solo/one", "2026-07-24T00:00:00Z"),
+        ("a", "shared/two", "2026-07-24T00:00:00Z"),
+        ("b", "shared/two", "2026-07-24T00:00:00Z"),
+    )
+    monkeypatch.setattr(_insider_roster, "poll_roster", lambda config=None, **kw: events)
+    result = insiders.fetch(config={"GITHUB_TOKEN": "x"})
+    assert [r["entity_id"] for r in result["records"]] == ["shared/two", "solo/one"]
 
 
-def test_fetch_ok_caps_to_limit(monkeypatch):
-    html = _repos([
-        {"full_name": "a/one", "distinct_starrers": 5, "starrers": [{"username": "x", "rank": 1}]},
-        {"full_name": "b/two", "distinct_starrers": 9, "starrers": [{"username": "y", "rank": 1}]},
-    ])
-    monkeypatch.setattr(insiders, "_request", lambda: html)
-    result = insiders.fetch(limit=1)
-    assert result["status"] == "ok" and len(result["records"]) == 1
-    assert result["records"][0]["entity_id"] == "b/two"  # highest stars first
+def test_missing_token_is_a_loud_error_not_silent(monkeypatch):
+    # Regression pin: an unauthenticated poll degrades to 60/hr and would pass
+    # locally while failing in CI -- the adapter must surface it as an error.
+    _insider_roster._reset_memo()
+    assert insiders.fetch(config={})["status"] == "error"
+    assert insiders.fetch()["status"] == "error"  # no config at all
+
+
+def test_empty_window_is_empty_not_error(monkeypatch):
+    _insider_roster._reset_memo()
+    monkeypatch.setattr(_insider_roster, "poll_roster", lambda config=None, **kw: [])
+    assert insiders.fetch(config={"GITHUB_TOKEN": "x"})["status"] == "empty"
+
+
+def test_fetch_caps_to_limit(monkeypatch):
+    _insider_roster._reset_memo()
+    events = _events(
+        ("a", "b/two", "2026-07-24T00:00:00Z"),
+        ("a", "a/one", "2026-07-24T00:00:00Z"),
+        ("b", "b/two", "2026-07-24T00:00:00Z"),  # b/two has 2 starrers -> ranks first
+    )
+    monkeypatch.setattr(_insider_roster, "poll_roster", lambda config=None, **kw: events)
+    result = insiders.fetch(limit=1, config={"GITHUB_TOKEN": "x"})
+    assert len(result["records"]) == 1 and result["records"][0]["entity_id"] == "b/two"
 
 
 def test_fetch_zero_limit_is_empty():
@@ -87,6 +79,8 @@ def test_fetch_zero_limit_is_empty():
 def test_selftest():
     insiders.selftest()
 
+
+# --- backfill_created_at: unchanged behavior, kept from the scraper era ---
 
 class FakeCache:
     def __init__(self, rows):

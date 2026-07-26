@@ -21,7 +21,11 @@ SOURCES = (github, trends, hn, npm, reddit, youtube, smartmoney, smolai, x)
 # Sources whose repo mentions are a credibility FLAG, not independent
 # corroboration: they never count toward source_count / the corroboration
 # multiplier (they'd otherwise inflate the score by 1.25x for free).
-_FLAG_SOURCES = frozenset({"smolai"})
+# smartmoney joined this set when it moved off the aggregate digg AI-1000 feed
+# to per-roster-member polling: a hit now means "one curated account starred
+# this", which must feed credibility (log1p term) but must NOT buy a free 1.25x
+# corroboration bump the way an independent OSS source does.
+_FLAG_SOURCES = frozenset({"smolai", "smartmoney"})
 # At 12, smart-money alone remains influential but cannot exceed modest
 # corroborated OSS momentum from three independent sources.
 CREDIBILITY_CAP = 12.0
@@ -342,7 +346,7 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     signal = merged.get("signal") if isinstance(merged.get("signal"), dict) else {}
     meta = merged.get("meta") if isinstance(merged.get("meta"), dict) else {}
     sources = merged.get("sources") if isinstance(merged.get("sources"), (set, list, tuple)) else ()
-    # Flag sources (smolai) don't count as independent corroboration.
+    # Flag sources (smolai, smartmoney) don't count as independent corroboration.
     source_count = len([source for source in sources if source not in _FLAG_SOURCES])
     reference = finite_float(now, time.time()) if now is not None else time.time()
     young = _is_young(signal.get("created_at"), reference)
@@ -415,10 +419,12 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     # Rising = climbing fast; Viral is the rare extreme (accelerating + corroborated).
     if rising:
         badges.append("viral" if (meta.get("accelerating") and source_count >= 2) else "rising")
-    # Smart Money = the premium credibility rubric: the AI1000 crowd is on it AND
-    # it is showing up across several independent sources.
-    if finite_float(signal.get("smartmoney_starrers"), 0.0) >= 2 and source_count >= 2:
-        badges.append("smart-money")
+    # Smart-money badge RETIRED (2026-07-26): the digg AI-1000 cohort was large
+    # enough that >=2 co-occurring starrers was routine; a curated roster of a
+    # few dozen accounts almost never produces two starrers on the same repo, so
+    # the badge would be silently near-invisible. The signal still lives in the
+    # credibility term (log1p smartmoney_starrers) and the dedicated `hotin
+    # insiders` tab; it is no longer a headline badge on the repos board.
     if paper_backed:
         badges.append("paper-backed")
     result.update({"momentum": momentum, "credibility": credibility, "signal_score": signal_score,
