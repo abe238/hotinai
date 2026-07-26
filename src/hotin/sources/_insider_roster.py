@@ -96,6 +96,10 @@ def _roster(config: Optional[dict]) -> Tuple[str, ...]:
                 text = handle.read()
         except (OSError, ValueError):
             pass
+        # Strip `#` comments FIRST: a roster file usually carries a header, and
+        # splitting on whitespace before stripping turns every comment word into
+        # a bogus handle (a real bug this caught: 26 phantom entries).
+        text = "\n".join(line.split("#", 1)[0] for line in text.splitlines())
         names = [n.strip() for n in re.split(r"[\s,]+", text) if n.strip()]
         if names:
             # dedupe, preserve order

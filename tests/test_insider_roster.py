@@ -165,6 +165,25 @@ def test_roster_override_parses_a_literal_list(monkeypatch):
     assert roster == ("alice", "bob", "carol")
 
 
+def test_roster_override_from_a_file_strips_comments(tmp_path):
+    # Regression: a roster FILE normally has a header. Splitting on whitespace
+    # before stripping '#' comments turned every comment word into a handle
+    # (this produced 26 phantom entries against the real private roster).
+    core._reset_memo()
+    f = tmp_path / "roster.txt"
+    f.write_text(
+        "# hotin insider roster -- PRIVATE, do not publish\n"
+        "# consumed via HOTIN_INSIDER_ROSTER_PATH\n"
+        "alice\n"
+        "bob   # trailing comment on a real entry\n"
+        "carol\n"
+    )
+    roster = core._roster({"HOTIN_INSIDER_ROSTER_PATH": str(f)})
+    assert roster == ("alice", "bob", "carol"), roster
+    assert not any(h.startswith("#") for h in roster)
+    assert "PRIVATE" not in roster and "hotin" not in roster
+
+
 def test_seed_roster_is_used_when_no_override():
     assert core._roster({}) == core.SEED_ROSTER
     assert len(core.SEED_ROSTER) >= 20  # a real starting set, not a 5-name stub
