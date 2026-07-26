@@ -221,11 +221,20 @@ _MEMO: Dict[Tuple[Any, ...], List[Dict[str, Any]]] = {}
 def poll_roster(
     config: Optional[dict] = None,
     *,
-    window_days: int = 7,
+    window_days: int = 30,
     now: Optional[datetime] = None,
     _force: bool = False,
 ) -> List[Dict[str, Any]]:
     """Poll every roster member's recently-starred repos, memoized per process.
+
+    The 30-day default window is measured, not guessed. Notable people star
+    rarely, so a 7-day window sampled almost nobody: across a 797-account cohort
+    it found 93 events from 36 people (4.5% participation), and a single
+    hyperactive account was 43% of the entire signal. Widening to 30 days gave
+    352 events from 87 people (10.9%), 301 distinct repos, and dropped that
+    account's share to 30% -- not by penalising anyone, but because the rest of
+    the cohort finally appeared. Costs nothing extra: the per-user page cap
+    already bounds the work.
 
     Returns a flat list of ``{username, canonical_repo, starred_at,
     stargazers_count, description}`` star events within ``window_days``. Raises

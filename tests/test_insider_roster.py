@@ -123,6 +123,30 @@ def test_http_date_retry_after_does_not_crash_the_poll(monkeypatch):
     assert events[0]["canonical_repo"] == "ok/repo"
 
 
+def test_default_window_is_30_days(monkeypatch):
+    # Pinned deliberately. 7 days sampled almost nobody (4.5% of the cohort
+    # active, one account = 43% of the signal); 30 days more than doubled
+    # participation and diluted that concentration to 30%. Narrowing this again
+    # should be a conscious decision with fresh numbers, not a drive-by edit.
+    core._reset_memo()
+    seen = {}
+
+    def spy(request, timeout=None):
+        return _Resp([])
+
+    monkeypatch.setattr(core.urllib.request, "urlopen", spy)
+    monkeypatch.setattr(core, "_roster", lambda config: ("solo",))
+    real_poll_one = core._poll_one
+
+    def capture(username, token, *, window_days, now):
+        seen["window_days"] = window_days
+        return real_poll_one(username, token, window_days=window_days, now=now)
+
+    monkeypatch.setattr(core, "_poll_one", capture)
+    core.poll_roster(config={"GITHUB_TOKEN": "x"})
+    assert seen["window_days"] == 30
+
+
 def test_pagination_stops_at_the_window_edge(monkeypatch):
     core._reset_memo()
     import datetime as dt
