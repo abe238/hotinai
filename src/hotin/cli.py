@@ -15,11 +15,11 @@ from . import __version__, board, categories, engine, health, render_board, sche
 from .cache import MemoryCache, open_cache
 from .canonical import canonicalize
 from .coerce import finite_float, finite_int
-from .config import config_dir, env_path, load_config
+from .config import config_dir, env_path, load_config, get as _config_get
 from .render import color, hyperlink, sanitize
 from .sources import (frontier, github, hfmodels, hfpapers, hn,
                       insiders, npm, trends, collections, reddit, rssnews,
-                      smolai, youtube)
+                      smolai, youtube, _readme_desc)
 
 
 # Entities (the nouns, each self-ranked) + MANAGE verbs. The raw single-source
@@ -819,6 +819,25 @@ def _docs_root() -> Path:
 INSIDER_MAX_REPO_AGE_DAYS = 180
 
 
+def _news7_order(records: List[dict], date_rank) -> List[dict]:
+    """Rank the 7-day news tab by crowd interest, not by date.
+
+    The main news tab is ranked date-first, so filtering it *by date* can only
+    ever hand back its own prefix: news7 shipped as news truncated, 32 of its
+    33 rows sitting at an identical position. The window was never the
+    problem -- the ranking was. Ordering the week by HN points makes the pair
+    answer two different questions: news = what just happened, news7 = what
+    people actually cared about. ``date_rank`` breaks ties so an unscored
+    story still falls in a stable, sensible place rather than by dict order.
+    """
+    def key(record):
+        signal = record.get("signal") if isinstance(record.get("signal"), dict) else {}
+        return (-finite_int(signal.get("hn_points"), 0),
+                not signal.get("hn_rising"),
+                date_rank(record))
+    return sorted([r for r in records if isinstance(r, dict)], key=key)
+
+
 def _export(arguments: argparse.Namespace) -> int:
     """Bake the 5-tab board into docs/index.html + write docs/data/latest.json.
 
@@ -959,6 +978,15 @@ def _export(arguments: argparse.Namespace) -> int:
     models60, models7 = _windows(models, _sig_date("created_at"))
     papers60, papers7 = _windows(papers, _sig_date("created_at"))
     news60, news7 = _windows(news, lambda r: (r.get("meta") or {}).get("date"))
+    news7 = _news7_order(news7, _news_rank)
+
+    # GitHub-blank descriptions, recovered from the README. One batched
+    # GraphQL request for the whole board, run here so only rows that will
+    # actually render are looked up.
+    _readme_desc.fill_missing_descriptions(
+        (repos60, repos7, rising, rising7, ins30[:limit]),
+        _config_get(config, "GITHUB_TOKEN"),
+    )
 
     rows = {
         "repos": board.repo_rows(repos60), "repos7": board.repo_rows(repos7),
