@@ -813,6 +813,12 @@ def _docs_root() -> Path:
     return Path.cwd() / "docs"
 
 
+# How old a repo may be and still count as an insider "find". A star on a
+# long-established project is a bookmark, not a discovery -- a 1077-day-old repo
+# reaching the live board is what prompted this bound.
+INSIDER_MAX_REPO_AGE_DAYS = 180
+
+
 def _export(arguments: argparse.Namespace) -> int:
     """Bake the 5-tab board into docs/index.html + write docs/data/latest.json.
 
@@ -926,23 +932,24 @@ def _export(arguments: argparse.Namespace) -> int:
                 _fresh_records(records, 7, date_of, keep_undated=False))
 
     repos60, repos7 = _windows(repos, _repo_activity)
-    # Insiders is the one tab with a single window, and it is 30 days.
-    # The window keys on the REPO'S OWN creation date: an insider starring a
-    # 3-year-old repo is not "new". A 7d companion tab was removed because it was
-    # structurally empty -- it needed a repo created inside 7 days AND starred by
-    # a roster member inside the star window, which essentially never coincided.
-    # 30d matches the star-poll window, so the two now agree instead of the tab
-    # being filtered by a date range narrower than the signal feeding it.
-    # Window on WHEN AN INSIDER STARRED IT, not on the repo's birthday.
+    # Insiders needs BOTH dates, because they answer different questions:
+    #   star date -> is this signal current?   (an old star is stale news)
+    #   repo age  -> is this actually new?     (a 3-year-old repo is not a find)
     #
-    # Keying on creation date filtered the wrong axis: a row had to be both
-    # recently-created AND recently-starred, and those rarely coincide. That is
-    # what made the old 7d companion tab permanently empty, and at 30d it made
-    # this tab unstable -- 13 rows at 60d, 8 on one machine at 30d, 0 on another
-    # hours later, while the cache held 20 repos under 30 days old the whole
-    # time. The signal here is "notable people are looking at this now", so the
-    # date that matters is the star, not the repo's age.
+    # Filtering on either alone is wrong, and both mistakes have shipped. Repo
+    # age alone made the tab erratic and often empty -- but only because the
+    # creation date came from a backfill capped at 40 repos/run, so freshly
+    # surfaced rows had no date and were dropped wholesale; in a live poll all
+    # 60 records lacked it. Star date alone then let genuinely ancient repos in
+    # (a 1077-day-old one reached the live board).
+    #
+    # Both work now because the poll captures the repo's creation date directly
+    # from the starred response, where it was available the whole time. Undated
+    # rows are KEPT rather than dropped: unknown age is not evidence of age, and
+    # dropping on a missing field is what emptied this tab before.
     ins30 = _fresh_records(ins, 30, _sig_date("most_recent_star_at"), keep_undated=False)
+    ins30 = _fresh_records(ins30, INSIDER_MAX_REPO_AGE_DAYS, _sig_date("created_at"),
+                           keep_undated=True)
     models60, models7 = _windows(models, _sig_date("created_at"))
     papers60, papers7 = _windows(papers, _sig_date("created_at"))
     news60, news7 = _windows(news, lambda r: (r.get("meta") or {}).get("date"))

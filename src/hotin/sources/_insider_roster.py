@@ -201,6 +201,14 @@ def _poll_one(
                 "username": username,
                 "canonical_repo": canonical,
                 "starred_at": starred_at,
+                # The repo's own creation date, straight from this response. It
+                # was always here -- the board previously sourced it from a
+                # separate backfill capped at 40 repos/run, so freshly-surfaced
+                # rows had no date and any age filter silently dropped 100% of
+                # them. Taking it at poll time makes repo age usable on the
+                # first sighting instead of eight runs later.
+                "repo_created_at": repo.get("created_at")
+                if isinstance(repo.get("created_at"), str) else None,
                 "stargazers_count": finite_int(repo.get("stargazers_count"), 0),
                 "description": repo.get("description")
                 if isinstance(repo.get("description"), str) else None,
@@ -330,9 +338,12 @@ def aggregate_by_repo(
             "canonical_repo": repo,
             "starrers": [],
             "most_recent_star_at": None,
+            "repo_created_at": None,
             "stargazers_count": 0,
             "description": None,
         })
+        if rec["repo_created_at"] is None and event.get("repo_created_at"):
+            rec["repo_created_at"] = event["repo_created_at"]
         user = event.get("username")
         if user and user not in rec["starrers"]:
             rec["starrers"].append(user)

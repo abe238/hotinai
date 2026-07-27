@@ -57,6 +57,8 @@ def _to_records(config: Optional[dict]) -> List[Dict[str, Any]]:
                 "insider_weight": agg.get("weight", float(len(usernames))),
                 "stars": finite_int(agg.get("stargazers_count"), 0),
                 "most_recent_star_at": agg.get("most_recent_star_at"),
+                # Repo age, captured at poll time rather than backfilled.
+                "created_at": agg.get("repo_created_at"),
             },
             "meta": {
                 "insiders": usernames,
