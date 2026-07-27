@@ -926,9 +926,14 @@ def _export(arguments: argparse.Namespace) -> int:
                 _fresh_records(records, 7, date_of, keep_undated=False))
 
     repos60, repos7 = _windows(repos, _repo_activity)
-    # insiders window on the REPO'S OWN creation date (user call): the smart-money
-    # view of young repos; an insider star on a 3-year-old repo is not "new".
-    ins60, ins7 = _windows(ins, _sig_date("created_at"))
+    # Insiders is the one tab with a single window, and it is 30 days.
+    # The window keys on the REPO'S OWN creation date: an insider starring a
+    # 3-year-old repo is not "new". A 7d companion tab was removed because it was
+    # structurally empty -- it needed a repo created inside 7 days AND starred by
+    # a roster member inside the star window, which essentially never coincided.
+    # 30d matches the star-poll window, so the two now agree instead of the tab
+    # being filtered by a date range narrower than the signal feeding it.
+    ins30 = _fresh_records(ins, 30, _sig_date("created_at"), keep_undated=False)
     models60, models7 = _windows(models, _sig_date("created_at"))
     papers60, papers7 = _windows(papers, _sig_date("created_at"))
     news60, news7 = _windows(news, lambda r: (r.get("meta") or {}).get("date"))
@@ -936,7 +941,7 @@ def _export(arguments: argparse.Namespace) -> int:
     rows = {
         "repos": board.repo_rows(repos60), "repos7": board.repo_rows(repos7),
         "rising": board.rising_rows(rising), "rising7": board.rising_rows(rising7),
-        "insiders": board.insider_rows(ins60), "insiders7": board.insider_rows(ins7),
+        "insiders": board.insider_rows(ins30),
         "models": board.model_rows(models60), "models7": board.model_rows(models7),
         "papers": board.paper_rows(papers60), "papers7": board.paper_rows(papers7),
         "news": board.news_rows(news60, note=news_note),
@@ -965,7 +970,7 @@ def _export(arguments: argparse.Namespace) -> int:
     # ledger must never cost the board its daily refresh (same principle as
     # every source adapter's own fail-soft contract).
     try:
-        tag_items = _classify_entities([repos60, rising, rising7, ins60], models60, papers60, news60)
+        tag_items = _classify_entities([repos60, rising, rising7, ins30], models60, papers60, news60)
         _write_tags_json(docs, tag_items, stamp_pt)
     except Exception as exc:  # noqa: BLE001 - deliberate: tagging is best-effort
         print("tags.json update skipped: {}".format(exc))
