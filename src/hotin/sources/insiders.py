@@ -138,7 +138,8 @@ def fetch(
             return {"records": [], "status": "empty", "detail": "limit is zero"}
         try:
             records = _to_records(config)
-        except (_insider_roster.MissingTokenError, _insider_roster.RosterAuthError) as exc:
+        except (_insider_roster.MissingTokenError, _insider_roster.RosterAuthError,
+                _insider_roster.RosterRateLimitError) as exc:
             return {"records": [], "status": "error", "detail": str(exc)}
         if not records:
             return {"records": [], "status": "empty",

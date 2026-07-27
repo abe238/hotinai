@@ -74,6 +74,40 @@ class RosterAuthError(RuntimeError):
     like "nobody starred anything" (a recurring real-world failure mode)."""
 
 
+class RosterRateLimitError(RuntimeError):
+    """Raised when enough of the roster was rate-limited that the poll no longer
+    describes reality.
+
+    401 was loud from the start; 403/429 was not, and that asymmetry was wrong.
+    A rate-limited account returns zero stars, which is byte-identical to an
+    account that genuinely starred nothing — so an exhausted token produced a
+    small, plausible, entirely fictional board while every status line said
+    "ok". It cost three separate misdiagnoses (a "cold store", a "cap-then-
+    filter" bug, an "ordering" bug) before the real cause was traced.
+
+    Live case: hotin.ai's CI authenticates with ``github.token``, capped at
+    1,000 REST requests/hour/repo, while one cycle polls the roster twice
+    (refresh + export) at ~793 accounts each. On the normal 3-hour cadence that
+    fits. Two runs inside one hour cannot, and the second silently produced 3
+    rows where the first produced 60.
+
+    Partial rate limiting is normal and tolerated; the threshold is about
+    whether the RESULT is still trustworthy, not whether anything went wrong."""
+
+
+# What a single account's poll tells us. Three outcomes, because "no stars"
+# and "not allowed to look" must never collapse into the same value again.
+_OK = "ok"
+_AUTH_FAILED = "auth_failed"
+_RATE_LIMITED = "rate_limited"
+
+# Fraction of the roster that may be rate-limited before the poll is considered
+# untrustworthy. Not zero: a handful of 403s is ordinary and the result is still
+# broadly right. At a tenth, the board would be quietly built on a minority of
+# the cohort, which is exactly the failure this guards.
+_RATE_LIMIT_TOLERANCE = 0.10
+
+
 def _token(config: Optional[dict]) -> str:
     token = (config or {}).get("GITHUB_TOKEN")
     if not isinstance(token, str) or not token.strip():
@@ -220,14 +254,17 @@ def _poll_one(
                 entries = json.loads(response.read().decode("utf-8", "replace"))
         except urllib.error.HTTPError as exc:
             if exc.code == 401:  # bad/revoked token — the caller must see this
-                return out, True
-            if exc.code in (403, 429):  # secondary rate limit — back off, stop this user
+                return out, _AUTH_FAILED
+            if exc.code in (403, 429):  # rate limited — back off, and SAY SO
                 retry = _retry_seconds(exc.headers.get("Retry-After")) if exc.headers else None
                 if retry is not None:
                     _THROTTLE.wait_for_retry_after(retry)
-            return out, False  # 404/410/etc: renamed/suspended/deleted — skip cleanly
+                # Reporting this is the whole point: an empty result here means
+                # "we were not allowed to look", not "there was nothing to see".
+                return out, _RATE_LIMITED
+            return out, _OK  # 404/410/etc: renamed/suspended/deleted — skip cleanly
         except Exception:
-            return out, False
+            return out, _OK
         if not isinstance(entries, list) or not entries:
             break
         stop = False
@@ -306,18 +343,30 @@ def poll_roster(
     token = _token(config)  # raises loudly before any network work
     events: List[Dict[str, Any]] = []
     auth_failures = 0
+    rate_limited = 0
     for username in roster:
-        user_events, auth_failed = _poll_one(
+        user_events, outcome = _poll_one(
             username, token, window_days=window_days, now=now)
         events.extend(user_events)
-        if auth_failed:
+        if outcome == _AUTH_FAILED:
             auth_failures += 1
+        elif outcome == _RATE_LIMITED:
+            rate_limited += 1
     # Every single member's request was 401-rejected => the token is broken, not
     # "nobody starred anything". Fail loud rather than cache/return an empty.
     if roster and auth_failures == len(roster):
         raise RosterAuthError(
             "GITHUB_TOKEN rejected (401) for all {} roster members — "
             "the token is invalid, revoked, or expired".format(len(roster)))
+    # Enough of the cohort was unreachable that the result no longer describes
+    # reality. Fail loudly instead of caching a small, plausible, wrong board.
+    if roster and rate_limited > _RATE_LIMIT_TOLERANCE * len(roster):
+        raise RosterRateLimitError(
+            "{} of {} roster members were rate-limited (403/429) — this poll "
+            "saw only part of the cohort and must not be published. A cycle "
+            "polls the roster twice, so at this roster size a 1,000 req/hr "
+            "token cannot support two runs in the same hour.".format(
+                rate_limited, len(roster)))
     _MEMO[key] = events
     return events
 
