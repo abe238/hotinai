@@ -846,7 +846,13 @@ def _export(arguments: argparse.Namespace) -> int:
                                       _ENTITY_COMMANDS["models"][2], limit=limit)
         papers = engine.rank_entities(engine.merge_by_entity(cached, "paper", max_age_days=window),
                                       _ENTITY_COMMANDS["papers"][2], limit=limit)
-    ins_res = insiders.fetch(limit=limit, config=config)
+    # Fetch a POOL, not the final list. The windows below drop rows, and if the
+    # cap is applied first they drop rows out of an already-truncated slice --
+    # which took the tab from 60 to 3. Weighting makes it sharper: highly
+    # weighted accounts tend to star established projects, so the top of the
+    # pool skews old, and an age filter applied after the cap removes almost
+    # all of it. Over-fetch, filter, then cap to `limit` when the rows are built.
+    ins_res = insiders.fetch(limit=max(limit * 6, 300), config=config)
     ins = [r for r in (ins_res.get("records") or []) if isinstance(r, dict)] if isinstance(ins_res, dict) else []
     # The Digg page carries no repo creation date; the refresh heal fetches each
     # one once from the GitHub API into the cached insiders rows. Read them back
@@ -957,7 +963,7 @@ def _export(arguments: argparse.Namespace) -> int:
     rows = {
         "repos": board.repo_rows(repos60), "repos7": board.repo_rows(repos7),
         "rising": board.rising_rows(rising), "rising7": board.rising_rows(rising7),
-        "insiders": board.insider_rows(ins30),
+        "insiders": board.insider_rows(ins30[:limit]),
         "models": board.model_rows(models60), "models7": board.model_rows(models7),
         "papers": board.paper_rows(papers60), "papers7": board.paper_rows(papers7),
         "news": board.news_rows(news60, note=news_note),
