@@ -933,7 +933,16 @@ def _export(arguments: argparse.Namespace) -> int:
     # a roster member inside the star window, which essentially never coincided.
     # 30d matches the star-poll window, so the two now agree instead of the tab
     # being filtered by a date range narrower than the signal feeding it.
-    ins30 = _fresh_records(ins, 30, _sig_date("created_at"), keep_undated=False)
+    # Window on WHEN AN INSIDER STARRED IT, not on the repo's birthday.
+    #
+    # Keying on creation date filtered the wrong axis: a row had to be both
+    # recently-created AND recently-starred, and those rarely coincide. That is
+    # what made the old 7d companion tab permanently empty, and at 30d it made
+    # this tab unstable -- 13 rows at 60d, 8 on one machine at 30d, 0 on another
+    # hours later, while the cache held 20 repos under 30 days old the whole
+    # time. The signal here is "notable people are looking at this now", so the
+    # date that matters is the star, not the repo's age.
+    ins30 = _fresh_records(ins, 30, _sig_date("most_recent_star_at"), keep_undated=False)
     models60, models7 = _windows(models, _sig_date("created_at"))
     papers60, papers7 = _windows(papers, _sig_date("created_at"))
     news60, news7 = _windows(news, lambda r: (r.get("meta") or {}).get("date"))
