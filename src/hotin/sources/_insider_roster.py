@@ -125,6 +125,55 @@ def _fresh(starred_at: Any, *, window_days: int, now: Optional[datetime]) -> boo
     return parsed >= reference - timedelta(days=window_days)
 
 
+# How much a brand-new repo is lifted over one sitting at the age cap.
+FRESH_BOOST = 0.66
+# Repo age at which the boost has fully decayed. Matches the board's age cap, so
+# a repo on the edge of being filtered out gets no boost rather than a cliff.
+FRESH_FULL_DECAY_DAYS = 180.0
+
+
+def _repo_age_days(created_at: Any, now: Optional[datetime] = None) -> Optional[float]:
+    """Repo age in days, or None when the creation date is unknown."""
+    if not isinstance(created_at, str) or not created_at.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    reference = now or datetime.now(timezone.utc)
+    if reference.tzinfo is None:
+        reference = reference.replace(tzinfo=timezone.utc)
+    return max(0.0, (reference - parsed).total_seconds() / 86400.0)
+
+
+def score_record(weight: float, created_at: Any, now: Optional[datetime] = None) -> float:
+    """Board score: consensus with diminishing returns, lifted by freshness.
+
+        score = sqrt(weight) * (1 + FRESH_BOOST * (1 - age/FRESH_FULL_DECAY_DAYS))
+
+    Two deliberate choices:
+
+    ``sqrt(weight)`` gives insider consensus **diminishing returns**. Raw weight
+    spans 1..6+ while the freshness factor only spans 1.0..1.66, so multiplying
+    the two leaves consensus in charge and freshness as decoration. Compressing
+    the weight term is what actually lets freshness outrank one extra insider,
+    which is the intended ordering ("starring matters, but a bit less than
+    freshness"). It is also the honest shape for votes: the 6th insider on a
+    repo tells you less than the 2nd did.
+
+    An unknown creation date scores as fully decayed (factor 1.0) rather than
+    fresh. Missing data must never look like a brand-new repo -- that is exactly
+    the failure that put 1077-day-old repos on the board.
+    """
+    fresh = 1.0
+    age = _repo_age_days(created_at, now)
+    if age is not None:
+        fresh += FRESH_BOOST * max(0.0, 1.0 - age / FRESH_FULL_DECAY_DAYS)
+    return (max(0.0, float(weight)) ** 0.5) * fresh
+
+
 def _retry_seconds(value: Any) -> Optional[float]:
     """Parse a Retry-After header. HTTP allows an integer-seconds OR an
     HTTP-date; we only honor the numeric form and ignore the date rather than
@@ -317,6 +366,7 @@ def aggregate_by_repo(
     events: List[Dict[str, Any]],
     weights: Optional[Dict[str, float]] = None,
     default_weight: float = 1.0,
+    now: Optional[datetime] = None,
 ) -> List[Dict[str, Any]]:
     """Fold flat star events into per-repo records the adapters both build on.
 
@@ -325,8 +375,15 @@ def aggregate_by_repo(
 
     ``weight`` is the sum of each distinct starrer's weight (all 1.0 unless a
     weights table is supplied), so with no weights it equals the starrer count.
-    Ordering is by weight desc, then starrer count, then repo id -- stable, and
-    identical to the old count-ordering when weights are absent.
+
+    ``score`` is what the board actually orders on: ``sqrt(weight)`` lifted by a
+    freshness factor (see :func:`score_record`). Weight remains on the record
+    because the display layer and the ledger both report raw consensus -- the
+    number a reader can verify by counting receipt chips -- while ``score`` is
+    the ranking function and may change without changing what we claim.
+
+    ``now`` is injectable so tests can pin the freshness curve instead of
+    depending on the wall clock.
     """
     weights = weights or {}
     by_repo: Dict[str, Dict[str, Any]] = {}
@@ -360,9 +417,10 @@ def aggregate_by_repo(
     for rec in by_repo.values():
         rec["weight"] = round(
             sum(weights.get(u.lower(), default_weight) for u in rec["starrers"]), 3)
+        rec["score"] = round(score_record(rec["weight"], rec["repo_created_at"], now), 4)
     return sorted(
         by_repo.values(),
-        key=lambda r: (-r["weight"], -len(r["starrers"]), r["canonical_repo"]),
+        key=lambda r: (-r["score"], -r["weight"], -len(r["starrers"]), r["canonical_repo"]),
     )
 
 
