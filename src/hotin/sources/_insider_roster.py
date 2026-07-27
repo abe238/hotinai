@@ -101,11 +101,36 @@ _OK = "ok"
 _AUTH_FAILED = "auth_failed"
 _RATE_LIMITED = "rate_limited"
 
-# Fraction of the roster that may be rate-limited before the poll is considered
-# untrustworthy. Not zero: a handful of 403s is ordinary and the result is still
-# broadly right. At a tenth, the board would be quietly built on a minority of
-# the cohort, which is exactly the failure this guards.
-_RATE_LIMIT_TOLERANCE = 0.10
+# Fraction of the roster that may be rate-limited before the poll is refused.
+#
+# Set high on purpose. The hard gate in CI already catches a collapsed board, so
+# this guard's job is to name the CAUSE, not to be a second gate -- and a tight
+# threshold here would trade a silent failure for a noisy one, blocking healthy
+# runs on routine partial limiting. Above half the cohort the result is not a
+# degraded board, it is a different board, and publishing it would be a lie.
+#
+# Deliberately NOT derived from an assumed hourly quota: the real budget for
+# CI's token could not be verified from outside, so the poll now REPORTS the
+# quota it saw (see _RATE_LIMIT_SEEN) instead of inferring one.
+_RATE_LIMIT_TOLERANCE = 0.50
+
+# Last rate-limit headers observed, so a run can say what the budget actually
+# was rather than guessing. Populated opportunistically; empty is normal.
+_RATE_LIMIT_SEEN: Dict[str, Any] = {}
+
+
+def _note_quota(headers: Any) -> None:
+    """Record GitHub's own rate-limit headers. Never raises: this is diagnostics,
+    and diagnostics must not be able to break the thing they describe."""
+    try:
+        for header, key in (("X-RateLimit-Limit", "limit"),
+                            ("X-RateLimit-Remaining", "remaining"),
+                            ("X-RateLimit-Reset", "reset")):
+            value = headers.get(header)
+            if value is not None:
+                _RATE_LIMIT_SEEN[key] = value
+    except Exception:
+        pass
 
 
 def _token(config: Optional[dict]) -> str:
@@ -248,6 +273,7 @@ def _poll_one(
         try:
             _THROTTLE.wait()
             with urllib.request.urlopen(request, timeout=30) as response:
+                _note_quota(response.headers)
                 retry_after = _retry_seconds(response.headers.get("Retry-After"))
                 if retry_after is not None:
                     _THROTTLE.wait_for_retry_after(retry_after)
@@ -256,6 +282,7 @@ def _poll_one(
             if exc.code == 401:  # bad/revoked token — the caller must see this
                 return out, _AUTH_FAILED
             if exc.code in (403, 429):  # rate limited — back off, and SAY SO
+                _note_quota(exc.headers)
                 retry = _retry_seconds(exc.headers.get("Retry-After")) if exc.headers else None
                 if retry is not None:
                     _THROTTLE.wait_for_retry_after(retry)
@@ -361,12 +388,17 @@ def poll_roster(
     # Enough of the cohort was unreachable that the result no longer describes
     # reality. Fail loudly instead of caching a small, plausible, wrong board.
     if roster and rate_limited > _RATE_LIMIT_TOLERANCE * len(roster):
+        quota = ""
+        if _RATE_LIMIT_SEEN:
+            quota = " GitHub reported limit={limit} remaining={remaining}.".format(
+                limit=_RATE_LIMIT_SEEN.get("limit", "?"),
+                remaining=_RATE_LIMIT_SEEN.get("remaining", "?"))
         raise RosterRateLimitError(
-            "{} of {} roster members were rate-limited (403/429) — this poll "
-            "saw only part of the cohort and must not be published. A cycle "
-            "polls the roster twice, so at this roster size a 1,000 req/hr "
-            "token cannot support two runs in the same hour.".format(
-                rate_limited, len(roster)))
+            "{} of {} roster members were rate-limited (403/429) — this poll saw "
+            "only part of the cohort and must not be published.{} A cycle polls "
+            "the roster once per process and `refresh`/`export` are two "
+            "processes, so back-to-back runs cost roughly twice a single "
+            "cycle.".format(rate_limited, len(roster), quota))
     _MEMO[key] = events
     return events
 

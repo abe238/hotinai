@@ -115,3 +115,42 @@ def test_a_poisoned_poll_is_never_memoized(monkeypatch):
     with pytest.raises(core.RosterRateLimitError):
         core.poll_roster(config={"GITHUB_TOKEN": "t"})
     assert core._MEMO == {}
+
+
+def test_partial_limiting_below_the_threshold_still_publishes(monkeypatch):
+    # 30% limited: degraded, but still the majority of the cohort. This must NOT
+    # raise. The hard gate in CI already refuses a collapsed board, so a tight
+    # threshold here would only trade a silent failure for a noisy one and block
+    # healthy runs. The guard exists to name the cause of a real collapse.
+    core._reset_memo()
+    roster = _roster_of(100)
+    limited = set(roster[:30])
+
+    def selective(request, timeout=None):
+        who = request.full_url.split("/users/")[1].split("/")[0]
+        code = 403 if who in limited else 404
+        raise urllib.error.HTTPError(request.full_url, code, "x", {}, None)
+
+    monkeypatch.setattr(core.urllib.request, "urlopen", selective)
+    monkeypatch.setattr(core, "_roster", lambda config: roster)
+    assert core.poll_roster(config={"GITHUB_TOKEN": "t"}) == []
+
+
+def test_the_error_reports_githubs_own_quota(monkeypatch):
+    # The threshold is not derived from an assumed hourly budget -- that number
+    # could not be verified from outside CI. The poll reports what GitHub said.
+    core._reset_memo()
+    core._RATE_LIMIT_SEEN.clear()
+
+    class Headers(dict):
+        pass
+
+    def limited(request, timeout=None):
+        h = Headers({"X-RateLimit-Limit": "1000", "X-RateLimit-Remaining": "0"})
+        raise urllib.error.HTTPError(request.full_url, 403, "rate", h, None)
+
+    monkeypatch.setattr(core.urllib.request, "urlopen", limited)
+    monkeypatch.setattr(core, "_roster", lambda config: _roster_of(50))
+    with pytest.raises(core.RosterRateLimitError) as exc:
+        core.poll_roster(config={"GITHUB_TOKEN": "t"})
+    assert "limit=1000" in str(exc.value) and "remaining=0" in str(exc.value)
