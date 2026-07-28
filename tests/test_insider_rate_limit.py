@@ -29,6 +29,54 @@ def _no_throttle(monkeypatch):
     monkeypatch.setattr(core._THROTTLE, "wait_for_retry_after", lambda *a, **k: None)
 
 
+
+# --- GraphQL transport fakes ------------------------------------------------
+# The poll batches accounts into ONE GraphQL request now, so a fake must answer
+# per BATCH, not per user. These helpers read the logins back out of the query
+# so each test can keep expressing itself in per-account terms -- the incidents
+# these tests pin are about aggregation, and must hold on whatever transport is
+# underneath.
+
+import io
+import json as _json
+import re as _re
+
+
+def _logins_in(request):
+    body = _json.loads(request.data.decode())["query"]
+    return _re.findall(r'user\(login: "([^"]+)"\)', body)
+
+
+class _Resp(io.BytesIO):
+    def __enter__(self): return self
+    def __exit__(self, *a): return False
+
+
+def _graphql(outcome_of):
+    """Fake urlopen answering a batch. ``outcome_of(login)`` -> one of
+    'ok' | 'rate_limited' | 'not_found'."""
+    def fake(request, timeout=None):
+        logins = _logins_in(request)
+        data, errors = {}, []
+        for i, login in enumerate(logins):
+            state = outcome_of(login)
+            if state == "rate_limited":
+                data["u{}".format(i)] = None
+                errors.append({"type": "RATE_LIMITED", "path": ["u{}".format(i)]})
+            elif state == "not_found":
+                data["u{}".format(i)] = None
+                errors.append({"type": "NOT_FOUND", "path": ["u{}".format(i)]})
+            else:
+                data["u{}".format(i)] = {"login": login, "starredRepositories": {
+                    "pageInfo": {"hasNextPage": False}, "edges": []}}
+        data["rateLimit"] = {"cost": 1, "remaining": 4999}
+        payload = {"data": data}
+        if errors:
+            payload["errors"] = errors
+        return _Resp(_json.dumps(payload).encode())
+    return fake
+
+
 def _roster_of(n):
     return tuple("user{}".format(i) for i in range(n))
 
@@ -53,14 +101,8 @@ def test_the_real_incident_shape(monkeypatch):
     core._reset_memo()
     roster = _roster_of(793)
     limited = set(roster[:790])
-
-    def selective(request, timeout=None):
-        who = request.full_url.split("/users/")[1].split("/")[0]
-        if who in limited:
-            raise urllib.error.HTTPError(request.full_url, 403, "rate", {}, None)
-        raise urllib.error.HTTPError(request.full_url, 404, "gone", {}, None)
-
-    monkeypatch.setattr(core.urllib.request, "urlopen", selective)
+    monkeypatch.setattr(core.urllib.request, "urlopen", _graphql(
+        lambda who: "rate_limited" if who in limited else "not_found"))
     monkeypatch.setattr(core, "_roster", lambda config: roster)
     with pytest.raises(core.RosterRateLimitError) as exc:
         core.poll_roster(config={"GITHUB_TOKEN": "t"})
@@ -74,12 +116,8 @@ def test_a_few_rate_limited_is_tolerated(monkeypatch):
     roster = _roster_of(100)
     limited = set(roster[:5])          # 5% -- under the 10% tolerance
 
-    def selective(request, timeout=None):
-        who = request.full_url.split("/users/")[1].split("/")[0]
-        code = 403 if who in limited else 404
-        raise urllib.error.HTTPError(request.full_url, code, "x", {}, None)
-
-    monkeypatch.setattr(core.urllib.request, "urlopen", selective)
+    monkeypatch.setattr(core.urllib.request, "urlopen", _graphql(
+        lambda who: "rate_limited" if who in limited else "not_found"))
     monkeypatch.setattr(core, "_roster", lambda config: roster)
     assert core.poll_roster(config={"GITHUB_TOKEN": "t"}) == []
 
@@ -126,12 +164,8 @@ def test_partial_limiting_below_the_threshold_still_publishes(monkeypatch):
     roster = _roster_of(100)
     limited = set(roster[:30])
 
-    def selective(request, timeout=None):
-        who = request.full_url.split("/users/")[1].split("/")[0]
-        code = 403 if who in limited else 404
-        raise urllib.error.HTTPError(request.full_url, code, "x", {}, None)
-
-    monkeypatch.setattr(core.urllib.request, "urlopen", selective)
+    monkeypatch.setattr(core.urllib.request, "urlopen", _graphql(
+        lambda who: "rate_limited" if who in limited else "not_found"))
     monkeypatch.setattr(core, "_roster", lambda config: roster)
     assert core.poll_roster(config={"GITHUB_TOKEN": "t"}) == []
 

@@ -24,6 +24,55 @@ class _Resp:
         return False
 
 
+
+
+# --- GraphQL transport fake -------------------------------------------------
+# poll_roster batches accounts into ONE GraphQL request, so a fake answers per
+# BATCH. The REST path is still live as the fallback and is tested directly
+# against _poll_one further down.
+
+import io as _io
+import re as _re
+
+
+class _GqlResp(_io.BytesIO):
+    def __enter__(self): return self
+    def __exit__(self, *a): return False
+    headers = {}
+
+
+def _gql_fake(state_of):
+    """``state_of(login)`` -> ('ok', [(repo, starred_at), ...]) | 'not_found'
+    | 'forbidden'."""
+    def fake(request, timeout=None):
+        logins = _re.findall(r'user\(login: "([^"]+)"\)',
+                             json.loads(request.data.decode())["query"])
+        data, errors = {}, []
+        for i, login in enumerate(logins):
+            alias = "u{}".format(i)
+            state = state_of(login)
+            if state == "not_found":
+                data[alias] = None
+                errors.append({"type": "NOT_FOUND", "path": [alias]})
+            elif state == "forbidden":
+                data[alias] = None
+                errors.append({"type": "FORBIDDEN", "path": [alias]})
+            else:
+                _, stars = state
+                data[alias] = {"login": login, "starredRepositories": {
+                    "pageInfo": {"hasNextPage": False},
+                    "edges": [{"starredAt": at, "node": {
+                        "nameWithOwner": repo, "createdAt": "2026-07-01T00:00:00Z",
+                        "stargazerCount": 10, "description": None}}
+                        for repo, at in stars]}}
+        data["rateLimit"] = {"cost": 1, "remaining": 4999}
+        payload = {"data": data}
+        if errors:
+            payload["errors"] = errors
+        return _GqlResp(json.dumps(payload).encode())
+    return fake
+
+
 def _entry(repo, starred_at, stars=10, desc=None):
     return {"starred_at": starred_at,
             "repo": {"full_name": repo, "stargazers_count": stars, "description": desc}}
@@ -41,7 +90,9 @@ def test_poll_is_memoized_per_process(monkeypatch):
 
     def fake_urlopen(request, timeout=None):
         calls["n"] += 1
-        return _Resp([])  # empty -> one call per user, no pagination
+        # The poll batches, so the count is per REQUEST, not per user. What is
+        # pinned here is that a second poll_roster costs ZERO further requests.
+        return _GqlResp(json.dumps({"data": {"rateLimit": {"remaining": 4999}}}).encode())
 
     monkeypatch.setattr(core.urllib.request, "urlopen", fake_urlopen)
     monkeypatch.setattr(core, "_roster", lambda config: ("alice", "bob"))
@@ -50,18 +101,19 @@ def test_poll_is_memoized_per_process(monkeypatch):
     n_after_first = calls["n"]
     second = core.poll_roster(config=cfg)          # same key -> served from memo
     assert second is first                          # identical object, no re-poll
-    assert calls["n"] == n_after_first == 2         # two users, polled once each
+    # ONE request for both users: the poll batches now, so the count is per
+    # request, not per account. That is the migration's whole point, and the
+    # memo property is that a second poll_roster adds nothing to it.
+    assert n_after_first == 1
+    assert calls["n"] == n_after_first
 
 
 def test_a_bad_user_does_not_crash_the_whole_poll(monkeypatch):
     core._reset_memo()
 
-    def fake_urlopen(request, timeout=None):
-        if "gone" in request.full_url:
-            raise urllib.error.HTTPError(request.full_url, 404, "Not Found", {}, None)
-        return _Resp([_entry("real/repo", "2026-07-25T00:00:00Z")])
-
-    monkeypatch.setattr(core.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(core.urllib.request, "urlopen", _gql_fake(
+        lambda who: "not_found" if who == "gone"
+        else ("ok", [("real/repo", "2026-07-25T00:00:00Z")])))
     monkeypatch.setattr(core, "_roster", lambda config: ("gone", "good"))
     events = core.poll_roster(config={"GITHUB_TOKEN": "x"},
                               now=__import__("datetime").datetime(2026, 7, 26,
@@ -92,10 +144,10 @@ def test_one_user_401_among_many_is_tolerated(monkeypatch):
     import datetime as dt
     now = dt.datetime(2026, 7, 26, tzinfo=dt.timezone.utc)
 
-    def mixed(request, timeout=None):
-        if "alice" in request.full_url:
-            raise urllib.error.HTTPError(request.full_url, 401, "Bad creds", {}, None)
-        return _Resp([_entry("good/repo", "2026-07-25T00:00:00Z")])
+    # Per-account auth failure is FORBIDDEN in GraphQL; a transport 401 is
+    # all-or-nothing and is covered by the all-401 test above.
+    mixed = _gql_fake(lambda who: "forbidden" if who == "alice"
+                      else ("ok", [("good/repo", "2026-07-25T00:00:00Z")]))
 
     monkeypatch.setattr(core.urllib.request, "urlopen", mixed)
     monkeypatch.setattr(core, "_roster", lambda config: ("alice", "bob"))
@@ -118,8 +170,9 @@ def test_http_date_retry_after_does_not_crash_the_poll(monkeypatch):
     monkeypatch.setattr(core.urllib.request, "urlopen",
                         lambda request, timeout=None: _RespWithDateRetry(
                             [_entry("ok/repo", "2026-07-25T00:00:00Z")]))
-    monkeypatch.setattr(core, "_roster", lambda config: ("solo",))
-    events = core.poll_roster(config={"GITHUB_TOKEN": "x"}, now=now)  # must not raise
+    # Retry-After lives on the REST fallback path, so exercise _poll_one directly.
+    events, outcome = core._poll_one("solo", "x", window_days=30, now=now)
+    assert outcome == core._OK
     assert events[0]["canonical_repo"] == "ok/repo"
 
 
@@ -132,17 +185,18 @@ def test_default_window_is_30_days(monkeypatch):
     seen = {}
 
     def spy(request, timeout=None):
-        return _Resp([])
+        return _GqlResp(json.dumps({"data": {"rateLimit": {"remaining": 4999}}}).encode())
 
     monkeypatch.setattr(core.urllib.request, "urlopen", spy)
     monkeypatch.setattr(core, "_roster", lambda config: ("solo",))
-    real_poll_one = core._poll_one
+    real_parse = core._gql.parse_batch
 
-    def capture(username, token, *, window_days, now):
+    def capture(payload, requested, *, window_days, now=None, fresh_fn=None):
         seen["window_days"] = window_days
-        return real_poll_one(username, token, window_days=window_days, now=now)
+        return real_parse(payload, requested, window_days=window_days,
+                          now=now, fresh_fn=fresh_fn)
 
-    monkeypatch.setattr(core, "_poll_one", capture)
+    monkeypatch.setattr(core._gql, "parse_batch", capture)
     core.poll_roster(config={"GITHUB_TOKEN": "x"})
     assert seen["window_days"] == 30
 
@@ -158,8 +212,10 @@ def test_pagination_stops_at_the_window_edge(monkeypatch):
     ]
     monkeypatch.setattr(core.urllib.request, "urlopen",
                         lambda request, timeout=None: _Resp(page))
-    monkeypatch.setattr(core, "_roster", lambda config: ("solo",))
-    events = core.poll_roster(config={"GITHUB_TOKEN": "x"}, window_days=7, now=now)
+    # REST pagination is the FALLBACK path now (truncated in-window pages and
+    # the bisection floor route to it), so test it where it lives.
+    events, outcome = core._poll_one("solo", "x", window_days=7, now=now)
+    assert outcome == core._OK
     assert [e["canonical_repo"] for e in events] == ["in/window"]  # old one dropped
 
 
@@ -174,13 +230,29 @@ def test_never_constructs_the_restricted_stargazers_url(monkeypatch):
         seen_urls.append(request.full_url)
         return _Resp([])
 
-    monkeypatch.setattr(core.urllib.request, "urlopen", spy_urlopen)
+    bodies = []
+
+    def spy_body(request, timeout=None):
+        seen_urls.append(request.full_url)
+        if request.data:
+            bodies.append(request.data.decode())
+        return _Resp([])
+
+    monkeypatch.setattr(core.urllib.request, "urlopen", spy_body)
     monkeypatch.setattr(core, "_roster", lambda config: ("alice", "bob"))
     core.poll_roster(config={"GITHUB_TOKEN": "x"})
     assert seen_urls, "expected at least one request"
     for url in seen_urls:
         assert "/stargazers" not in url, "must never hit the restricted endpoint: " + url
-        assert "/users/" in url and "/starred" in url
+        # The primary path is now the GraphQL endpoint; REST /users/{u}/starred
+        # survives as the fallback. Both are the FORWARD direction.
+        assert url.endswith("/graphql") or ("/users/" in url and "/starred" in url), url
+    # Same constraint at the query level: the restricted REVERSE lookup is the
+    # `stargazers` connection on a Repository. `stargazerCount` is a scalar and
+    # is fine; requesting `stargazers(` would not be.
+    for body in bodies:
+        assert "stargazers(" not in body, "must never request the reverse lookup"
+        assert "starredRepositories(" in body, "must use the forward direction"
 
 
 def test_roster_override_parses_a_literal_list(monkeypatch):

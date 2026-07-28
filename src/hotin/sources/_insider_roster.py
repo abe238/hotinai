@@ -28,15 +28,17 @@ from __future__ import annotations
 
 import json
 import re
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from hotin.canonical import canonicalize
 from hotin.coerce import finite_int
 from hotin.sources import _roster_data
+from hotin.sources import _roster_graphql as _gql
 from hotin.throttle import Throttle
 
 # The seed roster: known AI-community GitHub accounts. Hand-curated; L2's
@@ -117,6 +119,9 @@ _RATE_LIMIT_TOLERANCE = 0.50
 # Last rate-limit headers observed, so a run can say what the budget actually
 # was rather than guessing. Populated opportunistically; empty is normal.
 _RATE_LIMIT_SEEN: Dict[str, Any] = {}
+
+#: Last poll's per-outcome tally, for the run summary and drift alerting (L5).
+LAST_OUTCOMES: Dict[str, int] = {}
 
 
 def _note_quota(headers: Any) -> None:
@@ -328,7 +333,152 @@ def _poll_one(
             })
         if stop or len(entries) < _PER_PAGE:
             break
-    return out, False
+    # _OK, not False. The three-state contract used to be enforced by exclusion
+    # ("not auth_failed and not rate_limited"), so a falsy success value was
+    # harmless. It stopped being harmless the moment a caller mapped outcomes by
+    # NAME: `False` fell through to UNRESOLVED and silently discarded every
+    # successful REST-fallback poll. Returning the real state closes that.
+    return out, _OK
+
+
+#: Wall-clock ceiling for bisection retries within one batch. Without it, a
+#: sustained 502 storm could bisect its way past the REST baseline it is
+#: supposed to degrade *to*.
+_BISECT_SECONDS = 90.0
+_BISECT_ATTEMPTS = 4
+
+
+def _poll_batch_tree(
+    logins: Sequence[str], token: str, *, window_days: int,
+    now: Optional[datetime], stars: int, deadline: float, depth: int = 0,
+) -> Dict[str, Dict[str, Any]]:
+    """One batch, halving on a too-heavy response, REST at the floor.
+
+    Halving is on USER COUNT, the named axis, because that is the dimension the
+    measured cliff moves with (25x20 clean 5/5, 40x20 corrupt 5/5 at the SAME
+    star count). Bounded by attempts and a deadline so the degrade path can
+    never cost more than the REST baseline it falls back to.
+    """
+    logins = list(logins)
+    if not logins:
+        return {}
+
+    # The floor applies only AFTER halving. On the first attempt GraphQL is the
+    # primary path regardless of batch size -- gating it on size meant a roster
+    # smaller than the floor never used the primary path at all.
+    too_small = depth > 0 and len(logins) <= _gql.MIN_BATCH_USERS
+    out_of_budget = depth >= _BISECT_ATTEMPTS or time.monotonic() > deadline
+    if not (too_small or out_of_budget):
+        payload, status, headers = _gql.post(_gql.build_query(logins, stars), token)
+        if headers is not None:
+            _note_quota(headers)
+        if status == 401:
+            return {u: {"login": u, "events": [], "outcome": _gql.AUTH_FAILED,
+                        "needs_rest": False, "detail": "401"} for u in logins}
+        if status in (403, 429):
+            # GraphQL signals exhaustion as a typed error in a 200 MOST of the
+            # time, but the plain HTTP codes still occur (secondary limits, abuse
+            # detection). Bisecting here would burn budget while already over it,
+            # and would eventually reach the REST floor and spend more. Name it.
+            return {u: {"login": u, "events": [], "outcome": _gql.RATE_LIMITED,
+                        "needs_rest": False, "detail": str(status)} for u in logins}
+        shrink = status in _gql.TOO_HEAVY or (
+            payload is not None and _gql.is_resource_limited(payload))
+        if not shrink and payload is not None:
+            remaining = _gql.points_remaining(payload)
+            if remaining is not None:
+                # GraphQL reports its own pool. Never invent a `limit` here --
+                # reporting a number GitHub did not say is what this whole
+                # mechanism exists to stop.
+                _RATE_LIMIT_SEEN["remaining"] = remaining
+            return _gql.parse_batch(payload, logins, window_days=window_days,
+                                    now=now, fresh_fn=_fresh)
+        if not shrink:
+            # Unparseable body: retry once smaller rather than condemn the batch.
+            shrink = True
+        if shrink and len(logins) > _gql.MIN_BATCH_USERS:
+            mid = len(logins) // 2
+            merged: Dict[str, Dict[str, Any]] = {}
+            for half in (logins[:mid], logins[mid:]):
+                merged.update(_poll_batch_tree(
+                    half, token, window_days=window_days, now=now, stars=stars,
+                    deadline=deadline, depth=depth + 1))
+            return merged
+
+    # Floor: the batch path cannot serve these, so use the REST poller that has
+    # per-account isolation and a true date early-exit. This is why REST is kept
+    # rather than deleted.
+    results: Dict[str, Dict[str, Any]] = {}
+    for login in logins:
+        events, outcome = _poll_one(login, token, window_days=window_days, now=now)
+        mapped = {_OK: _gql.OK, _AUTH_FAILED: _gql.AUTH_FAILED,
+                  _RATE_LIMITED: _gql.RATE_LIMITED}.get(outcome, _gql.UNRESOLVED)
+        results[login] = {"login": login, "events": events, "outcome": mapped,
+                          "needs_rest": False, "detail": "rest"}
+    return results
+
+
+def _poll_via_graphql(
+    roster: Sequence[str], token: str, *, window_days: int,
+    now: Optional[datetime],
+) -> Tuple[List[Dict[str, Any]], Dict[str, int]]:
+    """Poll the whole roster in batches. Returns ``(events, outcome_tally)``."""
+    events: List[Dict[str, Any]] = []
+    tally: Dict[str, int] = {}
+    remaining_budget: Optional[int] = None
+    pending = list(roster)
+
+    for batch in _gql.batches(pending, _gql.BATCH_USERS):
+        # L4: stop BEFORE spending the last of the pool, and write an explicit
+        # rate_limited row for everything we did not reach. Skipping them would
+        # make "not looked at" indistinguishable from "starred nothing".
+        # _RATE_LIMIT_SEEN is fed from BOTH HTTP headers (strings) and the
+        # GraphQL rateLimit block (ints), so coerce rather than compare raw.
+        budget = finite_int(remaining_budget, -1) if remaining_budget is not None else -1
+        if budget >= 0 and budget < _gql.POINTS_FLOOR:
+            for login in batch:
+                tally[_gql.RATE_LIMITED] = tally.get(_gql.RATE_LIMITED, 0) + 1
+            continue
+        results = _poll_batch_tree(
+            batch, token, window_days=window_days, now=now,
+            stars=_gql.BATCH_STARS,
+            deadline=time.monotonic() + _BISECT_SECONDS)
+        remaining_budget = _RATE_LIMIT_SEEN.get("remaining", remaining_budget)
+
+        for login in batch:
+            entry = results.get(login)
+            if entry is None:
+                tally[_gql.UNRESOLVED] = tally.get(_gql.UNRESOLVED, 0) + 1
+                continue
+            # L3: a count-capped page that may have cut in-window stars goes to
+            # REST, which paginates on the date.
+            if entry.get("needs_rest"):
+                rest_events, outcome = _poll_one(
+                    login, token, window_days=window_days, now=now)
+                mapped = {_OK: _gql.OK, _AUTH_FAILED: _gql.AUTH_FAILED,
+                          _RATE_LIMITED: _gql.RATE_LIMITED}.get(
+                              outcome, _gql.UNRESOLVED)
+                entry = {"events": rest_events, "outcome": mapped}
+            outcome = entry.get("outcome", _gql.UNRESOLVED)
+            tally[outcome] = tally.get(outcome, 0) + 1
+            if outcome == _gql.OK:
+                events.extend(entry.get("events") or [])
+    return events, tally
+
+
+def summarize_outcomes(tally: Dict[str, int], total: int) -> str:
+    """L5: one line an operator can read without SSH-ing anywhere.
+
+    Aggregate drift is its own failure mode: the sacred constraint can be
+    honoured on every single run while the roster quietly erodes over weeks,
+    because each run's status lines all read clean.
+    """
+    order = (_gql.OK, _gql.RATE_LIMITED, _gql.AUTH_FAILED, _gql.NOT_FOUND,
+             _gql.MISMATCH, _gql.UNRESOLVED)
+    parts = ["{}={}".format(name, tally.get(name, 0)) for name in order
+             if tally.get(name)]
+    return "roster {}/{} polled: {}".format(
+        tally.get(_gql.OK, 0), total, " ".join(parts) or "nothing")
 
 
 # Module-level memoization: one poll per process. The two adapters are called
@@ -368,17 +518,12 @@ def poll_roster(
     if not _force and key in _MEMO:
         return _MEMO[key]
     token = _token(config)  # raises loudly before any network work
-    events: List[Dict[str, Any]] = []
-    auth_failures = 0
-    rate_limited = 0
-    for username in roster:
-        user_events, outcome = _poll_one(
-            username, token, window_days=window_days, now=now)
-        events.extend(user_events)
-        if outcome == _AUTH_FAILED:
-            auth_failures += 1
-        elif outcome == _RATE_LIMITED:
-            rate_limited += 1
+    events, tally = _poll_via_graphql(
+        roster, token, window_days=window_days, now=now)
+    auth_failures = tally.get(_gql.AUTH_FAILED, 0)
+    rate_limited = tally.get(_gql.RATE_LIMITED, 0)
+    LAST_OUTCOMES.clear()
+    LAST_OUTCOMES.update(tally)
     # Every single member's request was 401-rejected => the token is broken, not
     # "nobody starred anything". Fail loud rather than cache/return an empty.
     if roster and auth_failures == len(roster):
