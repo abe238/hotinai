@@ -297,3 +297,33 @@ def test_the_tally_is_published_after_a_poll(monkeypatch):
     assert core.LAST_OUTCOMES.get(G.NOT_FOUND) == 1
     assert core.LAST_OUTCOMES.get(G.OK) == 4
     assert "not_found=1" in core.summarize_outcomes(core.LAST_OUTCOMES, 5)
+
+
+def test_rest_fallbacks_are_counted_so_the_gain_can_be_watched(monkeypatch):
+    """If most accounts route back to REST, the migration stopped paying.
+
+    No single account is at fault when that happens, so it is invisible without
+    a counter. This is the early-warning signal for the whole change.
+    """
+    def truncating(request, timeout=None):
+        logins = _logins(request)
+        data = {}
+        for i, u in enumerate(logins):
+            data["u{}".format(i)] = {"login": u, "starredRepositories": {
+                "pageInfo": {"hasNextPage": True},
+                "edges": [{"starredAt": "2026-07-27T00:00:00Z", "node": {
+                    "nameWithOwner": "a/b", "createdAt": "2026-07-01T00:00:00Z",
+                    "stargazerCount": 1, "description": None}}]}}
+        data["rateLimit"] = {"cost": 1, "remaining": 4999}
+        return _Resp(json.dumps({"data": data}).encode())
+
+    monkeypatch.setattr(core, "_poll_one",
+                        lambda username, token, **kw: ([], core._OK))
+    _poll(5, truncating, monkeypatch)
+    assert core.LAST_OUTCOMES.get("rest_fallback") == 5
+    assert "rest_fallback=5" in core.summarize_outcomes(core.LAST_OUTCOMES, 5)
+
+
+def test_a_clean_run_reports_no_fallbacks(monkeypatch):
+    _poll(10, lambda r, timeout=None: _ok_payload(_logins(r)), monkeypatch)
+    assert "rest_fallback" not in core.summarize_outcomes(core.LAST_OUTCOMES, 10)

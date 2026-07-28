@@ -453,6 +453,11 @@ def _poll_via_graphql(
             # L3: a count-capped page that may have cut in-window stars goes to
             # REST, which paginates on the date.
             if entry.get("needs_rest"):
+                # Counted, because this is the metric that says whether the
+                # migration is still paying for itself: a roster selected for
+                # prolific starrers can route itself back to REST one account at
+                # a time, with no single account being at fault.
+                tally["rest_fallback"] = tally.get("rest_fallback", 0) + 1
                 rest_events, outcome = _poll_one(
                     login, token, window_days=window_days, now=now)
                 mapped = {_OK: _gql.OK, _AUTH_FAILED: _gql.AUTH_FAILED,
@@ -474,7 +479,7 @@ def summarize_outcomes(tally: Dict[str, int], total: int) -> str:
     because each run's status lines all read clean.
     """
     order = (_gql.OK, _gql.RATE_LIMITED, _gql.AUTH_FAILED, _gql.NOT_FOUND,
-             _gql.MISMATCH, _gql.UNRESOLVED)
+             _gql.MISMATCH, _gql.UNRESOLVED, "rest_fallback")
     parts = ["{}={}".format(name, tally.get(name, 0)) for name in order
              if tally.get(name)]
     return "roster {}/{} polled: {}".format(
