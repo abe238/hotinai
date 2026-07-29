@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple
 LOGGER = logging.getLogger(__name__)
 
 # Bump when the physical schema changes; _migrate() upgrades older databases.
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 _TABLE_COLUMNS = """
                 id INTEGER PRIMARY KEY,
@@ -29,6 +29,7 @@ _TABLE_COLUMNS = """
                 source TEXT NOT NULL,
                 signal_json TEXT NOT NULL,
                 fetched_at REAL NOT NULL,
+                first_seen REAL,
                 UNIQUE(entity_type, entity_id, source)
 """
 
@@ -73,6 +74,11 @@ def _normalise_record(record: Dict[str, Any]) -> Dict[str, Any]:
         "source": str(record.get("source", "")),
         "signal_json": signal,
         "fetched_at": record.get("fetched_at", time.time()),
+        # Written on INSERT and never on UPDATE, so it records the FIRST sighting
+        # rather than the latest. fetched_at is last-seen: every re-sighting
+        # overwrites it, which is why the board could never say when it first
+        # called a repo -- the one claim that makes a public ledger worth citing.
+        "first_seen": record.get("first_seen", record.get("fetched_at", time.time())),
     }
 
 
@@ -199,6 +205,15 @@ class Cache:
                 conn.execute("ALTER TABLE tools_new RENAME TO tools")
                 conn.execute("DROP TABLE IF EXISTS tools_fts")  # force FTS rebuild
         conn.execute("CREATE INDEX IF NOT EXISTS idx_tools_fetched_at ON tools(fetched_at DESC)")
+        # v3: first_seen. Additive, so it is safe on any prior version.
+        if "first_seen" not in {row[1] for row in conn.execute("PRAGMA table_info(tools)")}:
+            conn.execute("ALTER TABLE tools ADD COLUMN first_seen REAL")
+            # Backfill from fetched_at, which is LAST-seen. For rows that predate
+            # this column the true first sighting is unknowable and was never
+            # recorded, so this is an UPPER BOUND: the repo was seen no later
+            # than this. Rows written from here on are exact.
+            conn.execute("UPDATE tools SET first_seen = fetched_at WHERE first_seen IS NULL")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_tools_first_seen ON tools(first_seen)")
         # v2: the append-only observation time series (additive, safe on any prior version).
         conn.execute("CREATE TABLE IF NOT EXISTS observations ({})".format(_OBSERVATIONS_COLUMNS))
         conn.execute(
@@ -231,14 +246,17 @@ class Cache:
             return
         try:
             self._connection.execute(
-                """INSERT INTO tools (entity_type, entity_id, url, canonical_repo, name, source, signal_json, fetched_at)
-                   VALUES (:entity_type, :entity_id, :url, :canonical_repo, :name, :source, :signal_json, :fetched_at)
+                """INSERT INTO tools (entity_type, entity_id, url, canonical_repo, name, source, signal_json, fetched_at, first_seen)
+                   VALUES (:entity_type, :entity_id, :url, :canonical_repo, :name, :source, :signal_json, :fetched_at, :first_seen)
                    ON CONFLICT(entity_type, entity_id, source) DO UPDATE SET
                      url=excluded.url,
                      canonical_repo=excluded.canonical_repo,
                      name=excluded.name,
                      signal_json=excluded.signal_json,
                      fetched_at=excluded.fetched_at""",
+                # first_seen is absent from DO UPDATE SET ON PURPOSE. That
+                # omission IS the feature: re-sighting a repo must not move the
+                # date we first called it.
                 normalized,
             )
             if self._fts_available:

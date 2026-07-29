@@ -257,7 +257,14 @@ def cross_entity_repo_links(records: List[dict], *, max_age_days: Optional[float
 
 # Cumulative-counter metrics that are safe to difference for velocity. Gauges,
 # windowed counts, already-rates, and subject-changing metrics are NOT here.
-_VELOCITY_METRICS = {"stars": "repo", "model_downloads": "model", "model_likes": "model", "paper_upvotes": "paper"}
+# Cumulative counters worth a time series. `insider_stars` is the whole reason
+# this project exists and was the one signal NOT being recorded: 721 of 953
+# repos had no history at all, and "which repos did insiders back in June, and
+# what became of them" was simply unanswerable. Everything else here is a
+# third party's number; this one is ours.
+_VELOCITY_METRICS = {"stars": "repo", "model_downloads": "model",
+                     "model_likes": "model", "paper_upvotes": "paper",
+                     "insider_stars": "repo"}
 
 
 def observations_from_cache(records: List[dict], run_id: str, observed_at: float) -> List[dict]:

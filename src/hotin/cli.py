@@ -40,7 +40,19 @@ COMMANDS = {
     "show": "show one repo (owner/repo)",
     "about": "show project information",
 }
-_RETENTION_DAYS = 30.0
+# How much history the observation series keeps. Raised from 30 because 30 was
+# a hard ceiling on every question worth asking of this data: no cohort
+# analysis, no "what happened to the repos insiders backed in March", no
+# multi-month trend. The series is the one asset that cannot be re-fetched --
+# GitHub will not sell you last quarter's star timestamps.
+#
+# Sized on measurement, not feel. Observations cost 20 B/row gzipped and accrue
+# at ~3,500/day, so the published store snapshot grows:
+#     30d -> 2.1 MB    180d -> 12.6 MB    365d -> 25.5 MB    730d -> 51 MB
+# against ~1.3 MB today. A year costs ~25 MB on a once-per-run pull, which is
+# the right trade for a year of history. Beyond that, downsample (full
+# resolution recent, daily aggregates older) rather than raising this again.
+_RETENTION_DAYS = 365.0
 _INGEST_DEPTH = 100
 
 _BADGE_COLORS = {"fresh": "32", "rising": "38;5;208", "viral": "38;5;198",
