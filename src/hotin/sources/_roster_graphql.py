@@ -89,6 +89,14 @@ GRAPHQL_URL = "https://api.github.com/graphql"
 #: to finish a run that is already in flight.
 POINTS_FLOOR = 200
 
+#: Last few raw HTTP error bodies from GraphQL, for diagnosis. GitHub explains
+#: WHY it refused in the body; discarding it forced two wrong inferences.
+LAST_ERROR_BODY: List[str] = []
+
+#: Per-batch trace of the last poll: what was attempted and what came back.
+#: Populated by the caller. Cleared at the start of each poll.
+BATCH_TRACE: List[Dict[str, Any]] = []
+
 
 def build_query(logins: Sequence[str], first: int = BATCH_STARS) -> str:
     """One aliased `user` block per login.
@@ -280,6 +288,29 @@ def points_remaining(payload: Any) -> Optional[int]:
     return remaining if isinstance(remaining, int) else None
 
 
+def is_secondary_rate_limit(body: Optional[str]) -> bool:
+    """Does GitHub's 403 body actually say 'rate limit'?
+
+    This distinction decides whether falling back to REST helps or hurts, and it
+    cannot be inferred from the status code -- 403 covers both "slow down" and
+    "this credential cannot do that". Guessing it wrong is expensive in both
+    directions: retrying REST during a real rate limit adds load, while treating
+    a capability rejection as a rate limit throws away a whole cohort that REST
+    could have fetched fine.
+
+    Conservative on purpose: anything that looks like a limit is treated as one,
+    because adding load to an already-limited endpoint is the worse error.
+    """
+    # Unknown means unknown: a missing OR EMPTY body must take the conservative
+    # branch. An empty string read as "not a rate limit" and sent the poller to
+    # REST during a genuine limit -- the one direction that adds load.
+    if not isinstance(body, str) or not body.strip():
+        return True
+    lowered = body.lower()
+    return ("rate limit" in lowered or "abuse" in lowered
+            or "too many requests" in lowered or "try again later" in lowered)
+
+
 def is_resource_limited(payload: Any) -> bool:
     """True when GitHub partially served the query because it was too heavy.
 
@@ -338,6 +369,16 @@ def post(query: str, token: str, *, timeout: int = 120, opener=None):
             headers = getattr(response, "headers", None)
         return json.loads(raw.decode("utf-8", "replace")), None, headers
     except urllib.error.HTTPError as exc:
+        # CAPTURE THE BODY. Two root causes were inferred from circumstantial
+        # evidence and both were wrong; GitHub states the actual reason in the
+        # 403 body ("exceeded a secondary rate limit", "requires authentication",
+        # a scope complaint) and we were throwing it away. Diagnosing from
+        # inference is what cost the time -- read what it says instead.
+        try:
+            LAST_ERROR_BODY.append(exc.read().decode("utf-8", "replace")[:400])
+            del LAST_ERROR_BODY[:-5]
+        except Exception:
+            pass
         return None, exc.code, getattr(exc, "headers", None)
     except (urllib.error.URLError, OSError, ValueError):
         # A truncated or non-JSON body lands here. Nothing parseable means every

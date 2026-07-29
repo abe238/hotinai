@@ -351,6 +351,23 @@ _BISECT_SECONDS = 90.0
 _BISECT_ATTEMPTS = 4
 
 
+def _rest_floor(logins: Sequence[str], token: str, *, window_days: int,
+                now: Optional[datetime]) -> Dict[str, Dict[str, Any]]:
+    """Per-account REST poll: the backstop the batch path degrades to.
+
+    Kept rather than deleted precisely so the batched path always has somewhere
+    honest to fall to -- a too-heavy batch, or a credential GraphQL refuses.
+    """
+    results: Dict[str, Dict[str, Any]] = {}
+    for login in logins:
+        events, outcome = _poll_one(login, token, window_days=window_days, now=now)
+        mapped = {_OK: _gql.OK, _AUTH_FAILED: _gql.AUTH_FAILED,
+                  _RATE_LIMITED: _gql.RATE_LIMITED}.get(outcome, _gql.UNRESOLVED)
+        results[login] = {"login": login, "events": events, "outcome": mapped,
+                          "needs_rest": False, "detail": "rest"}
+    return results
+
+
 def _poll_batch_tree(
     logins: Sequence[str], token: str, *, window_days: int,
     now: Optional[datetime], stars: int, deadline: float, depth: int = 0,
@@ -380,9 +397,18 @@ def _poll_batch_tree(
         # exhaustion. Batching made each request cheaper in points and heavier in
         # server work, so pacing matters MORE here than it did per-account.
         _THROTTLE.wait()
+        _t0 = time.monotonic()
         payload, status, headers = _gql.post(_gql.build_query(logins, stars), token)
         if headers is not None:
             _note_quota(headers)
+        _gql.BATCH_TRACE.append({
+            "n": len(logins), "depth": depth, "status": status,
+            "secs": round(time.monotonic() - _t0, 1),
+            "retry_after": (headers or {}).get("Retry-After") if headers else None,
+            "gql_remaining": _gql.points_remaining(payload),
+            "err": (payload.get("errors") or [{}])[0].get("type")
+                   if isinstance(payload, dict) and payload.get("errors") else None,
+        })
         if status == 401:
             return {u: {"login": u, "events": [], "outcome": _gql.AUTH_FAILED,
                         "needs_rest": False, "detail": "401"} for u in logins}
@@ -407,11 +433,21 @@ def _poll_batch_tree(
                 if status not in (403, 429):
                     break
             if status in (403, 429):
-                # Still limited: say so. Never fall through to REST here -- more
-                # requests is the one thing that cannot help.
-                return {u: {"login": u, "events": [], "outcome": _gql.RATE_LIMITED,
-                            "needs_rest": False, "detail": str(status)}
-                        for u in logins}
+                body = _gql.LAST_ERROR_BODY[-1] if _gql.LAST_ERROR_BODY else None
+                if _gql.is_secondary_rate_limit(body):
+                    # A real limit: say so, and do NOT fall through to REST.
+                    # More requests is the one thing that cannot help.
+                    return {u: {"login": u, "events": [], "outcome": _gql.RATE_LIMITED,
+                                "needs_rest": False, "detail": str(status)}
+                            for u in logins}
+                # A 403 that is NOT a rate limit means this credential cannot use
+                # GraphQL (an unscoped classic PAT is refused by the GraphQL API
+                # while still serving public REST reads perfectly). REST is not
+                # "more load" in that case, it is the working path -- and this is
+                # exactly the shape production showed: 693 accounts refused while
+                # 4,879 of 5,000 points sat unused, on a token that reads public
+                # data over REST all day.
+                return _rest_floor(logins, token, window_days=window_days, now=now)
             if status == 401:
                 return {u: {"login": u, "events": [], "outcome": _gql.AUTH_FAILED,
                             "needs_rest": False, "detail": "401"} for u in logins}
@@ -438,17 +474,7 @@ def _poll_batch_tree(
                     deadline=deadline, depth=depth + 1))
             return merged
 
-    # Floor: the batch path cannot serve these, so use the REST poller that has
-    # per-account isolation and a true date early-exit. This is why REST is kept
-    # rather than deleted.
-    results: Dict[str, Dict[str, Any]] = {}
-    for login in logins:
-        events, outcome = _poll_one(login, token, window_days=window_days, now=now)
-        mapped = {_OK: _gql.OK, _AUTH_FAILED: _gql.AUTH_FAILED,
-                  _RATE_LIMITED: _gql.RATE_LIMITED}.get(outcome, _gql.UNRESOLVED)
-        results[login] = {"login": login, "events": events, "outcome": mapped,
-                          "needs_rest": False, "detail": "rest"}
-    return results
+    return _rest_floor(logins, token, window_days=window_days, now=now)
 
 
 def _poll_via_graphql(
@@ -556,6 +582,8 @@ def poll_roster(
     if not _force and key in _MEMO:
         return _MEMO[key]
     token = _token(config)  # raises loudly before any network work
+    _gql.BATCH_TRACE.clear()
+    _gql.LAST_ERROR_BODY.clear()
     events, tally = _poll_via_graphql(
         roster, token, window_days=window_days, now=now)
     auth_failures = tally.get(_gql.AUTH_FAILED, 0)

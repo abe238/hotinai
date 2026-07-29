@@ -294,3 +294,29 @@ def test_points_remaining_is_read_from_the_response():
 def test_points_remaining_is_none_when_absent_not_zero(payload):
     """Returning 0 would look like exhaustion and stop the run for no reason."""
     assert G.points_remaining(payload) is None
+
+
+# --- telling a rate limit from a capability rejection ---------------------
+
+@pytest.mark.parametrize("body", [
+    None, "", "   ", b"bytes", 42,
+    "You have exceeded a secondary rate limit",
+    "API rate limit exceeded for user",
+    "Too Many Requests",
+    "please try again later",
+])
+def test_unknown_or_limit_like_bodies_are_treated_as_rate_limits(body):
+    """Conservative by design: adding load to a limited endpoint is the worse
+    error, so anything unknown counts as a limit."""
+    assert G.is_secondary_rate_limit(body) is True
+
+
+@pytest.mark.parametrize("body", [
+    "Resource not accessible by personal access token",
+    "This endpoint requires one of the following scopes: read:user",
+    "Bad credentials",
+])
+def test_a_capability_rejection_is_not_a_rate_limit(body):
+    """A 403 that means 'this credential cannot do that' should route to REST,
+    which serves public reads fine with an unscoped classic token."""
+    assert G.is_secondary_rate_limit(body) is False
