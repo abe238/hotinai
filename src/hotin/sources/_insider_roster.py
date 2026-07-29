@@ -344,6 +344,9 @@ def _poll_one(
 #: Wall-clock ceiling for bisection retries within one batch. Without it, a
 #: sustained 502 storm could bisect its way past the REST baseline it is
 #: supposed to degrade *to*.
+#: Bounded retries for a TRANSIENT secondary rate limit (403/429 + Retry-After).
+#: Distinct from bisection: the batch size is not the problem, the pace is.
+_RATE_LIMIT_RETRIES = 3
 _BISECT_SECONDS = 90.0
 _BISECT_ATTEMPTS = 4
 
@@ -369,6 +372,14 @@ def _poll_batch_tree(
     too_small = depth > 0 and len(logins) <= _gql.MIN_BATCH_USERS
     out_of_budget = depth >= _BISECT_ATTEMPTS or time.monotonic() > deadline
     if not (too_small or out_of_budget):
+        # PACE THE REQUESTS. The REST path always did this and never tripped a
+        # secondary limit; the first GraphQL build omitted it and CI came back
+        # with 618 of 793 accounts rate-limited while GitHub still reported
+        # remaining=4983. Nearly the whole quota was intact -- the 403s were
+        # ABUSE DETECTION on a burst of 32 heavy queries fired back to back, not
+        # exhaustion. Batching made each request cheaper in points and heavier in
+        # server work, so pacing matters MORE here than it did per-account.
+        _THROTTLE.wait()
         payload, status, headers = _gql.post(_gql.build_query(logins, stars), token)
         if headers is not None:
             _note_quota(headers)
@@ -376,12 +387,34 @@ def _poll_batch_tree(
             return {u: {"login": u, "events": [], "outcome": _gql.AUTH_FAILED,
                         "needs_rest": False, "detail": "401"} for u in logins}
         if status in (403, 429):
-            # GraphQL signals exhaustion as a typed error in a 200 MOST of the
-            # time, but the plain HTTP codes still occur (secondary limits, abuse
-            # detection). Bisecting here would burn budget while already over it,
-            # and would eventually reach the REST floor and spend more. Name it.
-            return {u: {"login": u, "events": [], "outcome": _gql.RATE_LIMITED,
-                        "needs_rest": False, "detail": str(status)} for u in logins}
+            # A secondary limit is TRANSIENT and carries Retry-After, so back off
+            # and retry the SAME batch: condemning it outright turned a
+            # recoverable pause into 618 lost accounts. Retry in a bounded loop
+            # rather than by recursing -- recursion raised `depth`, which then
+            # read as "out of bisection budget" and dropped the batch through to
+            # the REST floor, firing 25 MORE requests at a server that had just
+            # asked us to slow down.
+            for _ in range(_RATE_LIMIT_RETRIES):
+                if time.monotonic() > deadline:
+                    break
+                retry = _retry_seconds(headers.get("Retry-After")) if headers else None
+                _THROTTLE.wait_for_retry_after(retry if retry is not None else 2.0)
+                _THROTTLE.wait()
+                payload, status, headers = _gql.post(
+                    _gql.build_query(logins, stars), token)
+                if headers is not None:
+                    _note_quota(headers)
+                if status not in (403, 429):
+                    break
+            if status in (403, 429):
+                # Still limited: say so. Never fall through to REST here -- more
+                # requests is the one thing that cannot help.
+                return {u: {"login": u, "events": [], "outcome": _gql.RATE_LIMITED,
+                            "needs_rest": False, "detail": str(status)}
+                        for u in logins}
+            if status == 401:
+                return {u: {"login": u, "events": [], "outcome": _gql.AUTH_FAILED,
+                            "needs_rest": False, "detail": "401"} for u in logins}
         shrink = status in _gql.TOO_HEAVY or (
             payload is not None and _gql.is_resource_limited(payload))
         if not shrink and payload is not None:

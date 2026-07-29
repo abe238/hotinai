@@ -161,19 +161,29 @@ def test_a_401_aborts_the_batch_without_bisecting(monkeypatch):
     assert len(attempts) == 1, "must not bisect a credential failure"
 
 
-def test_http_403_is_rate_limited_not_a_shrink_signal(monkeypatch):
-    """Bisecting while over quota spends more budget to learn the same thing."""
-    attempts = []
+def test_http_403_never_bisects_and_never_falls_through_to_rest(monkeypatch):
+    """A rate limit is not a size problem, and more requests cannot help.
+
+    Bisecting would shrink batches that were never too big, and dropping to the
+    REST floor would fire one request per account at a server that just asked
+    us to slow down. Retries are bounded and then it reports honestly.
+    """
+    sizes = []
+    rest_calls = []
 
     def limited(request, timeout=None):
-        attempts.append(1)
+        sizes.append(len(_logins(request)))
         raise core.urllib.error.HTTPError(request.full_url, 403, "rate", {}, None)
 
+    monkeypatch.setattr(core, "_poll_one",
+                        lambda u, t, **kw: rest_calls.append(u) or ([], core._OK))
     monkeypatch.setattr(core.urllib.request, "urlopen", limited)
     monkeypatch.setattr(core, "_roster", lambda config: _roster_of(25))
     with pytest.raises(core.RosterRateLimitError):
         core.poll_roster(config={"GITHUB_TOKEN": "t"})
-    assert len(attempts) == 1
+    assert set(sizes) == {25}, "batch size never shrank: {}".format(sorted(set(sizes)))
+    assert rest_calls == [], "must not spend REST requests while rate-limited"
+    assert len(sizes) <= core._RATE_LIMIT_RETRIES + 1, "retries are bounded"
 
 
 # --- the budget floor (L4) ------------------------------------------------
@@ -327,3 +337,73 @@ def test_rest_fallbacks_are_counted_so_the_gain_can_be_watched(monkeypatch):
 def test_a_clean_run_reports_no_fallbacks(monkeypatch):
     _poll(10, lambda r, timeout=None: _ok_payload(_logins(r)), monkeypatch)
     assert "rest_fallback" not in core.summarize_outcomes(core.LAST_OUTCOMES, 10)
+
+
+# --- secondary rate limits (the 0.5.0 regression) -------------------------
+
+def test_every_graphql_batch_is_paced(monkeypatch):
+    """Unpaced batching tripped GitHub's abuse detector in production.
+
+    618 of 793 accounts came back 403 while GitHub still reported
+    remaining=4983 -- almost the entire quota intact. The 403s were a burst
+    penalty, not exhaustion, and the REST path never had this problem because
+    it always paced.
+    """
+    paced = []
+    monkeypatch.setattr(core._THROTTLE, "wait", lambda: paced.append(1))
+    _poll(75, lambda r, timeout=None: _ok_payload(_logins(r)), monkeypatch)
+    assert len(paced) == 3, "one pace per batch (75 accounts / 25)"
+
+
+def test_a_secondary_limit_is_retried_not_condemned(monkeypatch):
+    """403 + Retry-After is transient. Immediately condemning it lost 618 accounts."""
+    attempts = {"n": 0}
+
+    class _H(dict):
+        pass
+
+    def flaky(request, timeout=None):
+        attempts["n"] += 1
+        if attempts["n"] == 1:
+            raise core.urllib.error.HTTPError(
+                request.full_url, 403, "secondary", _H({"Retry-After": "1"}), None)
+        return _ok_payload(_logins(request))
+
+    _poll(10, flaky, monkeypatch)
+    assert attempts["n"] == 2, "it retried after backing off"
+    assert core.LAST_OUTCOMES.get(G.OK) == 10, "nobody was lost to a transient pause"
+
+
+def test_retry_after_is_honoured_before_retrying(monkeypatch):
+    waited = []
+    monkeypatch.setattr(core._THROTTLE, "wait_for_retry_after",
+                        lambda s: waited.append(s))
+    attempts = {"n": 0}
+
+    class _H(dict):
+        pass
+
+    def flaky(request, timeout=None):
+        attempts["n"] += 1
+        if attempts["n"] == 1:
+            raise core.urllib.error.HTTPError(
+                request.full_url, 429, "slow down", _H({"Retry-After": "7"}), None)
+        return _ok_payload(_logins(request))
+
+    _poll(5, flaky, monkeypatch)
+    assert waited == [7.0], "GitHub's own Retry-After must be used, not a guess"
+
+
+def test_a_persistent_secondary_limit_still_gives_up_honestly(monkeypatch):
+    """Retrying forever would hang an unattended run. Bounded, then reported."""
+    class _H(dict):
+        pass
+
+    def always(request, timeout=None):
+        raise core.urllib.error.HTTPError(
+            request.full_url, 403, "nope", _H({"Retry-After": "0"}), None)
+
+    monkeypatch.setattr(core.urllib.request, "urlopen", always)
+    monkeypatch.setattr(core, "_roster", lambda config: _roster_of(25))
+    with pytest.raises(core.RosterRateLimitError):
+        core.poll_roster(config={"GITHUB_TOKEN": "t"})
