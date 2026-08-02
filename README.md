@@ -1,8 +1,21 @@
-# hotin — what's hot in AI, from your terminal
+# hotin — the whole field, ranked. With receipts.
 
-An open-source CLI for finding what's hot, fresh, and credible in AI.
+<p align="center">
+  <img src="docs/demo.svg" alt="hotin repos output: a ranked board of AI repos with scores, tags and badges" width="820">
+</p>
 
-hotin pulls together independent signals and ranks projects by cross-source consensus and freshness, so a tool gaining attention in more than one place has more weight than a one-source spike.
+<p align="center">
+  <a href="https://pypi.org/project/hotin/"><img alt="PyPI" src="https://img.shields.io/pypi/v/hotin?color=f0883e"></a>
+  <a href="https://pypi.org/project/hotin/"><img alt="downloads" src="https://img.shields.io/pypi/dm/hotin?color=3fb950"></a>
+  <img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-3fb950">
+  <a href="https://hotin.ai">hotin.ai</a>
+</p>
+
+One command, one ranked list of what actually matters in AI today — repos,
+models, papers and news. **Numbers are receipts, badges are verdicts.**
+
+Every row shows why it is there: how fast it is growing, who backed it, where
+else it surfaced. Nothing ranks on a single source's say-so.
 
 ## What it does
 
@@ -77,6 +90,35 @@ $ hotin --limit 8
 ```
 
 The first line of each result is score, owner/repo (clickable in a real terminal), category, and badges; a dimmed second line shows the human title when it adds context the slug doesn't. `fresh` reflects recent repository activity. In a live terminal the score and badges are colored. Your output will differ — it reflects what is actually hot when you run it.
+
+## Why corroboration, not popularity
+
+<details>
+<summary>The board requires two independent signals. Here is the measurement behind that.</summary>
+
+<br>
+
+Ranking on "a well-known developer starred it" is the obvious design. It does not
+hold up. Measured across 288 tracked repos, growth as a percentage of a repo's own
+star count so size is not mistaken for heat:
+
+| backed by | repos | growth |
+|---|---:|---:|
+| no notable star at all | 205 | 0.25 %/day |
+| exactly one | 62 | **0.19 %/day** |
+| two or more, independent | 21 | 0.55 %/day |
+
+One star tracks slightly *worse* than no endorsement. Two or more tracks about
+2x the baseline — though at n=21 that is p=0.087, suggestive rather than proven,
+and the board rests on the first result rather than the second.
+
+So nothing reaches the board on one source's say-so. It needs corroboration from
+an independent signal, and it has to still be true a few hours later.
+
+`scripts/measure_insider_signal.py` in the site repo re-runs this whenever you
+want to check the claim.
+
+</details>
 
 ## Keeping it fresh
 
