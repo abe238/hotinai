@@ -553,23 +553,73 @@ def summarize_outcomes(tally: Dict[str, int], total: int) -> str:
 _MEMO: Dict[Tuple[Any, ...], List[Dict[str, Any]]] = {}
 
 
+DEFAULT_WINDOW_DAYS = 45
+_MIN_WINDOW_DAYS, _MAX_WINDOW_DAYS = 1, 365
+
+
+def _window(config: Optional[dict], explicit: Optional[int]) -> int:
+    """Resolve the star window: explicit argument, then config/env, then default.
+
+    Exists so tuning this never again requires a PyPI release. It is the single
+    most consequential number in the pipeline -- it decides how many repos reach
+    the insiders tab at all -- and until 0.7.0 it was a bare default here,
+    invisible from the repo that depends on it.
+
+    Out-of-range values fall back to the default rather than raising: a typo in
+    an environment variable must not take the board down, and a silently clamped
+    window is easier to notice than a crashed bake.
+    """
+    if explicit is not None:
+        return explicit
+    raw = (config or {}).get("HOTIN_INSIDER_WINDOW_DAYS")
+    if raw in (None, ""):
+        return DEFAULT_WINDOW_DAYS
+    try:
+        value = int(str(raw).strip())
+    except (TypeError, ValueError):
+        return DEFAULT_WINDOW_DAYS
+    if not _MIN_WINDOW_DAYS <= value <= _MAX_WINDOW_DAYS:
+        return DEFAULT_WINDOW_DAYS
+    return value
+
+
 def poll_roster(
     config: Optional[dict] = None,
     *,
-    window_days: int = 30,
+    window_days: Optional[int] = None,
     now: Optional[datetime] = None,
     _force: bool = False,
 ) -> List[Dict[str, Any]]:
     """Poll every roster member's recently-starred repos, memoized per process.
 
-    The 30-day default window is measured, not guessed. Notable people star
-    rarely, so a 7-day window sampled almost nobody: across a 797-account cohort
-    it found 93 events from 36 people (4.5% participation), and a single
-    hyperactive account was 43% of the entire signal. Widening to 30 days gave
-    352 events from 87 people (10.9%), 301 distinct repos, and dropped that
-    account's share to 30% -- not by penalising anyone, but because the rest of
-    the cohort finally appeared. Costs nothing extra: the per-user page cap
-    already bounds the work.
+    The default window is measured, not guessed, and was widened 30 -> 45 in
+    0.7.0. Override per deployment with ``HOTIN_INSIDER_WINDOW_DAYS``.
+
+    A 7-day window sampled almost nobody: across a 797-account cohort it found
+    93 events from 36 people (4.5% participation), and a single hyperactive
+    account was 43% of the entire signal. 30 days gave 352 events from 87 people
+    (10.9%) and dropped that account's share to 30%.
+
+    30 -> 45 was measured the same way, on the trade that actually matters --
+    pool size against how well corroboration predicts subsequent growth
+    (repo growth as %/day of its own star count, so size is not mistaken for
+    heat):
+
+        window   repos with >=2 backers   their growth vs un-endorsed
+          30d              28                      4.4x
+          45d              39                      3.6x
+          60d              45                      3.3x
+          90d              75                      2.0x
+
+    The signal DEGRADES monotonically as the window widens: older stars carry
+    measurably less predictive power. 45 buys 39% more corroborated repos for an
+    18% smaller lift, which is the best trade on the curve; past 60 it falls off.
+    Widening further is not free and 90 halves the effect.
+
+    Caveats worth keeping: n is 14-21 per row, so the direction is trustworthy
+    and the individual figures are not; and the enrichment caps at 50 stars per
+    account, so the wider windows are truncated for active accounts and their
+    pools are undercounted.
 
     Returns a flat list of ``{username, canonical_repo, starred_at,
     stargazers_count, description}`` star events within ``window_days``. Raises
@@ -577,6 +627,7 @@ def poll_roster(
     :class:`RosterAuthError` if a present token is rejected (401) for every
     roster member — both loud, never a silent empty.
     """
+    window_days = _window(config, window_days)
     roster = _roster(config)
     key = (roster, window_days, now.isoformat() if now else None)
     if not _force and key in _MEMO:

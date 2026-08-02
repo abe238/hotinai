@@ -176,11 +176,23 @@ def test_http_date_retry_after_does_not_crash_the_poll(monkeypatch):
     assert events[0]["canonical_repo"] == "ok/repo"
 
 
-def test_default_window_is_30_days(monkeypatch):
-    # Pinned deliberately. 7 days sampled almost nobody (4.5% of the cohort
-    # active, one account = 43% of the signal); 30 days more than doubled
-    # participation and diluted that concentration to 30%. Narrowing this again
-    # should be a conscious decision with fresh numbers, not a drive-by edit.
+def test_default_window_is_45_days(monkeypatch):
+    # Pinned deliberately, and CHANGED deliberately in 0.7.0 (was 30).
+    #
+    # 7 days sampled almost nobody (4.5% of the cohort active, one account = 43%
+    # of the signal); 30 days more than doubled participation and diluted that
+    # concentration to 30%. 30 -> 45 was measured on the trade that matters,
+    # pool size against how well corroboration predicts subsequent growth:
+    #
+    #     30d  28 repos with >=2 backers, 4.4x growth lift
+    #     45d  39 repos,                  3.6x
+    #     60d  45 repos,                  3.3x
+    #     90d  75 repos,                  2.0x
+    #
+    # The signal degrades monotonically as the window widens; 45 is the best
+    # trade on that curve. Moving this again should be another conscious
+    # decision with fresh numbers, not a drive-by edit -- and it no longer needs
+    # a release either way, since HOTIN_INSIDER_WINDOW_DAYS overrides it.
     core._reset_memo()
     seen = {}
 
@@ -198,7 +210,7 @@ def test_default_window_is_30_days(monkeypatch):
 
     monkeypatch.setattr(core._gql, "parse_batch", capture)
     core.poll_roster(config={"GITHUB_TOKEN": "x"})
-    assert seen["window_days"] == 30
+    assert seen["window_days"] == 45
 
 
 def test_pagination_stops_at_the_window_edge(monkeypatch):
