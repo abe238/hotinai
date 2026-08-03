@@ -109,6 +109,16 @@ def manifest(ver: str) -> dict:
         # Optional on purpose. The board works with no key at all; a token only
         # unlocks the insiders signal. Marking it required would turn a
         # one-click install into a scavenger hunt for most users.
+        #
+        # `default: ""` IS LOad-BEARING, not tidiness. The host builds its
+        # substitution table only from user_config entries that have a default
+        # or a user-supplied value, and replaceVariables leaves any variable it
+        # cannot resolve ALONE. So an optional field with no default, left blank
+        # by the user, ships the literal string "${user_config.github_token}" as
+        # GITHUB_TOKEN -- which is not empty, so it overrides a token the user
+        # already had and then goes out as `Authorization: Bearer ${user_conf...`.
+        # Every insiders poll 401s, for the majority of one-click installs.
+        # An explicit "" puts the key in the table and the substitution resolves.
         "user_config": {
             "github_token": {
                 "type": "string",
@@ -119,6 +129,7 @@ def manifest(ver: str) -> dict:
                 ),
                 "sensitive": True,
                 "required": False,
+                "default": "",
             }
         },
         "tools": [

@@ -52,6 +52,35 @@ def test_blank_environment_value_does_not_erase_a_configured_one(tmp_path, monke
     assert config.load_config()["GITHUB_TOKEN"] == "from-environment"
 
 
+def test_an_unsubstituted_template_is_treated_as_absent(tmp_path, monkeypatch):
+    """The nastier half of the same bug. An MCP host builds its substitution
+    table only from user_config entries that have a default or a user value, and
+    leaves any variable it cannot resolve untouched -- so an optional field with
+    no default, left blank, arrives as the LITERAL "${user_config.github_token}".
+
+    That is not empty. A length check waves it through, it outranks the real
+    token in ~/.config/hotin/.env, and it goes out as
+    `Authorization: Bearer ${user_config.github_token}` on every insiders poll.
+    The bundle sets an explicit default so this never fires there; the guard
+    exists because a credential arriving from outside is a trust boundary."""
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+    for key in config._ENV_OVERLAY_KEYS:
+        monkeypatch.delenv(key, raising=False)
+    config.write_config({"GITHUB_TOKEN": "a-real-token"})
+
+    monkeypatch.setenv("GITHUB_TOKEN", "${user_config.github_token}")
+    assert config.load_config()["GITHUB_TOKEN"] == "a-real-token"
+
+    # And with nothing to protect, the literal must not be stored either --
+    # readers only check emptiness, so it would be sent as a bearer token.
+    config.write_config({})
+    assert config.load_config().get("GITHUB_TOKEN") == ""
+
+    # A token that merely CONTAINS braces is still a token, not a template.
+    monkeypatch.setenv("GITHUB_TOKEN", "ghp_abc${def}")
+    assert config.load_config()["GITHUB_TOKEN"] == "ghp_abc${def}"
+
+
 def test_blank_environment_value_survives_when_nothing_was_configured(tmp_path, monkeypatch):
     """With no file value to protect, a blank stays blank rather than vanishing:
     readers turn it into "absent" themselves, and inventing a key that the

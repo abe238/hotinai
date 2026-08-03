@@ -38,6 +38,17 @@ _ENV_OVERLAY_KEYS = (
 )
 
 
+def _unusable(value: str) -> bool:
+    """Blank, or a template variable the caller never expanded.
+
+    `${user_config.github_token}` means the host had nothing to put there, so it
+    carries exactly as much information as an empty string -- while looking, to
+    any length check, like a real value.
+    """
+    stripped = value.strip()
+    return not stripped or (stripped.startswith("${") and stripped.endswith("}"))
+
+
 def load_config() -> Dict[str, str]:
     """Load literal KEY=value entries, with process environment taking priority."""
     values: Dict[str, str] = {}
@@ -63,17 +74,30 @@ def load_config() -> Dict[str, str]:
         value = os.environ.get(key)
         if value is None:
             continue
-        # A BLANK environment value never erases a configured one. Every reader
-        # already treats "" as absent, so letting it win deletes a working
-        # setting and substitutes nothing.
+        # A BLANK OR UNSUBSTITUTED environment value never erases a configured
+        # one. Every reader already treats "" as absent, so letting it win
+        # deletes a working setting and substitutes nothing.
         #
-        # This is not hypothetical: an MCP bundle declares GITHUB_TOKEN as an
-        # optional field, and a host injects GITHUB_TOKEN="" when the user
-        # leaves it blank. Without this, installing the bundle would silently
-        # break the insiders tab for exactly the users who had already
-        # configured a token. Same for `export GITHUB_TOKEN=` in a shell rc.
-        if not value.strip() and values.get(key, "").strip():
-            continue
+        # Neither case is hypothetical. An MCP bundle declares GITHUB_TOKEN as
+        # an optional field; leave it blank and the host either injects "" or --
+        # when the field has no default -- gives up on the substitution and
+        # passes the LITERAL "${user_config.github_token}" through. The second
+        # is the dangerous one: it is not empty, so a length check waves it
+        # past, it outranks the real token in ~/.config/hotin/.env, and it goes
+        # out as `Authorization: Bearer ${user_config.github_token}` on every
+        # insiders poll. `export GITHUB_TOKEN=` in a shell rc is the first case.
+        #
+        # The bundle sets an explicit default so the substitution resolves;
+        # this guard is here because a credential arriving from outside is a
+        # trust boundary, and no other host's template syntax is our business.
+        if _unusable(value):
+            if values.get(key, "").strip():
+                continue
+            # Nothing to protect, but the literal must not be stored either --
+            # readers only check for emptiness, so "${user_config.github_token}"
+            # would sail through and be sent as a bearer token. Normalise it to
+            # the blank it actually is.
+            value = ""
         values[key] = value
     return values
 
