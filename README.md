@@ -11,11 +11,22 @@
   <a href="https://hotin.ai">hotin.ai</a>
 </p>
 
-One command, one ranked list of what actually matters in AI today — repos,
+One command, one ranked list of what actually matters in AI today: repos,
 models, papers and news. **Numbers are receipts, badges are verdicts.**
 
 Every row shows why it is there: how fast it is growing, who backed it, where
 else it surfaced. Nothing ranks on a single source's say-so.
+
+**It works two ways, from one install.**
+
+|  | you ask | your agent asks |
+|---|---|---|
+| | `hotin repos` in your terminal | `hotin mcp` inside Claude Code, Cursor, Codex or Gemini CLI |
+| | you read the board | the agent reads the board mid-task, and cites it |
+
+Your model's training data has a cutoff and a web search returns marketing. Ask
+an agent what is worth using in AI this week and it guesses. Point it at hotin
+and it answers with the same ranked evidence you would have read yourself.
 
 ## What it does
 
@@ -44,6 +55,36 @@ python hotin.pyz
 ```
 
 Developing on a checkout: `pip install -e .`.
+
+## Use it from your AI agent (MCP)
+
+The same board, callable by Claude Code, Cursor, Codex CLI, Gemini CLI, or
+anything else that speaks MCP. No extra package: `pip install hotin` already
+shipped it.
+
+Add this to your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "hotin": { "command": "hotin", "args": ["mcp"] }
+  }
+}
+```
+
+Then ask your agent things it otherwise cannot answer:
+
+> *"What AI repos are actually worth looking at this week?"*
+> *"Is anything notable happening with open-weight models right now?"*
+> *"Before we pick a library for this, what is trending and who is backing it?"*
+
+Two tools are exposed. `hotin_board` returns any tab (`repos`, `rising`,
+`insiders`, `models`, `papers`, `news`) with the receipts attached, and
+`hotin_brief` returns the daily digest. Answers come back in about a second,
+served from the local cache.
+
+Set `GITHUB_TOKEN` if you want the `insiders` signal; everything else works
+without any key.
 
 ## Quick start
 

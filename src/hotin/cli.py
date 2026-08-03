@@ -39,6 +39,7 @@ COMMANDS = {
     "search": "search cached tools",
     "show": "show one repo (owner/repo)",
     "about": "show project information",
+    "mcp": "run as an MCP server so agents can query the board (stdio)",
 }
 # How much history the observation series keeps. Raised from 30 because 30 was
 # a hard ceiling on every question worth asking of this data: no cohort
@@ -1422,6 +1423,12 @@ def main(argv: Optional[List[str]] = None) -> int:
             _since_days(arguments.since)
         except ValueError as exc:
             parser.error(str(exc))
+    if command == "mcp":
+        # Before anything else can print. stdio transport means STDOUT IS THE
+        # PROTOCOL, so a stray attribution line or a format warning would corrupt
+        # the stream and the client would drop the connection.
+        from hotin import mcp as _mcp
+        return _mcp.serve()
     if command == "setup":
         code = _setup_check() if arguments.check else _setup(arguments)
         _attribution(arguments)
