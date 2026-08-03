@@ -59,18 +59,32 @@ Developing on a checkout: `pip install -e .`.
 ## Use it from your AI agent (MCP)
 
 The same board, callable by Claude Code, Cursor, Codex CLI, Gemini CLI, or
-anything else that speaks MCP. No extra package: `pip install hotin` already
-shipped it.
+anything else that speaks MCP. Pick whichever line is least work for you.
 
-Add this to your MCP client config:
+**One click.** Download [`hotin.mcpb`](https://github.com/abe238/hotinai/releases/latest/download/hotin.mcpb)
+and open it. Claude Desktop shows an install dialog and that is the whole
+process: no config file to find, no JSON to edit, no terminal. The bundle is
+136 KB and carries hotin inside it, so there is nothing to install first --
+hotin has zero dependencies, which is what makes that possible. macOS and Linux.
+
+**One line.** Nothing installed at all, `uvx` fetches it on demand:
+
+```sh
+claude mcp add hotin -- uvx hotin mcp
+```
+
+**Any other client.** Same idea, as config:
 
 ```json
 {
   "mcpServers": {
-    "hotin": { "command": "hotin", "args": ["mcp"] }
+    "hotin": { "command": "uvx", "args": ["hotin", "mcp"] }
   }
 }
 ```
+
+Already ran `pip install hotin`? Then it is `"command": "hotin", "args": ["mcp"]`
+-- the MCP server ships inside the package, there is no second thing to install.
 
 Then ask your agent things it otherwise cannot answer:
 
@@ -93,7 +107,8 @@ Set `GITHUB_TOKEN` if you want the `insiders` signal; everything else works
 without any key. A first call on a cold cache takes about 15 seconds while it
 fetches; after that answers are served locally in about a second.
 
-Works with every install route, including the single-file `hotin.pyz`.
+Works with every install route: the bundle, `uvx`, `pip`, `pipx`, and the
+single-file `hotin.pyz`.
 
 ## Quick start
 
