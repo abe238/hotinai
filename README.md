@@ -1,3 +1,9 @@
+<!-- mcp-name: io.github.abe238/hotin -->
+<!-- ^ Not decoration. The official MCP Registry proves you own the PyPI package
+     by looking for this exact string in the README that renders on PyPI, and it
+     must match `name` in server.json. It only reaches PyPI on a release, so
+     removing it silently breaks the next registry publish, not this file. -->
+
 # hotin — the whole field, ranked. With receipts.
 
 <p align="center">

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.abe238/hotin",
+  "description": "What's hot in AI right now, ranked with receipts from GitHub, HN, npm and Hugging Face.",
+  "repository": {
+    "url": "https://github.com/abe238/hotinai",
+    "source": "github"
+  },
+  "version": "0.8.2",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "hotin",
+      "version": "0.8.2",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp",
+          "valueHint": "mcp",
+          "isRequired": true,
+          "description": "Starts the MCP server. Without it the CLI prints usage and exits, so this is not optional."
+        }
+      ],
+      "environmentVariables": [
+        {
+          "name": "GITHUB_TOKEN",
+          "description": "Optional. Only the 'insiders' tab needs it, to poll what notable developers starred. Every other tab works with no key at all.",
+          "isRequired": false,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}
