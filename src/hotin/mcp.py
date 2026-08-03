@@ -42,6 +42,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import subprocess
 import sys
 from typing import Any, Dict, List, Optional
@@ -96,6 +97,26 @@ TOOLS: List[Dict[str, Any]] = [
 ]
 
 
+def _cli_command() -> List[str]:
+    """How to re-invoke this same hotin as a child process.
+
+    RUNS ENTIRELY ON THE USER'S MACHINE. Nothing here talks to hotin.ai; the
+    child fetches GitHub, Hacker News, npm and Hugging Face directly, writes to
+    the user's own cache, and uses the user's own token if they set one. The
+    only appearance of hotin.ai anywhere in the runtime is a User-Agent string.
+
+    `-m hotin` is right for pip, pipx, uv and a checkout. It is WRONG for the
+    zipapp: `python hotin.pyz mcp` leaves the package inside the archive, where
+    a fresh interpreter cannot import it, so the child would fail with
+    "No module named hotin" on every call. Inside a zipapp `sys.argv[0]` is the
+    archive path, so re-invoke that instead.
+    """
+    entry = sys.argv[0] if sys.argv else ""
+    if entry.endswith(".pyz") and os.path.exists(entry):
+        return [sys.executable, os.path.abspath(entry)]
+    return [sys.executable, "-m", "hotin"]
+
+
 def _run(argv: List[str], timeout: int = TIMEOUT_SECONDS) -> Any:
     """Run the CLI in a child process. THE ONLY PLACE THAT INVOKES IT.
 
@@ -106,7 +127,7 @@ def _run(argv: List[str], timeout: int = TIMEOUT_SECONDS) -> Any:
     """
     try:
         completed = subprocess.run(
-            [sys.executable, "-m", "hotin", *argv],
+            [*_cli_command(), *argv],
             capture_output=True, text=True, timeout=timeout)
     except subprocess.TimeoutExpired:
         return {"error": "hotin timed out after {}s".format(timeout)}
@@ -256,6 +277,22 @@ def selftest() -> int:
     # A timeout is reported rather than hanging the client forever.
     slow = _run(["about", "--json"], timeout=0)
     assert "timed out" in slow.get("error", ""), slow
+
+    # The zipapp install path. `python hotin.pyz mcp` cannot use `-m hotin`,
+    # because the package lives inside the archive; every call would fail with
+    # "No module named hotin". argv[0] is the archive, so re-invoke that.
+    real_argv = sys.argv
+    try:
+        sys.argv = ["/nope/missing.pyz"]
+        assert _cli_command()[1:] == ["-m", "hotin"], "a MISSING pyz must not be trusted"
+        import tempfile
+        with tempfile.NamedTemporaryFile(suffix=".pyz") as fake:
+            sys.argv = [fake.name]
+            assert _cli_command() == [sys.executable, os.path.abspath(fake.name)]
+        sys.argv = ["/usr/local/bin/hotin"]
+        assert _cli_command()[1:] == ["-m", "hotin"], "console script uses -m"
+    finally:
+        sys.argv = real_argv
 
     # serve() must round-trip a real frame and write exactly one line.
     out = io.StringIO()

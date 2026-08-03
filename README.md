@@ -83,8 +83,17 @@ Two tools are exposed. `hotin_board` returns any tab (`repos`, `rising`,
 `hotin_brief` returns the daily digest. Answers come back in about a second,
 served from the local cache.
 
+**It runs on your machine, not ours.** Your MCP client starts `hotin` as a local
+child process. It fetches GitHub, Hacker News, npm and Hugging Face directly,
+caches to your own disk, and uses your own token if you set one. hotin.ai is
+never in the path: the site is a separate rendering of the same tool, not a
+service this depends on.
+
 Set `GITHUB_TOKEN` if you want the `insiders` signal; everything else works
-without any key.
+without any key. A first call on a cold cache takes about 15 seconds while it
+fetches; after that answers are served locally in about a second.
+
+Works with every install route, including the single-file `hotin.pyz`.
 
 ## Quick start
 
