@@ -193,8 +193,16 @@ def test_fetch_all_starts_every_adapter_and_catches_errors(monkeypatch):
 def test_fetch_all_timeout_does_not_wait_for_slow_adapter(monkeypatch):
     cache = MemoryCache()
 
+    # SLEEP LONG, ASSERT LOOSE. The claim is "we did not wait for the slow
+    # adapter", so what has to be large is the gap between the deadline and the
+    # adapter's own duration -- not the tightness of the wall-clock bound.
+    #
+    # The previous shape asserted elapsed < 0.15 against a 0.2s adapter, leaving
+    # the whole assertion resting on how fast a loaded CI runner can spawn nine
+    # threads. It measured 0.171s on macos/3.14 and failed, having caught
+    # nothing but a busy machine.
     def slow(**kwargs):
-        time.sleep(0.2)
+        time.sleep(2.0)
         return {"records": [], "status": "empty", "detail": None}
 
     monkeypatch.setattr(engine.github, "fetch", slow)
@@ -204,7 +212,9 @@ def test_fetch_all_timeout_does_not_wait_for_slow_adapter(monkeypatch):
     started = time.monotonic()
     statuses = engine.fetch_all({}, cache=cache, timeout=0.02)
     elapsed = time.monotonic() - started
-    assert elapsed < 0.15
+    # A full second of headroom over thread-spawn overhead, and still an order
+    # of magnitude below the 2.0s that waiting would cost.
+    assert elapsed < 1.0, elapsed
     assert next(status for status in statuses if status.source == "github").detail == "timed out"
     assert sum(status.status == "empty" for status in statuses) == 8
 
@@ -213,13 +223,20 @@ def test_fetch_all_has_one_timeout_budget_for_the_entire_batch(monkeypatch):
     cache = MemoryCache()
     # 10 slow sources make the concurrent-vs-sequential gap wide: one shared
     # timeout budget finishes in ~timeout, while a per-future (sequential) wait
-    # would take ~10x that. A generous absolute threshold between the two keeps
-    # the assertion meaningful without flaking on a loaded CI runner.
+    # would take ~10x that.
+    #
+    # THE DEADLINE MUST BEAT THE WORK BY A LOT. This previously ran a 0.2s
+    # budget against 0.3s of work -- a 0.1s margin -- and on macos/3.14 the
+    # whole set came back NOT timed out. That is what starving the main thread
+    # looks like: `wait(timeout=0.2)` is only accurate if the main thread is
+    # scheduled on time, and when it isn't the sleeps have already finished by
+    # the time it looks, so every future reports done and nothing is marked.
+    # An inverted race in the probe, not a defect in fetch_all.
     slow_sources = tuple(SimpleNamespace(SOURCE="slow{}".format(index)) for index in range(10))
     fast_source = SimpleNamespace(SOURCE="fast")
 
     def slow(**kwargs):
-        time.sleep(0.3)
+        time.sleep(3.0)
         return {"records": [], "status": "empty", "detail": None}
 
     for source in slow_sources:
@@ -228,13 +245,13 @@ def test_fetch_all_has_one_timeout_budget_for_the_entire_batch(monkeypatch):
     monkeypatch.setattr(engine, "SOURCES", slow_sources + (fast_source,))
 
     started = time.monotonic()
-    statuses = engine.fetch_all({}, cache=cache, timeout=0.2)
+    statuses = engine.fetch_all({}, cache=cache, timeout=0.5)
     elapsed = time.monotonic() - started
 
-    # One shared budget: ~0.2s + thread overhead. A per-future (sequential) wait
-    # would be ~2.0s (10 x 0.2). The 1.0s threshold leaves ~0.8s of overhead
-    # headroom on the concurrent path while staying well below sequential.
-    assert elapsed < 1.0
+    # One shared budget: ~0.5s + thread overhead. A per-future (sequential) wait
+    # would be ~5.0s (10 x 0.5). 2.0s sits far from both, and the main thread
+    # would have to be starved for 2.5s to invert the race again.
+    assert elapsed < 2.0, elapsed
     assert {status.source for status in statuses if status.detail == "timed out"} == {source.SOURCE for source in slow_sources}
     assert next(status for status in statuses if status.source == "fast").status == "empty"
 
