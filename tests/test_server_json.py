@@ -18,7 +18,7 @@ README = ROOT / "README.md"
 
 
 def _server():
-    return json.loads(SERVER.read_text())
+    return json.loads(SERVER.read_text(encoding="utf-8"))
 
 
 def test_the_server_name_is_under_the_namespace_github_auth_grants():
@@ -33,7 +33,7 @@ def test_the_readme_carries_the_ownership_marker_the_registry_looks_for():
     the token needs a boundary after it -- glued to a trailing character it will
     not match."""
     name = _server()["name"]
-    marker = re.search(r"mcp-name:\s*(\S+?)(?:\s|-->|$)", README.read_text())
+    marker = re.search(r"mcp-name:\s*(\S+?)(?:\s|-->|$)", README.read_text(encoding="utf-8"))
     assert marker, "the README lost the mcp-name marker; the next publish will fail"
     assert marker.group(1) == name, (marker.group(1), name)
 

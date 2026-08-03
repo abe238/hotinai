@@ -21,7 +21,7 @@ SKILL = pathlib.Path(__file__).resolve().parents[1] / "skills" / "hotin" / "SKIL
 
 @pytest.fixture(scope="module")
 def text():
-    return SKILL.read_text()
+    return SKILL.read_text(encoding="utf-8")
 
 
 def test_frontmatter_is_present_and_named(text):
