@@ -60,8 +60,21 @@ def load_config() -> Dict[str, str]:
     # configuration works. Unrelated process variables are never pulled in.
     overlay = list(values) + [key for key in _ENV_OVERLAY_KEYS if key not in values]
     for key in overlay:
-        if key in os.environ:
-            values[key] = os.environ[key]
+        value = os.environ.get(key)
+        if value is None:
+            continue
+        # A BLANK environment value never erases a configured one. Every reader
+        # already treats "" as absent, so letting it win deletes a working
+        # setting and substitutes nothing.
+        #
+        # This is not hypothetical: an MCP bundle declares GITHUB_TOKEN as an
+        # optional field, and a host injects GITHUB_TOKEN="" when the user
+        # leaves it blank. Without this, installing the bundle would silently
+        # break the insiders tab for exactly the users who had already
+        # configured a token. Same for `export GITHUB_TOKEN=` in a shell rc.
+        if not value.strip() and values.get(key, "").strip():
+            continue
+        values[key] = value
     return values
 
 

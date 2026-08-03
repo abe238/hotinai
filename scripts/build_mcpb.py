@@ -127,7 +127,14 @@ def manifest(ver: str) -> dict:
             {"name": "hotin_brief",
              "description": "A short digest of the last day across all of AI."},
         ],
-        "compatibility": {"runtimes": {"python": ">=3.9"}},
+        # Declared, not discovered the hard way. The bundle launches `python3`,
+        # which macOS and Linux ship; on Windows that name is commonly absent or
+        # a Microsoft Store stub that opens the store instead of running code.
+        # A refused install with a stated reason beats one that succeeds and
+        # then fails every call. Windows users still have `uvx hotin mcp` and
+        # `pip install hotin`, both of which the README leads with.
+        "compatibility": {"platforms": ["darwin", "linux"],
+                          "runtimes": {"python": ">=3.9"}},
     }
 
 
@@ -169,7 +176,33 @@ def verify(bundle: pathlib.Path) -> dict:
         assert meta.get(key), "manifest missing " + key
     assert meta["server"]["mcp_config"]["command"] == "python3"
     return {"files": len(names), "version": meta["version"],
-            "bytes": bundle.stat().st_size}
+            "bytes": bundle.stat().st_size, "schema": _validate_schema(bundle)}
+
+
+def _validate_schema(bundle: pathlib.Path) -> str:
+    """Check the manifest against the OFFICIAL schema, not against my reading of it.
+
+    The spec is young and the field names have already moved -- published
+    examples in the wild carry manifest_version 0.3, 0.4, and a stale
+    mcpb_version 0.1. Picking one by reading a blog post is how you ship a
+    bundle that is well-formed by your own standards and rejected by every host.
+
+    Skipped, loudly, when npx is unavailable: a build machine without Node is a
+    reason to say the check did not run, never a reason to imply it passed.
+    """
+    with tempfile.TemporaryDirectory() as tmp:
+        with zipfile.ZipFile(bundle) as zf:
+            zf.extract("manifest.json", tmp)
+        try:
+            done = subprocess.run(
+                ["npx", "-y", "@anthropic-ai/mcpb@latest", "validate",
+                 str(pathlib.Path(tmp) / "manifest.json")],
+                capture_output=True, text=True, timeout=180)
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            return "NOT CHECKED (npx unavailable: {})".format(type(exc).__name__)
+    output = (done.stdout or "") + (done.stderr or "")
+    assert done.returncode == 0, "official schema validation FAILED:\n" + output.strip()
+    return "passes the official @anthropic-ai/mcpb schema"
 
 
 def smoke(bundle: pathlib.Path) -> None:
@@ -246,7 +279,9 @@ def main() -> int:
     smoke(bundle)
     print("built {} ({} files, {:.0f} KB, hotin {})".format(
         bundle, stats["files"], stats["bytes"] / 1024, stats["version"]))
-    print("verified: manifest valid, server vendored, protocol answered from the unpacked bundle")
+    print("manifest: {}".format(stats["schema"]))
+    print("verified: server vendored, protocol answered and a real child process "
+          "run from the unpacked bundle outside the repo")
     return 0
 
 

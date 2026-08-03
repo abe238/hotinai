@@ -29,6 +29,40 @@ def test_known_key_is_read_from_environment_even_when_file_omits_it(tmp_path, mo
     assert "SOME_UNRELATED_VAR" not in config.load_config()
 
 
+def test_blank_environment_value_does_not_erase_a_configured_one(tmp_path, monkeypatch):
+    """An MCP bundle declares GITHUB_TOKEN optional, and the host injects it as
+    an EMPTY string when the user leaves the field blank. Since every reader
+    already treats "" as absent, letting it win deletes a working setting and
+    replaces it with nothing -- so installing the bundle would have broken the
+    insiders tab for precisely the users who had already configured a token.
+    `export GITHUB_TOKEN=` in a shell rc did the same thing."""
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+    for key in config._ENV_OVERLAY_KEYS:
+        monkeypatch.delenv(key, raising=False)
+    config.write_config({"GITHUB_TOKEN": "a-real-token"})
+
+    monkeypatch.setenv("GITHUB_TOKEN", "")
+    assert config.load_config()["GITHUB_TOKEN"] == "a-real-token"
+    monkeypatch.setenv("GITHUB_TOKEN", "   ")
+    assert config.load_config()["GITHUB_TOKEN"] == "a-real-token"
+
+    # A real environment value still wins -- this narrows the override, it does
+    # not remove it.
+    monkeypatch.setenv("GITHUB_TOKEN", "from-environment")
+    assert config.load_config()["GITHUB_TOKEN"] == "from-environment"
+
+
+def test_blank_environment_value_survives_when_nothing_was_configured(tmp_path, monkeypatch):
+    """With no file value to protect, a blank stays blank rather than vanishing:
+    readers turn it into "absent" themselves, and inventing a key that the
+    environment did set would be its own surprise."""
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+    for key in config._ENV_OVERLAY_KEYS:
+        monkeypatch.delenv(key, raising=False)
+    monkeypatch.setenv("GITHUB_TOKEN", "")
+    assert config.load_config().get("GITHUB_TOKEN") == ""
+
+
 def test_missing_file_returns_empty_dict(tmp_path, monkeypatch):
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
     assert config.load_config() == {}
