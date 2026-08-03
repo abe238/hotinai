@@ -45,8 +45,16 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install mcp-publisher
         run: |
-          curl -sL "https://github.com/modelcontextprotocol/registry/releases/download/latest/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" \
+          # -f, not just -sL. Without it curl prints a 404 page to stdout, tar
+          # says "not in gzip format", and the real cause is two lines up. That
+          # is exactly how this failed the first time.
+          #
+          # /releases/latest/download/<asset>, not /releases/download/latest/.
+          # The second form needs a tag literally named "latest"; this repo tags
+          # v1.8.0 and friends, so it 404s. Verified both forms by hand.
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" \
             | tar xz mcp-publisher
+          ./mcp-publisher --help > /dev/null
       - name: Wait for PyPI to serve this version
         run: |
           # The registry fetches the package to verify ownership, so publishing
