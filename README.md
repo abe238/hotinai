@@ -110,6 +110,20 @@ fetches; after that answers are served locally in about a second.
 Works with every install route: the bundle, `uvx`, `pip`, `pipx`, and the
 single-file `hotin.pyz`.
 
+### Claude Code skill
+
+[`skills/hotin/SKILL.md`](skills/hotin/SKILL.md) teaches an agent *when* to reach
+for the board and, more usefully, how to read it: which fields are actual
+evidence, and what the board does not know. Copy it in:
+
+```sh
+mkdir -p ~/.claude/skills && cp -R skills/hotin ~/.claude/skills/
+```
+
+It works with or without the MCP server, and is worth having alongside it — the
+MCP tool descriptions say what the tools return, the skill says which numbers
+mean something and when a row is a lead rather than a finding.
+
 ## Quick start
 
 ```sh
