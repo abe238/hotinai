@@ -49,6 +49,9 @@ FEEDS = (
     ("https://importai.substack.com/feed", "Import AI", "analysis"),
     ("https://semianalysis.com/feed/", "SemiAnalysis", "analysis"),
     ("https://www.latent.space/feed", "Latent Space", "analysis"),
+    # Daily digest newsletter; full-content RSS, probed live 2026-08-09. Also
+    # swept by sources/smolai.py for its repo-mention credibility flag.
+    ("https://www.rohan-paul.com/feed", "Rohan's Bytes", "analysis"),
 )
 
 _ITEM_RE = re.compile(r"<(?:item|entry)\b[^>]*>(.*?)</(?:item|entry)>", re.DOTALL | re.IGNORECASE)

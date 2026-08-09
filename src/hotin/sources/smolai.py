@@ -1,12 +1,16 @@
-"""smol.ai / AINews — a light repo-corroboration flag (the repos it mentions).
+"""AI newsletters — a light repo-corroboration flag (the repos editors mention).
 
-smol.ai is overwhelmingly a models/news signal (its trending-repo yield is tiny),
-so here it contributes only a bounded credibility FLAG for the repos its editors
-mention, NOT an independent corroboration source (see engine._FLAG_SOURCES).
+Covers smol.ai/AINews and Rohan's Bytes (rohan-paul.com, probed live
+2026-08-09). Newsletters are overwhelmingly a models/news signal (trending-repo
+yield is tiny) and they largely echo sources the engine already reads, so they
+contribute only a bounded credibility FLAG for the repos their editors mention,
+NOT independent corroboration (see engine._FLAG_SOURCES) -- two newsletters
+under one flag source keeps that property: more feeds never inflate consensus.
 
-We deliberately do NOT parse the feed as XML: we scan the raw text for GitHub
-repository links. That makes this adapter immune to the feed's recurrent
-malformed-XML bug (a broken tag cannot drop the whole feed). Never raises.
+We deliberately do NOT parse the feeds as XML: we scan the raw text for GitHub
+repository links. That makes this adapter immune to malformed-XML bugs (a
+broken tag cannot drop a feed). One feed failing never drops the other.
+Never raises.
 """
 
 from __future__ import annotations
@@ -24,6 +28,12 @@ from hotin.throttle import Throttle
 
 SOURCE = "smolai"
 ENDPOINT = "https://news.smol.ai/rss.xml"
+# Repo-flag scan sweeps every newsletter here; news items are rssnews's job
+# (Rohan's Bytes is also in rssnews.FEEDS as an "analysis" publisher).
+NEWSLETTER_FEEDS = (
+    ENDPOINT,
+    "https://www.rohan-paul.com/feed",
+)
 THROTTLE = Throttle(min_interval=2.0, jitter=1.0)
 USER_AGENT = "hotin/0.2.0"
 
@@ -107,10 +117,10 @@ def parse_news(feed_text: Any) -> List[Dict[str, Any]]:
     return news
 
 
-def _request() -> Optional[str]:
-    """Fetch the feed text, returning None for any transport/decode failure."""
+def _request(url: str = ENDPOINT) -> Optional[str]:
+    """Fetch one feed's text, returning None for any transport/decode failure."""
     try:
-        request = urllib.request.Request(ENDPOINT, headers={"User-Agent": USER_AGENT})
+        request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
         THROTTLE.wait()
         with urllib.request.urlopen(request, timeout=30) as response:
             body = response.read()
@@ -124,19 +134,31 @@ def _request() -> Optional[str]:
 def fetch(
     query: Optional[str] = None, *, limit: int = 50, config: Optional[dict] = None
 ) -> Dict[str, Any]:
-    """Return the repos smol.ai/AINews editorially mentions (a corroboration flag)."""
+    """Return the repos the newsletters editorially mention (a corroboration flag)."""
     del query, config
     try:
         requested_limit = _normalise_limit(limit)
         if requested_limit == 0:
             return {"records": [], "status": "empty", "detail": "limit is zero"}
-        text = _request()
-        if text is None:
-            return {"records": [], "status": "error", "detail": "smol request failed"}
-        records = parse_repos(text)
+        records: List[Dict[str, Any]] = []
+        seen_repos: set = set()
+        fetched = 0
+        for url in NEWSLETTER_FEEDS:
+            text = _request(url)
+            if text is None:
+                continue
+            fetched += 1
+            for record in parse_repos(text):
+                if record["canonical_repo"] not in seen_repos:
+                    seen_repos.add(record["canonical_repo"])
+                    records.append(record)
+        if fetched == 0:
+            return {"records": [], "status": "error", "detail": "every newsletter request failed"}
         if not records:
-            return {"records": [], "status": "empty", "detail": "no repos mentioned in smol feed"}
-        return {"records": records[:requested_limit], "status": "ok", "detail": None}
+            return {"records": [], "status": "empty", "detail": "no repos mentioned in newsletter feeds"}
+        detail = None if fetched == len(NEWSLETTER_FEEDS) else \
+            "{} of {} newsletter feeds unreachable".format(len(NEWSLETTER_FEEDS) - fetched, len(NEWSLETTER_FEEDS))
+        return {"records": records[:requested_limit], "status": "ok", "detail": detail}
     except Exception:
         return {"records": [], "status": "error", "detail": "smolai fetch failed"}
 
