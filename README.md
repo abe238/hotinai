@@ -17,8 +17,11 @@
   <a href="https://hotin.ai">hotin.ai</a>
 </p>
 
-One command, one ranked list of what actually matters in AI today: repos,
-models, papers and news. **Numbers are receipts, badges are verdicts.**
+One command, one ranked list of what's actually hot in AI today: trending
+repos, models, papers and news, ranked daily by cross-source consensus.
+**Numbers are receipts, badges are verdicts.** Want the same thing in a
+browser? [The live hotin board](https://hotin.ai) is what's trending in AI
+today, updated daily.
 
 Every row shows why it is there: how fast it is growing, who backed it, where
 else it surfaced. Nothing ranks on a single source's say-so.
