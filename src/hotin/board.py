@@ -388,8 +388,7 @@ def rising_rows(ranked: List[dict]) -> List[dict]:
         age = finite_int(s.get("age_days"), 0)
         if age:
             receipts.append({"label": "{}d old".format(age), "kind": "age"})
-        desc = _meta(r).get("description")
-        meta = desc.strip()[:80] if isinstance(desc, str) and desc.strip() else None
+        meta = _clip(_meta(r).get("description"), 80)
         rows.append({
             "rank": i, "id": join_id(r.get("entity_id") or r.get("canonical_repo") or r.get("name")),
             "name": r.get("canonical_repo") or r.get("name") or "?",

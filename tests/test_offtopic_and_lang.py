@@ -95,6 +95,18 @@ def test_clip_tags_chinese_only_and_not_english():
 
 # --- README nav-row rejection ----------------------------------------------
 
+def test_rising_rows_route_through_clip():
+    # regression: rising_rows once truncated raw, bypassing prefer_english/[zh]
+    rows = board.rising_rows([{
+        "canonical_repo": "a/b", "entity_id": "a/b", "url": "https://x",
+        "meta": {"description": "中文简介 | An English rising-repo description here"}}])
+    assert rows[0]["meta"] == "An English rising-repo description here"
+    zh = board.rising_rows([{
+        "canonical_repo": "c/d", "entity_id": "c/d", "url": "https://x",
+        "meta": {"description": "面向 AI 创作的开源无限画布工作台"}}])
+    assert zh[0]["meta"].startswith("[zh] ")
+
+
 def test_is_prose_rejects_nav_row():
     assert _readme_desc._is_prose("English · 两种创作路径 · 开始使用 · 作品档案") is False
     assert _readme_desc._is_prose("Home | Docs | Examples | API") is False
