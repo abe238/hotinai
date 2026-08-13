@@ -950,8 +950,8 @@ def _export(arguments: argparse.Namespace) -> int:
     news.sort(key=_news_rank)
     news_note = "swept {} · lab blogs + named experts · pts = HN · rising = still climbing days later".format(
         news_result.get("detail") or "curated feeds")
-    rising = _rising_ranked(config, 30)
-    rising7 = _rising_ranked(config, 30, max_age=7)
+    rising = engine.drop_offtopic(_rising_ranked(config, 30))
+    rising7 = engine.drop_offtopic(_rising_ranked(config, 30, max_age=7))
 
     # Both windows are strictly enforced on every tab: the 60d container holds
     # items dated within 60 days, the 7d one within 7; undated rows drop from
@@ -969,7 +969,7 @@ def _export(arguments: argparse.Namespace) -> int:
         return (_fresh_records(records, 60, date_of, keep_undated=False),
                 _fresh_records(records, 7, date_of, keep_undated=False))
 
-    repos60, repos7 = _windows(repos, _repo_activity)
+    repos60, repos7 = _windows(engine.drop_offtopic(repos), _repo_activity)
     # Insiders needs BOTH dates, because they answer different questions:
     #   star date -> is this signal current?   (an old star is stale news)
     #   repo age  -> is this actually new?     (a 3-year-old repo is not a find)

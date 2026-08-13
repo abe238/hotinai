@@ -449,6 +449,57 @@ def rank(merged_repos: Dict[str, dict], *, limit: int = 50) -> List[dict]:
     return scored[:max(0, int(limit))]
 
 
+# High-precision markers for the two off-topic clusters that ride GitHub's
+# global trending onto an AI board: pirate-streaming resource lists and
+# proxy/geo-spoof config kits. Every term here is essentially never in a
+# genuine AI repo -- deliberately NOT a language filter (Chinese AI repos are
+# real signal) and NOT the classifier's "uncategorized" bucket (41% of the
+# board, mostly legit model drops). Latin terms are distinctive enough (>=4
+# chars, no common-word substrings like "loon"/"clash") to match by plain
+# substring alongside the CJK terms.
+_OFFTOPIC_TERMS = (
+    # pirate streaming / torrent resource lists
+    "追剧", "磁力", "迅雷", "网盘搜索", "会员拼团", "iptv", "tvbox",
+    # proxy / circumvention / geo-spoof kits
+    "机场推荐", "翻墙", "科学上网", "quantumult", "gs-loc",
+)
+
+
+def _has_ai_signal(record: dict) -> bool:
+    """True if a repo carries any AI-specific credibility signal. Such a repo is
+    NEVER dropped by the off-topic gate: with the classifier failing on 41% of
+    rows, provenance is a far stronger shield than a keyword. A streaming/proxy
+    list has none of these; a real AI repo starred by the insider roster (or
+    mentioned by smol.ai, a curated channel, or a trending paper) has one."""
+    signal = record.get("signal") if isinstance(record.get("signal"), dict) else {}
+    meta = record.get("meta") if isinstance(record.get("meta"), dict) else {}
+    return bool(
+        finite_float(signal.get("smartmoney_starrers"), 0.0) > 0
+        or meta.get("smol_mention") or meta.get("youtube_curated")
+        or meta.get("paper_backed")
+    )
+
+
+def is_offtopic(record: dict) -> bool:
+    """A repo that only rode generic trending in AND matches an off-topic marker.
+    Language-agnostic: an English pirate-streaming list drops too."""
+    if not isinstance(record, dict) or _has_ai_signal(record):
+        return False
+    meta = record.get("meta") if isinstance(record.get("meta"), dict) else {}
+    topics = meta.get("topics")
+    text = "{} {} {}".format(
+        record.get("name") or "",
+        meta.get("description") or "",
+        " ".join(t for t in topics if isinstance(t, str)) if isinstance(topics, list) else "",
+    ).casefold()
+    return any(term in text for term in _OFFTOPIC_TERMS)
+
+
+def drop_offtopic(records: Iterable[dict]) -> List[dict]:
+    """Filter off-topic repos out of a repo list, preserving order."""
+    return [r for r in records or [] if isinstance(r, dict) and not is_offtopic(r)]
+
+
 def merge_by_entity(
     records: List[dict], entity_type: str, *, max_age_days: Optional[float] = None, now: Optional[float] = None
 ) -> Dict[str, dict]:

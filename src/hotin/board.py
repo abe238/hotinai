@@ -73,11 +73,63 @@ def _date_label(created_at: Any, now: Optional[float] = None) -> Optional[str]:
     return "{} {}".format(_MONTHS[month], day if year == this_year else year)
 
 
+# A repo's own script — CJK (Han), Hiragana/Katakana, Hangul. Latin letters
+# are counted the plain way. We compare the two to decide "is this line, as a
+# reader sees it, mostly not-English".
+_CJK = re.compile(r"[぀-ヿ㐀-鿿가-힯豈-﫿]")
+_LATIN = re.compile(r"[A-Za-z]")
+# Segment separators bilingual descriptions actually use: a pipe/bullet divider
+# ("中文 | English"), or a sentence end that flips scripts ("中文。 English").
+_SEG_SPLIT = re.compile(r"[|｜]|(?<=[。！？.!?])\s+")
+_MIN_EN_WORDS = 4
+
+
+def _latinness(text: str) -> float:
+    """Fraction of a segment's letters that are Latin (0..1); 0 if no letters."""
+    latin = len(_LATIN.findall(text))
+    cjk = len(_CJK.findall(text))
+    total = latin + cjk
+    return latin / total if total else 0.0
+
+
+def prefer_english(text: str) -> str:
+    """When a description ships both scripts, return its English clause verbatim;
+    otherwise return the text unchanged. Never translates or fabricates -- it
+    only PICKS an English sentence the author already wrote (the common
+    "中文简介 | English summary" bilingual README pattern). Repos with no CJK
+    take the fast path untouched; repos that are Chinese-only fall through
+    unchanged (and get flagged, not rewritten)."""
+    if not text or not _CJK.search(text):
+        return text
+    best, best_score = None, 0.0
+    for seg in _SEG_SPLIT.split(text):
+        seg = seg.strip()
+        # A real English clause: enough Latin words AND dominantly Latin (a
+        # Chinese sentence with a stray "TypeScript" in it must not qualify).
+        if len(_LATIN.findall(seg)) and len(seg.split()) >= _MIN_EN_WORDS and _latinness(seg) >= 0.7:
+            score = _latinness(seg) * len(seg)
+            if score > best_score:
+                best, best_score = seg, score
+    return best if best else text
+
+
+def is_cjk_dominant(text: str) -> bool:
+    """True when a reader would see mostly Han/Kana/Hangul, not English."""
+    return bool(text) and _latinness(text) < 0.5 and bool(_CJK.search(text))
+
+
 def _clip(desc: Any, limit: int = 100) -> Optional[str]:
-    """Board meta line: a tidy description or None, never an empty string."""
+    """Board meta line: a tidy description or None, never an empty string.
+
+    Prefers a verbatim English clause when the source is bilingual, and tags a
+    still-non-English line with `[zh]` so a visitor knows before they click that
+    the repo's own description is not in English (we keep the repo -- Chinese AI
+    repos are real signal -- we just don't pretend the text is readable)."""
     if not isinstance(desc, str) or not desc.strip():
         return None
-    clean = desc.strip()
+    clean = prefer_english(desc.strip()).strip()
+    if is_cjk_dominant(clean):
+        clean = "[zh] " + clean
     return (clean[:limit].rstrip() + "…") if len(clean) > limit else clean
 
 

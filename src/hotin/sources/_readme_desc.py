@@ -72,6 +72,14 @@ def _is_prose(text: str) -> bool:
     # Entities and tags mean raw HTML leaked through: a badge or banner.
     if _ENTITY.search(text) or _HTML.search(text):
         return False
+    # A bullet/pipe-delimited nav or table-of-contents row ("English · 快速开始
+    # · 文档 · 示例") clears every check above but is not prose. Reject a line
+    # that a middot/pipe cuts into 3+ short link-label segments.
+    for sep in ("·", "•", "|", "｜"):
+        if sep in text:
+            segs = [s for s in text.split(sep) if s.strip()]
+            if len(segs) >= 3 and all(len(s.split()) < MIN_WORDS for s in segs):
+                return False
     return len(text.split()) >= MIN_WORDS
 
 
