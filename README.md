@@ -55,6 +55,7 @@ hotin has zero dependencies, so a plain `pip install` is safe (nothing to confli
 uvx hotin              # run without installing (needs uv)
 uv tool install hotin  # persistent command via uv
 pipx install hotin     # persistent command via pipx
+npx hotinai            # from the npm ecosystem (launcher; runs uvx/pipx under the hood)
 ```
 
 No package manager, just Python? Grab the single-file `hotin.pyz` from the [latest release](https://github.com/abe238/hotinai/releases/latest) and run it:
