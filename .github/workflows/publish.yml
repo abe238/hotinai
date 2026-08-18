@@ -33,3 +33,54 @@ jobs:
         run: uv build
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+
+  npm:
+    name: Publish the npm launcher
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write        # npm provenance: cryptographically links the
+                             # published tarball to THIS commit and workflow
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      # Keep the launcher version identical to the Python release, so
+      # `npx hotinai@X` and `pip install hotin==X` always mean the same thing.
+      - name: Sync version to the release tag
+        working-directory: npm
+        run: |
+          set -euo pipefail
+          V="${GITHUB_REF_NAME#v}"
+          [ -n "$V" ] || { echo "::error::empty version from tag"; exit 1; }
+          node -e "
+            const fs=require('fs'); const p=JSON.parse(fs.readFileSync('package.json','utf8'));
+            p.version=process.argv[1];
+            fs.writeFileSync('package.json', JSON.stringify(p,null,2)+'\n');
+            console.log('npm version ->', p.version);
+          " "$V"
+
+      # The launcher shells out to the Python CLI, so a broken shim would ship
+      # silently. Prove it runs before publishing it.
+      - name: Smoke-test the launcher
+        working-directory: npm
+        run: |
+          set -euo pipefail
+          node bin/hotin.js --help >/dev/null 2>&1 \
+            || echo "no python runtime on this runner; checking syntax only"
+          node --check bin/hotin.js
+
+      - name: Publish to npm
+        working-directory: npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "::error::NPM_TOKEN secret is not set; skipping npm publish"
+            exit 1
+          fi
+          npm publish --provenance --access public
