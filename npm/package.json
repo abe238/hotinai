@@ -1,8 +1,16 @@
 {
   "name": "hotinai",
-  "version": "0.1.0",
-  "description": "hotin — what's hot in AI right now, ranked daily by cross-source consensus. npm launcher for the Python CLI (npx hotinai).",
-  "keywords": ["ai", "trending", "cli", "mcp", "github", "papers", "models"],
+  "version": "0.8.6",
+  "description": "hotin \u2014 what's hot in AI right now, ranked daily by cross-source consensus. npm launcher for the Python CLI (npx hotinai).",
+  "keywords": [
+    "ai",
+    "trending",
+    "cli",
+    "mcp",
+    "github",
+    "papers",
+    "models"
+  ],
   "homepage": "https://hotin.ai",
   "bugs": "https://github.com/abe238/hotinai/issues",
   "repository": {
@@ -12,7 +20,14 @@
   },
   "license": "Apache-2.0",
   "author": "Abe Diaz",
-  "bin": { "hotinai": "bin/hotin.js" },
-  "files": ["bin", "README.md"],
-  "engines": { "node": ">=18" }
+  "bin": {
+    "hotinai": "bin/hotin.js"
+  },
+  "files": [
+    "bin",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
 }
