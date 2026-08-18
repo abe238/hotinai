@@ -43,10 +43,15 @@ jobs:
                              # published tarball to THIS commit and workflow
     steps:
       - uses: actions/checkout@v4
+      # Trusted publishing needs npm >= 11.5.1, which needs Node >= 22.14.0.
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
+      - name: Ensure npm supports trusted publishing
+        run: |
+          npm install -g npm@latest
+          node --version && npm --version
 
       # Keep the launcher version identical to the Python release, so
       # `npx hotinai@X` and `pip install hotin==X` always mean the same thing.
@@ -73,14 +78,13 @@ jobs:
             || echo "no python runtime on this runner; checking syntax only"
           node --check bin/hotin.js
 
-      - name: Publish to npm
+      # Tokenless: authenticates via the OIDC token minted for this run and
+      # checked against the trusted publisher registered on npmjs.com.
+      #
+      # DO NOT add a NODE_AUTH_TOKEN env var here, not even an empty one. npm
+      # sees the variable as SET and takes the token path instead of OIDC, which
+      # fails as ENEEDAUTH and reads exactly like a missing secret. That is the
+      # single most common way this setup breaks.
+      - name: Publish to npm (trusted publishing, no stored token)
         working-directory: npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          set -euo pipefail
-          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
-            echo "::error::NPM_TOKEN secret is not set; skipping npm publish"
-            exit 1
-          fi
-          npm publish --provenance --access public
+        run: npm publish --provenance --access public
