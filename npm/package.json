@@ -1,7 +1,7 @@
 {
   "name": "hotinai",
   "version": "0.8.6",
-  "description": "hotin \u2014 what's hot in AI right now, ranked daily by cross-source consensus. npm launcher for the Python CLI (npx hotinai).",
+  "description": "hotin: what's hot in AI right now, ranked daily by cross-source consensus. npm launcher for the Python CLI (npx hotinai).",
   "keywords": [
     "ai",
     "trending",
