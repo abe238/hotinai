@@ -47,6 +47,8 @@ import subprocess
 import sys
 from typing import Any, Dict, List, Optional
 
+from .render import UNTRUSTED_BEGIN, UNTRUSTED_END
+
 PROTOCOL_VERSION = "2024-11-05"
 # A board query is cache-served and returns in about a second. Anything past
 # this is a hung upstream, and an agent waiting on a tool call is a user
@@ -144,6 +146,23 @@ def _run(argv: List[str], timeout: int = TIMEOUT_SECONDS) -> Any:
         return {"text": text, "exit_code": completed.returncode}
 
 
+def _frame(payload: Any) -> str:
+    """Render a tool result as the text an agent will read.
+
+    Source-derived payloads are wrapped in untrusted markers: hotin surfaces
+    repos nobody vetted, so a repo description is a stranger writing into the
+    agent's context. The markers are framing, not the defense -- the payload is
+    already neutralized by the CLI's JSON sanitizer, which is what stops a
+    description forging its own close marker and promoting the rest to trusted.
+
+    Errors are hotin's own text, not source text, so they are returned bare.
+    """
+    body = json.dumps(payload, indent=2, default=str)
+    if _is_error(payload):
+        return body
+    return "{}\n{}\n{}".format(UNTRUSTED_BEGIN, body, UNTRUSTED_END)
+
+
 def call_tool(name: str, arguments: Optional[dict]) -> Any:
     arguments = arguments or {}
     if name == "hotin_brief":
@@ -205,8 +224,7 @@ def handle(message: dict) -> Optional[dict]:
         # and `isError` is how a tool failure is reported without killing the
         # connection.
         return ok({
-            "content": [{"type": "text",
-                         "text": json.dumps(payload, indent=2, default=str)}],
+            "content": [{"type": "text", "text": _frame(payload)}],
             "isError": _is_error(payload),
         })
     return {"jsonrpc": "2.0", "id": request_id,

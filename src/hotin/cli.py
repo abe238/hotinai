@@ -16,7 +16,7 @@ from .cache import MemoryCache, open_cache
 from .canonical import canonicalize
 from .coerce import finite_float, finite_int
 from .config import config_dir, env_path, load_config, get as _config_get
-from .render import color, hyperlink, sanitize
+from .render import color, defang_markers, hyperlink, sanitize
 from .sources import (frontier, github, hfmodels, hfpapers, hn,
                       insiders, npm, trends, collections, reddit, rssnews,
                       smolai, youtube, _readme_desc)
@@ -255,11 +255,25 @@ def _json_safe_key(key: object) -> Any:
 
 
 def _sanitize_json(value: object) -> object:
-    """Replace non-finite values and non-JSON-safe dict keys, retaining a machine-readable result."""
+    """Neutralize untrusted strings, non-finite values and non-JSON-safe dict keys.
+
+    JSON is what ``hotin.mcp`` hands to an agent, so every string here is a
+    write into an agent's context by whoever authored the repo. Strings used to
+    pass through verbatim while only the terminal path was defended -- the
+    interesting attack was never a stray float.
+
+    Keys are sanitized too: repo slugs are dict keys in the ledger-shaped
+    payloads and come from the same untrusted upstream as the values.
+    """
+    if isinstance(value, str):
+        # sanitize strips zero-width padding, defang_markers adds it. This order
+        # only. Reversed, the first step undoes the second.
+        return defang_markers(sanitize(value, allow_whitespace=True))
     if isinstance(value, float):
         return value if math.isfinite(value) else None
     if isinstance(value, dict):
-        return {_json_safe_key(key): _sanitize_json(item) for key, item in value.items()}
+        return {_sanitize_json(_json_safe_key(key)): _sanitize_json(item)
+                for key, item in value.items()}
     if isinstance(value, (list, tuple)):
         return [_sanitize_json(item) for item in value]
     if isinstance(value, set):
@@ -268,14 +282,21 @@ def _sanitize_json(value: object) -> object:
 
 
 def _dump_json(payload: object) -> None:
+    """The single stdout chokepoint for JSON. Everything routes through here.
+
+    Sanitization is unconditional, not a fallback: it used to run only in the
+    except branch, so the happy path -- every real board, brief and search --
+    emitted untrusted source text verbatim.
+    """
+    safe = _sanitize_json(payload)
     try:
-        rendered = json.dumps(payload, default=_json_default, allow_nan=False)
+        rendered = json.dumps(safe, default=_json_default, allow_nan=False)
     except (ValueError, TypeError):
-        # ValueError: a non-finite float slipped past _sanitize_json's normal pass (defense in
-        # depth). TypeError: a genuinely unserializable Python shape from a malformed adapter
+        # TypeError: a genuinely unserializable Python shape from a malformed adapter
         # (e.g. a tuple used as a dict key) — this project never crashes on hostile/malformed
-        # data, JSON output is no exception.
-        rendered = json.dumps(_sanitize_json(payload), default=_json_default, allow_nan=False)
+        # data, JSON output is no exception. Retrying _sanitize_json would produce the same
+        # object and the same error, so the backstop has to change the encoder, not the input.
+        rendered = json.dumps(safe, default=str, allow_nan=False)
     print(rendered)
 
 
