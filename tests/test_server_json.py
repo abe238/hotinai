@@ -39,12 +39,25 @@ def test_the_readme_carries_the_ownership_marker_the_registry_looks_for():
 
 
 def test_the_versions_move_together():
+    """FOUR files, not three: pyproject.toml is the one that decides.
+
+    This test used to read server.json and __init__.py only. pyproject.toml is
+    what actually stamps the PyPI artifact, so it drifted unnoticed: 0.8.6 went
+    out the door carrying __version__ = "0.8.5", and every `hotin about`,
+    `hotin --version` and MCP serverInfo on the live package reported the wrong
+    number. Checking the two files that agreed with each other could never have
+    caught it.
+    """
     from hotin import __version__
 
     server = _server()
     assert server["version"] == __version__, (server["version"], __version__)
     for package in server["packages"]:
         assert package["version"] == __version__, package
+
+    pyproject = re.search(r'^version = "(.*?)"',
+                          (ROOT / "pyproject.toml").read_text(encoding="utf-8"), re.M)
+    assert pyproject and pyproject.group(1) == __version__, (pyproject, __version__)
 
 
 def test_the_description_fits_the_registry_limit():
