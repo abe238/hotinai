@@ -208,3 +208,13 @@ def test_the_exported_board_artifact_is_sanitized_too(tmp_path):
     assert mcp.UNTRUSTED_END not in meta
     assert "‮" not in meta and "\x1b" not in meta
     assert "❤️" in meta, "the web board renders this row; emoji must survive"
+
+
+def test_every_tool_description_carries_the_untrusted_notice():
+    """The warning has to reach the agent BEFORE the payload it is about.
+
+    Framing the result body only helps once the agent is already reading source
+    text. Tool descriptions are read first, at tool-list time.
+    """
+    for tool in mcp.TOOLS:
+        assert mcp.UNTRUSTED_NOTICE in tool["description"], tool["name"]
