@@ -149,17 +149,19 @@ def _run(argv: List[str], timeout: int = TIMEOUT_SECONDS) -> Any:
 def _frame(payload: Any) -> str:
     """Render a tool result as the text an agent will read.
 
-    Source-derived payloads are wrapped in untrusted markers: hotin surfaces
-    repos nobody vetted, so a repo description is a stranger writing into the
-    agent's context. The markers are framing, not the defense -- the payload is
-    already neutralized by the CLI's JSON sanitizer, which is what stops a
-    description forging its own close marker and promoting the rest to trusted.
+    hotin surfaces repos nobody vetted, so a repo description is a stranger
+    writing into the agent's context. The markers are framing, not the defense
+    -- the payload is already neutralized by the CLI's JSON sanitizer, which is
+    what stops a description forging its own close marker.
 
-    Errors are hotin's own text, not source text, so they are returned bare.
+    EVERY result is framed, errors included. An earlier version exempted them on
+    the theory that "an error is hotin's own text"; that is false. `models` and
+    `papers` rank cached source records and still report status "error" when the
+    live adapter failed, so an error-shaped payload routinely carries attacker-
+    authored titles. The MCP `isError` field already signals failure to the
+    client, so framing costs nothing.
     """
     body = json.dumps(payload, indent=2, default=str)
-    if _is_error(payload):
-        return body
     return "{}\n{}\n{}".format(UNTRUSTED_BEGIN, body, UNTRUSTED_END)
 
 

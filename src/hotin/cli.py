@@ -245,7 +245,12 @@ def _setup(arguments: argparse.Namespace) -> int:
 
 
 def _json_default(value: object) -> object:
-    return sorted(value) if isinstance(value, set) else str(value)
+    # str() on an unknown object is untrusted text like any other: an object
+    # whose __repr__ carries a forged marker would otherwise skip the sanitizer
+    # entirely, since _sanitize_json only sees types it recognizes.
+    if isinstance(value, set):
+        return sorted(value)
+    return defang_markers(sanitize(str(value), allow_whitespace=True))
 
 
 def _json_safe_key(key: object) -> Any:
@@ -254,7 +259,7 @@ def _json_safe_key(key: object) -> Any:
     return key if isinstance(key, (str, int, float, bool)) or key is None else str(key)
 
 
-def _sanitize_json(value: object) -> object:
+def _sanitize_json(value: object, keep_display: bool = False) -> object:
     """Neutralize untrusted strings, non-finite values and non-JSON-safe dict keys.
 
     JSON is what ``hotin.mcp`` hands to an agent, so every string here is a
@@ -264,20 +269,24 @@ def _sanitize_json(value: object) -> object:
 
     Keys are sanitized too: repo slugs are dict keys in the ledger-shaped
     payloads and come from the same untrusted upstream as the values.
+
+    ``keep_display`` is off here (agents do not need glyphs, and the emoji tag
+    block is a smuggling channel) but on for artifacts a browser renders.
     """
     if isinstance(value, str):
         # sanitize strips zero-width padding, defang_markers adds it. This order
         # only. Reversed, the first step undoes the second.
-        return defang_markers(sanitize(value, allow_whitespace=True))
+        return defang_markers(sanitize(value, allow_whitespace=True,
+                                       keep_display=keep_display))
     if isinstance(value, float):
         return value if math.isfinite(value) else None
     if isinstance(value, dict):
-        return {_sanitize_json(_json_safe_key(key)): _sanitize_json(item)
+        return {_sanitize_json(_json_safe_key(key), keep_display): _sanitize_json(item, keep_display)
                 for key, item in value.items()}
     if isinstance(value, (list, tuple)):
-        return [_sanitize_json(item) for item in value]
+        return [_sanitize_json(item, keep_display) for item in value]
     if isinstance(value, set):
-        return sorted(_sanitize_json(item) for item in value)
+        return sorted(_sanitize_json(item, keep_display) for item in value)
     return value
 
 
@@ -872,6 +881,24 @@ def _news7_order(records: List[dict], date_rank) -> List[dict]:
     return sorted([r for r in records if isinstance(r, dict)], key=key)
 
 
+def _write_latest_json(docs: Path, stamp: str, stamp_pt: str, rows: object) -> None:
+    """Write the board snapshot agents and the web page both read.
+
+    Sanitized like stdout JSON: agents read this artifact straight out of git
+    rather than re-baking, so the raw json.dumps this replaced reopened exactly
+    the hole _dump_json closes. keep_display is ON -- the web board renders
+    these rows to a human, and a destroyed flag emoji is a visible bug.
+
+    Split out of _export purely so it is reachable from a test without a full
+    network bake; _export itself fetches every adapter.
+    """
+    (docs / "data").mkdir(parents=True, exist_ok=True)
+    (docs / "data" / "latest.json").write_text(json.dumps(
+        _sanitize_json({"generated": stamp, "generated_pt": stamp_pt, "entities": rows},
+                       keep_display=True),
+        indent=2, allow_nan=False))
+
+
 def _export(arguments: argparse.Namespace) -> int:
     """Bake the 5-tab board into docs/index.html + write docs/data/latest.json.
 
@@ -1046,10 +1073,7 @@ def _export(arguments: argparse.Namespace) -> int:
                       lambda m: "<!-- STAMP -->last updated " + stamp_pt + " <!-- /STAMP -->",
                       html, flags=re.DOTALL)
         index.write_text(html)
-    (docs / "data").mkdir(parents=True, exist_ok=True)
-    (docs / "data" / "latest.json").write_text(json.dumps(
-        {"generated": stamp, "generated_pt": stamp_pt, "entities": rows},
-        indent=2, allow_nan=False))
+    _write_latest_json(docs, stamp, stamp_pt, rows)
     # Tagging runs LAST and never raises past this point — a broken tags.json
     # ledger must never cost the board its daily refresh (same principle as
     # every source adapter's own fail-soft contract).

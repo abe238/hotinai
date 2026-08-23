@@ -27,7 +27,7 @@ UNTRUSTED_END = "<!-- END UNTRUSTED SOURCE DATA -->"
 
 # Matched on shape, not on the exact spelling above: an attacker who can only
 # produce a near-miss ("BEGIN  UNTRUSTED", "end-untrusted") still gets defanged.
-_MARKER_RE = re.compile(r"(?i)(?:BEGIN|END)[\s\-_]*UNTRUSTED")
+_MARKER_RE = re.compile(r"(?i)(?:BEGIN|END)[^0-9A-Za-z]{0,8}UNTRUSTED")
 
 _INVISIBLE_CODEPOINTS = frozenset({
     # Zero-width spacers and joiners.
@@ -56,8 +56,35 @@ _VARIATION_SELECTORS = frozenset(range(0xFE00, 0xFE10)) | frozenset(range(0xE010
 # unconditionally would corrupt the very rows it is meant to protect.
 _CONTEXTUAL = {0x200C, 0x200D}
 
+# Emoji presentation selectors. Not a payload channel on their own: one selector
+# refines the glyph of the character before it. VS17-256 (U+E0100+) ARE a
+# payload channel and stay in _VARIATION_SELECTORS.
+_PRESENTATION_SELECTORS = {0xFE0E, 0xFE0F}
+# Keycap bases: the only ASCII characters a presentation selector legitimately
+# follows (5️⃣ is "5" + VS16 + U+20E3).
+_KEYCAP_BASES = set("0123456789#*")
+# A flag like 🏴󠁧󠁢󠁥󠁮󠁧󠁿 is a base emoji, up to six tag characters, then U+E007F.
+# Longer or unterminated runs are the smuggling channel (chr(0xE0000 + ord(c))
+# per letter), not a flag.
+_TAG_TERMINATOR = 0xE007F
+_MAX_TAG_RUN = 8
 
-def strip_invisible(text: str) -> str:
+
+def _tag_run_is_a_flag(text: str, start: int) -> bool:
+    """True when text[start:] is a bounded, properly terminated tag sequence."""
+    for offset in range(_MAX_TAG_RUN):
+        index = start + offset
+        if index >= len(text):
+            return False
+        code = ord(text[index])
+        if code == _TAG_TERMINATOR:
+            return offset > 0
+        if code not in _TAG_BLOCK:
+            return False
+    return False
+
+
+def strip_invisible(text: str, keep_display: bool = False) -> str:
     """Drop code points that render as nothing.
 
     Category ``Cf`` (format) is stripped wholesale rather than by enumeration:
@@ -66,16 +93,41 @@ def strip_invisible(text: str) -> str:
     An enumerated denylist silently reopens this hole on every new Unicode
     revision. Ported from the watch skill, where U+206A slipped past exactly
     such a denylist and left its marker defense bypassable.
+
+    ``keep_display`` preserves the two classes that are invisible but carry
+    real display meaning -- presentation selectors and terminated flag tag
+    sequences -- for consumers that render to a human. Without it a board row
+    turns ❤️ into ❤ and destroys every flag emoji. Agent-facing output leaves it
+    off: an agent never needs the glyph, and the tag block is a smuggling
+    channel worth closing outright there.
+
+    Preservation always requires a non-ASCII neighbour (or a keycap base), so a
+    kept character can never sit between ESC and an escape introducer. That is
+    what lets the escape-reassembly defense below hold in both variants.
     """
     kept = []
     for i, ch in enumerate(text):
         code = ord(ch)
+        prev_ch = text[i - 1] if i else ""
         if code in _CONTEXTUAL:
-            prev_ch = text[i - 1] if i else ""
             next_ch = text[i + 1] if i + 1 < len(text) else ""
             if prev_ch and next_ch and ord(prev_ch) > 0x7F and ord(next_ch) > 0x7F:
                 kept.append(ch)      # joining emoji or Arabic/Indic letters
             continue
+        if keep_display and code in _PRESENTATION_SELECTORS:
+            if prev_ch and (ord(prev_ch) > 0x7F or prev_ch in _KEYCAP_BASES):
+                kept.append(ch)      # ❤️, ✈️, 5️⃣
+                continue
+        if keep_display and code in _TAG_BLOCK:
+            # Kept only as part of a run the base emoji introduced, so scanning
+            # starts at the run's first character.
+            run_start = i
+            while run_start > 0 and ord(text[run_start - 1]) in _TAG_BLOCK:
+                run_start -= 1
+            base = text[run_start - 1] if run_start else ""
+            if base and ord(base) > 0x7F and _tag_run_is_a_flag(text, run_start):
+                kept.append(ch)      # 🏴󠁧󠁢󠁥󠁮󠁧󠁿
+                continue
         if (unicodedata.category(ch) == "Cf"
                 or code in _INVISIBLE_CODEPOINTS
                 or code in _TAG_BLOCK
@@ -100,13 +152,19 @@ def defang_markers(text: str) -> str:
 
 
 
-def sanitize(text: str, allow_whitespace: bool = False) -> str:
-    """Remove terminal control syntax and invisible payloads from untrusted text."""
+def sanitize(text: str, allow_whitespace: bool = False,
+             keep_display: bool = True) -> str:
+    """Remove terminal control syntax and invisible payloads from untrusted text.
+
+    ``keep_display`` defaults to True because most callers render to a human and
+    a destroyed flag emoji is a visible bug. Agent-facing output (the JSON path)
+    passes False to close the tag-block smuggling channel as well.
+    """
     safe = str(text)
     # Invisibles first: a Cf character wedged inside an escape sequence
     # ("\x1b[3<ZWSP>1m") defeats the regexes below, and removing it reassembles
     # the sequence so _CSI/_OSC consume it whole instead of leaving residue.
-    safe = strip_invisible(safe)
+    safe = strip_invisible(safe, keep_display=keep_display)
     safe = _OSC.sub("", safe)
     safe = _CSI.sub("", safe)
     safe = _OTHER_ESCAPE.sub("", safe)
