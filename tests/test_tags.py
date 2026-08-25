@@ -70,3 +70,32 @@ def test_write_tags_json_never_raises_on_malformed_prior_file(tmp_path):
         _write_tags_json(docs, {"a/b": "agents"}, "2026-07-26 10:00 PT")
         data = json.loads(path.read_text())
         assert data["items"]["a/b"]["tag"] == "agents"
+
+
+def test_write_tags_json_uncategorized_never_stomps_a_propagated_tag(tmp_path):
+    # The tagging workflow fills uncategorized items via exemplar propagation;
+    # the next bake re-classifies board items and must not revert those fills
+    # ("uncategorized" is an absence, not a verdict).
+    docs = tmp_path / "docs"
+    (docs / "data").mkdir(parents=True)
+    (docs / "data" / "tags.json").write_text(json.dumps({
+        "_schema_version": 1,
+        "items": {"a/b": {"tag": "inference", "source": "exemplar-inferred",
+                          "confidence": 0.51}}}))
+    _write_tags_json(docs, {"a/b": "uncategorized"}, "2026-08-25 10:00 PT")
+    data = json.loads((docs / "data" / "tags.json").read_text())
+    assert data["items"]["a/b"]["tag"] == "inference"
+    assert data["items"]["a/b"]["source"] == "exemplar-inferred"
+
+
+def test_write_tags_json_real_keyword_tag_still_wins_over_propagated(tmp_path):
+    docs = tmp_path / "docs"
+    (docs / "data").mkdir(parents=True)
+    (docs / "data" / "tags.json").write_text(json.dumps({
+        "_schema_version": 1,
+        "items": {"a/b": {"tag": "training", "source": "exemplar-inferred",
+                          "confidence": 0.44}}}))
+    _write_tags_json(docs, {"a/b": "agents"}, "2026-08-25 10:00 PT")
+    data = json.loads((docs / "data" / "tags.json").read_text())
+    assert data["items"]["a/b"]["tag"] == "agents"
+    assert data["items"]["a/b"]["source"] == "keyword"

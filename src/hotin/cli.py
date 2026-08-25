@@ -841,6 +841,15 @@ def _write_tags_json(docs: Path, items: dict, stamp_pt: str) -> None:
         existing = {}
     tagged = existing.get("items") if isinstance(existing.get("items"), dict) else {}
     for entity_id, tag in items.items():
+        # Method precedence: "uncategorized" is an absence, not a verdict. It
+        # must not stomp a real tag another method (exemplar propagation)
+        # already assigned, or every bake reverts the tagging pass's fills.
+        # A real keyword tag still wins over everything (deterministic beats
+        # a cosine guess).
+        prior = tagged.get(entity_id)
+        if tag == "uncategorized" and isinstance(prior, dict) \
+                and prior.get("tag") not in (None, "", "uncategorized"):
+            continue
         tagged[entity_id] = {"tag": tag, "source": "keyword", "confidence": 1.0, "updated_at": stamp_pt}
     path.write_text(json.dumps({"_schema_version": 1, "items": tagged}, indent=2, allow_nan=False))
 

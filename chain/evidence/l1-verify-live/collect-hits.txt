@@ -1,0 +1,14 @@
+6 /g/collect POST hits captured via claude-in-chrome read_network_requests during
+a live browser pass on https://hotin.ai/?ship_verify=2 (2026-07-25):
+1. en=tab_view, ep.tab=repos           (repos tab click)
+2. en=click (GA auto outbound), link_url=vercel-labs/deepsec  (select_result click,
+   also auto-tracked by GA4 Enhanced Measurement as an outbound-link click)
+3. en=click (GA auto outbound), link_url=abe238/hotinai, link_classes=star-link
+   (star_click, also auto-tracked as outbound-link click)
+Other 3 events (window_toggle, copy_install, section_view) + our custom
+select_result/star_click were sent but GA4 BATCHES multiple events into one
+POST when they fire close together — the additional event blocks live in the
+POST BODY, which read_network_requests does not expose (URL-only visibility).
+This is a tooling limitation of my verification method, not evidence the
+events didn't fire — confirmed by the server-side Realtime report below,
+which is authoritative (it reflects what GA4 actually recorded).
