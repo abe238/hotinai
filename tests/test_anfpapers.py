@@ -31,13 +31,24 @@ def test_only_the_id_is_taken_from_the_feed_never_its_text():
             "<link>https://huggingface.co/papers/2607.16922</link>")
     ids = anfpapers.parse_ids(feed)
     assert ids == ["2607.16922"]
-    rec = anfpapers._record(ids[0], "arXiv " + ids[0], None)
+    # name/summary come from HuggingFace, never from the feed
+    rec = anfpapers._record(ids[0], {"title": "Real Title From HF", "upvotes": 3})
     assert "IGNORE" not in str(rec)
-    assert rec["name"] == "arXiv 2607.16922"
+    assert rec["name"] == "Real Title From HF"
+
+
+def test_record_carries_upvotes_or_it_can_never_rank():
+    # The papers tab ranks on paper_upvotes. A record without it scores zero,
+    # so the source would report "ok" and contribute nothing visible.
+    rec = anfpapers._record("2607.16922", {"title": "T", "upvotes": 12})
+    assert rec["signal"]["paper_upvotes"] == 12
+    missing = anfpapers._record("2607.16922", {})
+    assert missing["signal"]["paper_upvotes"] == 0
+    assert missing["name"] == "arXiv 2607.16922"   # degrades, never crashes
 
 
 def test_record_shape_matches_the_paper_contract():
-    rec = anfpapers._record("2607.16922", "arXiv 2607.16922", "an abstract")
+    rec = anfpapers._record("2607.16922", {"title": "arXiv 2607.16922", "summary": "an abstract"})
     assert rec["entity_type"] == "paper"
     assert rec["entity_id"] == "2607.16922"
     assert rec["source"] == "anfpapers"

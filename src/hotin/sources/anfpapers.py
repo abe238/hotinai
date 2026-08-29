@@ -31,7 +31,6 @@ import re
 from typing import Any, Dict, List, Optional
 
 from hotin.coerce import finite_int
-from hotin.sources import hfpapers
 from hotin.throttle import Throttle
 
 SOURCE = "anfpapers"
@@ -64,18 +63,46 @@ def parse_ids(feed_text: Any) -> List[str]:
     return out
 
 
-def _record(paper_id: str, title: str, summary: Optional[str]) -> Dict[str, Any]:
+def fetch_paper(paper_id: str) -> Dict[str, Any]:
+    """Real title/upvotes/date for one paper id, from HuggingFace.
+
+    The FEED gives us an id and nothing else we trust; everything a reader
+    sees is resolved here. Upvotes matter beyond display: the papers tab is
+    ranked on ``paper_upvotes``, so a record without it scores zero and can
+    never surface -- the source would report "ok" while contributing nothing
+    (found 2026-08-29, before it shipped).
+    """
+    import json as _json
+    from hotin.sources import _hf
+    text = _hf.request_text("https://huggingface.co/api/papers/{}".format(paper_id))
+    if text is None:
+        return {}
+    try:
+        data = _json.loads(text)
+    except (TypeError, ValueError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _record(paper_id: str, paper: Dict[str, Any]) -> Dict[str, Any]:
     meta: Dict[str, Any] = {"curated_by": "ai-native-foundation"}
-    if summary:
-        meta["paper_summary"] = summary
+    summary = paper.get("summary")
+    if isinstance(summary, str) and summary.strip():
+        meta["paper_summary"] = summary.strip()
+    title = paper.get("title")
+    name = title.strip() if isinstance(title, str) and title.strip() else "arXiv {}".format(paper_id)
+    signal: Dict[str, Any] = {"paper_upvotes": finite_int(paper.get("upvotes"), 0)}
+    published = paper.get("publishedAt")
+    if isinstance(published, str) and published.strip():
+        signal["created_at"] = published.strip()
     return {
         "entity_type": "paper",
         "entity_id": paper_id,
         "url": "https://huggingface.co/papers/{}".format(paper_id),
         "canonical_repo": None,
-        "name": title,
+        "name": name,
         "source": SOURCE,
-        "signal": {},
+        "signal": signal,
         "meta": meta,
     }
 
@@ -116,8 +143,7 @@ def fetch(
         records: List[Dict[str, Any]] = []
         for paper_id in ids[:min(requested_limit, MAX_LOOKUPS)]:
             # Title comes from HuggingFace, never from the feed's own text.
-            summary = hfpapers.fetch_summary(paper_id)
-            records.append(_record(paper_id, "arXiv {}".format(paper_id), summary))
+            records.append(_record(paper_id, fetch_paper(paper_id)))
         if not records:
             return {"records": [], "status": "empty", "detail": "no papers resolved"}
         return {"records": records, "status": "ok", "detail": None}
@@ -138,7 +164,9 @@ def selftest() -> None:
     assert parse_ids(None) == []
     assert parse_ids("huggingface.co/papers/not-an-id") == []
     assert parse_ids("huggingface.co/papers/2607.16922/../evil") == ["2607.16922"]
-    rec = _record("2607.16922", "arXiv 2607.16922", "abstract")
+    rec = _record("2607.16922", {"title": "A Paper", "summary": "abstract", "upvotes": 7})
+    assert rec["name"] == "A Paper" and rec["signal"]["paper_upvotes"] == 7
+    rec = _record("2607.16922", {})   # HF unreachable: still a valid record
     assert rec["entity_type"] == "paper" and rec["source"] == SOURCE
     assert rec["meta"]["curated_by"] == "ai-native-foundation"
     print("anfpapers selftest: ok")
