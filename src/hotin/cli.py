@@ -920,19 +920,6 @@ def _export(arguments: argparse.Namespace) -> int:
     index = docs / "index.html"
     limit = _normal_limit(arguments) or 60
     config = load_config()
-    # Warm the shared insider-roster memo BEFORE the timed fan-out.
-    # smartmoney and the insiders tab read the SAME poll, but smartmoney runs
-    # inside fetch_all's 25s budget while the insiders tab is fetched below
-    # with no cap. An 810-account cold poll cannot finish in 25s, so smartmoney
-    # timed out on EVERY bake and its records were discarded (the future was
-    # never in `done`, so nothing was upserted) -- a silently dead credibility
-    # signal, not a flaky one. Warming here costs no extra network: the same
-    # poll happens either way, just before the clock starts instead of during.
-    try:
-        from hotin.sources import _insider_roster
-        _insider_roster.poll_roster(config)
-    except Exception:  # noqa: BLE001 - best-effort: a failed warm just
-        pass           # restores the previous behaviour, never breaks a bake
     with _cache_session() as cache:
         engine.fetch_all(config, limit=max(limit, 100), cache=cache)
         cached = cache.get_all()

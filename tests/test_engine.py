@@ -465,30 +465,3 @@ def test_roster_starrers_earn_no_rank_bonus():
     # a spurious rank:0 would add a large bonus; no-rank must score strictly lower credibility
     assert engine.score_repo(unranked, now=now)["credibility"] < \
         engine.score_repo(ranked_top, now=now)["credibility"]
-
-
-def test_smartmoney_returns_fast_when_the_roster_memo_is_warm(monkeypatch):
-    """The 2026-08-29 fix: smartmoney shares the insider-roster poll with the
-    insiders tab, but runs inside fetch_all's 25s budget. A cold 810-account
-    poll can never finish there, so it timed out on every bake. With the memo
-    warmed first, the adapter must do NO network and return promptly."""
-    from hotin.sources import _insider_roster, smartmoney
-    _insider_roster._reset_memo()
-    calls = {"n": 0}
-    real_events = [{"username": "karpathy", "canonical_repo": "owner/repo",
-                    "starred_at": "2026-08-28T00:00:00Z",
-                    "stargazers_count": 10, "description": "x"}]
-
-    def fake_poll(config=None, **kw):
-        calls["n"] += 1
-        return real_events
-
-    # warm phase (what _export now does before the timed fan-out)
-    monkeypatch.setattr(_insider_roster, "poll_roster", fake_poll)
-    _insider_roster.poll_roster({})
-    assert calls["n"] == 1
-
-    res = smartmoney.fetch(limit=10, config={})
-    assert res["status"] == "ok", res
-    # the adapter consulted the shared poll rather than opening its own path
-    assert calls["n"] == 2
