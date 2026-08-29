@@ -28,6 +28,20 @@ CATEGORIES = [
                 "vector-search", "vector-store", "embeddings", "embedding", "semantic-search",
                 "chatbot", "langchain", "llamaindex", "knowledge-base", "prompt-engineering",
                 "chat-ui", "llm-app", "ocr", "document-understanding", "multimodal"]),
+    # Writing and content work. Added 2026-08-29 from measured demand: the
+    # click-proven items visitors opened most often (an AI-slop remover, a
+    # Chinese writing skill, a doc-to-markdown converter) matched NO category
+    # and sat in "uncategorized", invisible to every tag-based surface.
+    ("writing-content", ["writing", "copywriting", "ghostwriting", "proofreading",
+                "grammar", "paraphrase", "paraphrasing", "humanizer", "ai-slop",
+                "prose", "editorial", "blog-post", "seo-content", "content-writing",
+                "screenwriting", "essay", "zine", "transcription", "subtitle",
+                "subtitles", "summarization", "note-taking", "markdown"]),
+    # Agent SKILLS as an artifact class. The ecosystem now ships skills as
+    # distinct, installable units (skills.sh, the board's own skills rail), so
+    # "a skill" is no longer just "an agent thing".
+    ("skills", ["skill", "skills", "claude-skill", "agent-skill", "codex-skill",
+                "skill-pack", "agent-skills", "claude-skills"]),
     ("dev-tools", ["cli", "command-line", "developer-tools", "devtools", "ide", "vscode",
                 "neovim", "jetbrains", "copilot", "code-review", "code-completion",
                 "coding-assistant", "coding-agent", "code-editor", "code-generation", "terminal",

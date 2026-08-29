@@ -40,3 +40,25 @@ def test_classify_generalizes_to_paper_and_model_and_news_text():
     assert classify("DocReason", "an OCR pipeline for document understanding", None) == "app-building"
     assert classify("Mini-8B", "an open weights small model for on-device inference", None) == "inference"
     assert classify("New agentic reasoning model ships", "", None) == "agents"
+
+
+def test_writing_content_category_covers_the_measured_gap():
+    # These are the click-proven items that sat in "uncategorized" for weeks:
+    # visitors opened them, but no category matched, so they were invisible to
+    # every tag-based surface (measured 2026-08-29).
+    assert classify("no-ai-slop", "Removes 20+ patterns of AI slop from any piece of writing.", []) == "writing-content"
+    assert classify("ai-copywriter", "An AI copywriting assistant", []) == "writing-content"
+    assert classify("anydoc", "Convert Word, PowerPoint and PDF to clean Markdown.", []) == "writing-content"
+
+
+def test_skills_is_its_own_artifact_class():
+    assert classify("scroll-craft", "Claude Code skill for scroll-driven websites", []) == "skills"
+    assert classify("some-pack", "", ["agent-skills"]) == "skills"
+
+
+def test_new_categories_do_not_steal_the_existing_ones():
+    # ties resolve by CATEGORIES order, so the older categories keep their own
+    assert classify("crewai", "multi-agent orchestration framework", ["agent"]) == "agents"
+    assert classify("llamacpp", "GGUF quantized local inference", ["inference"]) == "inference"
+    assert classify("cursor", "code-editor with completion", ["ide"]) == "dev-tools"
+    assert classify("sd-webui", "stable-diffusion image-generation", ["diffusion"]) == "creative-media"

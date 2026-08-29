@@ -17,7 +17,7 @@ from .canonical import canonicalize
 from .coerce import finite_float, finite_int
 from .config import config_dir, env_path, load_config, get as _config_get
 from .render import color, defang_markers, hyperlink, sanitize
-from .sources import (frontier, github, hfmodels, hfpapers, hn,
+from .sources import (anfpapers, frontier, github, hfmodels, hfpapers, hn,
                       insiders, npm, trends, collections, reddit, rssnews,
                       smolai, youtube, _readme_desc)
 
@@ -1400,7 +1400,12 @@ def _refresh(arguments: argparse.Namespace) -> int:
         statuses = list(engine.fetch_all(config, limit=_INGEST_DEPTH, cache=cache, ttl=0))
         # insiders and rssnews join the persisted sources so their rows can be
         # healed (repo creation dates / HN points) and windowed like the rest.
-        extra_adapters = [insiders, rssnews]
+        # anfpapers joins here (not _ENTITY_COMMANDS, which is one adapter per
+        # entity type for the CLI's own list commands): its records carry
+        # entity_type="paper", so merge_by_entity folds them into the papers
+        # tab alongside hfpapers automatically. It reaches papers hfpapers'
+        # same-day window misses -- measured 63% never-seen on 2026-08-29.
+        extra_adapters = [insiders, rssnews, anfpapers]
         for adapter, _entity_type, _weights in (
                 list(_ENTITY_COMMANDS.values()) + [(a, None, None) for a in extra_adapters]):
             try:
