@@ -6,10 +6,11 @@ the public contract: the site's registration code is served inline in
 `https://hotin.ai` (view-source shows it in full), but the page lives in a private
 repo, so the reviewable specification lives here.
 
-**Status: dormant by design.** Chrome currently lists WebMCP as *Proposed* with the
-origin trial off, so `document.modelContext` is undefined for ordinary visitors and
-registration is a guarded no-op. hotin.ai carries no origin-trial token. The site
-says "wherever the browser supports it" for exactly this reason. Verify with
+**Status: dormant until enrolled.** WebMCP is available as a Chrome origin trial
+from Chrome 149, but hotin.ai carries no origin-trial token yet, so
+`document.modelContext` is undefined for ordinary visitors and registration is a
+guarded no-op. Locally it can be enabled with `chrome://flags/#enable-webmcp-testing`.
+The site says "wherever the browser supports it" for exactly this reason. Verify with
 `typeof document.modelContext` in your own browser before assuming the tools are live.
 
 ## Tools
