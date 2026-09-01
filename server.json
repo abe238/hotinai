@@ -6,12 +6,12 @@
     "url": "https://github.com/abe238/hotinai",
     "source": "github"
   },
-  "version": "0.9.1",
+  "version": "0.9.2",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "hotin",
-      "version": "0.9.1",
+      "version": "0.9.2",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"

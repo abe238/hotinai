@@ -17,7 +17,17 @@ from .health import SourceStatus
 from .sources import github, hn, npm, trends, reddit, smartmoney, smolai, x, youtube
 
 
-SOURCES = (github, trends, hn, npm, reddit, youtube, smartmoney, smolai, x)
+# smartmoney is deliberately ABSENT: it shares the ~810-account insider roster
+# poll with the insiders tab, which takes minutes, while fetch_all gives every
+# source a shared 25s budget. It could never finish, so it timed out on EVERY
+# bake and its records were discarded (the future was never in `done`, so
+# nothing was upserted) -- a silently dead credibility signal, not a flaky one.
+# Worse, the abandoned thread kept polling, spending API quota for nothing.
+# It is fetched in cli._refresh instead, right after `insiders`, where the
+# shared memo is already warm and there is no clock. Removing it from here is
+# the fix; do not add it back. (A previous attempt warmed the memo BEFORE
+# fetch_all instead, which spent a second full poll and starved insiders.)
+SOURCES = (github, trends, hn, npm, reddit, youtube, smolai, x)
 # Sources whose repo mentions are a credibility FLAG, not independent
 # corroboration: they never count toward source_count / the corroboration
 # multiplier (they'd otherwise inflate the score by 1.25x for free).

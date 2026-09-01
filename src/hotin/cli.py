@@ -17,7 +17,7 @@ from .canonical import canonicalize
 from .coerce import finite_float, finite_int
 from .config import config_dir, env_path, load_config, get as _config_get
 from .render import color, defang_markers, hyperlink, sanitize
-from .sources import (anfpapers, frontier, github, hfmodels, hfpapers, hn,
+from .sources import (anfpapers, frontier, github, hfmodels, hfpapers, hn, smartmoney,
                       insiders, npm, trends, collections, reddit, rssnews,
                       smolai, youtube, _readme_desc)
 
@@ -1405,7 +1405,12 @@ def _refresh(arguments: argparse.Namespace) -> int:
         # entity_type="paper", so merge_by_entity folds them into the papers
         # tab alongside hfpapers automatically. It reaches papers hfpapers'
         # same-day window misses -- measured 63% never-seen on 2026-08-29.
-        extra_adapters = [insiders, rssnews, anfpapers]
+        # smartmoney MUST follow insiders: both read the same memoized
+        # roster poll, so insiders pays for it once and smartmoney returns
+        # from the warm memo with no extra network. It lives here rather than
+        # in engine.SOURCES because that fan-out has a 25s budget an
+        # 810-account poll can never meet (see the comment on SOURCES).
+        extra_adapters = [insiders, smartmoney, rssnews, anfpapers]
         for adapter, _entity_type, _weights in (
                 list(_ENTITY_COMMANDS.values()) + [(a, None, None) for a in extra_adapters]):
             try:

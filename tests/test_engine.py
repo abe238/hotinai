@@ -187,7 +187,9 @@ def test_fetch_all_starts_every_adapter_and_catches_errors(monkeypatch):
     github_status = next(status for status in statuses if status.source == "github")
     assert github_status.status == "error"
     assert "boom" in (github_status.detail or "")
-    assert len(cache.get_all()) == 8
+    # every adapter except the one that raised; derived, not hardcoded,
+    # so adding/removing a source does not fail an unrelated assertion
+    assert len(cache.get_all()) == len(engine.SOURCES) - 1
 
 
 def test_fetch_all_timeout_does_not_wait_for_slow_adapter(monkeypatch):
@@ -216,7 +218,8 @@ def test_fetch_all_timeout_does_not_wait_for_slow_adapter(monkeypatch):
     # of magnitude below the 2.0s that waiting would cost.
     assert elapsed < 1.0, elapsed
     assert next(status for status in statuses if status.source == "github").detail == "timed out"
-    assert sum(status.status == "empty" for status in statuses) == 8
+    # all but the one deliberately-slow adapter (github)
+    assert sum(status.status == "empty" for status in statuses) == len(engine.SOURCES) - 1
 
 
 def test_fetch_all_has_one_timeout_budget_for_the_entire_batch(monkeypatch):
@@ -465,3 +468,29 @@ def test_roster_starrers_earn_no_rank_bonus():
     # a spurious rank:0 would add a large bonus; no-rank must score strictly lower credibility
     assert engine.score_repo(unranked, now=now)["credibility"] < \
         engine.score_repo(ranked_top, now=now)["credibility"]
+
+
+def test_smartmoney_is_not_in_the_timed_fan_out():
+    """smartmoney shares the ~810-account roster poll with the insiders tab.
+    fetch_all gives every source ONE shared 25s budget, which that poll can
+    never meet, so smartmoney timed out on every bake and its records were
+    discarded: a silently dead credibility signal that read as 'flaky'.
+
+    It belongs in cli._refresh's sequential adapters, immediately AFTER
+    insiders, where the shared memo is warm and there is no clock.
+    """
+    from hotin.sources import smartmoney
+    assert smartmoney not in engine.SOURCES, \
+        "an 810-account poll cannot finish inside fetch_all's shared timeout"
+    # still a credibility FLAG, not independent corroboration
+    assert "smartmoney" in engine._FLAG_SOURCES
+
+
+def test_smartmoney_runs_after_insiders_so_the_roster_poll_is_paid_once():
+    import inspect
+    from hotin import cli
+    src = inspect.getsource(cli._refresh)
+    line = next(l for l in src.splitlines() if "extra_adapters = [" in l)
+    order = [n.strip() for n in line.split("[", 1)[1].rstrip("]").split(",")]
+    assert order.index("insiders") < order.index("smartmoney"), \
+        "insiders must warm the memo first, or smartmoney pays for a second poll"
