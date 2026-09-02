@@ -494,3 +494,31 @@ def test_smartmoney_runs_after_insiders_so_the_roster_poll_is_paid_once():
     order = [n.strip() for n in line.split("[", 1)[1].rstrip("]").split(",")]
     assert order.index("insiders") < order.index("smartmoney"), \
         "insiders must warm the memo first, or smartmoney pays for a second poll"
+
+
+def test_paper_gaining_now_outranks_paper_that_gained_in_july():
+    """2026-09-01: the site's papers tab had ZERO September ids because it
+    ranks on cumulative upvotes, so a July paper with 300 beats today's with 80
+    forever. With upvote velocity annotated, gaining-now wins; without history
+    (cold start) the ranking is exactly the snapshot, as before."""
+    now = time.time(); day = 86400.0
+    class Store:
+        def __init__(self, by_id): self.by_id = by_id
+        def observations_for(self, entity_type, entity_id, metric): return self.by_id.get(entity_id, [])
+    def paper(pid, upvotes):
+        return {"entity_type": "paper", "entity_id": pid, "source": "hfpapers",
+                "signal": {"paper_upvotes": upvotes}, "meta": {}}
+    merged = engine.merge_by_entity([paper("2607.00001", 300), paper("2609.00001", 80)], "paper")
+    weights = {"paper_upvotes": 1.0}
+    cold = [r["entity_id"] for r in engine.rank_entities(dict(merged), weights)]
+    assert cold[0] == "2607.00001"                      # snapshot: cumulative wins
+    engine.annotate_velocity(merged, Store({
+        "2607.00001": [(298, now - 2 * day), (300, now)],    # +1/day, stale
+        "2609.00001": [(0, now - 1 * day), (80, now)],       # +80/day, live
+    }), entity_type="paper", metric="paper_upvotes")
+    hot = [r["entity_id"] for r in engine.rank_entities(merged, weights)]
+    assert hot[0] == "2609.00001", hot
+    # and a store with no history changes nothing
+    frozen = engine.merge_by_entity([paper("2607.00001", 300), paper("2609.00001", 80)], "paper")
+    engine.annotate_velocity(frozen, Store({}), entity_type="paper", metric="paper_upvotes")
+    assert [r["entity_id"] for r in engine.rank_entities(frozen, weights)] == cold

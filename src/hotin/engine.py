@@ -557,6 +557,10 @@ def merge_by_entity(
     return merged
 
 
+# Weight of log1p(per-day gain) in score_entity, relative to log1p(total) at 1.0.
+ENTITY_VELOCITY_WEIGHT = 1.0
+
+
 def score_entity(merged: dict, metric_weights: Dict[str, float]) -> dict:
     """Score a paper/model: sum of log-scaled metric fields x corroboration."""
     result = dict(merged)
@@ -566,6 +570,18 @@ def score_entity(merged: dict, metric_weights: Dict[str, float]) -> dict:
     base = 0.0
     for key, weight in metric_weights.items():
         base += math.log1p(max(0.0, finite_float(signal.get(key), 0.0))) * weight
+    # Velocity, when annotate_velocity() has run for this entity type. The
+    # cumulative metric alone made the papers tab a museum: a July paper with
+    # 300 upvotes outranked today's with 80 forever, and on 2026-09-01 the
+    # live site had ZERO September paper ids while the CLI's cold cache (which
+    # only knew today's fetch) showed nothing but. log1p(per-day gain) beside
+    # log1p(total) lets "gaining now" beat "gained once", while the total keeps
+    # the tab from being a lottery of one-upvote newcomers. No history (cold
+    # start, or a store without observations) adds nothing: snapshot ranking
+    # exactly, the same contract score_repo keeps.
+    meta = merged.get("meta") if isinstance(merged.get("meta"), dict) else {}
+    velocity = finite_float(meta.get("velocity_per_day"), 0.0) if meta.get("rising") else 0.0
+    base += math.log1p(max(0.0, velocity)) * ENTITY_VELOCITY_WEIGHT
     corroboration = 1.0 + 0.25 * max(0, source_count - 1)
     score = base * corroboration
     result["score"] = score if math.isfinite(score) else 0.0

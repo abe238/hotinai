@@ -933,8 +933,11 @@ def _export(arguments: argparse.Namespace) -> int:
         repos = engine.rank(merged, limit=limit)
         models = engine.rank_entities(engine.merge_by_entity(cached, "model", max_age_days=window),
                                       _ENTITY_COMMANDS["models"][2], limit=limit)
-        papers = engine.rank_entities(engine.merge_by_entity(cached, "paper", max_age_days=window),
-                                      _ENTITY_COMMANDS["papers"][2], limit=limit)
+        papers_merged = engine.merge_by_entity(cached, "paper", max_age_days=window)
+        # upvote velocity from the observation store, so "gaining now" can
+        # outrank "gained in July" (see engine.score_entity)
+        engine.annotate_velocity(papers_merged, cache, entity_type="paper", metric="paper_upvotes")
+        papers = engine.rank_entities(papers_merged, _ENTITY_COMMANDS["papers"][2], limit=limit)
     # Fetch a POOL, not the final list. The windows below drop rows, and if the
     # cap is applied first they drop rows out of an already-truncated slice --
     # which took the tab from 60 to 3. Weighting makes it sharper: highly
@@ -1168,6 +1171,9 @@ def _entity_command(command: str, arguments: argparse.Namespace) -> int:
         if cutoff is not None:
             merged = {k: v for k, v in merged.items()
                       if _dated_within((v.get("signal") or {}).get("created_at"), cutoff)}
+        if entity_type == "paper":
+            # papers only, deliberately: models agree 10/10 with the site today
+            engine.annotate_velocity(merged, cache, entity_type="paper", metric="paper_upvotes")
         ranked = engine.rank_entities(merged, metric_weights, limit=limit)
         if arguments.json:
             _dump_json({"entities": ranked, "status": status, "detail": detail})
@@ -1273,7 +1279,9 @@ def _brief(arguments: argparse.Namespace) -> int:
         engine.annotate_velocity(merged, cache)
         repos = engine.rank(merged, limit=50)
         models = engine.rank_entities(engine.merge_by_entity(rows, "model", max_age_days=window), _ENTITY_COMMANDS["models"][2], limit=5)
-        papers = engine.rank_entities(engine.merge_by_entity(rows, "paper", max_age_days=window), _ENTITY_COMMANDS["papers"][2], limit=5)
+        papers_merged = engine.merge_by_entity(rows, "paper", max_age_days=window)
+        engine.annotate_velocity(papers_merged, cache, entity_type="paper", metric="paper_upvotes")
+        papers = engine.rank_entities(papers_merged, _ENTITY_COMMANDS["papers"][2], limit=5)
         rising = sorted(
             (repo for repo in repos if repo.get("meta", {}).get("rising")),
             key=lambda repo: -_finite(repo.get("meta", {}).get("velocity_per_day")),
