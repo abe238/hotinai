@@ -39,7 +39,7 @@ COMMANDS = {
     "search": "search cached tools",
     "show": "show one repo (owner/repo)",
     "about": "show project information",
-    "subscribe": "get the daily hotin bake email (8:08am PT)",
+    "subscribe": "get the hotin daily email (8:08am PT)",
     "mcp": "run as an MCP server so agents can query the board (stdio)",
 }
 # How much history the observation series keeps. Raised from 30 because 30 was
@@ -125,7 +125,7 @@ def build_parser() -> argparse.ArgumentParser:
         elif command == "show":
             subparser.add_argument("repo", help="GitHub owner/repository")
         elif command == "subscribe":
-            subparser.add_argument("email", help="where to send the daily bake")
+            subparser.add_argument("email", help="where to send the daily email")
     return parser
 
 
