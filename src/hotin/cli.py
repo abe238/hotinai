@@ -11,7 +11,7 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
-from . import __version__, board, categories, engine, health, render_board, schedule
+from . import __version__, board, categories, engine, health, render_board, schedule, subscribe
 from .cache import MemoryCache, open_cache
 from .canonical import canonicalize
 from .coerce import finite_float, finite_int
@@ -39,6 +39,7 @@ COMMANDS = {
     "search": "search cached tools",
     "show": "show one repo (owner/repo)",
     "about": "show project information",
+    "subscribe": "get the daily hotin bake email (8:08am PT)",
     "mcp": "run as an MCP server so agents can query the board (stdio)",
 }
 # How much history the observation series keeps. Raised from 30 because 30 was
@@ -68,6 +69,9 @@ _SOURCE_CHOICES = tuple(_REPO_SOURCE_ADAPTERS)
 _FORMATS = ("text", "json", "md", "html")
 # Commands that produce a ranked/list result and take --limit.
 _LIST_COMMANDS = {"repos", "rising", "insiders", "models", "papers", "news", "search", "export"}
+# Text-format board commands end with one dim subscribe hint (HOTIN_NO_FOOTER=1 hides it).
+_FOOTER_COMMANDS = {"repos", "rising", "insiders", "models", "papers", "news", "brief"}
+_FOOTER = "Daily email at 8:08am PT: hotin subscribe you@example.com"
 # Entity commands: (adapter, entity_type, metric weights for scoring, primary metric label).
 # Models rank by HuggingFace's trendingScore (heat right now), NOT lifetime
 # downloads — otherwise a hugely-adopted but old model (Kokoro-82M, ~10M
@@ -120,6 +124,8 @@ def build_parser() -> argparse.ArgumentParser:
             subparser.add_argument("query", nargs="?", default=None, help="text to search for")
         elif command == "show":
             subparser.add_argument("repo", help="GitHub owner/repository")
+        elif command == "subscribe":
+            subparser.add_argument("email", help="where to send the daily bake")
     return parser
 
 
@@ -428,6 +434,10 @@ def _render_single_source(
 
 def _attribution(arguments: argparse.Namespace, *, force: bool = False) -> None:
     """Show the one-time terminal footer; errors here must never affect a command."""
+    if (not force and (arguments.command or "repos") in _FOOTER_COMMANDS
+            and getattr(arguments, "format", "text") == "text"
+            and not getattr(arguments, "quiet", False) and os.environ.get("HOTIN_NO_FOOTER") != "1"):
+        print(color(_FOOTER, "2", _color_enabled(arguments)))
     if not force and (getattr(arguments, "quiet", False) or getattr(arguments, "json", False) or not sys.stdout.isatty()):
         return
     try:
@@ -1517,6 +1527,8 @@ def main(argv: Optional[List[str]] = None) -> int:
             print("hotin {} — What's hot in AI, from your terminal.".format(__version__))
             _attribution(arguments, force=True)
         return 0
+    if command == "subscribe":
+        return subscribe.run(arguments.email)
     if command == "models":
         return _models(arguments)
     if command in _ENTITY_COMMANDS:
