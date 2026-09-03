@@ -1,6 +1,7 @@
 import io
 import json
 import urllib.error
+import urllib.request
 
 import pytest
 
@@ -8,6 +9,7 @@ from hotin import __version__, cli, subscribe
 from hotin.cache import MemoryCache
 from hotin.cli import main
 from hotin.health import SourceStatus
+from hotin.throttle import Throttle
 
 
 class _Response(io.BytesIO):
@@ -59,16 +61,28 @@ def test_subscribe_http_error_is_one_plain_line(capsys):
     assert "<" not in out.err
 
 
-def test_subscribe_network_error_is_one_plain_line(capsys):
+@pytest.mark.parametrize("reason", ["<script>nope</script>", "/Users/abe/.certs/proxy.pem", "proxy 10.0.0.7:3128 refused"])
+def test_subscribe_network_error_is_constant(capsys, reason):
     def opener(request, timeout=None):
-        raise urllib.error.URLError("<script>nope</script>")
+        raise urllib.error.URLError(reason)
     assert subscribe.run("you@example.com", opener=opener) == 1
     err = capsys.readouterr().err
-    assert len(err.strip().splitlines()) == 1
-    assert "<" not in err
+    assert err.strip() == subscribe._NETWORK_ERROR
+    assert reason not in err
 
 
-@pytest.mark.parametrize("bad", ["not-an-email", "a@b", "@example.com", "a b@example.com", "", "<b>x</b>@example.com"])
+@pytest.mark.parametrize("good", ["you@example.com", "first.last+tag@sub.example.co", "a_b%c@x-y.example.org"])
+def test_subscribe_accepts_reasonable_addresses(good):
+    calls = []
+    assert subscribe.run(good, opener=_fake_opener(202, calls)) == 0
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("bad", [
+    "not-an-email", "a@b", "@example.com", "a b@example.com", "", "<b>x</b>@example.com",
+    "a..b@example.com", ".a@example.com", "a.@example.com",
+    "a@.example.com", "a@example..com", "a@example-.com", "a@-example.com", "a@example.c0m", "a@example.com.",
+])
 def test_subscribe_rejects_garbage_locally(capsys, bad):
     calls = []
     assert subscribe.run(bad, opener=_fake_opener(202, calls)) == 2
@@ -107,24 +121,59 @@ def _seed(monkeypatch):
         })
         return [SourceStatus("github", "ok")]
 
+    def offline(*args, **kwargs):
+        raise urllib.error.URLError("offline in tests")
+
+    def empty(**kwargs):
+        return {"records": [], "status": "empty", "detail": None}
+
+    insider = {"entity_type": "repo", "entity_id": "acme/tool", "canonical_repo": "acme/tool",
+               "url": "https://github.com/acme/tool", "name": "Acme Agent", "source": "insiders",
+               "signal": {"insider_stars": 3, "stars": 20}, "meta": {"insiders": ["simonw"]}}
     monkeypatch.setattr(cli, "open_cache", lambda: cache)
     monkeypatch.setattr(cli.engine, "fetch_all", fetch_all)
+    monkeypatch.setattr(cli.hfmodels, "fetch", empty)
+    monkeypatch.setattr(cli.hfpapers, "fetch", empty)
+    news = {"name": "Acme ships a thing", "url": "https://acme.example/blog", "source": "rssnews",
+            "signal": {}, "meta": {"date": "2026-09-01", "publisher": "Acme", "kind": "primary"}}
+    rising = {"canonical_repo": "acme/rocket", "name": "acme/rocket", "url": "https://github.com/acme/rocket",
+              "signal": {"stars": 500, "created_at": "2026-08-30T00:00:00Z"}, "meta": {}}
+    monkeypatch.setattr(cli.rssnews, "fetch", lambda **kwargs: {"records": [news], "status": "ok", "detail": None})
+    monkeypatch.setattr(cli.github, "fetch", lambda *a, **kw: {"records": [rising], "status": "ok", "detail": None})
+    monkeypatch.setattr(cli.insiders, "fetch", lambda **kwargs: {"records": [insider], "status": "ok", "detail": None})
+    monkeypatch.setattr(urllib.request, "urlopen", offline)  # every other adapter degrades to empty
+    monkeypatch.setattr(Throttle, "_sleep_and_record", lambda self, delay: None)  # no pacing sleeps
     monkeypatch.setattr(cli.os, "_exit", lambda code: None)
     monkeypatch.delenv("HOTIN_NO_FOOTER", raising=False)
 
 
-def test_footer_prints_once_after_text_board(monkeypatch, capsys):
+BOARD_COMMANDS = ["repos", "rising", "insiders", "models", "papers", "news", "brief"]
+
+
+@pytest.mark.parametrize("command", BOARD_COMMANDS)
+def test_footer_prints_once_after_text_board(monkeypatch, capsys, command):
     _seed(monkeypatch)
-    assert main(["repos", "--limit", "5"]) == 0
+    assert main([command]) == 0
     out = capsys.readouterr().out
     assert out.count(FOOTER) == 1
     assert out.rstrip().endswith(FOOTER)
 
 
-@pytest.mark.parametrize("fmt", ["json", "md", "html"])
-def test_footer_absent_for_non_text_formats(monkeypatch, capsys, fmt):
+@pytest.mark.parametrize("command", BOARD_COMMANDS)
+def test_footer_is_dim_when_color_enabled(monkeypatch, capsys, command):
     _seed(monkeypatch)
-    assert main(["repos", "--limit", "5", "--format", fmt]) == 0
+    monkeypatch.setattr(cli, "_color_enabled", lambda arguments: True)
+    assert main([command]) == 0
+    out = capsys.readouterr().out
+    assert out.count(FOOTER) == 1
+    assert "\x1b[2m" + FOOTER + "\x1b[0m" in out
+
+
+@pytest.mark.parametrize("command", BOARD_COMMANDS)
+@pytest.mark.parametrize("flags", [["--format", "json"], ["--json"], ["--format", "md"], ["--format", "html"]])
+def test_footer_absent_for_non_text_formats(monkeypatch, capsys, command, flags):
+    _seed(monkeypatch)
+    assert main([command] + flags) == 0
     assert FOOTER not in capsys.readouterr().out
 
 

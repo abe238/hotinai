@@ -435,7 +435,7 @@ def _render_single_source(
 def _attribution(arguments: argparse.Namespace, *, force: bool = False) -> None:
     """Show the one-time terminal footer; errors here must never affect a command."""
     if (not force and (arguments.command or "repos") in _FOOTER_COMMANDS
-            and getattr(arguments, "format", "text") == "text"
+            and getattr(arguments, "format", "text") == "text" and not getattr(arguments, "json", False)
             and not getattr(arguments, "quiet", False) and os.environ.get("HOTIN_NO_FOOTER") != "1"):
         print(color(_FOOTER, "2", _color_enabled(arguments)))
     if not force and (getattr(arguments, "quiet", False) or getattr(arguments, "json", False) or not sys.stdout.isatty()):

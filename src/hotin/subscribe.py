@@ -17,7 +17,12 @@ from . import __version__
 URL = "https://hotin.ai/api/subscribe"
 TIMEOUT = 10
 # ponytail: syntax sanity only, the Worker's confirmation email is the real check.
-_EMAIL = re.compile(r"^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$")
+# Local part: dot-separated atoms (no leading/trailing/double dots). Domain: labels
+# that start and end alphanumeric, hyphens only inside, alphabetic TLD.
+_ATOM = r"[A-Za-z0-9_%+\-]+"
+_LABEL = r"[A-Za-z0-9](?:[A-Za-z0-9\-]*[A-Za-z0-9])?"
+_EMAIL = re.compile(r"^{a}(?:\.{a})*@(?:{l}\.)+[A-Za-z]{{2,}}$".format(a=_ATOM, l=_LABEL))
+_NETWORK_ERROR = "Could not reach hotin.ai. Check your connection and try again."
 urlopen = urllib.request.urlopen  # swapped in tests
 
 
@@ -43,9 +48,9 @@ def run(email: str, opener: Optional[Callable] = None) -> int:
     except urllib.error.HTTPError as exc:
         print("Could not subscribe (HTTP {}). Try again later.".format(exc.code), file=sys.stderr)
         return 1
-    except (urllib.error.URLError, OSError) as exc:
-        reason = re.sub(r"[^\w .,:/'()-]", "", str(getattr(exc, "reason", exc)))[:80].strip()
-        print("Could not reach hotin.ai ({}). Try again later.".format(reason or "network error"), file=sys.stderr)
+    except (urllib.error.URLError, OSError):
+        # Constant text: URLError.reason can carry proxy, cert or local path details.
+        print(_NETWORK_ERROR, file=sys.stderr)
         return 1
     if status in (200, 202):
         print("Check your inbox to confirm.")
