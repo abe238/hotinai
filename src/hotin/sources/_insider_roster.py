@@ -92,10 +92,11 @@ class RosterRateLimitError(RuntimeError):
     filter" bug, an "ordering" bug) before the real cause was traced.
 
     Live case: hotin.ai's CI authenticates with ``github.token``, capped at
-    1,000 REST requests/hour/repo, while one cycle polls the roster twice
-    (refresh + export) at ~793 accounts each. On the normal 3-hour cadence that
-    fits. Two runs inside one hour cannot, and the second silently produced 3
-    rows where the first produced 60.
+    1,000 REST requests/hour/repo, while one cycle polled the roster twice
+    (refresh + export, before export learned to reuse refresh's persisted poll)
+    at ~793 accounts each. On the normal 3-hour cadence that fit. Two runs
+    inside one hour could not, and the second silently produced 3 rows where
+    the first produced 60.
 
     Partial rate limiting is normal and tolerated; the threshold is about
     whether the RESULT is still trustworthy, not whether anything went wrong."""
@@ -773,10 +774,10 @@ def poll_roster(
                 remaining=_RATE_LIMIT_SEEN.get("remaining", "?"))
         raise RosterRateLimitError(
             "{} of {} roster members were rate-limited (403/429) — this poll saw "
-            "only part of the cohort and must not be published.{} A cycle polls "
-            "the roster once per process and `refresh`/`export` are two "
-            "processes, so back-to-back runs cost roughly twice a single "
-            "cycle.".format(rate_limited, len(roster), quota))
+            "only part of the cohort and must not be published.{} `export` reuses "
+            "`refresh`'s persisted poll within HOTIN_INSIDERS_REUSE_S, so a "
+            "roster/token/window change or --no-insiders-cache is what costs a "
+            "second poll.".format(rate_limited, len(roster), quota))
     _save_persisted(pkey, events, tally)
     _MEMO[key] = events
     return events
