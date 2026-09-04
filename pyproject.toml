@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hotin"
-version = "0.9.5"
+version = "0.9.6"
 description = "An open-source CLI surfacing what's hot, fresh, and credible in AI from GitHub, Hacker News, npm, Reddit, and an insider-stars credibility signal (a roster of notable accounts you can supply yourself), ranked by cross-source corroboration and freshness."
 readme = "README.md"
 requires-python = ">=3.9"
