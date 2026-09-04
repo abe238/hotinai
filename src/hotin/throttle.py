@@ -1,6 +1,7 @@
 """Shared request pacing for source adapters."""
 
 import random
+import threading
 import time
 from typing import Callable, Optional
 
@@ -20,6 +21,10 @@ class Throttle:
         self._sleep = sleep_fn
         self._clock = clock_fn
         self._last_call: Optional[float] = None
+        # Serializes the whole wait (delay + sleep + record) across threads, so
+        # N workers still emit at most one request per min_interval and a
+        # Retry-After pause holds every worker, exactly like the serial path.
+        self._lock = threading.Lock()
 
     def _regular_delay(self) -> float:
         if self._last_call is None:
@@ -35,8 +40,10 @@ class Throttle:
 
     def wait(self) -> None:
         """Wait as needed before the next request."""
-        self._sleep_and_record(self._regular_delay())
+        with self._lock:
+            self._sleep_and_record(self._regular_delay())
 
     def wait_for_retry_after(self, seconds: float) -> None:
         """Honor a server-requested retry delay without weakening normal pacing."""
-        self._sleep_and_record(max(float(seconds), self._regular_delay()))
+        with self._lock:
+            self._sleep_and_record(max(float(seconds), self._regular_delay()))

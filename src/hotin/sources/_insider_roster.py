@@ -27,8 +27,10 @@ locally while failing intermittently in CI), not a silent fallback.
 from __future__ import annotations
 
 import json
+import os
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -351,6 +353,40 @@ _BISECT_SECONDS = 90.0
 _BISECT_ATTEMPTS = 4
 
 
+#: Per-account REST polls run on a small worker pool. The shared _THROTTLE is
+#: locked, so the pool overlaps network latency without adding requests or
+#: beating the pacing; 1 restores the serial loop. Env, not config: the two
+#: REST sites sit below every config-carrying signature.
+_WORKERS_ENV = "HOTIN_INSIDERS_WORKERS"
+_DEFAULT_WORKERS = 4
+
+
+def _workers() -> int:
+    try:
+        return max(1, int(os.environ.get(_WORKERS_ENV, _DEFAULT_WORKERS)))
+    except (TypeError, ValueError):
+        return _DEFAULT_WORKERS
+
+
+def _poll_many(logins: Sequence[str], token: str, *, window_days: int,
+               now: Optional[datetime]) -> Dict[str, Tuple[List[Dict[str, Any]], bool]]:
+    """``{login: _poll_one(login)}`` in roster order, on ``_workers()`` threads.
+
+    Same requests as the serial loop, one _poll_one per login; only the wall
+    clock changes. Result order is the input order (executor.map), so every
+    downstream tally and aggregation is byte-identical to a serial run.
+    """
+    def one(login: str) -> Tuple[List[Dict[str, Any]], bool]:
+        return _poll_one(login, token, window_days=window_days, now=now)
+
+    logins = list(logins)
+    workers = min(_workers(), len(logins))
+    if workers <= 1:
+        return {login: one(login) for login in logins}
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        return dict(zip(logins, pool.map(one, logins)))
+
+
 def _rest_floor(logins: Sequence[str], token: str, *, window_days: int,
                 now: Optional[datetime]) -> Dict[str, Dict[str, Any]]:
     """Per-account REST poll: the backstop the batch path degrades to.
@@ -359,8 +395,8 @@ def _rest_floor(logins: Sequence[str], token: str, *, window_days: int,
     honest to fall to -- a too-heavy batch, or a credential GraphQL refuses.
     """
     results: Dict[str, Dict[str, Any]] = {}
-    for login in logins:
-        events, outcome = _poll_one(login, token, window_days=window_days, now=now)
+    for login, (events, outcome) in _poll_many(
+            logins, token, window_days=window_days, now=now).items():
         mapped = {_OK: _gql.OK, _AUTH_FAILED: _gql.AUTH_FAILED,
                   _RATE_LIMITED: _gql.RATE_LIMITED}.get(outcome, _gql.UNRESOLVED)
         results[login] = {"login": login, "events": events, "outcome": mapped,
@@ -504,21 +540,24 @@ def _poll_via_graphql(
             deadline=time.monotonic() + _BISECT_SECONDS)
         remaining_budget = _RATE_LIMIT_SEEN.get("remaining", remaining_budget)
 
+        # L3: a count-capped page that may have cut in-window stars goes to
+        # REST, which paginates on the date. Polled together (worker pool),
+        # then tallied below in batch order so the outcome is order-free.
+        rest_polls = _poll_many(
+            [u for u in batch if (results.get(u) or {}).get("needs_rest")],
+            token, window_days=window_days, now=now)
         for login in batch:
             entry = results.get(login)
             if entry is None:
                 tally[_gql.UNRESOLVED] = tally.get(_gql.UNRESOLVED, 0) + 1
                 continue
-            # L3: a count-capped page that may have cut in-window stars goes to
-            # REST, which paginates on the date.
             if entry.get("needs_rest"):
                 # Counted, because this is the metric that says whether the
                 # migration is still paying for itself: a roster selected for
                 # prolific starrers can route itself back to REST one account at
                 # a time, with no single account being at fault.
                 tally["rest_fallback"] = tally.get("rest_fallback", 0) + 1
-                rest_events, outcome = _poll_one(
-                    login, token, window_days=window_days, now=now)
+                rest_events, outcome = rest_polls[login]
                 mapped = {_OK: _gql.OK, _AUTH_FAILED: _gql.AUTH_FAILED,
                           _RATE_LIMITED: _gql.RATE_LIMITED}.get(
                               outcome, _gql.UNRESOLVED)

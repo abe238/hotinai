@@ -918,6 +918,28 @@ def _write_latest_json(docs: Path, stamp: str, stamp_pt: str, rows: object) -> N
         indent=2, allow_nan=False))
 
 
+class _Timings:
+    """Wall clock per pipeline phase, printed as a compact table at the end of
+    a bake so the runner log says where the minutes go. ``mark(name)`` closes
+    the phase that started at the previous mark; stderr so ``--json`` stdout
+    stays parseable and ``--quiet`` still shows it."""
+
+    def __init__(self) -> None:
+        self.rows: List[Tuple[str, float]] = []
+        self._t0 = time.monotonic()
+
+    def mark(self, name: str) -> None:
+        now = time.monotonic()
+        self.rows.append((name, now - self._t0))
+        self._t0 = now
+
+    def report(self, stream=None) -> None:
+        out = stream or sys.stderr
+        for name, secs in self.rows:
+            print("phase {}: {:.1f}s".format(name, secs), file=out)
+        print("phase total: {:.1f}s".format(sum(s for _, s in self.rows)), file=out)
+
+
 def _export(arguments: argparse.Namespace) -> int:
     """Bake the 5-tab board into docs/index.html + write docs/data/latest.json.
 
@@ -930,8 +952,10 @@ def _export(arguments: argparse.Namespace) -> int:
     index = docs / "index.html"
     limit = _normal_limit(arguments) or 60
     config = load_config()
+    timings = _Timings()
     with _cache_session() as cache:
         engine.fetch_all(config, limit=max(limit, 100), cache=cache)
+        timings.mark("fetch_sources")
         cached = cache.get_all()
         window = engine.EVIDENCE_WINDOW_DAYS
         links = engine.cross_entity_repo_links(cached, max_age_days=window)
@@ -948,6 +972,7 @@ def _export(arguments: argparse.Namespace) -> int:
         # outrank "gained in July" (see engine.score_entity)
         engine.annotate_velocity(papers_merged, cache, entity_type="paper", metric="paper_upvotes")
         papers = engine.rank_entities(papers_merged, _ENTITY_COMMANDS["papers"][2], limit=limit)
+    timings.mark("rank_repos_models_papers")
     # Fetch a POOL, not the final list. The windows below drop rows, and if the
     # cap is applied first they drop rows out of an already-truncated slice --
     # which took the tab from 60 to 3. Weighting makes it sharper: highly
@@ -956,6 +981,7 @@ def _export(arguments: argparse.Namespace) -> int:
     # all of it. Over-fetch, filter, then cap to `limit` when the rows are built.
     ins_res = insiders.fetch(limit=max(limit * 6, 300), config=config)
     ins = [r for r in (ins_res.get("records") or []) if isinstance(r, dict)] if isinstance(ins_res, dict) else []
+    timings.mark("insiders_poll")
     # The Digg page carries no repo creation date; the refresh heal fetches each
     # one once from the GitHub API into the cached insiders rows. Read them back
     # so the live fetch gets dated (the 7d/60d windows key on this).
@@ -996,6 +1022,7 @@ def _export(arguments: argparse.Namespace) -> int:
         kmeta = known.get("meta") if isinstance(known.get("meta"), dict) else {}
         if kmeta.get("velocity_per_day") is not None:
             rec.setdefault("meta", {}).setdefault("velocity_per_day", kmeta["velocity_per_day"])
+    timings.mark("insiders_cache_readback")
     # News: curated primary + expert feeds, ranked by evidence — same-day items
     # order by HN points (the crowd receipt, healed into the cache by refresh),
     # with the lab's own post ("primary") ahead of commentary on ties.
@@ -1018,10 +1045,12 @@ def _export(arguments: argparse.Namespace) -> int:
                 (r.get("meta") or {}).get("kind") != "primary")
 
     news.sort(key=_news_rank)
+    timings.mark("news")
     news_note = "swept {} · lab blogs + named experts · pts = HN · rising = still climbing days later".format(
         news_result.get("detail") or "curated feeds")
     rising = engine.drop_offtopic(_rising_ranked(config, 30))
     rising7 = engine.drop_offtopic(_rising_ranked(config, 30, max_age=7))
+    timings.mark("rising")
 
     # Both windows are strictly enforced on every tab: the 60d container holds
     # items dated within 60 days, the 7d one within 7; undated rows drop from
@@ -1062,6 +1091,7 @@ def _export(arguments: argparse.Namespace) -> int:
     papers60, papers7 = _windows(papers, _sig_date("created_at"))
     news60, news7 = _windows(news, lambda r: (r.get("meta") or {}).get("date"))
     news7 = _news7_order(news7, _news_rank)
+    timings.mark("windows")
 
     # GitHub-blank descriptions, recovered from the README. One batched
     # GraphQL request for the whole board, run here so only rows that will
@@ -1070,6 +1100,7 @@ def _export(arguments: argparse.Namespace) -> int:
         (repos60, repos7, rising, rising7, ins30[:limit]),
         _config_get(config, "GITHUB_TOKEN"),
     )
+    timings.mark("readme_descriptions")
 
     rows = {
         "repos": board.repo_rows(repos60), "repos7": board.repo_rows(repos7),
@@ -1080,6 +1111,7 @@ def _export(arguments: argparse.Namespace) -> int:
         "news": board.news_rows(news60, note=news_note),
         "news7": board.news_rows(news7, note=news_note),
     }
+    timings.mark("render_rows")
     stamp = datetime.date.today().isoformat()
     stamp_pt = _pacific_stamp()
     html_baked = index.exists()
@@ -1095,7 +1127,9 @@ def _export(arguments: argparse.Namespace) -> int:
                       lambda m: "<!-- STAMP -->last updated " + stamp_pt + " <!-- /STAMP -->",
                       html, flags=re.DOTALL)
         index.write_text(html)
+    timings.mark("render_index_html")
     _write_latest_json(docs, stamp, stamp_pt, rows)
+    timings.mark("write_latest_json")
     # Tagging runs LAST and never raises past this point — a broken tags.json
     # ledger must never cost the board its daily refresh (same principle as
     # every source adapter's own fail-soft contract).
@@ -1104,6 +1138,8 @@ def _export(arguments: argparse.Namespace) -> int:
         _write_tags_json(docs, tag_items, stamp_pt)
     except Exception as exc:  # noqa: BLE001 - deliberate: tagging is best-effort
         print("tags.json update skipped: {}".format(exc))
+    timings.mark("tags_json")
+    timings.report()
     counts = ", ".join("{} {}".format(len(v), k) for k, v in rows.items())
     if html_baked:
         print("exported {} · baked {} + docs/data/latest.json in {}".format(counts, index.name, docs))
@@ -1388,6 +1424,7 @@ def _refresh(arguments: argparse.Namespace) -> int:
     now = time.time()
     config = load_config()
     cache = open_cache()
+    timings = _Timings()
     statuses: List[health.SourceStatus] = []
     persisted = False
     # healed meta (card descriptions, paper summaries, gated flags) must survive
@@ -1415,7 +1452,9 @@ def _refresh(arguments: argparse.Namespace) -> int:
             if _hn:
                 preserved_sig[_key] = _hn
     try:
+        timings.mark("preserve_healed_meta")
         statuses = list(engine.fetch_all(config, limit=_INGEST_DEPTH, cache=cache, ttl=0))
+        timings.mark("fetch_sources")
         # insiders and rssnews join the persisted sources so their rows can be
         # healed (repo creation dates / HN points) and windowed like the rest.
         # anfpapers joins here (not _ENTITY_COMMANDS, which is one adapter per
@@ -1455,19 +1494,26 @@ def _refresh(arguments: argparse.Namespace) -> int:
                             record["signal"] = {**keep_sig,
                                                 **{k: v for k, v in sig.items() if v is not None}}
                         cache.upsert(engine._cache_record(record))
+        timings.mark("fetch_insiders_news_papers")
         healed = hfpapers.backfill_summaries(cache)
+        timings.mark("heal_paper_summaries")
         healed_models = hfmodels.backfill_descriptions(cache)
+        timings.mark("heal_model_descriptions")
         from .config import get as _config_get
         gh_token = _config_get(config, "GITHUB_TOKEN")
         healed_dates = insiders.backfill_created_at(
             cache, gh_token if isinstance(gh_token, str) and gh_token.strip() else None)
+        timings.mark("heal_insider_dates")
         healed_hn = rssnews.backfill_hn_points(cache)
         rechecked = rssnews.recheck_hn_points(cache)
+        timings.mark("heal_hn_points")
         if (healed or healed_models or healed_dates or healed_hn or rechecked) and not arguments.quiet and not arguments.json:
             print("healed {} paper summaries, {} model descriptions, {} insider repo dates, {} news HN checks (+{} rechecks)".format(
                 healed, healed_models, healed_dates, healed_hn, rechecked))
         cache.record_observations(engine.observations_from_cache(cache.get_all(), run_id, now))
         cache.prune_observations(now - _RETENTION_DAYS * 86400.0)
+        timings.mark("record_observations")
+        timings.report()
         persisted = not isinstance(cache, MemoryCache) and getattr(cache, "_fallback", None) is None
         if arguments.json:
             _dump_json({"run_id": run_id, "persisted": persisted,
