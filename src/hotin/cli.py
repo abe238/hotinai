@@ -120,6 +120,9 @@ def build_parser() -> argparse.ArgumentParser:
             subparser.add_argument("--check", action="store_true", help="check local configuration")
             subparser.add_argument("--schedule", choices=("daily", "twice", "off"), default=None,
                                    help="install/remove a scheduled `hotin refresh` (daily=8am, twice=8am+8pm)")
+        elif command in ("refresh", "export"):
+            subparser.add_argument("--no-insiders-cache", action="store_true",
+                                   help="poll the insider roster fresh instead of reusing a recent poll")
         elif command == "search":
             subparser.add_argument("query", nargs="?", default=None, help="text to search for")
         elif command == "show":
@@ -952,6 +955,8 @@ def _export(arguments: argparse.Namespace) -> int:
     index = docs / "index.html"
     limit = _normal_limit(arguments) or 60
     config = load_config()
+    if getattr(arguments, "no_insiders_cache", False):
+        config["HOTIN_INSIDERS_REUSE_S"] = "0"  # force a fresh roster poll
     timings = _Timings()
     with _cache_session() as cache:
         engine.fetch_all(config, limit=max(limit, 100), cache=cache)
@@ -1423,6 +1428,8 @@ def _refresh(arguments: argparse.Namespace) -> int:
     run_id = "run-{}".format(int(time.time()))
     now = time.time()
     config = load_config()
+    if getattr(arguments, "no_insiders_cache", False):
+        config["HOTIN_INSIDERS_REUSE_S"] = "0"  # force a fresh roster poll
     cache = open_cache()
     timings = _Timings()
     statuses: List[health.SourceStatus] = []

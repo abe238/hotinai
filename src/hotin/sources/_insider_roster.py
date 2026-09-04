@@ -26,11 +26,13 @@ locally while failing intermittently in CI), not a silent fallback.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor
+import sys
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -586,10 +588,74 @@ def summarize_outcomes(tally: Dict[str, int], total: int) -> str:
 
 # Module-level memoization: one poll per process. The two adapters are called
 # from different pipeline points (engine.fetch_all vs _export vs `hotin insiders`)
-# so an in-process cache spans what a per-call cache cannot. NOT once-per-cycle:
-# `hotin refresh` and `hotin export` are two processes, so a 3h cycle polls twice
-# — negligible at roster scale, documented rather than chased.
+# so an in-process cache spans what a per-call cache cannot. Across processes
+# (`hotin refresh` then `hotin export` in one bake) the completed poll is also
+# persisted next to cache.db as insiders_poll.json and reused within
+# HOTIN_INSIDERS_REUSE_S (default 7200s): measured 620s + 726s per bake for the
+# same 802-handle roster polled twice.
 _MEMO: Dict[Tuple[Any, ...], List[Dict[str, Any]]] = {}
+
+DEFAULT_REUSE_S = 7200
+
+
+def _reuse_seconds(config: Optional[dict]) -> float:
+    raw = (config or {}).get("HOTIN_INSIDERS_REUSE_S", os.environ.get("HOTIN_INSIDERS_REUSE_S"))
+    if raw in (None, ""):
+        return DEFAULT_REUSE_S
+    try:
+        return max(0.0, float(str(raw).strip()))
+    except (TypeError, ValueError):
+        return DEFAULT_REUSE_S
+
+
+def _persist_path() -> Any:
+    from hotin.cache import cache_path
+    return cache_path().parent / "insiders_poll.json"
+
+
+def _persist_key(roster: Sequence[str], token: str, window_days: int, now_key: Any) -> Dict[str, Any]:
+    # Token is fingerprinted, never stored: 8 hex of sha256 is enough to notice
+    # a rotated credential and useless to anyone reading the file.
+    return {
+        "roster_sha": hashlib.sha256("\n".join(roster).encode("utf-8")).hexdigest(),
+        "token_fp": hashlib.sha256(token.encode("utf-8")).hexdigest()[:8],
+        "window_days": window_days,
+        "now": now_key,
+    }
+
+
+def _load_persisted(key: Dict[str, Any], max_age: float) -> Optional[Dict[str, Any]]:
+    """The persisted poll if it matches ``key`` and is younger than ``max_age``.
+    Any mismatch, corruption, or read error is None: fall through to a real poll."""
+    if max_age <= 0:
+        return None
+    try:
+        with open(_persist_path(), "r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+        if not isinstance(payload, dict) or not isinstance(payload.get("events"), list):
+            return None
+        if any(payload.get(k) != v for k, v in key.items()):
+            return None
+        age = time.time() - float(payload["saved_at"])
+        if not 0 <= age < max_age:
+            return None
+        payload["age_s"] = age
+        return payload
+    except Exception:
+        return None
+
+
+def _save_persisted(key: Dict[str, Any], events: List[Dict[str, Any]], tally: Dict[str, int]) -> None:
+    """Best effort: a failed write costs the next process one poll, nothing more."""
+    try:
+        path = _persist_path()
+        payload = dict(key, saved_at=time.time(), events=events, outcomes=dict(tally))
+        tmp = path.with_suffix(".json.tmp")
+        with open(tmp, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle)
+        os.replace(tmp, path)
+    except Exception:
+        pass
 
 
 DEFAULT_WINDOW_DAYS = 45
@@ -668,10 +734,21 @@ def poll_roster(
     """
     window_days = _window(config, window_days)
     roster = _roster(config)
-    key = (roster, window_days, now.isoformat() if now else None)
+    now_key = now.isoformat() if now else None
+    key = (roster, window_days, now_key)
     if not _force and key in _MEMO:
         return _MEMO[key]
     token = _token(config)  # raises loudly before any network work
+    pkey = _persist_key(roster, token, window_days, now_key)
+    saved = None if _force else _load_persisted(pkey, _reuse_seconds(config))
+    if saved is not None:
+        # The previous process (refresh) already paid for this exact poll.
+        print("insiders: reused poll from {} min ago".format(int(saved["age_s"] // 60)),
+              file=sys.stderr)
+        LAST_OUTCOMES.clear()
+        LAST_OUTCOMES.update(saved.get("outcomes") or {})
+        _MEMO[key] = saved["events"]
+        return saved["events"]
     _gql.BATCH_TRACE.clear()
     _gql.LAST_ERROR_BODY.clear()
     events, tally = _poll_via_graphql(
@@ -700,6 +777,7 @@ def poll_roster(
             "the roster once per process and `refresh`/`export` are two "
             "processes, so back-to-back runs cost roughly twice a single "
             "cycle.".format(rate_limited, len(roster), quota))
+    _save_persisted(pkey, events, tally)
     _MEMO[key] = events
     return events
 
@@ -807,5 +885,9 @@ def aggregate_by_repo(
 
 
 def _reset_memo() -> None:
-    """Test hook: clear the per-process memo."""
+    """Test hook: clear the per-process memo and the persisted poll."""
     _MEMO.clear()
+    try:
+        os.unlink(_persist_path())
+    except OSError:
+        pass
