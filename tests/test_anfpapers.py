@@ -104,6 +104,21 @@ def test_feed_yields_only_digest_posts_newest_first():
     ]
 
 
+def test_a_dashed_date_in_the_title_still_parses():
+    feed = ("<item><title>AI Native Daily Paper Digest – 2026-09-05 – X</title>"
+            "<link>https://ainativefoundation.org/d/</link></item>")
+    assert anfpapers.parse_feed_digests(feed) == [{"date": "20260905",
+                                                   "url": "https://ainativefoundation.org/d/"}]
+
+
+def test_fetch_keeps_a_whole_digest_of_39_papers(monkeypatch):
+    page = "".join("<h3>{0}. Paper {0}</h3><p>https://huggingface.co/papers/2607.{0:05d}</p>".format(i)
+                   for i in range(1, 40))
+    _wire(monkeypatch, {anfpapers.FEED: FEED, DIGEST_URL: page})
+    recs = anfpapers.fetch()["records"]
+    assert len(recs) == 39 and recs[-1]["meta"]["digest_rank"] == 39
+
+
 def test_page_yields_ranked_ids_and_titles():
     assert anfpapers.parse_digest(PAGE) == [
         {"id": "2607.28618", "rank": 1, "title": "AskChem: Claim-Centered Chemistry"},

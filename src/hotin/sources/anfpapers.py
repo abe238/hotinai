@@ -42,10 +42,11 @@ USER_AGENT = "hotin/0.2.0"
 THROTTLE = Throttle(min_interval=2.0, jitter=1.0)
 # Only ids that look like arXiv ids are accepted out of the untrusted feed.
 _PAPER_ID = re.compile(r"huggingface\.co/papers/(\d{4}\.\d{4,5})")
-# Bound the per-run title lookups: a digest carries ~15-20 ids and each one
-# costs one HF API call. Seen ids are resolved once and then cached by the
-# board's own store, so this converges after the first couple of runs.
-MAX_LOOKUPS = 25
+# Bound the per-run title lookups: a digest carries up to ~40 ids (measured
+# 39 on 2026-09-04) and each one costs one HF API call on the shared
+# _hf.HOST_THROTTLE (~1-1.5s each, so ~1 min per bake). The cap must cover a
+# whole digest or papers_curated ships truncated.
+MAX_LOOKUPS = 50
 # Follow the newest N digest posts (one GET each). Two so a paper that fell
 # off today's list is still reachable when yesterday's bake was missed.
 MAX_DIGESTS = 2
@@ -53,7 +54,8 @@ DIGEST_TITLE_PREFIX = "AI Native Daily Paper Digest"
 _ITEM = re.compile(r"<item>(.*?)</item>", re.S)
 _TITLE = re.compile(r"<title>(.*?)</title>", re.S)
 _LINK = re.compile(r"<link>(.*?)</link>", re.S)
-_YYYYMMDD = re.compile(r"\b(\d{8})\b")
+# digest titles carry 20260903; a sibling post already used 2026-09-01
+_YYYYMMDD = re.compile(r"\b(\d{4})-?(\d{2})-?(\d{2})\b")
 _HEADING = re.compile(r"<h[23][^>]*>(.*?)</h[23]>", re.S)
 _TAG = re.compile(r"<[^>]+>")
 _NUMBERED = re.compile(r"^\s*(\d{1,3})\.\s*(.+?)\s*$", re.S)
@@ -105,7 +107,7 @@ def parse_feed_digests(feed_text: Any) -> List[Dict[str, str]]:
         url = link.group(1).strip()
         if not date or not url.startswith("https://ainativefoundation.org/"):
             continue
-        out.append({"date": date.group(1), "url": url})
+        out.append({"date": "".join(date.groups()), "url": url})
     out.sort(key=lambda d: d["date"], reverse=True)
     return out
 
@@ -230,7 +232,7 @@ def fetch(
             return {"records": [], "status": "empty",
                     "detail": "no daily paper digest post in the feed"}
         # newest digest first, so a paper repeated across days keeps today's
-        # date and rank, and MAX_LOOKUPS always covers today's list
+        # date and rank, and the MAX_LOOKUPS slice reaches today's list first
         entries: List[Dict[str, Any]] = []
         seen = set()
         for digest in digests[:MAX_DIGESTS]:
