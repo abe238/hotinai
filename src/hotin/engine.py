@@ -582,6 +582,12 @@ def score_entity(merged: dict, metric_weights: Dict[str, float]) -> dict:
     meta = merged.get("meta") if isinstance(merged.get("meta"), dict) else {}
     velocity = finite_float(meta.get("velocity_per_day"), 0.0) if meta.get("rising") else 0.0
     base += math.log1p(max(0.0, velocity)) * ENTITY_VELOCITY_WEIGHT
+    # Editorial curation (anfpapers meta["curated_by"]) counts as one more
+    # independent source in the same corroboration step every adapter earns,
+    # so a curated paper gets the +0.25 an extra source would, once, and a
+    # curated paper that is also on HF Daily gets 1.5 rather than 1.75.
+    if meta.get("curated_by"):
+        source_count += 1
     corroboration = 1.0 + 0.25 * max(0, source_count - 1)
     score = base * corroboration
     result["score"] = score if math.isfinite(score) else 0.0

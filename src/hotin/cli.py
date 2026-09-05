@@ -1113,6 +1113,9 @@ def _export(arguments: argparse.Namespace) -> int:
         "insiders": board.insider_rows(ins30[:limit]),
         "models": board.model_rows(models60), "models7": board.model_rows(models7),
         "papers": board.paper_rows(papers60), "papers7": board.paper_rows(papers7),
+        # today's ANF digest in digest order, from the unwindowed merge: the
+        # digest lists months-old papers the 7d/60d windows would drop
+        "papers_curated": board.curated_paper_rows(list(papers_merged.values())),
         "news": board.news_rows(news60, note=news_note),
         "news7": board.news_rows(news7, note=news_note),
     }

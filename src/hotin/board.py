@@ -322,11 +322,42 @@ def paper_rows(ranked: List[dict]) -> List[dict]:
         published = _date_label(_sig(p).get("created_at"))
         if published:
             receipts.append({"label": "published {}".format(published), "kind": "age"})
+        badges = [{"label": "paper-backed", "hot": False}] if _meta(p).get("linked_repo") else []
+        if _meta(p).get("curated_by"):
+            # editorial pick (AI Native Foundation daily digest): who and where
+            badges.append({"label": "curated", "hot": False})
+            rank = finite_int(_meta(p).get("digest_rank"), 0)
+            receipts.append({"label": "ANF #{}".format(rank) if rank else "ANF", "kind": "curated"})
         rows.append({"rank": i, "id": join_id(p.get("entity_id") or p.get("name")),
                      "name": p.get("name") or p.get("entity_id") or "?",
                      "url": p.get("url"), "meta": _clip(_meta(p).get("paper_summary"), 140),
-                     "receipts": receipts,
-                     "badges": [{"label": "paper-backed", "hot": False}] if _meta(p).get("linked_repo") else []})
+                     "receipts": receipts, "badges": badges})
+    return rows
+
+
+def curated_paper_rows(merged: List[dict]) -> List[dict]:
+    """`papers_curated`: the newest digest, in the curator's order.
+
+    Not windowed by publish date (digests routinely list months-old papers)
+    and not ranked by score: rank IS the digest position. Empty when no
+    record carries a digest date.
+    """
+    dated = [p for p in merged if isinstance(p, dict)
+             and _meta(p).get("curated_by") and isinstance(_meta(p).get("digest_date"), str)]
+    if not dated:
+        return []
+    newest = max(_meta(p)["digest_date"] for p in dated)
+    today = sorted((p for p in dated if _meta(p)["digest_date"] == newest),
+                   key=lambda p: finite_int(_meta(p).get("digest_rank"), 10 ** 6))
+    rows: List[dict] = []
+    for row, p in zip(paper_rows(today), today):
+        meta = _meta(p)
+        row.update({"rank": finite_int(meta.get("digest_rank"), row["rank"]),
+                    "meta": meta.get("paper_authors") if isinstance(meta.get("paper_authors"), str) else "",
+                    "curated_by": meta.get("curated_by"),
+                    "digest_url": meta.get("digest_url") if isinstance(meta.get("digest_url"), str) else None,
+                    "digest_date": newest})
+        rows.append(row)
     return rows
 
 
