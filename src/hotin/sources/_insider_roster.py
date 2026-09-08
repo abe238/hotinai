@@ -378,6 +378,21 @@ def _workers() -> int:
         return _DEFAULT_WORKERS
 
 
+_GQL_WORKERS_ENV = "HOTIN_INSIDERS_GQL_WORKERS"
+
+
+def _gql_workers() -> int:
+    """Concurrent GraphQL batches. Default 1: measured 2026-09-08 from the CI runner,
+    4 workers drew five 403 secondary-limit replies (Retry-After 60) and took 448s,
+    2 workers 660s with a 300s Retry-After and 13 unresolved accounts, serial ~400s.
+    The same code from a residential address ran 4 workers clean in 144s, so the
+    knob stays for hosts GitHub treats differently."""
+    try:
+        return max(1, int(os.environ.get(_GQL_WORKERS_ENV, 1)))
+    except (TypeError, ValueError):
+        return 1
+
+
 def _poll_many(logins: Sequence[str], token: str, *, window_days: int,
                now: Optional[datetime]) -> Dict[str, Tuple[List[Dict[str, Any]], bool]]:
     """``{login: _poll_one(login)}`` in roster order, on ``_workers()`` threads.
@@ -531,7 +546,7 @@ def _poll_via_graphql(
 ) -> Tuple[List[Dict[str, Any]], Dict[str, int]]:
     """Poll the whole roster in batches. Returns ``(events, outcome_tally)``.
 
-    Batches run ``_workers()`` at a time (measured: ~8s per batch, 56 batches
+    Batches run ``_gql_workers()`` at a time (measured: ~8s per batch, 56 batches
     for 802 handles = 399s serial). Submitted in chunks of ``workers`` so the
     L4 budget floor is re-checked between chunks; results are tallied in
     roster order, so the output is byte-identical to a serial run.
@@ -540,7 +555,7 @@ def _poll_via_graphql(
     tally: Dict[str, int] = {}
     remaining_budget: Optional[int] = None
     batches = list(_gql.batches(list(roster), _gql.BATCH_USERS))
-    workers = max(1, min(_workers(), len(batches)))
+    workers = max(1, min(_gql_workers(), len(batches)))
 
     def run(batch: Sequence[str]) -> Dict[str, Dict[str, Any]]:
         return _poll_batch_tree(
@@ -791,8 +806,21 @@ def poll_roster(
         return saved["events"]
     _gql.BATCH_TRACE.clear()
     _gql.LAST_ERROR_BODY.clear()
+    _t_poll = time.monotonic()
     events, tally = _poll_via_graphql(
         roster, token, window_days=window_days, now=now)
+    # Ship the evidence with every bake: 2026-09-08 a 4-worker poll from the CI
+    # runner silently spent 5 min in GitHub secondary-limit waits (403 +
+    # Retry-After 60) and nothing in the log said so.
+    trace = list(_gql.BATCH_TRACE)
+    statuses = {}
+    for b in trace:
+        statuses[b.get("status")] = statuses.get(b.get("status"), 0) + 1
+    waited = sum(int(b.get("retry_after") or 0) for b in trace)
+    print("insiders: {} | {:.0f}s, workers={}, batches={}, statuses={}, retry_after_total={}s".format(
+        summarize_outcomes(tally, len(roster)), time.monotonic() - _t_poll, _gql_workers(),
+        len(trace), {str(k): v for k, v in sorted(statuses.items(), key=lambda kv: str(kv[0]))},
+        waited), file=sys.stderr)
     auth_failures = tally.get(_gql.AUTH_FAILED, 0)
     rate_limited = tally.get(_gql.RATE_LIMITED, 0)
     LAST_OUTCOMES.clear()

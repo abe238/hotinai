@@ -24,6 +24,7 @@ def _no_throttle(monkeypatch):
     # Serial by default: the floor tests below count on the budget being
     # re-checked before EVERY batch. The concurrency tests set their own.
     monkeypatch.setenv(core._WORKERS_ENV, "1")
+    monkeypatch.setenv(core._GQL_WORKERS_ENV, "1")
     core._reset_memo()
     core._RATE_LIMIT_SEEN.clear()
 
@@ -433,6 +434,7 @@ def _stub_tree(calls, sleep=0.0, drain=False):
 def _run_pool(monkeypatch, workers, roster, **stub_kw):
     calls = {"batches": [], "threads": set(), "lock": threading.Lock()}
     monkeypatch.setenv(core._WORKERS_ENV, str(workers))
+    monkeypatch.setenv(core._GQL_WORKERS_ENV, str(workers))
     monkeypatch.setattr(core, "_poll_batch_tree", _stub_tree(calls, **stub_kw))
     t0 = time.monotonic()
     events, tally = core._poll_via_graphql(roster, "t", window_days=45, now=None)
