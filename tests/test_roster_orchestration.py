@@ -8,6 +8,8 @@ an operator can tell that the roster is quietly eroding.
 import io
 import json
 import re
+import threading
+import time
 
 import pytest
 
@@ -19,6 +21,9 @@ from hotin.sources import _roster_graphql as G
 def _no_throttle(monkeypatch):
     monkeypatch.setattr(core._THROTTLE, "wait", lambda: None)
     monkeypatch.setattr(core._THROTTLE, "wait_for_retry_after", lambda *a, **k: None)
+    # Serial by default: the floor tests below count on the budget being
+    # re-checked before EVERY batch. The concurrency tests set their own.
+    monkeypatch.setenv(core._WORKERS_ENV, "1")
     core._reset_memo()
     core._RATE_LIMIT_SEEN.clear()
 
@@ -407,3 +412,55 @@ def test_a_persistent_secondary_limit_still_gives_up_honestly(monkeypatch):
     monkeypatch.setattr(core, "_roster", lambda config: _roster_of(25))
     with pytest.raises(core.RosterRateLimitError):
         core.poll_roster(config={"GITHUB_TOKEN": "t"})
+
+
+# --- batches run concurrently, chunked by the worker count -----------------
+
+def _stub_tree(calls, sleep=0.0, drain=False):
+    """Stand-in for _poll_batch_tree: every account ok with one event."""
+    def tree(logins, token, *, window_days, now, stars, deadline, depth=0):
+        with calls["lock"]:
+            calls["batches"].append(list(logins))
+            calls["threads"].add(threading.current_thread().name)
+        time.sleep(sleep)
+        if drain:
+            core._RATE_LIMIT_SEEN["remaining"] = G.POINTS_FLOOR - 1
+        return {u: {"login": u, "events": [{"login": u}], "outcome": G.OK,
+                    "needs_rest": False} for u in logins}
+    return tree
+
+
+def _run_pool(monkeypatch, workers, roster, **stub_kw):
+    calls = {"batches": [], "threads": set(), "lock": threading.Lock()}
+    monkeypatch.setenv(core._WORKERS_ENV, str(workers))
+    monkeypatch.setattr(core, "_poll_batch_tree", _stub_tree(calls, **stub_kw))
+    t0 = time.monotonic()
+    events, tally = core._poll_via_graphql(roster, "t", window_days=45, now=None)
+    return events, tally, calls, time.monotonic() - t0
+
+
+def test_four_workers_finish_eight_batches_in_two_rounds_with_the_serial_result(monkeypatch):
+    roster = _roster_of(G.BATCH_USERS * 8)
+    serial_events, serial_tally, _, _ = _run_pool(monkeypatch, 1, roster, sleep=0.2)
+    events, tally, calls, secs = _run_pool(monkeypatch, 4, roster, sleep=0.2)
+    assert secs < 0.9, "8 x 0.2s on 4 workers is two rounds, not eight"
+    assert events == serial_events and tally == serial_tally
+    assert len(calls["threads"]) > 1, "a real pool, not a fast clock"
+
+
+def test_the_floor_is_re_checked_between_chunks(monkeypatch):
+    """A chunk that drains the pool stops the NEXT chunk from being submitted;
+    everything unreached gets an explicit rate_limited row."""
+    roster = _roster_of(G.BATCH_USERS * 8)
+    events, tally, calls, _ = _run_pool(monkeypatch, 4, roster, drain=True)
+    assert len(calls["batches"]) == 4, "only the first chunk ran"
+    assert tally == {G.OK: G.BATCH_USERS * 4, G.RATE_LIMITED: G.BATCH_USERS * 4}
+    assert len(events) == G.BATCH_USERS * 4
+
+
+def test_one_worker_keeps_the_serial_call_order_and_builds_no_pool(monkeypatch):
+    roster = _roster_of(G.BATCH_USERS * 8)
+    monkeypatch.setattr(core, "ThreadPoolExecutor",
+                        lambda *a, **k: pytest.fail("no pool at workers=1"))
+    _, _, calls, _ = _run_pool(monkeypatch, 1, roster)
+    assert calls["batches"] == [list(b) for b in G.batches(roster, G.BATCH_USERS)]

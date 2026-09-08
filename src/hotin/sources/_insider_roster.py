@@ -30,6 +30,7 @@ import hashlib
 import json
 import os
 import re
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 import sys
@@ -125,6 +126,11 @@ _RATE_LIMIT_TOLERANCE = 0.50
 # was rather than guessing. Populated opportunistically; empty is normal.
 _RATE_LIMIT_SEEN: Dict[str, Any] = {}
 
+#: Guards the module-level diagnostics (_RATE_LIMIT_SEEN, _gql.BATCH_TRACE) now
+#: that GraphQL batches run on a worker pool. ponytail: one global lock, the
+#: critical sections are dict/list writes measured in microseconds.
+_STATE_LOCK = threading.Lock()
+
 #: Last poll's per-outcome tally, for the run summary and drift alerting (L5).
 LAST_OUTCOMES: Dict[str, int] = {}
 
@@ -133,12 +139,13 @@ def _note_quota(headers: Any) -> None:
     """Record GitHub's own rate-limit headers. Never raises: this is diagnostics,
     and diagnostics must not be able to break the thing they describe."""
     try:
-        for header, key in (("X-RateLimit-Limit", "limit"),
-                            ("X-RateLimit-Remaining", "remaining"),
-                            ("X-RateLimit-Reset", "reset")):
-            value = headers.get(header)
-            if value is not None:
-                _RATE_LIMIT_SEEN[key] = value
+        with _STATE_LOCK:
+            for header, key in (("X-RateLimit-Limit", "limit"),
+                                ("X-RateLimit-Remaining", "remaining"),
+                                ("X-RateLimit-Reset", "reset")):
+                value = headers.get(header)
+                if value is not None:
+                    _RATE_LIMIT_SEEN[key] = value
     except Exception:
         pass
 
@@ -440,14 +447,15 @@ def _poll_batch_tree(
         payload, status, headers = _gql.post(_gql.build_query(logins, stars), token)
         if headers is not None:
             _note_quota(headers)
-        _gql.BATCH_TRACE.append({
-            "n": len(logins), "depth": depth, "status": status,
-            "secs": round(time.monotonic() - _t0, 1),
-            "retry_after": (headers or {}).get("Retry-After") if headers else None,
-            "gql_remaining": _gql.points_remaining(payload),
-            "err": (payload.get("errors") or [{}])[0].get("type")
-                   if isinstance(payload, dict) and payload.get("errors") else None,
-        })
+        with _STATE_LOCK:
+            _gql.BATCH_TRACE.append({
+                "n": len(logins), "depth": depth, "status": status,
+                "secs": round(time.monotonic() - _t0, 1),
+                "retry_after": (headers or {}).get("Retry-After") if headers else None,
+                "gql_remaining": _gql.points_remaining(payload),
+                "err": (payload.get("errors") or [{}])[0].get("type")
+                       if isinstance(payload, dict) and payload.get("errors") else None,
+            })
         if status == 401:
             return {u: {"login": u, "events": [], "outcome": _gql.AUTH_FAILED,
                         "needs_rest": False, "detail": "401"} for u in logins}
@@ -498,7 +506,8 @@ def _poll_batch_tree(
                 # GraphQL reports its own pool. Never invent a `limit` here --
                 # reporting a number GitHub did not say is what this whole
                 # mechanism exists to stop.
-                _RATE_LIMIT_SEEN["remaining"] = remaining
+                with _STATE_LOCK:
+                    _RATE_LIMIT_SEEN["remaining"] = remaining
             return _gql.parse_batch(payload, logins, window_days=window_days,
                                     now=now, fresh_fn=_fresh)
         if not shrink:
@@ -520,56 +529,86 @@ def _poll_via_graphql(
     roster: Sequence[str], token: str, *, window_days: int,
     now: Optional[datetime],
 ) -> Tuple[List[Dict[str, Any]], Dict[str, int]]:
-    """Poll the whole roster in batches. Returns ``(events, outcome_tally)``."""
+    """Poll the whole roster in batches. Returns ``(events, outcome_tally)``.
+
+    Batches run ``_workers()`` at a time (measured: ~8s per batch, 56 batches
+    for 802 handles = 399s serial). Submitted in chunks of ``workers`` so the
+    L4 budget floor is re-checked between chunks; results are tallied in
+    roster order, so the output is byte-identical to a serial run.
+    """
     events: List[Dict[str, Any]] = []
     tally: Dict[str, int] = {}
     remaining_budget: Optional[int] = None
-    pending = list(roster)
+    batches = list(_gql.batches(list(roster), _gql.BATCH_USERS))
+    workers = max(1, min(_workers(), len(batches)))
 
-    for batch in _gql.batches(pending, _gql.BATCH_USERS):
-        # L4: stop BEFORE spending the last of the pool, and write an explicit
-        # rate_limited row for everything we did not reach. Skipping them would
-        # make "not looked at" indistinguishable from "starred nothing".
-        # _RATE_LIMIT_SEEN is fed from BOTH HTTP headers (strings) and the
-        # GraphQL rateLimit block (ints), so coerce rather than compare raw.
-        budget = finite_int(remaining_budget, -1) if remaining_budget is not None else -1
-        if budget >= 0 and budget < _gql.POINTS_FLOOR:
-            for login in batch:
-                tally[_gql.RATE_LIMITED] = tally.get(_gql.RATE_LIMITED, 0) + 1
-            continue
-        results = _poll_batch_tree(
+    def run(batch: Sequence[str]) -> Dict[str, Dict[str, Any]]:
+        return _poll_batch_tree(
             batch, token, window_days=window_days, now=now,
             stars=_gql.BATCH_STARS,
             deadline=time.monotonic() + _BISECT_SECONDS)
-        remaining_budget = _RATE_LIMIT_SEEN.get("remaining", remaining_budget)
 
-        # L3: a count-capped page that may have cut in-window stars goes to
-        # REST, which paginates on the date. Polled together (worker pool),
-        # then tallied below in batch order so the outcome is order-free.
-        rest_polls = _poll_many(
-            [u for u in batch if (results.get(u) or {}).get("needs_rest")],
-            token, window_days=window_days, now=now)
-        for login in batch:
-            entry = results.get(login)
-            if entry is None:
-                tally[_gql.UNRESOLVED] = tally.get(_gql.UNRESOLVED, 0) + 1
+    # No pool at all when serial: the loop below is then exactly the old one.
+    pool = ThreadPoolExecutor(max_workers=workers) if workers > 1 else None
+    try:
+        for start in range(0, len(batches), workers):
+            chunk = batches[start:start + workers]
+            # L4: stop BEFORE spending the last of the pool, and write an explicit
+            # rate_limited row for everything we did not reach. Skipping them would
+            # make "not looked at" indistinguishable from "starred nothing".
+            # _RATE_LIMIT_SEEN is fed from BOTH HTTP headers (strings) and the
+            # GraphQL rateLimit block (ints), so coerce rather than compare raw.
+            budget = finite_int(remaining_budget, -1) if remaining_budget is not None else -1
+            if budget >= 0 and budget < _gql.POINTS_FLOOR:
+                for batch in chunk:
+                    for login in batch:
+                        tally[_gql.RATE_LIMITED] = tally.get(_gql.RATE_LIMITED, 0) + 1
                 continue
-            if entry.get("needs_rest"):
-                # Counted, because this is the metric that says whether the
-                # migration is still paying for itself: a roster selected for
-                # prolific starrers can route itself back to REST one account at
-                # a time, with no single account being at fault.
-                tally["rest_fallback"] = tally.get("rest_fallback", 0) + 1
-                rest_events, outcome = rest_polls[login]
-                mapped = {_OK: _gql.OK, _AUTH_FAILED: _gql.AUTH_FAILED,
-                          _RATE_LIMITED: _gql.RATE_LIMITED}.get(
-                              outcome, _gql.UNRESOLVED)
-                entry = {"events": rest_events, "outcome": mapped}
-            outcome = entry.get("outcome", _gql.UNRESOLVED)
-            tally[outcome] = tally.get(outcome, 0) + 1
-            if outcome == _gql.OK:
-                events.extend(entry.get("events") or [])
+            if pool is None:
+                chunk_results = [run(chunk[0])]
+            else:
+                chunk_results = list(pool.map(run, chunk))
+            with _STATE_LOCK:
+                remaining_budget = _RATE_LIMIT_SEEN.get("remaining", remaining_budget)
+            for batch, results in zip(chunk, chunk_results):
+                _tally_batch(batch, results, token, events, tally,
+                             window_days=window_days, now=now)
+    finally:
+        if pool is not None:
+            pool.shutdown()
     return events, tally
+
+
+def _tally_batch(batch: Sequence[str], results: Dict[str, Dict[str, Any]],
+                 token: str, events: List[Dict[str, Any]], tally: Dict[str, int],
+                 *, window_days: int, now: Optional[datetime]) -> None:
+    """Fold one batch's results into ``events``/``tally`` in roster order."""
+    # L3: a count-capped page that may have cut in-window stars goes to
+    # REST, which paginates on the date. Polled together (worker pool),
+    # then tallied below in batch order so the outcome is order-free.
+    rest_polls = _poll_many(
+        [u for u in batch if (results.get(u) or {}).get("needs_rest")],
+        token, window_days=window_days, now=now)
+    for login in batch:
+        entry = results.get(login)
+        if entry is None:
+            tally[_gql.UNRESOLVED] = tally.get(_gql.UNRESOLVED, 0) + 1
+            continue
+        if entry.get("needs_rest"):
+            # Counted, because this is the metric that says whether the
+            # migration is still paying for itself: a roster selected for
+            # prolific starrers can route itself back to REST one account at
+            # a time, with no single account being at fault.
+            tally["rest_fallback"] = tally.get("rest_fallback", 0) + 1
+            rest_events, outcome = rest_polls[login]
+            mapped = {_OK: _gql.OK, _AUTH_FAILED: _gql.AUTH_FAILED,
+                      _RATE_LIMITED: _gql.RATE_LIMITED}.get(
+                          outcome, _gql.UNRESOLVED)
+            entry = {"events": rest_events, "outcome": mapped}
+        outcome = entry.get("outcome", _gql.UNRESOLVED)
+        tally[outcome] = tally.get(outcome, 0) + 1
+        if outcome == _gql.OK:
+            events.extend(entry.get("events") or [])
 
 
 def summarize_outcomes(tally: Dict[str, int], total: int) -> str:
