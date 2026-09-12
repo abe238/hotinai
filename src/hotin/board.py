@@ -199,6 +199,14 @@ def _badges(record: dict) -> List[Dict[str, Any]]:
     return out
 
 
+def _cooling(signal: dict) -> bool:
+    """A spike that died: this week under a quarter of a >=50-star previous week."""
+    if not isinstance(signal.get("stars_7d"), int):
+        return False
+    prev = finite_int(signal.get("stars_prev_7d"), 0)
+    return prev >= 50 and signal["stars_7d"] < 0.25 * prev
+
+
 def repo_rows(ranked: List[dict]) -> List[dict]:
     """Fused repo board rows: receipts = the numbers, badges = the verdicts."""
     rows: List[dict] = []
@@ -217,7 +225,12 @@ def repo_rows(ranked: List[dict]) -> List[dict]:
         elif finite_int(signal.get("stars"), 0):
             receipts.append({"label": "{} stars".format(_num(finite_int(signal.get("stars")))), "kind": "stars"})
         vel = finite_float(_meta(repo).get("velocity_per_day"), 0.0)
-        if vel:
+        if isinstance(signal.get("stars_7d"), int):
+            # trailing 7 complete days from GitHub's star history, not the
+            # observation store's first-to-last slope (a lifetime average for
+            # repos hotin has tracked since birth)
+            receipts.append({"label": "+{} in 7d".format(_num(signal["stars_7d"])), "kind": "stars"})
+        elif vel:
             receipts.append({"label": "+{}/day".format(_num(vel)), "kind": "stars"})
         if finite_int(signal.get("hn_points"), 0):
             receipts.append({"label": "{} pts".format(_num(finite_int(signal.get("hn_points")))), "kind": "hn"})
@@ -239,6 +252,18 @@ def repo_rows(ranked: List[dict]) -> List[dict]:
             "name": slug, "url": repo.get("url"), "meta": meta,
             "receipts": receipts, "badges": _badges(repo),
         })
+        if _cooling(signal):
+            # the store's slope still says rising/viral for a spike that died;
+            # both display as "trending", so drop that label unless GitHub
+            # trending itself put it there (then just turn the heat off)
+            raw = set(repo.get("badges") or [])
+            if "trending" in raw:
+                for b in rows[-1]["badges"]:
+                    if b.get("label") == "trending":
+                        b["hot"] = False
+            else:
+                rows[-1]["badges"] = [b for b in rows[-1]["badges"] if b.get("label") != "trending"]
+            rows[-1]["badges"].append({"label": "cooling", "hot": False})
         if "star_days" in _meta(repo):
             rows[-1]["spark"] = _meta(repo)["star_days"]
     return rows
@@ -430,9 +455,7 @@ def rising_rows(ranked: List[dict]) -> List[dict]:
             "url": r.get("url"), "meta": meta,
             "receipts": receipts, "badges": [{"label": "fresh", "hot": False}],
         })
-        if (isinstance(s.get("stars_7d"), int)
-                and finite_int(s.get("stars_prev_7d"), 0) >= 50
-                and s["stars_7d"] < 0.25 * finite_int(s.get("stars_prev_7d"), 0)):
+        if _cooling(s):
             rows[-1]["badges"].append({"label": "cooling", "hot": False})
         if "star_days" in _meta(r):
             rows[-1]["spark"] = _meta(r)["star_days"]

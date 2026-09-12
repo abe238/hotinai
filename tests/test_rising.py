@@ -94,3 +94,23 @@ def test_history_receipts_cooling_and_spark():
         row = board.rising_rows([rec])[0]
         assert ("cooling" in [b["label"] for b in row["badges"]]) == cooling
         assert row["spark"] == [0, 5, 10]
+
+
+def test_repo_rows_prefer_7d_receipt_and_drop_dead_rising_badge():
+    rec = {"canonical_repo": "a/b", "url": "u",
+           "signal": {"stars": 219000, "stars_7d": 900, "stars_prev_7d": 40000},
+           "badges": ["fresh", "rising"], "meta": {"velocity_per_day": 7400.0, "rising": True}}
+    row = board.repo_rows([rec])[0]
+    labels = [r["label"] for r in row["receipts"]]
+    assert "+900 in 7d" in labels and not any("/day" in x for x in labels)
+    badge_labels = [b["label"] for b in row["badges"]]
+    assert badge_labels == ["fresh", "cooling"]      # rising displays as trending; gone
+    rec["badges"] = ["trending", "viral"]             # GitHub trending stays, heat off
+    row = board.repo_rows([rec])[0]
+    assert [(b["label"], b["hot"]) for b in row["badges"]] == [("trending", False), ("cooling", False)]
+    # no history -> the observation-store slope and its badge stand
+    rec2 = {"canonical_repo": "c/d", "signal": {"stars": 10}, "badges": ["rising"],
+            "meta": {"velocity_per_day": 12.0}}
+    row2 = board.repo_rows([rec2])[0]
+    assert any("+12/day" == r["label"] for r in row2["receipts"])
+    assert [b["label"] for b in row2["badges"]] == ["trending"]
