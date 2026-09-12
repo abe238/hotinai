@@ -48,6 +48,16 @@ Returns `{query, searched[], as_of, total, offset, nextOffset, matches[]}`. Ever
 requested list is searched in full and results de-duplicated by entity id **before**
 the limit is applied, so a broad query does not starve later lists.
 
+### `find_on_board` (declarative)
+
+The search box on hotin.ai is also a WebMCP **declarative** tool: the `<form>` carries
+`toolname="find_on_board"`, a `tooldescription`, and a `toolparamdescription` on its one
+input `q`. Agents (and static auditors) can discover it from the HTML alone, without
+running the script. On an agent-invoked submit the page answers via `respondWith()` with
+`{query, note, results[]}` (`id`, `name`, `tab`, `url`, `live`, `description`), capped at
+10 rows. It never navigates: the site's CSP sets `form-action 'none'`. Same read-only
+posture and untrusted-data note as the two imperative tools.
+
 ## Security model
 
 Row text is third-party and attacker-controlled (repo names and descriptions from
