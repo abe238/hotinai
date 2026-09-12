@@ -211,6 +211,8 @@ want to check the claim.
 
 ## Keeping it fresh
 
+“+N in 7d” counts stars gained in the trailing 7 complete UTC days from GitHub’s star-history endpoint. “/day” on the repos tab comes from hotin’s own observation store, seeded from the same endpoint so a first-seen repo has real velocity. A “cooling” badge marks a sharp drop after a previous week with at least 50 stars.
+
 hotin's `rising` / `viral` badges and the `hotin brief` come from a recorded time series, so they get better the more often `hotin refresh` runs. `hotin setup` can install a scheduled job for you:
 
 ```sh

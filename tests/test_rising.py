@@ -15,7 +15,7 @@ def test_age_days_floor_and_unknown():
     assert _age_days("not-a-date") > 10000
 
 
-def test_velocity_is_stars_per_day():
+def test_velocity_falls_back_to_stars_per_day():
     rec = {"signal": {"stars": 1000, "created_at": _iso(10)}}
     assert abs(_rising_velocity(rec) - 100.0) < 0.01
     # a young repo with fewer total stars can out-rank an older bigger one
@@ -56,3 +56,41 @@ def test_dated_within_drops_old_and_undated():
     assert _dated_within(_iso(2), cutoff) is True
     assert _dated_within(_iso(30), cutoff) is False
     assert _dated_within(None, cutoff) is False
+
+
+def test_ranking_uses_history_and_lifetime_fallback(monkeypatch):
+    from hotin import cli
+    from hotin.sources import _star_history
+    records = [
+        {"canonical_repo": "a/spike", "signal": {"stars": 326, "created_at": _iso(1)}},
+        {"canonical_repo": "b/steady", "signal": {"stars": 2000, "created_at": _iso(40)}},
+        {"canonical_repo": "c/missing", "signal": {"stars": 10, "created_at": _iso(10)}},
+    ]
+    monkeypatch.setattr(cli.github, "fetch", lambda *a, **kw: {"records": records})
+
+    def fetch(repo, *args, **kwargs):
+        gains = {"a/spike": [0, 0, 0, 326, 1, 0, 0], "b/steady": [100] * 7}.get(repo)
+        if gains is None:
+            return None
+        return {"stars_7d": sum(gains), "stars_prev_7d": 0,
+                "stars_1d": gains[-1], "daily": list(enumerate(gains))}
+
+    monkeypatch.setattr(_star_history, "fetch_history", fetch)
+    ranked = cli._rising_ranked({}, 3)
+    assert [r["canonical_repo"] for r in ranked] == ["b/steady", "a/spike", "c/missing"]
+    assert ranked[0]["signal"]["velocity_per_day"] == 100
+    assert ranked[1]["signal"]["velocity_per_day"] == 46.7
+    assert ranked[0]["signal"]["velocity_basis"] == "7d"
+    assert ranked[2]["signal"]["velocity_basis"] == "lifetime"
+
+
+def test_history_receipts_cooling_and_spark():
+    rec = {"canonical_repo": "a/b", "signal": {"stars_7d": 1056},
+           "meta": {"star_days": [0, 5, 10]}}
+    assert board.rising_rows([rec])[0]["receipts"][0]["label"] == "+1.1k in 7d"
+    assert board.repo_rows([rec])[0]["spark"] == [0, 5, 10]
+    for current, cooling in [(20, True), (300, False)]:
+        rec["signal"].update(stars_7d=current, stars_prev_7d=400)
+        row = board.rising_rows([rec])[0]
+        assert ("cooling" in [b["label"] for b in row["badges"]]) == cooling
+        assert row["spark"] == [0, 5, 10]

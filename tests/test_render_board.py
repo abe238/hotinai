@@ -118,3 +118,16 @@ def test_missing_keys_never_raise():
         render_text(bad)
         render_md(bad)
         render_html(bad)
+
+
+def test_spark_points_and_cooling():
+    out = render_html([dict(ROWS[0], spark=[0, 5, 10],
+                            badges=[{"label": "cooling", "hot": False}])])
+    assert out.count('<svg class="spark"') == 1
+    assert 'points="0.0,13.0 30.0,7.0 60.0,1.0"' in out
+    assert out.index("<svg") < out.index('<div class="receipts">')
+    assert 'class="badge cool"' in out
+    assert "<svg" not in render_html(ROWS)
+    for spark in ([], [1], [0, -1], [0, float("nan")], [0, float("inf")], [0, "5"]):
+        assert "<svg" not in render_html([dict(ROWS[0], spark=spark)])
+    assert 'points="0.0,13.0 60.0,13.0"' in render_html([dict(ROWS[0], spark=[0, 0])])

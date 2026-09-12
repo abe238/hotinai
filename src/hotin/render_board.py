@@ -22,6 +22,7 @@ a stable identifier instead of the free-text display name.
 """
 
 import html
+import math
 
 from hotin.render import color, hyperlink, sanitize
 
@@ -53,6 +54,7 @@ _CHIP_CLASS = {
 # badge label -> ANSI 256 color for the terminal board.
 _BADGE_ANSI = {
     "fresh": "46",
+    "cooling": "245",
     "smart-money": "220",
     "paper-backed": "45",
     "trending": "99",
@@ -64,6 +66,7 @@ _BADGE_ANSI = {
 # badge label -> badge CSS class on the web board.
 _BADGE_CLASS = {
     "fresh": "fresh",
+    "cooling": "cool",
     "smart-money": "smart",
     "paper-backed": "paper",
     "trending": "trend",
@@ -193,16 +196,29 @@ def render_html(rows, *, entity="repos"):
             inner = '<a href="{}" target="_blank" rel="noopener">{}</a>'.format(
                 html.escape(str(url), quote=True), inner)
 
+        spark_html = ""
+        spark = row.get("spark")
+        if (isinstance(spark, list) and len(spark) >= 2
+                and all(type(v) in (int, float) and v >= 0
+                        and (isinstance(v, int) or math.isfinite(v)) for v in spark)):
+            peak = max(spark)
+            points = " ".join("{:.1f},{:.1f}".format(
+                60 * i / (len(spark) - 1), 13 - 12 * (v / peak) if peak else 13)
+                for i, v in enumerate(spark))
+            spark_html = ('<svg class="spark" viewBox="0 0 60 14" preserveAspectRatio="none" '
+                          'aria-hidden="true"><polyline fill="none" points="{}"/></svg>').format(points)
+
         row_id = row.get("id")
         id_attr = ' data-id="{}"'.format(html.escape(str(row_id), quote=True)) if row_id else ""
         out.append(
             '<div class="row"{id_attr}><div class="rank">{rank}</div>'
             '<div class="item"><div class="name">{inner}</div>'
-            '<div class="receipts">{chips}</div></div>'
+            '{spark}<div class="receipts">{chips}</div></div>'
             '<div class="badges">{badges}</div></div>'.format(
                 id_attr=id_attr,
                 rank=rank,
                 inner=inner,
+                spark=spark_html,
                 chips="".join(chips),
                 badges="".join(badges),
             )

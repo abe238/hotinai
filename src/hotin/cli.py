@@ -19,7 +19,7 @@ from .config import config_dir, env_path, load_config, get as _config_get
 from .render import color, defang_markers, hyperlink, sanitize
 from .sources import (anfpapers, frontier, github, hfmodels, hfpapers, hn, smartmoney,
                       insiders, npm, trends, collections, reddit, rssnews,
-                      smolai, youtube, _readme_desc)
+                      smolai, youtube, _readme_desc, _star_history)
 
 
 # Entities (the nouns, each self-ranked) + MANAGE verbs. The raw single-source
@@ -684,13 +684,15 @@ def _age_days(created_iso: Any) -> int:
 
 def _rising_velocity(record: dict) -> float:
     signal = record.get("signal") if isinstance(record, dict) else None
+    if isinstance((signal or {}).get("stars_7d"), int):
+        return signal["stars_7d"] / 7.0
     stars = finite_int((signal or {}).get("stars"), 0)
     return stars / _age_days((signal or {}).get("created_at"))
 
 
 def _rising_ranked(config: Optional[dict], limit: int, max_age: int = _RISING_MAX_AGE) -> List[dict]:
     """Freshest fast-climbing AI repos: union of domain-scoped GitHub searches,
-    ranked by star velocity (stars/day since creation). GitHub's own board ranks
+    ranked by trailing 7-day star velocity (lifetime fallback). GitHub's own board ranks
     by absolute stars, which buries young rockets under established mega-repos.
     `max_age` caps repo age in days; a tight window also narrows the fetch so a
     small-but-fast young repo isn't buried under bigger ones in the star sort."""
@@ -707,12 +709,14 @@ def _rising_ranked(config: Optional[dict], limit: int, max_age: int = _RISING_MA
                 pool[key] = record
     fresh = [r for r in pool.values()
              if _age_days((r.get("signal") or {}).get("created_at")) <= max_age]
+    _star_history.annotate(fresh, _config_get(config or {}, "GITHUB_TOKEN"))
     fresh.sort(key=_rising_velocity, reverse=True)
     ranked = fresh[: max(limit, 0)]
     for record in ranked:
         signal = record.setdefault("signal", {})
         signal["age_days"] = _age_days(signal.get("created_at"))
         signal["velocity_per_day"] = round(_rising_velocity(record), 1)
+        signal["velocity_basis"] = "7d" if isinstance(signal.get("stars_7d"), int) else "lifetime"
     return ranked
 
 
@@ -736,6 +740,8 @@ def _rising(arguments: argparse.Namespace) -> int:
         _dump_json({"rising": [{"rank": i + 1, "repo": r.get("canonical_repo"),
                                 "url": r.get("url"),
                                 "stars": (r.get("signal") or {}).get("stars"),
+                                "stars_7d": (r.get("signal") or {}).get("stars_7d"),
+                                "velocity_basis": (r.get("signal") or {}).get("velocity_basis"),
                                 "velocity_per_day": (r.get("signal") or {}).get("velocity_per_day"),
                                 "age_days": (r.get("signal") or {}).get("age_days")}
                                for i, r in enumerate(ranked)]})
@@ -1097,6 +1103,13 @@ def _export(arguments: argparse.Namespace) -> int:
     news60, news7 = _windows(news, lambda r: (r.get("meta") or {}).get("date"))
     news7 = _news7_order(news7, _news_rank)
     timings.mark("windows")
+    _star_history.annotate(repos, _config_get(config, "GITHUB_TOKEN"))
+    _star_history.annotate(ins30[:limit], _config_get(config, "GITHUB_TOKEN"))
+    # Seed the observation store with the trailing 14 days so the NEXT run's
+    # annotate_velocity sees real history for a first-seen repo (hourly runs).
+    with _cache_session() as cache:
+        _star_history.seed_observations(cache, repos + rising + rising7 + ins30[:limit])
+    timings.mark("star_history")
 
     # GitHub-blank descriptions, recovered from the README. One batched
     # GraphQL request for the whole board, run here so only rows that will

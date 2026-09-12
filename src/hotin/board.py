@@ -239,6 +239,8 @@ def repo_rows(ranked: List[dict]) -> List[dict]:
             "name": slug, "url": repo.get("url"), "meta": meta,
             "receipts": receipts, "badges": _badges(repo),
         })
+        if "star_days" in _meta(repo):
+            rows[-1]["spark"] = _meta(repo)["star_days"]
     return rows
 
 
@@ -401,8 +403,8 @@ def news_rows(items: List[dict], note: Optional[str] = None) -> List[dict]:
 def rising_rows(ranked: List[dict]) -> List[dict]:
     """`hotin rising`: the freshest repos climbing fastest — velocity, not size.
 
-    Lead receipt is stars/day (why it's rising), then total stars and age so a
-    2-day-old rocket reads differently from a steady 60-day climber.
+    Lead with trailing 7-day stars (lifetime stars/day fallback), then total
+    stars and age so a 2-day-old rocket differs from a steady 60-day climber.
     """
     rows: List[dict] = []
     for i, r in enumerate(ranked, 1):
@@ -411,7 +413,9 @@ def rising_rows(ranked: List[dict]) -> List[dict]:
         s = _sig(r)
         receipts: List[Dict[str, str]] = []
         vel = finite_float(s.get("velocity_per_day"), 0.0)
-        if vel:
+        if isinstance(s.get("stars_7d"), int):
+            receipts.append({"label": "+{} in 7d".format(_num(s["stars_7d"])), "kind": "stars"})
+        elif vel:
             receipts.append({"label": "+{}/day".format(_num(vel)), "kind": "stars"})
         stars = finite_int(s.get("stars"), 0)
         if stars:
@@ -426,6 +430,12 @@ def rising_rows(ranked: List[dict]) -> List[dict]:
             "url": r.get("url"), "meta": meta,
             "receipts": receipts, "badges": [{"label": "fresh", "hot": False}],
         })
+        if (isinstance(s.get("stars_7d"), int)
+                and finite_int(s.get("stars_prev_7d"), 0) >= 50
+                and s["stars_7d"] < 0.25 * finite_int(s.get("stars_prev_7d"), 0)):
+            rows[-1]["badges"].append({"label": "cooling", "hot": False})
+        if "star_days" in _meta(r):
+            rows[-1]["spark"] = _meta(r)["star_days"]
     return rows
 
 

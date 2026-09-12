@@ -29,7 +29,7 @@ def test_export_prints_every_phase(monkeypatch, tmp_path, capsys):
     assert main(["export"]) == 0
     assert _phases(capsys.readouterr().err) == [
         "fetch_sources", "rank_repos_models_papers", "insiders_poll",
-        "insiders_cache_readback", "news", "rising", "windows",
+        "insiders_cache_readback", "news", "rising", "windows", "star_history",
         "readme_descriptions", "render_rows", "render_index_html",
         "write_latest_json", "tags_json", "total"]
 
