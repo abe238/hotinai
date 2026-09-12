@@ -7,6 +7,7 @@ an operator can tell that the roster is quietly eroding.
 
 import io
 import json
+from datetime import datetime, timezone
 import re
 import threading
 import time
@@ -50,6 +51,11 @@ def _ok_payload(logins, remaining=4999):
         for i, u in enumerate(logins)}
     data["rateLimit"] = {"cost": 1, "remaining": remaining}
     return _Resp(json.dumps({"data": data}).encode())
+
+
+# Fixture stars are dated 2026-07-27; pin 'now' so the 45-day window never ages
+# them out (the two truncation tests started failing on 2026-09-10 with real time).
+_FIXED_NOW = datetime(2026, 8, 1, tzinfo=timezone.utc)
 
 
 def _roster_of(n):
@@ -272,7 +278,7 @@ def test_a_truncated_account_is_re_polled_over_rest(monkeypatch):
                  "stargazers_count": 0, "description": None}], core._OK
 
     monkeypatch.setattr(core, "_poll_one", fake_rest)
-    events = _poll(3, fake, monkeypatch)
+    events = _poll(3, fake, monkeypatch, now=_FIXED_NOW)
     assert sorted(rest_calls) == sorted(_roster_of(3))
     assert all(e["canonical_repo"] == "from/rest" for e in events)
 
@@ -309,7 +315,7 @@ def test_the_tally_is_published_after_a_poll(monkeypatch):
         return _Resp(json.dumps({"data": data, "errors": [
             {"type": "NOT_FOUND", "path": ["u0"]}]}).encode())
 
-    _poll(5, fake, monkeypatch)
+    _poll(5, fake, monkeypatch, now=_FIXED_NOW)
     assert core.LAST_OUTCOMES.get(G.NOT_FOUND) == 1
     assert core.LAST_OUTCOMES.get(G.OK) == 4
     assert "not_found=1" in core.summarize_outcomes(core.LAST_OUTCOMES, 5)
@@ -335,7 +341,7 @@ def test_rest_fallbacks_are_counted_so_the_gain_can_be_watched(monkeypatch):
 
     monkeypatch.setattr(core, "_poll_one",
                         lambda username, token, **kw: ([], core._OK))
-    _poll(5, truncating, monkeypatch)
+    _poll(5, truncating, monkeypatch, now=_FIXED_NOW)
     assert core.LAST_OUTCOMES.get("rest_fallback") == 5
     assert "rest_fallback=5" in core.summarize_outcomes(core.LAST_OUTCOMES, 5)
 
