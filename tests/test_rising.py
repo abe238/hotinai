@@ -26,7 +26,8 @@ def test_velocity_falls_back_to_stars_per_day():
 
 def test_rising_rows_receipts_and_badge():
     ranked = [{"canonical_repo": "a/b", "url": "u",
-               "signal": {"stars": 500, "age_days": 5, "velocity_per_day": 100.0},
+               "signal": {"stars": 500, "age_days": 5, "velocity_per_day": 100.0,
+                          "created_at": _iso(5)},  # inside the repo freshness window (7d)
                "meta": {"description": "a fresh rocket"}}]
     r = board.rising_rows(ranked)[0]
     assert r["rank"] == 1 and r["name"] == "a/b" and r["url"] == "u"
@@ -104,7 +105,10 @@ def test_repo_rows_prefer_7d_receipt_and_drop_dead_rising_badge():
     labels = [r["label"] for r in row["receipts"]]
     assert "+900 in 7d" in labels and not any("/day" in x for x in labels)
     badge_labels = [b["label"] for b in row["badges"]]
-    assert badge_labels == ["fresh", "cooling"]      # rising displays as trending; gone
+    # this is exactly the old-but-active case the new policy exists for: the
+    # engine's own "fresh" badge (re-seen recently) is dropped -- no
+    # created_at here, so freshness.is_fresh has nothing to call fresh
+    assert badge_labels == ["cooling"]      # rising displays as trending; gone
     rec["badges"] = ["trending", "viral"]             # GitHub trending stays, heat off
     row = board.repo_rows([rec])[0]
     assert [(b["label"], b["hot"]) for b in row["badges"]] == [("trending", False), ("cooling", False)]

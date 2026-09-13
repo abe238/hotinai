@@ -11,7 +11,7 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
-from . import __version__, board, categories, engine, health, render_board, schedule, subscribe
+from . import __version__, board, categories, engine, freshness, health, render_board, schedule, subscribe
 from .cache import MemoryCache, open_cache
 from .canonical import canonicalize
 from .coerce import finite_float, finite_int
@@ -919,10 +919,20 @@ def _write_latest_json(docs: Path, stamp: str, stamp_pt: str, rows: object) -> N
 
     Split out of _export purely so it is reachable from a test without a full
     network bake; _export itself fetches every adapter.
+
+    `schema_version` / `policy_version` / `policy` / `generated_at` are FROZEN
+    field names two other repos (hotin-web's newsletter, working-models' video
+    publisher) read verbatim -- see freshness.py, the one place their values
+    come from. Never rename or drop an existing top-level key alongside them.
     """
+    import datetime as _dt
     (docs / "data").mkdir(parents=True, exist_ok=True)
     (docs / "data" / "latest.json").write_text(json.dumps(
-        _sanitize_json({"generated": stamp, "generated_pt": stamp_pt, "entities": rows},
+        _sanitize_json({"generated": stamp, "generated_pt": stamp_pt, "entities": rows,
+                        "schema_version": freshness.SCHEMA_VERSION,
+                        "policy_version": freshness.POLICY_VERSION,
+                        "policy": freshness.policy(),
+                        "generated_at": _dt.datetime.now(_dt.timezone.utc).isoformat().replace("+00:00", "Z")},
                        keep_display=True),
         indent=2, allow_nan=False))
 

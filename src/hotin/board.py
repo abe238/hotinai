@@ -14,6 +14,7 @@ import re
 import time
 from typing import Any, Dict, List, Optional
 
+from . import freshness
 from .coerce import finite_float, finite_int
 
 
@@ -169,7 +170,10 @@ def _insider_receipt(record: dict) -> Optional[Dict[str, str]]:
 
 
 _ENGINE_BADGE_MAP = {
-    "fresh": ("fresh", False),
+    # "fresh" is deliberately absent: the engine's fresh means "young OR
+    # re-seen within 30 days" (a re-star keeps a year-old repo "fresh"
+    # forever). The badge visitors see now comes only from freshness.is_fresh
+    # on the row's own date_iso, appended by each row builder below.
     "smart-money": ("smart-money", False),
     "paper-backed": ("paper-backed", False),
     "viral": ("trending", True),      # viral = trending, turned up
@@ -197,6 +201,18 @@ def _badges(record: dict) -> List[Dict[str, Any]]:
         seen.add(key)
         out.append({"label": label, "hot": hot})
     return out
+
+
+def _freshness_fields(record: dict, kind: str) -> Dict[str, Any]:
+    """The three frozen fields every row carries, plus the `fresh` badge (only
+    when the policy says so -- see the note on _ENGINE_BADGE_MAP)."""
+    date_iso = freshness.entity_date(record, kind)
+    return {"date_iso": date_iso, "age_days": freshness.age_days(date_iso)}
+
+
+def _fresh_badge(record: dict, kind: str) -> List[Dict[str, Any]]:
+    date_iso = freshness.entity_date(record, kind)
+    return [{"label": "fresh", "hot": False}] if freshness.is_fresh(kind, date_iso) else []
 
 
 def _cooling(signal: dict) -> bool:
@@ -247,10 +263,12 @@ def repo_rows(ranked: List[dict]) -> List[dict]:
         # showed just the bare owner/repo with no context.
         title = raw_name if raw_name and raw_name.casefold() != str(slug).casefold() else None
         meta = _clip(title or _meta(repo).get("description"))
+        badges = _badges(repo) + _fresh_badge(repo, "repo")
         rows.append({
             "rank": i, "id": join_id(repo.get("entity_id") or slug),
             "name": slug, "url": repo.get("url"), "meta": meta,
-            "receipts": receipts, "badges": _badges(repo),
+            "receipts": receipts, "badges": badges,
+            "section_id": "repos", **_freshness_fields(repo, "repo"),
         })
         if _cooling(signal):
             # the store's slope still says rising/viral for a spike that died;
@@ -308,7 +326,8 @@ def insider_rows(records: List[dict]) -> List[dict]:
             "name": rec.get("canonical_repo") or rec.get("name") or "?",
             "url": rec.get("url"), "meta": _clip(_meta(rec).get("description")),
             "receipts": receipts,
-            "badges": [{"label": "smart-money", "hot": False}],
+            "badges": [{"label": "smart-money", "hot": False}] + _fresh_badge(rec, "repo"),
+            "section_id": "insiders", **_freshness_fields(rec, "repo"),
         })
     return rows
 
@@ -335,7 +354,8 @@ def model_rows(ranked: List[dict]) -> List[dict]:
         rows.append({"rank": i, "id": join_id(m.get("entity_id") or m.get("name")),
                      "name": m.get("entity_id") or m.get("name") or "?",
                      "url": m.get("url"), "meta": desc or None,
-                     "receipts": receipts, "badges": _badges(m)})
+                     "receipts": receipts, "badges": _badges(m) + _fresh_badge(m, "model"),
+                     "section_id": "models", **_freshness_fields(m, "model")})
     return rows
 
 
@@ -355,10 +375,12 @@ def paper_rows(ranked: List[dict]) -> List[dict]:
             badges.append({"label": "curated", "hot": False})
             rank = finite_int(_meta(p).get("digest_rank"), 0)
             receipts.append({"label": "ANF #{}".format(rank) if rank else "ANF", "kind": "curated"})
+        badges += _fresh_badge(p, "paper")
         rows.append({"rank": i, "id": join_id(p.get("entity_id") or p.get("name")),
                      "name": p.get("name") or p.get("entity_id") or "?",
                      "url": p.get("url"), "meta": _clip(_meta(p).get("paper_summary"), 140),
-                     "receipts": receipts, "badges": badges})
+                     "receipts": receipts, "badges": badges,
+                     "section_id": "papers", **_freshness_fields(p, "paper")})
     return rows
 
 
@@ -383,7 +405,7 @@ def curated_paper_rows(merged: List[dict]) -> List[dict]:
                     "meta": meta.get("paper_authors") if isinstance(meta.get("paper_authors"), str) else "",
                     "curated_by": meta.get("curated_by"),
                     "digest_url": meta.get("digest_url") if isinstance(meta.get("digest_url"), str) else None,
-                    "digest_date": newest})
+                    "digest_date": newest, "section_id": "curated"})
         rows.append(row)
     return rows
 
@@ -415,13 +437,19 @@ def news_rows(items: List[dict], note: Optional[str] = None) -> List[dict]:
         if _sig(item).get("hn_rising"):
             # the crowd is still upvoting this days later — hotin's own verdict
             badges.append({"label": "rising", "hot": False})
+        badges += _fresh_badge(item, "news")
         rows.append({"rank": i, "id": join_id(item.get("entity_id") or item.get("name")),
                      "name": item.get("name") or "?",
                      "url": item.get("url"), "meta": _clip(_meta(item).get("publisher"), 40),
-                     "receipts": receipts, "badges": badges})
+                     "receipts": receipts, "badges": badges,
+                     "section_id": "news", **_freshness_fields(item, "news")})
     if rows and isinstance(note, str) and note.strip():
+        # the provenance row is not an entity -- no creation date to report --
+        # but it still carries the frozen keys so every row in the list shapes
+        # the same way for downstream consumers.
         rows.append({"rank": "·", "id": None, "name": note.strip(), "url": None,
-                     "meta": None, "receipts": [], "badges": []})
+                     "meta": None, "receipts": [], "badges": [],
+                     "section_id": "news", "date_iso": None, "age_days": None})
     return rows
 
 
@@ -453,7 +481,10 @@ def rising_rows(ranked: List[dict]) -> List[dict]:
             "rank": i, "id": join_id(r.get("entity_id") or r.get("canonical_repo") or r.get("name")),
             "name": r.get("canonical_repo") or r.get("name") or "?",
             "url": r.get("url"), "meta": meta,
-            "receipts": receipts, "badges": [{"label": "fresh", "hot": False}],
+            # was hardcoded -- every rising row is now judged by the same
+            # policy call as everything else, not assumed fresh by tab membership
+            "receipts": receipts, "badges": _fresh_badge(r, "repo"),
+            "section_id": "rising", **_freshness_fields(r, "repo"),
         })
         if _cooling(s):
             rows[-1]["badges"].append({"label": "cooling", "hot": False})
@@ -518,7 +549,8 @@ def demo() -> None:
     assert any("pts" in x for x in nws_labels) and any("Jul" in x for x in nws_labels), nws_labels
     assert nws[0]["badges"] == [{"label": "official", "hot": False}]
     assert nws[-1] == {"rank": "·", "id": None, "name": "swept 12/12 feeds", "url": None,
-                       "meta": None, "receipts": [], "badges": []}
+                       "meta": None, "receipts": [], "badges": [],
+                       "section_id": "news", "date_iso": None, "age_days": None}
     assert news_rows([]) == []  # empty window: no orphan provenance row
     ris = news_rows([{"name": "Health in ChatGPT", "url": "u",
                       "signal": {"hn_points": 412, "hn_points_delta": 381, "hn_rising": True},
