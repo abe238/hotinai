@@ -204,8 +204,9 @@ def _badges(record: dict) -> List[Dict[str, Any]]:
 
 
 def _freshness_fields(record: dict, kind: str) -> Dict[str, Any]:
-    """The three frozen fields every row carries, plus the `fresh` badge (only
-    when the policy says so -- see the note on _ENGINE_BADGE_MAP)."""
+    """Two of the frozen fields every row carries. `section_id` is the caller's
+    own constant and the `fresh` badge comes from _fresh_badge (only when the
+    policy says so -- see the note on _ENGINE_BADGE_MAP)."""
     date_iso = freshness.entity_date(record, kind)
     return {"date_iso": date_iso, "age_days": freshness.age_days(date_iso)}
 
