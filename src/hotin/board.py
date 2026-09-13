@@ -327,8 +327,9 @@ def insider_rows(records: List[dict]) -> List[dict]:
             "name": rec.get("canonical_repo") or rec.get("name") or "?",
             "url": rec.get("url"), "meta": _clip(_meta(rec).get("description")),
             "receipts": receipts,
-            "badges": [{"label": "smart-money", "hot": False}] + _fresh_badge(rec, "repo"),
-            "section_id": "insiders", **_freshness_fields(rec, "repo"),
+            # "insider", not "repo": this row's clock is the star EVENT (see freshness.KINDS)
+            "badges": [{"label": "smart-money", "hot": False}] + _fresh_badge(rec, "insider"),
+            "section_id": "insiders", **_freshness_fields(rec, "insider"),
         })
     return rows
 

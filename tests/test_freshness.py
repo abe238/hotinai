@@ -102,12 +102,15 @@ def test_window_unknown_kind_raises_value_error():
         window("bogus")
 
 
-def test_policy_returns_exactly_the_five_keys():
+def test_policy_returns_exactly_the_published_windows():
+    # insider_max_age_days joined in POLICY_VERSION 2: an insider row is judged by when the
+    # insider starred it, not by the repo's creation date.
     assert policy() == {
         "repo_max_age_days": 7,
         "model_max_age_days": 7,
         "paper_max_age_days": 7,
         "news_max_age_days": 2,
+        "insider_max_age_days": 7,
         "max_appearances": 3,
     }
 

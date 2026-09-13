@@ -78,7 +78,7 @@ def test_export_envelope_carries_schema_and_policy(tmp_path):
     written = json.loads((tmp_path / "data" / "latest.json").read_text())
 
     assert written["schema_version"] == freshness.SCHEMA_VERSION == 2
-    assert written["policy_version"] == freshness.POLICY_VERSION == 1
+    assert written["policy_version"] == freshness.POLICY_VERSION == 2
     assert written["policy"] == freshness.policy()
     # existing keys hotin-web reads today must survive untouched
     assert written["generated"] == "2026-09-12"
