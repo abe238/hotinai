@@ -118,6 +118,10 @@ def test_max_appearances_constant():
     assert MAX_APPEARANCES == 3
 
 
+@pytest.mark.skipif(not hasattr(time, "tzset"),
+                    reason="rewriting the host TZ needs time.tzset(), which is POSIX-only; "
+                           "the guarantee is still proven on Linux and macOS, and the bake "
+                           "runs on Linux")
 def test_default_reference_date_is_pacific_not_host_local(monkeypatch):
     """age_days() without on_date must anchor on the Pacific civil date, never
     host-local time.
