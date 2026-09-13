@@ -60,6 +60,15 @@ def entity_date(record: dict, kind: str) -> Optional[str]:
     return value if isinstance(value, str) and value else None
 
 
+def _now() -> datetime:
+    return datetime.now(_PT_ZONE)
+
+
+def _anchor(on_date: date) -> datetime:
+    """PT-noon anchor for on_date. Shared by production and tests."""
+    return datetime(on_date.year, on_date.month, on_date.day, 12, tzinfo=_PT_ZONE)
+
+
 def age_days(date_iso: Optional[str], on_date: Optional[date] = None) -> Optional[int]:
     match = _ISO_DATE_RE.match(date_iso) if isinstance(date_iso, str) else None
     if not match:
@@ -69,9 +78,8 @@ def age_days(date_iso: Optional[str], on_date: Optional[date] = None) -> Optiona
                             tzinfo=timezone.utc)
     except ValueError:
         return None
-    anchor_date = datetime.now(_PT_ZONE).date() if on_date is None else on_date
-    anchor = datetime(anchor_date.year, anchor_date.month, anchor_date.day, 12,
-                       tzinfo=_PT_ZONE)
+    anchor_date = _now().date() if on_date is None else on_date
+    anchor = _anchor(anchor_date)
     seconds = (anchor - created).total_seconds()
     return max(0, int(seconds // 86400))
 
@@ -79,13 +87,3 @@ def age_days(date_iso: Optional[str], on_date: Optional[date] = None) -> Optiona
 def is_fresh(kind: str, date_iso: Optional[str], on_date: Optional[date] = None) -> bool:
     days = age_days(date_iso, on_date)
     return days is not None and days <= window(kind)
-
-
-def _get_anchor_for_testing(on_date: date) -> datetime:
-    """Private helper for testing: return the anchor datetime.
-
-    Exposes the anchor datetime so tests can verify its offset is DST-aware.
-    """
-    anchor = datetime(on_date.year, on_date.month, on_date.day, 12,
-                      tzinfo=_PT_ZONE)
-    return anchor

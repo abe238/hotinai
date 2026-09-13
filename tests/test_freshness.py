@@ -16,8 +16,9 @@ from hotin.freshness import (
     is_fresh,
     policy,
     window,
-    _get_anchor_for_testing,
+    _anchor,
 )
+from hotin import freshness
 from zoneinfo import ZoneInfo
 
 
@@ -116,44 +117,49 @@ def test_max_appearances_constant():
 
 
 def test_default_reference_date_is_pacific_not_host_local(monkeypatch):
-    """Verify that age_days() uses Pacific date, not host local date.
+    """age_days() without on_date must anchor on the Pacific civil date, never
+    host-local time.
 
-    Captures the current Pacific date, then monkeypatches host TZ to a zone
-    where the civil date is ahead of Pacific. Asserts that age_days() without
-    on_date (which should use the Pacific date via the fix) returns the same
-    value as when on_date is explicitly set to the Pacific date.
+    Freezes freshness._now to a fixed Pacific-aware instant (2026-09-12 23:30
+    PDT), which is already 2026-09-13 in a UTC+14 zone. Under two different
+    host TZs whose civil date at that instant differs from Pacific's, the
+    result must still equal the age computed against the PACIFIC date -- that
+    is what proves host-independence deterministically (a date.today()
+    regression would instead track the host TZ and diverge).
     """
-    # Capture the current Pacific date BEFORE monkeypatching
-    pacific_now = datetime.now(ZoneInfo("America/Los_Angeles"))
-    pacific_ref_date = pacific_now.date()
+    original_tz = os.environ.get("TZ")
+    fixed_instant = datetime(2026, 9, 12, 23, 30, tzinfo=ZoneInfo("America/Los_Angeles"))
+    monkeypatch.setattr(freshness, "_now", lambda: fixed_instant)
 
-    # Monkeypatch host TZ to a zone ahead of Pacific (UTC+14)
-    monkeypatch.setenv("TZ", "Etc/GMT-14")
-    time.tzset()  # Apply the timezone change to the C library
+    date_iso = "2026-09-05"
+    # Pacific civil date at the fixed instant is 2026-09-12; created 2026-09-05
+    # is 7 days before Pacific noon on that date.
+    expected_age = 7
+    assert age_days(date_iso, on_date=fixed_instant.date()) == expected_age
 
-    # A test date in the past
-    test_date = "2026-08-15"
-
-    # Call age_days without on_date - should use Pacific date (from the fix)
-    age_without_on_date = age_days(test_date)
-
-    # Call age_days with the Pacific date explicitly
-    age_with_pacific_date = age_days(test_date, on_date=pacific_ref_date)
-
-    # After the fix, these should be equal (both use Pacific date)
-    assert age_without_on_date == age_with_pacific_date
+    try:
+        for tz in ("Etc/GMT-14", "Pacific/Kiritimati"):
+            monkeypatch.setenv("TZ", tz)
+            time.tzset()
+            assert age_days(date_iso) == expected_age
+    finally:
+        if original_tz is None:
+            os.environ.pop("TZ", None)
+        else:
+            os.environ["TZ"] = original_tz
+        time.tzset()
 
 
 def test_anchor_is_correct_under_daylight_saving():
     """Verify that the anchor uses real Pacific zone (DST-aware), not fixed -8.
 
-    Asserts that the anchor datetime for a date in August (PDT, UTC-7) and
-    a date in November (PST, UTC-8) have the correct utc offsets.
+    Asserts on `_anchor`, the SAME builder `age_days` calls, so a revert of
+    just its tzinfo cannot escape this test.
     """
     # August is PDT (UTC-7)
-    anchor_august = _get_anchor_for_testing(date(2026, 8, 20))
+    anchor_august = _anchor(date(2026, 8, 20))
     assert anchor_august.utcoffset() == timedelta(hours=-7), "August should be PDT (UTC-7)"
 
     # November is PST (UTC-8)
-    anchor_november = _get_anchor_for_testing(date(2026, 11, 20))
+    anchor_november = _anchor(date(2026, 11, 20))
     assert anchor_november.utcoffset() == timedelta(hours=-8), "November should be PST (UTC-8)"
