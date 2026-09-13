@@ -1,4 +1,6 @@
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+import os
+import time
 
 import pytest
 
@@ -14,7 +16,9 @@ from hotin.freshness import (
     is_fresh,
     policy,
     window,
+    _get_anchor_for_testing,
 )
+from zoneinfo import ZoneInfo
 
 
 def test_null_date_is_not_fresh_and_has_no_age():
@@ -109,3 +113,47 @@ def test_policy_returns_exactly_the_five_keys():
 
 def test_max_appearances_constant():
     assert MAX_APPEARANCES == 3
+
+
+def test_default_reference_date_is_pacific_not_host_local(monkeypatch):
+    """Verify that age_days() uses Pacific date, not host local date.
+
+    Captures the current Pacific date, then monkeypatches host TZ to a zone
+    where the civil date is ahead of Pacific. Asserts that age_days() without
+    on_date (which should use the Pacific date via the fix) returns the same
+    value as when on_date is explicitly set to the Pacific date.
+    """
+    # Capture the current Pacific date BEFORE monkeypatching
+    pacific_now = datetime.now(ZoneInfo("America/Los_Angeles"))
+    pacific_ref_date = pacific_now.date()
+
+    # Monkeypatch host TZ to a zone ahead of Pacific (UTC+14)
+    monkeypatch.setenv("TZ", "Etc/GMT-14")
+    time.tzset()  # Apply the timezone change to the C library
+
+    # A test date in the past
+    test_date = "2026-08-15"
+
+    # Call age_days without on_date - should use Pacific date (from the fix)
+    age_without_on_date = age_days(test_date)
+
+    # Call age_days with the Pacific date explicitly
+    age_with_pacific_date = age_days(test_date, on_date=pacific_ref_date)
+
+    # After the fix, these should be equal (both use Pacific date)
+    assert age_without_on_date == age_with_pacific_date
+
+
+def test_anchor_is_correct_under_daylight_saving():
+    """Verify that the anchor uses real Pacific zone (DST-aware), not fixed -8.
+
+    Asserts that the anchor datetime for a date in August (PDT, UTC-7) and
+    a date in November (PST, UTC-8) have the correct utc offsets.
+    """
+    # August is PDT (UTC-7)
+    anchor_august = _get_anchor_for_testing(date(2026, 8, 20))
+    assert anchor_august.utcoffset() == timedelta(hours=-7), "August should be PDT (UTC-7)"
+
+    # November is PST (UTC-8)
+    anchor_november = _get_anchor_for_testing(date(2026, 11, 20))
+    assert anchor_november.utcoffset() == timedelta(hours=-8), "November should be PST (UTC-8)"

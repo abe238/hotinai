@@ -11,6 +11,7 @@ from __future__ import annotations
 import re
 from datetime import date, datetime, timedelta, timezone
 from typing import Optional
+from zoneinfo import ZoneInfo
 
 SCHEMA_VERSION = 2
 POLICY_VERSION = 1
@@ -22,7 +23,7 @@ MAX_APPEARANCES = 3
 KINDS = ("repo", "model", "paper", "news")
 
 _ISO_DATE_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})")
-_PT_OFFSET = timedelta(hours=-8)
+_PT_ZONE = ZoneInfo("America/Los_Angeles")
 
 
 def policy() -> dict:
@@ -68,9 +69,9 @@ def age_days(date_iso: Optional[str], on_date: Optional[date] = None) -> Optiona
                             tzinfo=timezone.utc)
     except ValueError:
         return None
-    anchor_date = date.today() if on_date is None else on_date
+    anchor_date = datetime.now(_PT_ZONE).date() if on_date is None else on_date
     anchor = datetime(anchor_date.year, anchor_date.month, anchor_date.day, 12,
-                       tzinfo=timezone(_PT_OFFSET))
+                       tzinfo=_PT_ZONE)
     seconds = (anchor - created).total_seconds()
     return max(0, int(seconds // 86400))
 
@@ -78,3 +79,13 @@ def age_days(date_iso: Optional[str], on_date: Optional[date] = None) -> Optiona
 def is_fresh(kind: str, date_iso: Optional[str], on_date: Optional[date] = None) -> bool:
     days = age_days(date_iso, on_date)
     return days is not None and days <= window(kind)
+
+
+def _get_anchor_for_testing(on_date: date) -> datetime:
+    """Private helper for testing: return the anchor datetime.
+
+    Exposes the anchor datetime so tests can verify its offset is DST-aware.
+    """
+    anchor = datetime(on_date.year, on_date.month, on_date.day, 12,
+                      tzinfo=_PT_ZONE)
+    return anchor
