@@ -31,6 +31,10 @@ def summarize(statuses: List[SourceStatus], cache_has_data: bool = False) -> Tup
 
 
 # --- Scout health: record one row per source per refresh cycle, and report ---
+
+# How many recorded cycles a scout needs before "it has never returned ok" is evidence of
+# permanent inertness rather than one bad run.
+INERT_MIN_CYCLES = 5
 # whether each has EVER returned "ok" (inert sources like the x stub or
 # unconfigured reddit/youtube never have, and must never count as healthy).
 #
@@ -69,6 +73,7 @@ class ScoutRecord:
     ok_in_window: int
     cycles_in_window: int
     inert: bool
+    cycles_recorded: int = 0
 
 
 def scout_history(cache: Any, window: int = SCOUT_HISTORY_WINDOW) -> List[ScoutRecord]:
@@ -89,7 +94,15 @@ def scout_history(cache: Any, window: int = SCOUT_HISTORY_WINDOW) -> List[ScoutR
             latest_observed_at=latest["observed_at"],
             ok_in_window=sum(1 for row in windowed if row["metric"] == "ok"),
             cycles_in_window=len(windowed),
-            inert=not any(row["metric"] == "ok" for row in source_rows),
+            # "never returned ok" only means something once there is enough history to say
+            # it. After a single cycle it would brand any scout that merely had a bad run as
+            # permanently inert -- verified live 2026-09-13, where one real refresh labelled
+            # insiders, smartmoney and trends "inert" when they had simply errored or come back
+            # empty that once. Below the threshold a scout is UNKNOWN, never inert, and never
+            # counted as healthy either.
+            inert=(len(source_rows) >= INERT_MIN_CYCLES
+                   and not any(row["metric"] == "ok" for row in source_rows)),
+            cycles_recorded=len(source_rows),
         ))
     records.sort(key=lambda record: record.source)
     return records
@@ -99,10 +112,15 @@ def scout_summary_line(records: List[ScoutRecord], checked_label: str) -> str:
     """The one line `hotin brief` prints. Silence is not trustworthy; this is."""
     if not records:
         return "scouts: no history recorded yet"
-    live = [r for r in records if not r.inert]
     inert = [r for r in records if r.inert]
+    unknown = [r for r in records
+               if not r.inert and r.cycles_recorded < INERT_MIN_CYCLES and r.latest_status != "ok"]
+    live = [r for r in records if r not in inert and r not in unknown]
     ok_count = sum(1 for r in live if r.latest_status == "ok")
     line = "scouts: {}/{} live ok".format(ok_count, len(live))
+    if unknown:
+        # not yet enough history to judge; say so rather than quietly counting them either way
+        line += " · {} unproven ({})".format(len(unknown), ", ".join(r.source for r in unknown))
     if inert:
         line += " · {} inert ({})".format(len(inert), ", ".join(r.source for r in inert))
     line += " · checked {}".format(checked_label)

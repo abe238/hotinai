@@ -33,9 +33,12 @@ def test_recorded_cycle_round_trips():
 
 def test_scouts_json_reports_live_and_inert():
     cache = MemoryCache()
-    cache.record_observations(scout_observations(
-        [SourceStatus("github", "ok", None, 5), SourceStatus("x", "empty", "not implemented", 0)],
-        "run-1", 1000.0))
+    # enough cycles that "never returned ok" is evidence of inertness rather than one bad run
+    for cycle in range(6):
+        cache.record_observations(scout_observations(
+            [SourceStatus("github", "ok", None, 5),
+             SourceStatus("x", "empty", "not implemented", 0)],
+            "run-{}".format(cycle), 1000.0 + cycle))
 
     records = {r.source: r for r in scout_history(cache)}
 
@@ -45,9 +48,12 @@ def test_scouts_json_reports_live_and_inert():
 
 def test_healthy_denominator_excludes_inert_sources():
     cache = MemoryCache()
-    cache.record_observations(scout_observations(
-        [SourceStatus("github", "ok", None, 5), SourceStatus("x", "empty", "not implemented", 0)],
-        "run-1", 1000.0))
+    # enough cycles that "never returned ok" is evidence of inertness rather than one bad run
+    for cycle in range(6):
+        cache.record_observations(scout_observations(
+            [SourceStatus("github", "ok", None, 5),
+             SourceStatus("x", "empty", "not implemented", 0)],
+            "run-{}".format(cycle), 1000.0 + cycle))
 
     records = scout_history(cache)
     live = [r for r in records if not r.inert]
@@ -58,9 +64,12 @@ def test_healthy_denominator_excludes_inert_sources():
 
 def test_brief_line_renders_with_right_counts():
     cache = MemoryCache()
-    cache.record_observations(scout_observations(
-        [SourceStatus("github", "ok", None, 5), SourceStatus("x", "empty", "not implemented", 0)],
-        "run-1", 1000.0))
+    # enough cycles that "never returned ok" is evidence of inertness rather than one bad run
+    for cycle in range(6):
+        cache.record_observations(scout_observations(
+            [SourceStatus("github", "ok", None, 5),
+             SourceStatus("x", "empty", "not implemented", 0)],
+            "run-{}".format(cycle), 1000.0 + cycle))
 
     line = scout_summary_line(scout_history(cache), "14:05 PT")
 
@@ -78,7 +87,7 @@ def test_inert_scout_is_never_counted_healthy():
     The summary must read 1/1 live ok plus one inert -- never 1/2, never 2/2.
     """
     cache = MemoryCache()
-    for cycle, observed_at in enumerate((100.0, 200.0, 300.0)):
+    for cycle, observed_at in enumerate((100.0, 200.0, 300.0, 400.0, 500.0, 600.0)):
         cache.record_observations(scout_observations(
             [SourceStatus("github", "ok", None, 3),
              SourceStatus("reddit", "empty", "no SCRAPECREATORS_API_KEY configured", 0)],

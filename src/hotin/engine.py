@@ -121,6 +121,7 @@ def fetch_all(
     for source in SOURCES:
         source_name = _source_name(source)
         if latest_fetch.get(source_name, float("-inf")) >= cutoff:
+            # served from cache: a real ok, but this path never counts records, so items stays 0
             statuses_by_source[source_name] = SourceStatus(source_name, "ok", "served from cache")
         else:
             pending.append(source)
@@ -145,6 +146,7 @@ def fetch_all(
                     raise ValueError("invalid adapter status")
                 detail = result.get("detail")
                 detail = detail if isinstance(detail, str) else None
+                items = 0
                 if status == "ok":
                     records = result.get("records")
                     if not isinstance(records, list):
@@ -152,7 +154,11 @@ def fetch_all(
                     for record in records:
                         if isinstance(record, dict):
                             cache.upsert(_cache_record(record))
-                statuses_by_source[source_name] = SourceStatus(source_name, status, detail)
+                    items = len(records)
+                # `items` is what makes the scout history usable: status alone cannot tell a
+                # scout that returned nothing from one that returned fifty, and these nine ARE
+                # the scouts Abe asks about ("how do i know the nine scouts are working").
+                statuses_by_source[source_name] = SourceStatus(source_name, status, detail, items)
             except Exception as exc:
                 statuses_by_source[source_name] = SourceStatus(source_name, "error", str(exc) or "failed")
     finally:
