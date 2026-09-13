@@ -9,9 +9,8 @@ a small per-kind age window, anchored to PT noon of the reference date.
 from __future__ import annotations
 
 import re
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone, tzinfo
 from typing import Optional
-from zoneinfo import ZoneInfo
 
 SCHEMA_VERSION = 2
 POLICY_VERSION = 2
@@ -28,7 +27,54 @@ MAX_APPEARANCES = 3
 KINDS = ("repo", "model", "paper", "news", "insider")
 
 _ISO_DATE_RE = re.compile(r"^(\d{4})-(\d{2})-(\d{2})")
-_PT_ZONE = ZoneInfo("America/Los_Angeles")
+
+
+def _nth_weekday(year: int, month: int, weekday: int, nth: int) -> date:
+    """The nth <weekday> of a month (weekday: Monday=0 .. Sunday=6)."""
+    first = date(year, month, 1)
+    offset = (weekday - first.weekday()) % 7
+    return date(year, month, 1 + offset + 7 * (nth - 1))
+
+
+class _USPacific(tzinfo):
+    """Pacific time computed from the US rule, for Pythons with no IANA database.
+
+    hotin declares ZERO dependencies, so `tzdata` cannot be required; and slim
+    Pythons (CI images, minimal containers, Windows) ship no system zoneinfo. A
+    module-level ZoneInfo lookup therefore breaks `import hotin.board` outright on
+    those machines -- which is exactly what 0.9.13/0.9.14 did. DST runs from the
+    second Sunday in March to the first Sunday in November, 02:00 local.
+    """
+
+    def utcoffset(self, dt):
+        return timedelta(hours=-7 if self._is_dst(dt) else -8)
+
+    def dst(self, dt):
+        return timedelta(hours=1) if self._is_dst(dt) else timedelta(0)
+
+    def tzname(self, dt):
+        return "PDT" if self._is_dst(dt) else "PST"
+
+    @staticmethod
+    def _is_dst(dt) -> bool:
+        if dt is None:
+            return False
+        naive = dt.replace(tzinfo=None)
+        start = datetime.combine(_nth_weekday(naive.year, 3, 6, 2), datetime.min.time()).replace(hour=2)
+        end = datetime.combine(_nth_weekday(naive.year, 11, 6, 1), datetime.min.time()).replace(hour=2)
+        return start <= naive < end
+
+
+def _pacific() -> tzinfo:
+    try:
+        from zoneinfo import ZoneInfo
+
+        return ZoneInfo("America/Los_Angeles")
+    except Exception:  # no IANA database on this machine
+        return _USPacific()
+
+
+_PT_ZONE = _pacific()
 
 
 def policy() -> dict:
