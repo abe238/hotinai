@@ -99,15 +99,15 @@ def test_history_receipts_cooling_and_spark():
 
 def test_repo_rows_prefer_7d_receipt_and_drop_dead_rising_badge():
     rec = {"canonical_repo": "a/b", "url": "u",
-           "signal": {"stars": 219000, "stars_7d": 900, "stars_prev_7d": 40000},
+           "signal": {"stars": 219000, "stars_7d": 900, "stars_prev_7d": 40000, "created_at": "2026-01-15T00:00:00Z"},
            "badges": ["fresh", "rising"], "meta": {"velocity_per_day": 7400.0, "rising": True}}
     row = board.repo_rows([rec])[0]
     labels = [r["label"] for r in row["receipts"]]
     assert "+900 in 7d" in labels and not any("/day" in x for x in labels)
     badge_labels = [b["label"] for b in row["badges"]]
     # this is exactly the old-but-active case the new policy exists for: the
-    # engine's own "fresh" badge (re-seen recently) is dropped -- no
-    # created_at here, so freshness.is_fresh has nothing to call fresh
+    # engine's own "fresh" badge (re-seen recently) is dropped because the repo
+    # was created long ago
     assert badge_labels == ["cooling"]      # rising displays as trending; gone
     rec["badges"] = ["trending", "viral"]             # GitHub trending stays, heat off
     row = board.repo_rows([rec])[0]
