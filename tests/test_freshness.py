@@ -19,7 +19,6 @@ from hotin.freshness import (
     _anchor,
 )
 from hotin import freshness
-from zoneinfo import ZoneInfo
 
 
 def test_null_date_is_not_fresh_and_has_no_age():
@@ -131,7 +130,7 @@ def test_default_reference_date_is_pacific_not_host_local(monkeypatch):
     regression would instead track the host TZ and diverge).
     """
     original_tz = os.environ.get("TZ")
-    fixed_instant = datetime(2026, 9, 12, 23, 30, tzinfo=ZoneInfo("America/Los_Angeles"))
+    fixed_instant = datetime(2026, 9, 12, 23, 30, tzinfo=freshness._PT_ZONE)
     monkeypatch.setattr(freshness, "_now", lambda: fixed_instant)
 
     date_iso = "2026-09-05"
