@@ -13,11 +13,13 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
-from zoneinfo import ZoneInfo
 
 from hotin import board, cli, freshness
 
-_PT = ZoneInfo("America/Los_Angeles")
+# freshness owns Pacific, and it falls back to a computed US rule when the machine
+# has no IANA database -- importing ZoneInfo here reintroduced the exact failure
+# 0.9.15 fixed, and broke CI collection on this one file.
+_PT = freshness._PT_ZONE
 
 
 def _iso(days_ago: int) -> str:
