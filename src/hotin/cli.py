@@ -40,6 +40,7 @@ COMMANDS = {
     "show": "show one repo (owner/repo)",
     "about": "show project information",
     "subscribe": "get the hotin daily email (8:08am PT)",
+    "fresh": "inspect the freshness policy",
     "mcp": "run as an MCP server so agents can query the board (stdio)",
 }
 # How much history the observation series keeps. Raised from 30 because 30 was
@@ -1568,6 +1569,26 @@ def _refresh(arguments: argparse.Namespace) -> int:
     return exit_code  # allows unit tests to substitute os._exit()
 
 
+def _fresh(arguments: argparse.Namespace) -> int:
+    """Print the freshness policy, either as JSON or human-readable text."""
+    policy = freshness.policy()
+    if arguments.json:
+        _dump_json({
+            "schema_version": freshness.SCHEMA_VERSION,
+            "policy_version": freshness.POLICY_VERSION,
+            "policy": policy,
+        })
+    else:
+        print("schema_version: {}".format(freshness.SCHEMA_VERSION))
+        print("policy_version: {}".format(freshness.POLICY_VERSION))
+        print("repo_max_age_days: {}".format(policy["repo_max_age_days"]))
+        print("model_max_age_days: {}".format(policy["model_max_age_days"]))
+        print("paper_max_age_days: {}".format(policy["paper_max_age_days"]))
+        print("news_max_age_days: {}".format(policy["news_max_age_days"]))
+        print("max_appearances: {}".format(policy["max_appearances"]))
+    return 0
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     parser = build_parser()
     arguments = parser.parse_args(argv)
@@ -1608,6 +1629,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
     if command == "subscribe":
         return subscribe.run(arguments.email)
+    if command == "fresh":
+        return _fresh(arguments)
     if command == "models":
         return _models(arguments)
     if command in _ENTITY_COMMANDS:
