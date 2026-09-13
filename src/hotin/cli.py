@@ -41,6 +41,7 @@ COMMANDS = {
     "about": "show project information",
     "subscribe": "get the hotin daily email (8:08am PT)",
     "fresh": "inspect the freshness policy",
+    "scouts": "per-source scout health: latest status, item counts, ok-streak",
     "mcp": "run as an MCP server so agents can query the board (stdio)",
 }
 # How much history the observation series keeps. Raised from 30 because 30 was
@@ -771,6 +772,18 @@ def _pacific_stamp() -> str:
         now.strftime("%b"), now.day, now.year, hour12, now.minute, ampm)
 
 
+def _pt_hhmm() -> str:
+    """Current time as `HH:MM PT`, for the compact scouts line in `hotin brief`."""
+    import datetime
+    now = datetime.datetime.now()
+    try:
+        from zoneinfo import ZoneInfo
+        now = datetime.datetime.now(ZoneInfo("America/Los_Angeles"))
+    except Exception:
+        pass
+    return "{:02d}:{:02d} PT".format(now.hour, now.minute)
+
+
 
 def _insiders_from_cache(cached_rows: List[dict], limit: int, *, now: Optional[float] = None) -> List[dict]:
     """Rebuild the insiders tab from cached rows when the live Digg fetch flakes.
@@ -1370,9 +1383,11 @@ def _brief(arguments: argparse.Namespace) -> int:
         news_result = rssnews.fetch(limit=6)
         news = news_result.get("records") if isinstance(news_result.get("records"), list) else []
         releases, _rel_detail = _frontier_releases(5)
+        scout_line = health.scout_summary_line(health.scout_history(cache), _pt_hhmm())
 
         if arguments.json:
             _dump_json({
+                "scouts": scout_line,
                 "rising": [{"repo": r.get("canonical_repo"), "stars_per_day": _finite(r.get("meta", {}).get("velocity_per_day"))} for r in rising],
                 "releases": [{"lab": r["meta"].get("lab"), "title": r.get("name"), "url": r.get("url"), "date": r["meta"].get("date")} for r in releases],
                 "top_repos": [{"repo": r.get("canonical_repo"), "score": _finite(r.get("score")), "badges": r.get("badges")} for r in repos[:5]],
@@ -1440,6 +1455,39 @@ def _brief(arguments: argparse.Namespace) -> int:
                 title = hyperlink(color(_safe(item["name"])[:70], "1", enabled),
                                   item["url"] if isinstance(item.get("url"), str) else "", enabled)
                 print("  {}  {}".format(color(date, "2", enabled), title))
+        print("\n" + color(scout_line, "2", enabled))
+        _attribution(arguments)
+        return 0
+
+
+def _scouts(arguments: argparse.Namespace) -> int:
+    """The rolling per-source scout table: latest status/items and ok-in-window."""
+    with _cache_session() as cache:
+        records = health.scout_history(cache)
+        if arguments.json:
+            _dump_json({
+                "window": health.SCOUT_HISTORY_WINDOW,
+                "sources": [{"source": r.source, "status": r.latest_status, "items": r.latest_items,
+                             "ok_in_window": r.ok_in_window, "cycles_in_window": r.cycles_in_window,
+                             "inert": r.inert} for r in records],
+            })
+            return 0
+        if not records:
+            print("no scout history recorded yet — run `hotin refresh` first")
+            _attribution(arguments)
+            return 0
+        live = [r for r in records if not r.inert]
+        inert = [r for r in records if r.inert]
+        enabled = _color_enabled(arguments)
+        if live:
+            print(color("Live scouts", "1", enabled))
+            for r in live:
+                print("  {:<14} {:<6} items={:<4} ok {}/{} last cycles".format(
+                    r.source, r.latest_status, r.latest_items, r.ok_in_window, r.cycles_in_window))
+        if inert:
+            print(color("Inert (never returned ok)", "1", enabled))
+            for r in inert:
+                print("  {:<14} {:<6} items={}".format(r.source, r.latest_status, r.latest_items))
         _attribution(arguments)
         return 0
 
@@ -1509,12 +1557,14 @@ def _refresh(arguments: argparse.Namespace) -> int:
             except Exception as exc:  # adapters shouldn't raise; ingest never crashes
                 result = {"records": [], "status": "error", "detail": str(exc) or "fetch failed"}
             if isinstance(result, dict):
+                records_list = result.get("records") if isinstance(result.get("records"), list) else []
                 statuses.append(health.SourceStatus(
                     getattr(adapter, "SOURCE", "?"),
                     result.get("status") if result.get("status") in ("ok", "empty", "error") else "error",
                     result.get("detail") if isinstance(result.get("detail"), str) else None,
+                    len(records_list),
                 ))
-                for record in result.get("records") if isinstance(result.get("records"), list) else []:
+                for record in records_list:
                     if isinstance(record, dict):
                         key = (record.get("entity_type"),
                                record.get("entity_id"), record.get("source"))
@@ -1545,6 +1595,7 @@ def _refresh(arguments: argparse.Namespace) -> int:
             print("healed {} paper summaries, {} model descriptions, {} insider repo dates, {} news HN checks (+{} rechecks)".format(
                 healed, healed_models, healed_dates, healed_hn, rechecked))
         cache.record_observations(engine.observations_from_cache(cache.get_all(), run_id, now))
+        cache.record_observations(health.scout_observations(statuses, run_id, now))
         cache.prune_observations(now - _RETENTION_DAYS * 86400.0)
         timings.mark("record_observations")
         timings.report()
@@ -1631,6 +1682,8 @@ def main(argv: Optional[List[str]] = None) -> int:
         return subscribe.run(arguments.email)
     if command == "fresh":
         return _fresh(arguments)
+    if command == "scouts":
+        return _scouts(arguments)
     if command == "models":
         return _models(arguments)
     if command in _ENTITY_COMMANDS:
