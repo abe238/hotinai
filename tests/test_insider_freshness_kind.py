@@ -49,7 +49,12 @@ def test_old_repo_with_a_stale_star_is_not_fresh():
     assert not freshness.is_fresh("insider", freshness.entity_date(OLD_REPO_OLD_STAR, "insider"), TODAY)
 
 
-def test_insider_rows_use_the_star_event():
+def test_insider_rows_use_the_star_event(monkeypatch):
+    # insider_rows reads the clock itself, so this test was a time bomb: the fixture star is
+    # dated 2026-09-11 and the insider window is 7 days, so it passed until the wall clock
+    # reached 2026-09-18 and then failed every day after, for a reason that has nothing to do
+    # with the behaviour under test. Pin the clock through the same seam production uses.
+    monkeypatch.setattr(freshness, "_now", lambda: freshness._anchor(TODAY))
     fresh_row, stale_row = board.insider_rows([OLD_REPO_FRESH_STAR, OLD_REPO_OLD_STAR])
     assert fresh_row["date_iso"] == "2026-09-11T10:00:00+00:00"
     assert stale_row["date_iso"] == "2026-08-01T10:00:00+00:00"

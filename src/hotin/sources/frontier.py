@@ -37,8 +37,23 @@ FEEDS = [
     ("Alibaba Qwen", "https://qwenlm.github.io/blog/index.xml"),
     ("Thinking Machines Lab", "https://thinkingmachines.ai/index.xml"),
 ]
-# Named labs with no public feed (HTML-scrape fallback is a TODO). Kept visible
-# so `hotin` can report honestly which labs it does and does not yet cover.
+# Labs with no feed at all, polled through their sitemap instead. This is the HTML-scrape
+# fallback the UNSUPPORTED note below has always called for, built for the first lab that
+# actually needed it: typesafe.ai serves no RSS or Atom, and even /blog 404s, so its posts are
+# reachable ONLY via sitemap.xml. Each entry is (lab, sitemap url, path marker).
+#
+# Cost is 1 request for the sitemap plus one per post, against ~1 for a feed lab, so the post
+# count is bounded. Do not add a lab here that publishes a real feed.
+SITEMAP_LABS = [
+    ("TypeSafe AI", "https://typesafe.ai/sitemap.xml", "/blog/"),
+]
+# Bound on posts fetched per sitemap lab per run. typesafe.ai has 5, so today every post is
+# read and ordering does not matter; past this bound we take the sitemap's own order, which is
+# newest-first there but is not a guarantee the format makes.
+MAX_SITEMAP_POSTS = 8
+
+# Named labs with no public feed AND no sitemap adapter yet. Kept visible so `hotin` can
+# report honestly which labs it does and does not yet cover.
 UNSUPPORTED = ["Anthropic", "xAI", "Meta AI", "Moonshot AI", "DeepSeek", "Z.ai", "MiniMax"]
 
 _ITEM_RE = re.compile(r"<(?:item|entry)\b[^>]*>(.*?)</(?:item|entry)>", re.DOTALL | re.IGNORECASE)
@@ -124,6 +139,92 @@ def _normalise_limit(limit: Any) -> int:
     return 50 if value is None else max(0, value)
 
 
+_LOC_RE = re.compile(r"<loc>([^<]+)</loc>", re.IGNORECASE)
+_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
+_MONTHS = "Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec"
+# The post date as rendered ELEMENT TEXT: ">Sep 10, 2026<". Deliberately not "any date in the
+# page": Framer stamps its own site-publish date into an HTML comment at the top of every page
+# ("<!-- Published Sep 18, 2026, 11:44 PM UTC -->"), identical across every post and equal to
+# the last time the SITE was deployed. Reading that would date every post to today and march
+# the whole lab to the top of the board every time they touch any page. Comments are stripped
+# before this runs, and the element-text anchor is the second line of defence.
+_TEXT_DATE_RE = re.compile(r">\s*((?:%s)[a-z]*\s+\d{1,2},?\s+20\d\d)\s*<" % _MONTHS)
+# " - TypeSafe AI Blog" / " | TypeSafe AI": strip the site suffix off the <title>.
+_TITLE_SUFFIX_RE = re.compile(r"\s*[-|\u2013\u2014]\s*[^-|\u2013\u2014]*$")
+
+
+def _month_epoch(date_str: str) -> float:
+    """"Sep 10, 2026" -> epoch seconds (UTC midnight). 0.0 if unparseable."""
+    for fmt in ("%b %d, %Y", "%B %d, %Y", "%b %d %Y", "%B %d %Y"):
+        try:
+            return datetime.strptime(date_str.strip(), fmt).replace(tzinfo=timezone.utc).timestamp()
+        except (TypeError, ValueError):
+            continue
+    return 0.0
+
+
+def parse_post(page: Any, url: str, lab: str) -> Optional[Dict[str, Any]]:
+    """One feedless blog post -> a release record, or None if it cannot be dated.
+
+    An undated post is DROPPED rather than given a fallback date: the board's freshness gate
+    reads this date, and inventing one would present an old post as today's news.
+    """
+    if not isinstance(page, str):
+        return None
+    body = _COMMENT_RE.sub(" ", page)
+    title_match = _TITLE_RE.search(body)
+    if not title_match:
+        return None
+    title = _TITLE_SUFFIX_RE.sub("", _clean(title_match.group(1))).strip()
+    if not title:
+        return None
+    date_match = _TEXT_DATE_RE.search(body)
+    if not date_match:
+        return None
+    date_raw = date_match.group(1)
+    released_at = _month_epoch(date_raw)
+    if not released_at:
+        return None
+    return {
+        "entity_type": "release",
+        "entity_id": url,
+        "url": url,
+        "name": title,
+        "source": SOURCE,
+        "signal": {"released_at": released_at},
+        "meta": {"official": True, "lab": lab, "date": date_raw},
+    }
+
+
+def parse_sitemap(sitemap_text: Any, marker: str) -> List[str]:
+    """Post URLs from a sitemap, in document order, deduped."""
+    if not isinstance(sitemap_text, str):
+        return []
+    seen, out = set(), []
+    for loc in _LOC_RE.findall(sitemap_text):
+        url = html.unescape(loc).strip()
+        if marker in url and url.startswith("http") and url not in seen:
+            seen.add(url)
+            out.append(url)
+    return out
+
+
+def fetch_sitemap_lab(lab: str, sitemap_url: str, marker: str) -> List[Dict[str, Any]]:
+    """Every dated post for one feedless lab. Never raises."""
+    sitemap = _request(sitemap_url)
+    if sitemap is None:
+        return []
+    records = []
+    for url in parse_sitemap(sitemap, marker)[:MAX_SITEMAP_POSTS]:
+        page = _request(url)
+        if page is None:
+            continue
+        record = parse_post(page, url, lab)
+        if record is not None:
+            records.append(record)
+    return records
+
+
 def fetch(
     query: Optional[str] = None, *, limit: int = 50, config: Optional[dict] = None
 ) -> Dict[str, Any]:
@@ -141,6 +242,11 @@ def fetch(
                 continue
             reached += 1
             records.extend(parse_feed(text, lab))
+        for lab, sitemap_url, marker in SITEMAP_LABS:
+            from_lab = fetch_sitemap_lab(lab, sitemap_url, marker)
+            if from_lab:
+                reached += 1
+            records.extend(from_lab)
         if not records:
             detail = "no frontier feeds reachable" if reached == 0 else "no releases parsed"
             return {"records": [], "status": "error" if reached == 0 else "empty", "detail": detail}
