@@ -212,8 +212,23 @@ def _freshness_fields(record: dict, kind: str) -> Dict[str, Any]:
 
 
 def _fresh_badge(record: dict, kind: str) -> List[Dict[str, Any]]:
+    """The freshness verdict, labelled with WHAT it measured.
+
+    An insider row's clock is the star event, not the repo's birthday, so an 80-day-old repo an
+    insider starred 4 days ago is correctly fresh. But the card also carries an "80d old"
+    receipt, and a bare "fresh" next to "80d old" reads as a straight contradiction: the row
+    looks broken, and by extension so does every other row. justvugg/colibri shipped exactly
+    that way in the 2026-09-19 video (80d old, "fresh", deepfates starred it on the 15th).
+    Naming the clock costs one word and makes the row self-explanatory instead of suspect.
+    """
     date_iso = freshness.entity_date(record, kind)
-    return [{"label": "fresh", "hot": False}] if freshness.is_fresh(kind, date_iso) else []
+    if not freshness.is_fresh(kind, date_iso):
+        return []
+    if kind == "insider":
+        days = freshness.age_days(date_iso)
+        label = "starred today" if days == 0 else "starred {}d ago".format(days)
+        return [{"label": label, "hot": False}]
+    return [{"label": "fresh", "hot": False}]
 
 
 def _cooling(signal: dict) -> bool:

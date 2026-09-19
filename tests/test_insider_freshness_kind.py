@@ -60,7 +60,15 @@ def test_insider_rows_use_the_star_event(monkeypatch):
     assert stale_row["date_iso"] == "2026-08-01T10:00:00+00:00"
     # PIN: if insider_rows ever reverts to kind "repo", both rows take created_at and the
     # recent-star row stops being fresh -- this assertion is what catches that.
-    assert "fresh" in labels(fresh_row)
+    #
+    # The badge NAMES its clock ("starred 1d ago") rather than saying a bare "fresh". The card
+    # also shows the repo's age, and "80d old" beside "fresh" reads as a contradiction that
+    # makes the whole board look broken. A bare "fresh" on an insider row is therefore itself
+    # a regression, so assert the label is the star-clock form and not the generic one.
+    fresh_labels = labels(fresh_row)
+    assert any(l.startswith("starred ") for l in fresh_labels), fresh_labels
+    assert "fresh" not in fresh_labels, "an insider row must say which clock it measured"
+    assert not any(l.startswith("starred ") for l in labels(stale_row))
     assert "fresh" not in labels(stale_row)
     assert all(r["section_id"] == "insiders" for r in (fresh_row, stale_row))
 
