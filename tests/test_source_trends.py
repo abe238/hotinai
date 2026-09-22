@@ -92,3 +92,30 @@ def test_infinite_metrics_are_ignored():
 
 def test_selftest():
     trends.selftest()
+
+
+def test_an_upstream_retirement_is_reported_as_such_not_as_a_quiet_day():
+    """The provider publishes its own availability; say what it says.
+
+    This ranking has been unavailable since 2026-03-01 (their GitHub event capture fell to
+    ~0.3% of baseline). For months it reported a bare "no usable GitHub repositories found",
+    which reads exactly like a quiet day, so a source contributing a guaranteed zero was
+    indistinguishable from one that simply had nothing that morning.
+    """
+    payload = {
+        "data": {"columns": [], "rows": [], "result": {"row_count": 0}},
+        "data_quality": {"status": "unavailable", "unavailable_since": "2026-03-01",
+                         "reason": "event capture fell to ~0.3% of baseline"},
+    }
+    detail = trends._unavailable_detail(payload)
+    assert "RETIRED" in detail
+    assert "2026-03-01" in detail
+    assert "not a quiet day" in detail
+
+
+def test_a_genuinely_empty_but_healthy_upstream_still_reads_as_empty():
+    """A real quiet day must NOT be mislabelled as a retirement."""
+    payload = {"data": {"columns": ["repo_name"], "rows": [], "result": {"row_count": 0}}}
+    assert trends._unavailable_detail(payload) == "no usable GitHub repositories found"
+    payload_ok = {"data": {"rows": []}, "data_quality": {"status": "ok"}}
+    assert trends._unavailable_detail(payload_ok) == "no usable GitHub repositories found"

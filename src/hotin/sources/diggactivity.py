@@ -184,6 +184,10 @@ def parse_page(page: Any) -> List[Dict[str, Any]]:
         return []
 
 
+# Attempts at the activity page before calling it a real failure. See the note in fetch().
+ATTEMPTS = 2
+
+
 def _request_page() -> Optional[str]:
     try:
         request = urllib.request.Request(URL, headers={"User-Agent": USER_AGENT})
@@ -208,11 +212,22 @@ def fetch(
         requested_limit = 50 if requested_limit is None else max(0, requested_limit)
         if requested_limit == 0:
             return {"records": [], "status": "empty", "detail": "limit is zero"}
-        page = _request_page()
+        # One retry. The page is a Next.js RSC stream, and it intermittently arrives without
+        # its row chunks: measured 2 failures in 16 bakes (2026-09-22), each time recovering on
+        # the very next run with no code change, so it is a partial render and not a shape
+        # change. Without a retry that is ~34 repos silently missing from the pool for that
+        # cycle, and the bake swallows the non-zero exit, so nothing downstream ever notices.
+        page = None
+        for attempt in range(ATTEMPTS):
+            page = _request_page()
+            if page is not None and _rows(_chunks(page)):
+                break
+            page = None if page is None else page
         if page is None:
             return {"records": [], "status": "error", "detail": "digg activity request failed"}
         if not _rows(_chunks(page)):
-            return {"records": [], "status": "error", "detail": "digg activity page had no rows (shape changed?)"}
+            return {"records": [], "status": "error",
+                    "detail": "digg activity page had no rows after {} attempts (shape changed?)".format(ATTEMPTS)}
         records = parse_page(page)
         if not records:
             return {"records": [], "status": "empty", "detail": "no repositories with more than 11 stars"}

@@ -76,3 +76,51 @@ def test_registered_in_engine_after_trends():
     names = [engine._source_name(source) for source in engine.SOURCES]
     assert names.index("diggactivity") == names.index("trends") + 1
     assert "diggactivity" not in engine._FLAG_SOURCES
+
+
+def test_the_page_is_retried_before_being_called_a_failure(monkeypatch):
+    """Measured 2 failures in 16 bakes (2026-09-22), each recovering on the next run with no
+    code change. That is a partial RSC render, not a shape change. Without a retry it is ~34
+    repos silently missing from the pool for that cycle, and the bake swallows the non-zero
+    exit (`hotin refresh || echo ...`), so nothing downstream ever notices."""
+    calls = []
+    monkeypatch.setattr(diggactivity, "_request_page",
+                        lambda: calls.append(1) or "<html>no flight chunks</html>")
+    out = diggactivity.fetch(limit=5, config={})
+    assert len(calls) == diggactivity.ATTEMPTS, calls
+    assert out["status"] == "error"
+    assert "after {} attempts".format(diggactivity.ATTEMPTS) in out["detail"]
+
+
+def test_a_retry_that_succeeds_returns_records(monkeypatch):
+    """The recovery path, exercised on purpose: first body is rows-less, second is real."""
+    import pathlib
+    fixture = None
+    for cand in pathlib.Path("tests").glob("**/*digg*"):
+        if cand.suffix in (".html", ".txt"):
+            fixture = cand.read_text()
+            break
+    if fixture is None:
+        import pytest
+        pytest.skip("no local digg page fixture to replay")
+    bodies = iter(["<html>no flight chunks</html>", fixture])
+    monkeypatch.setattr(diggactivity, "_request_page", lambda: next(bodies))
+    out = diggactivity.fetch(limit=5, config={})
+    assert out["status"] == "ok" and out["records"]
+
+
+def test_a_healthy_first_response_costs_exactly_one_request(monkeypatch):
+    """The retry must not double every bake's request cost on a good day."""
+    calls = []
+    real = diggactivity._request_page
+
+    def counted():
+        calls.append(1)
+        return real()
+
+    monkeypatch.setattr(diggactivity, "_request_page", counted)
+    out = diggactivity.fetch(limit=5, config={})
+    if out["status"] != "ok":
+        import pytest
+        pytest.skip("digg unreachable from this host")
+    assert len(calls) == 1

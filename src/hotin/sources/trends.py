@@ -18,6 +18,16 @@ THROTTLE = Throttle(min_interval=2.0, jitter=1.0)
 _PERIODS = {"past_week", "past_month"}
 
 
+def _unavailable_detail(payload: Any) -> str:
+    """The upstream's own `data_quality` verdict, when it publishes one."""
+    quality = payload.get("data_quality") if isinstance(payload, dict) else None
+    if isinstance(quality, dict) and quality.get("status") == "unavailable":
+        since = quality.get("unavailable_since")
+        return ("upstream ranking RETIRED by the provider{}; this source cannot return rows "
+                "and is not a quiet day".format(" since {}".format(since) if since else ""))
+    return "no usable GitHub repositories found"
+
+
 def _column_names(columns: Any) -> Optional[List[str]]:
     """Return the documented column names, or None for a malformed response."""
     if not isinstance(columns, list):
@@ -176,7 +186,13 @@ def fetch(
 
         records = parse_response(payload)
         if not records:
-            return {"records": [], "status": "empty", "detail": "no usable GitHub repositories found"}
+            # The upstream declares its own availability. Say what it says, rather than
+            # reporting a bare "empty" that reads like a quiet day: this ranking has been
+            # unavailable since 2026-03-01 (their GitHub event capture fell to ~0.3% of
+            # baseline), so the source has contributed exactly zero for months while looking
+            # like a source that simply had nothing today. A scout that can never return ok
+            # must not be mistaken for one that might.
+            return {"records": [], "status": "empty", "detail": _unavailable_detail(payload)}
         return {"records": records[:requested_limit], "status": "ok", "detail": None}
     except Exception:
         return {"records": [], "status": "error", "detail": "trend-signal fetch failed"}
