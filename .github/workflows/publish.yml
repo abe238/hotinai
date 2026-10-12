@@ -88,3 +88,27 @@ jobs:
       - name: Publish to npm (trusted publishing, no stored token)
         working-directory: npm
         run: npm publish --provenance --access public
+
+  assets:
+    # hotin.ai and llms.txt link releases/latest/download/hotin.mcpb and hotin.pyz. Attaching
+    # them was a manual step that was done once (v0.8.1) and then silently skipped, so both
+    # links 404'd on every later "latest" release. Build and attach them on every release.
+    name: Attach hotin.mcpb + hotin.pyz to the release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # gh release upload
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4   # build_mcpb validates against the official mcpb schema via npx
+        with:
+          node-version: "24"
+      - name: Build (each build verifies itself)
+        run: |
+          set -euo pipefail
+          python3 scripts/build_mcpb.py
+          sh scripts/build_zipapp.sh
+          python3 dist/hotin.pyz --help >/dev/null
+      - name: Upload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" dist/hotin.mcpb dist/hotin.pyz --clobber -R "$GITHUB_REPOSITORY"
