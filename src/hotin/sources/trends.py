@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import html
 import json
+import re
 import urllib.parse
 import urllib.request
 from typing import Any, Dict, List, Optional
@@ -16,6 +18,10 @@ SOURCE = "trends"
 ENDPOINT = "https://api.ossinsight.io/v1/trends/repos/"
 THROTTLE = Throttle(min_interval=2.0, jitter=1.0)
 _PERIODS = {"past_week", "past_month"}
+# ossinsight's ranking is retired upstream (2026-03-01), so GitHub's own Trending page
+# is the momentum signal: the only source that sees an OLD repo exploding today.
+TRENDING_URL = "https://github.com/trending"
+_SINCE = {"past_week": "weekly", "past_month": "monthly"}
 
 
 def _unavailable_detail(payload: Any) -> str:
@@ -126,6 +132,55 @@ def parse_response(payload: Any) -> List[Dict[str, Any]]:
         return []
 
 
+def parse_trending_html(page: Any) -> List[Dict[str, Any]]:
+    """Purely convert a github.com/trending page into hotin Records."""
+    # ponytail: regex over GitHub's HTML; if the markup changes this returns [] and the
+    # source reads "empty" (health check surfaces it), never wrong rows.
+    if not isinstance(page, str):
+        return []
+    records: List[Dict[str, Any]] = []
+    for block in re.findall(r'<article class="Box-row">(.*?)</article>', page, re.S):
+        repo = re.search(r'href="/([^"/?]+/[^"/?]+)/stargazers"', block)
+        canonical_repo = canonicalize(repo.group(1)) if repo else None
+        if canonical_repo is None:
+            continue
+        signal: Dict[str, Any] = {}
+        stars = re.search(r"([\d,]+)\s+stars?\s+(?:today|this week|this month)", block)
+        if stars:
+            signal["trend_stars"] = finite_int(stars.group(1).replace(",", ""))
+        meta: Dict[str, Any] = {}
+        language = re.search(r'itemprop="programmingLanguage">([^<]+)<', block)
+        if language:
+            meta["language"] = html.unescape(language.group(1)).strip()
+        description = re.search(r'<p class="[^"]*">(.*?)</p>', block, re.S)
+        if description:
+            text = re.sub(r"<[^>]+>", "", html.unescape(description.group(1)))
+            text = " ".join(text.split())
+            if text:
+                meta["description"] = text
+        records.append({
+            "url": "https://github.com/{}".format(canonical_repo),
+            "canonical_repo": canonical_repo,
+            "name": canonical_repo,
+            "source": SOURCE,
+            "signal": signal,
+            "meta": meta,
+        })
+    return records
+
+
+def _request_trending(since: str) -> Optional[str]:
+    """Fetch one github.com/trending page, returning None for every request failure."""
+    try:
+        url = "{}?{}".format(TRENDING_URL, urllib.parse.urlencode({"since": since}))
+        request = urllib.request.Request(url, headers={"User-Agent": "hotin/0.2.0"})
+        THROTTLE.wait()
+        with urllib.request.urlopen(request, timeout=30) as response:
+            return response.read().decode("utf-8", "replace")
+    except Exception:
+        return None
+
+
 def _normalise_limit(limit: Any) -> int:
     value = finite_int(limit)
     return 50 if value is None else max(0, value)
@@ -178,13 +233,23 @@ def fetch(
         if requested_limit == 0:
             return {"records": [], "status": "empty", "detail": "limit is zero"}
 
-        payload = _request_payload(_normalise_period(period))
+        normalised_period = _normalise_period(period)
+        payload = _request_payload(normalised_period)
+        records = parse_response(payload) if _has_expected_shape(payload) else []
+        if not records:
+            # daily first: an explosion today (morluto/rea, 2026-10-14) is not on weekly yet
+            seen = set()
+            for since in ("daily", _SINCE[normalised_period]):
+                for record in parse_trending_html(_request_trending(since)):
+                    if record["canonical_repo"] not in seen:
+                        seen.add(record["canonical_repo"])
+                        records.append(record)
+            if records:
+                return {"records": records[:requested_limit], "status": "ok", "detail": None}
         if payload is None:
             return {"records": [], "status": "error", "detail": "trend-signal request failed"}
         if not _has_expected_shape(payload):
             return {"records": [], "status": "error", "detail": "trend-signal response was malformed"}
-
-        records = parse_response(payload)
         if not records:
             # The upstream declares its own availability. Say what it says, rather than
             # reporting a bare "empty" that reads like a quiet day: this ranking has been
