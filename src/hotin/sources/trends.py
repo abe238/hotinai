@@ -7,6 +7,7 @@ import json
 import re
 import urllib.parse
 import urllib.request
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from hotin.canonical import canonicalize
@@ -245,6 +246,9 @@ def fetch(
                         seen.add(record["canonical_repo"])
                         records.append(record)
             if records:
+                today = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+                for record in records:
+                    record["signal"]["trending_at"] = today  # the date it was seen trending
                 return {"records": records[:requested_limit], "status": "ok", "detail": None}
         if payload is None:
             return {"records": [], "status": "error", "detail": "trend-signal request failed"}

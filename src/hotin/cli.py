@@ -178,6 +178,13 @@ def _within_window(value: Any, days: float) -> Optional[bool]:
     return parsed >= datetime.date.today() - datetime.timedelta(days=int(days))
 
 
+def _repo_activity(r: dict) -> Any:
+    """Latest activity date for the repos-tab windows. GitHub Trending rows carry no
+    push or creation date, so without trending_at every one dropped as undated."""
+    s = r.get("signal") if isinstance(r.get("signal"), dict) else {}
+    return s.get("trending_at") or s.get("pushed_at") or s.get("created_at")
+
+
 def _fresh_records(records: List[dict], days: float, date_of, *, keep_undated: bool) -> List[dict]:
     """The site's per-tab freshness window: same date semantics as --since
     (`_parse_date`), with each entity's keep-undated stance made explicit."""
@@ -1092,10 +1099,6 @@ def _export(arguments: argparse.Namespace) -> int:
     # both (a window you can't verify isn't a window). Date basis per tab:
     # repos = latest ACTIVITY (push/creation), insiders = the repo's own
     # creation date, models/papers/news = release/publish date.
-    def _repo_activity(r):
-        s = r.get("signal") if isinstance(r.get("signal"), dict) else {}
-        return s.get("pushed_at") or s.get("created_at")
-
     def _sig_date(key):
         return lambda r: (r.get("signal") or {}).get(key) if isinstance(r.get("signal"), dict) else None
 

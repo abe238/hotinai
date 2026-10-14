@@ -172,3 +172,20 @@ def test_fetch_falls_back_to_github_trending_when_upstream_is_retired(monkeypatc
     monkeypatch.setattr(trends, "_request_trending", lambda since: None)
     out = trends.fetch()
     assert out["status"] == "empty" and "RETIRED" in out["detail"]
+
+
+def test_trending_rows_survive_the_repos_tab_activity_window(monkeypatch):
+    """0.9.19 fetched GitHub Trending fine, yet not one row reached the board: the
+    repos tab keeps rows dated within 60 days and DROPS undated ones, and trending
+    rows had no push/creation date. They now carry the date they were seen trending."""
+    from hotin import cli
+    monkeypatch.setattr(trends, "_request_payload", lambda period: None)
+    monkeypatch.setattr(trends, "_request_trending", lambda since: TRENDING_HTML)
+    rows = trends.fetch()["records"]
+    assert all(r["signal"].get("trending_at") for r in rows)
+    kept = cli._fresh_records(rows, 60, cli._repo_activity, keep_undated=False)
+    assert [r["canonical_repo"] for r in kept] == ["morluto/rea", "example/thing"]
+    # the old behavior, as a control: strip the stamp and the window drops them all
+    for r in rows:
+        r["signal"].pop("trending_at")
+    assert cli._fresh_records(rows, 60, cli._repo_activity, keep_undated=False) == []
