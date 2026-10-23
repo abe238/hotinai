@@ -235,21 +235,24 @@ def fetch(
             return {"records": [], "status": "empty", "detail": "limit is zero"}
 
         normalised_period = _normalise_period(period)
+        # GitHub Trending FIRST. ossinsight (retired 2026-03-01) began hanging on
+        # 2026-10-22; asked first, it ate the engine's shared 25s budget and the whole
+        # source timed out before Trending was ever requested (4 of 5 bakes).
+        # daily first: an explosion today (morluto/rea, 2026-10-14) is not on weekly yet
+        records = []
+        seen = set()
+        for since in ("daily", _SINCE[normalised_period]):
+            for record in parse_trending_html(_request_trending(since)):
+                if record["canonical_repo"] not in seen:
+                    seen.add(record["canonical_repo"])
+                    records.append(record)
+        if records:
+            today = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+            for record in records:
+                record["signal"]["trending_at"] = today  # the date it was seen trending
+            return {"records": records[:requested_limit], "status": "ok", "detail": None}
         payload = _request_payload(normalised_period)
         records = parse_response(payload) if _has_expected_shape(payload) else []
-        if not records:
-            # daily first: an explosion today (morluto/rea, 2026-10-14) is not on weekly yet
-            seen = set()
-            for since in ("daily", _SINCE[normalised_period]):
-                for record in parse_trending_html(_request_trending(since)):
-                    if record["canonical_repo"] not in seen:
-                        seen.add(record["canonical_repo"])
-                        records.append(record)
-            if records:
-                today = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-                for record in records:
-                    record["signal"]["trending_at"] = today  # the date it was seen trending
-                return {"records": records[:requested_limit], "status": "ok", "detail": None}
         if payload is None:
             return {"records": [], "status": "error", "detail": "trend-signal request failed"}
         if not _has_expected_shape(payload):

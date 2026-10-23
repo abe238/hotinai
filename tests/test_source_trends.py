@@ -189,3 +189,14 @@ def test_trending_rows_survive_the_repos_tab_activity_window(monkeypatch):
     for r in rows:
         r["signal"].pop("trending_at")
     assert cli._fresh_records(rows, 60, cli._repo_activity, keep_undated=False) == []
+
+
+def test_a_hanging_retired_upstream_is_never_asked_when_trending_works(monkeypatch):
+    """2026-10-22: ossinsight started hanging. Asked first, it burned the engine's shared
+    25s budget, so the source timed out in 4 of 5 bakes with Trending never requested."""
+    def hang(period):
+        raise AssertionError("retired upstream was requested although Trending had rows")
+    monkeypatch.setattr(trends, "_request_payload", hang)
+    monkeypatch.setattr(trends, "_request_trending", lambda since: TRENDING_HTML)
+    out = trends.fetch()
+    assert out["status"] == "ok" and out["records"][0]["canonical_repo"] == "morluto/rea"
