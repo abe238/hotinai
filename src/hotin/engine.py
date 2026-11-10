@@ -39,6 +39,14 @@ _FLAG_SOURCES = frozenset({"smolai", "smartmoney"})
 # At 12, smart-money alone remains influential but cannot exceed modest
 # corroborated OSS momentum from three independent sources.
 CREDIBILITY_CAP = 12.0
+# Digg's "Top GitHub Activity" counts today's work by tracked contributors. It
+# used to land in meta only, so a repo seen nowhere else scored 0 and never
+# reached the board (2 of 61 rows did, both via other sources). The term is
+# capped at 24: on the 2026-11-09 store the 60th board slot scored 21.0, two
+# independent sources had a median of 21.5 and three sources a p25 of 28.6, so a
+# strong Digg-only repo can just make the board but cannot pass a repo
+# corroborated across three sources. Re-measure if the board's scale moves.
+DIGG_CAP = 24.0
 # Corroboration should mean "hot across sources recently", not "ever mentioned".
 # A source observation older than this (i.e. the source stopped re-surfacing the
 # repo) no longer counts toward the ranked view. The CLI passes this to
@@ -395,6 +403,11 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     signal_score = math.log1p(max(0.0, finite_float(signal.get("hn_points"), 0.0))) * 1.5
     signal_score += math.log1p(max(0.0, finite_float(signal.get("reddit_score"), 0.0))) * 1.2
     signal_score += math.log1p(max(0.0, finite_float(signal.get("youtube_views"), 0.0))) * 0.3
+    digg = math.log1p(max(0.0, finite_float(signal.get("digg_actions"), 0.0))) * 3.0
+    digg += math.log1p(max(0.0, finite_float(signal.get("digg_push"), 0.0))) * 1.0
+    digg += math.log1p(max(0.0, finite_float(signal.get("digg_devs"), 0.0))) * 3.0
+    digg += math.log1p(max(0.0, finite_float(signal.get("digg_stars"), 0.0))) * 0.5
+    signal_score += min(digg, DIGG_CAP)
     corroboration = 1.0 + 0.25 * max(0, source_count - 1)
 
     # Freshness reflects real repository activity (last push, last smart-money
@@ -403,7 +416,8 @@ def score_repo(merged: dict, now: Optional[float] = None) -> dict:
     # activity timestamp is available we neither penalize the repo nor claim a
     # freshness we cannot verify: neutral factor, no "fresh" badge.
     activity = [_timestamp(signal.get("pushed_at")),
-                _timestamp(signal.get("smartmoney_most_recent_star_at"))]
+                _timestamp(signal.get("smartmoney_most_recent_star_at")),
+                _timestamp(signal.get("digg_active_at"))]
     known = [timestamp for timestamp in activity if timestamp is not None]
     freshness_days = max(0.0, (reference - max(known)) / 86400.0) if known else None
     freshness_factor = (

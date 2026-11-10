@@ -21,7 +21,10 @@ def test_known_rows_parse_with_ints_and_lowercase_ids():
     assert openclaw["url"] == "https://github.com/openclaw/openclaw"
     assert openclaw["name"] == "openclaw/openclaw"
     assert openclaw["source"] == "diggactivity"
-    assert openclaw["signal"] == {}
+    assert openclaw["signal"] == {
+        "digg_actions": 1622, "digg_push": 231, "digg_devs": 24, "digg_stars": 389400,
+        "digg_active_at": openclaw["signal"]["digg_active_at"],
+    }
     assert openclaw["meta"] == {
         "digg_rank": 1, "actions": 1622, "push": 231, "pr": 684, "issues": 429,
         "devs": 24, "stars": 389400, "digg_developer": "Peter Steinberger \U0001f99e",
@@ -124,3 +127,8 @@ def test_a_healthy_first_response_costs_exactly_one_request(monkeypatch):
         import pytest
         pytest.skip("digg unreachable from this host")
     assert len(calls) == 1
+
+
+def test_rows_are_dated_now_so_the_board_windows_keep_them():
+    records = diggactivity.parse_page(FIXTURE.read_text(encoding="utf-8"), now=1_700_000_000)
+    assert {r["signal"]["digg_active_at"] for r in records} == {"2023-11-14T22:13:20Z"}

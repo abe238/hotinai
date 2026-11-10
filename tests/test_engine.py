@@ -522,3 +522,24 @@ def test_paper_gaining_now_outranks_paper_that_gained_in_july():
     frozen = engine.merge_by_entity([paper("2607.00001", 300), paper("2609.00001", 80)], "paper")
     engine.annotate_velocity(frozen, Store({}), entity_type="paper", metric="paper_upvotes")
     assert [r["entity_id"] for r in engine.rank_entities(frozen, weights)] == cold
+
+
+def test_a_repo_seen_only_on_digg_scores_above_zero():
+    now = time.time()
+    digg = engine.merge_by_repo([record("diggactivity", signal={
+        "digg_actions": 44, "digg_devs": 24, "digg_stars": 133800, "digg_active_at": now})])["acme/tool"]
+    assert engine.score_repo(digg, now=now)["score"] > 0
+
+
+def test_digg_alone_is_capped_below_a_repo_corroborated_by_three_sources():
+    now = time.time()
+    huge = engine.merge_by_repo([record("diggactivity", signal={
+        "digg_actions": 10**6, "digg_devs": 10**4, "digg_stars": 10**7, "digg_active_at": now})])["acme/tool"]
+    assert engine.score_repo(huge, now=now)["score"] == engine.DIGG_CAP
+    # the store's p25 for three independent sources was 28.6 (2026-11-09)
+    corroborated = engine.merge_by_repo([
+        record("trends", signal={"trend_total_score": 200, "pushed_at": now}),
+        record("hn", signal={"hn_points": 100}), record("reddit", signal={"reddit_score": 100}),
+    ])["acme/tool"]
+    assert engine.score_repo(corroborated, now=now)["score"] > 28.6
+    assert engine.score_repo(corroborated, now=now)["score"] > engine.score_repo(huge, now=now)["score"]

@@ -39,3 +39,12 @@ def test_news_rows_id_uses_join_id_for_long_article_urls():
                         "signal": {}, "meta": {}}])
     assert rows[0]["id"] == join_id(long_url)
     assert len(rows[0]["id"]) < len(long_url)
+
+
+def test_a_digg_only_repo_shows_why_it_is_on_the_board():
+    row = repo_rows([{"canonical_repo": "openclaw/openclaw", "name": "openclaw/openclaw",
+                      "url": "https://github.com/openclaw/openclaw", "score": 24.0, "sources": {"diggactivity"},
+                      "signal": {"digg_actions": 248, "digg_devs": 26, "digg_stars": 394200}, "meta": {}}])[0]
+    labels = [r["label"] for r in row["receipts"]]
+    assert "248 actions · 26 devs today" in labels
+    assert any(label.endswith("stars") for label in labels)

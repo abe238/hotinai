@@ -14,7 +14,9 @@ from __future__ import annotations
 import html as _html
 import json
 import re
+import time
 import urllib.request
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from hotin.canonical import canonicalize
@@ -142,8 +144,24 @@ def _developer(cell: Any) -> Optional[str]:
     return None
 
 
-def parse_page(page: Any) -> List[Dict[str, Any]]:
+def _iso(epoch: float) -> str:
+    return datetime.fromtimestamp(epoch, timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _signal(meta: Dict[str, Any], now: float) -> Dict[str, Any]:
+    """The scoring inputs, under digg_* keys so they never overwrite another
+    source's exact stars/dates in the merge. The board is today's activity by
+    tracked contributors ("Contributors today"), so a row is activity dated now."""
+    return {
+        "digg_actions": meta.get("actions", 0), "digg_push": meta.get("push", 0),
+        "digg_devs": meta.get("devs", 0),
+        "digg_stars": meta.get("stars", 0), "digg_active_at": _iso(now),
+    }
+
+
+def parse_page(page: Any, now: Optional[float] = None) -> List[Dict[str, Any]]:
     """Purely convert the board HTML into hotin records (stars > 11 only)."""
+    reference = time.time() if now is None else now
     try:
         chunks = _chunks(page)
         records: List[Dict[str, Any]] = []
@@ -176,7 +194,7 @@ def parse_page(page: Any) -> List[Dict[str, Any]]:
                 "canonical_repo": repo,
                 "name": repo,
                 "source": SOURCE,
-                "signal": {},
+                "signal": _signal(meta, reference),
                 "meta": meta,
             })
         return records

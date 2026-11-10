@@ -256,6 +256,13 @@ def repo_rows(ranked: List[dict]) -> List[dict]:
             receipts.append({"label": "+{} stars".format(_num(growth)), "kind": "stars"})
         elif finite_int(signal.get("stars"), 0):
             receipts.append({"label": "{} stars".format(_num(finite_int(signal.get("stars")))), "kind": "stars"})
+        elif finite_int(signal.get("digg_stars"), 0):
+            receipts.append({"label": "{} stars".format(_num(finite_int(signal.get("digg_stars")))), "kind": "stars"})
+        if finite_int(signal.get("digg_actions"), 0):
+            # Digg's daily board: work by tracked contributors today
+            receipts.append({"label": "{} actions · {} devs today".format(
+                _num(finite_int(signal.get("digg_actions"))), _num(finite_int(signal.get("digg_devs"), 0))),
+                "kind": "digg"})
         vel = finite_float(_meta(repo).get("velocity_per_day"), 0.0)
         if isinstance(signal.get("stars_7d"), int):
             # trailing 7 complete days from GitHub's star history, not the

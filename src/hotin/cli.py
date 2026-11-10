@@ -182,7 +182,8 @@ def _repo_activity(r: dict) -> Any:
     """Latest activity date for the repos-tab windows. GitHub Trending rows carry no
     push or creation date, so without trending_at every one dropped as undated."""
     s = r.get("signal") if isinstance(r.get("signal"), dict) else {}
-    return s.get("trending_at") or s.get("pushed_at") or s.get("created_at")
+    return (s.get("trending_at") or s.get("pushed_at") or s.get("created_at")
+            or s.get("digg_active_at"))
 
 
 def _fresh_records(records: List[dict], days: float, date_of, *, keep_undated: bool) -> List[dict]:
